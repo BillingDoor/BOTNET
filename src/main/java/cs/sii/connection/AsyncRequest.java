@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.io.BufferedReader;
@@ -143,9 +144,12 @@ public class AsyncRequest {
 		String response = "";
 		while (counter <= REQNUMBER) {
 		Type type=new TypeToken<Pairs<Long,Long>>(){}.getType();
-
+		String postRequest = "{\"hashMac\":\""+hashMac+"\"}";
 		try {
-			response = doPost("http://"+ip+":8080/welcome/hmac", hashMac);
+			//response = doPost("http://"+ip+":8080/welcome/hmac", hashMac);
+			RestTemplate rest=new RestTemplate();
+			
+			response=rest.postForObject("http://"+ip+":8080/welcome/hmac", hashMac, String.class);
 			return response;
 		} catch (Exception e) {
 			//e.printStackTrace();
