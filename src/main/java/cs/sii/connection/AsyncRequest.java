@@ -142,9 +142,10 @@ public class AsyncRequest {
 		Integer counter = 0;
 		String response = "";
 		while (counter <= REQNUMBER) {
-		Type type=new TypeToken<Pairs<Long,Long>>(){}.getType();			
+		Type type=new TypeToken<Pairs<Long,Long>>(){}.getType();
+
 		try {
-			response=doGetJSON("http://"+ip+":8080/welcome/hmac?keyNumber="+keyNumber+"&iterationNumber="+iterationNumber+"&hashMac="+hashMac, type);
+			response = doPost("http://"+ip+":8080/welcome/hmac", hashMac);
 			return response;
 		} catch (Exception e) {
 			//e.printStackTrace();

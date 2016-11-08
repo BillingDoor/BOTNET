@@ -89,9 +89,15 @@ public class CommandController {
 		System.out.println("3");
 
     	if(engineBot.isCommandandconquerStatus()){
-    			if(auth.findBotChallengeInfo(request.getRemoteAddr())
+    			if(auth.findBotChallengeInfo(request.getRemoteAddr())){
+    				
+    				IP ip=new IP(request.getRemoteAddr());
+    				Long keyNumber=auth.getBotSeed().get(ip).getValue1();
+    				Long iterationNumber=auth.getBotSeed().get(ip).getValue2();
+    				
     			if(auth.validateHmac(keyNumber, iterationNumber, hashMac))
     				response="Challenge OK";
+    			}
     	}else{
     		response= "Challenge Error";
     		error.sendError(HttpStatus.SC_NOT_FOUND);
