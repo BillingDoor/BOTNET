@@ -64,7 +64,7 @@ public class CommandController {
 
     //CONTROLLER PER LA GESTIONE DELLA CHALLENGE DI AUTENTICAZIONE//////
     
-    @RequestMapping(value = "/welcome", method = RequestMethod.POST)
+    @RequestMapping(value = "/welcome", method = RequestMethod.GET)
    	@ResponseBody
    	public Pairs<Long,Long> botFirstAcces(HttpServletResponse error,HttpServletRequest request) throws IOException {  
     		System.out.println("1");

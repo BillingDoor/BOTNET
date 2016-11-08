@@ -33,7 +33,7 @@ public class Application {
         return args -> {
 
         	
-        	bot.initializeBot();
+//        	bot.initializeBot();
 //            System.out.println("Let's inspect the beans provided by Spring Boot:");
 //
 //            String[] beanNames = ctx.getBeanDefinitionNames();
