@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -84,7 +85,7 @@ public class CommandController {
     
     @RequestMapping(value = "/welcome/hmac", method = RequestMethod.POST)
    	@ResponseBody
-   	public String botFirstAccesSecondPhase(String hashMac, HttpServletResponse error,HttpServletRequest request) throws IOException {  
+   	public String botFirstAccesSecondPhase(@RequestBody String hashMac, HttpServletResponse error,HttpServletRequest request) throws IOException {  
     	String response="";
 		System.out.println("3");
 

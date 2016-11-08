@@ -42,7 +42,6 @@ protected void configure(HttpSecurity http) throws Exception {
     .logout()
         .permitAll();
 	
-	
 /*
  	http.authorizeRequests().antMatchers("/newuser/**", "/delete-user-*").permitAll().antMatchers("/edit-user-*")
  
