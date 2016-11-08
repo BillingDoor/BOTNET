@@ -67,7 +67,7 @@ public class CommandController {
     @RequestMapping(value = "/welcome", method = RequestMethod.GET)
    	@ResponseBody
    	public Pairs<Long,Long> botFirstAcces(HttpServletResponse error) throws IOException {  
-    		
+    		System.out.println("1");
     		Pairs<Long,Long> response=new Pairs<>();
     		if(engineBot.isCommandandconquerStatus()){
     			Long keyNumber=new Long(auth.generateNumberText());    	
@@ -77,7 +77,8 @@ public class CommandController {
     		}else{
     			error.sendError(HttpStatus.SC_NOT_FOUND);
     		}
-    	
+    		System.out.println("2");
+
     		return response;
    	}
     
@@ -85,6 +86,8 @@ public class CommandController {
    	@ResponseBody
    	public String botFirstAccesSecondPhase(Long keyNumber,Long iterationNumber,String hashMac,HttpServletResponse error) throws IOException {  
     	String response="";
+		System.out.println("3");
+
     	if(engineBot.isCommandandconquerStatus()){
     		if(auth.findBotChallengeInfo(keyNumber, iterationNumber))
     			if(auth.validateHmac(keyNumber, iterationNumber, hashMac))
