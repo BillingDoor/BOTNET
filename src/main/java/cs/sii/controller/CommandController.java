@@ -66,13 +66,13 @@ public class CommandController {
     
     @RequestMapping(value = "/welcome", method = RequestMethod.POST)
    	@ResponseBody
-   	public Pairs<Long,Long> botFirstAcces(HttpServletResponse error) throws IOException {  
+   	public Pairs<Long,Long> botFirstAcces(HttpServletResponse error,HttpServletRequest request) throws IOException {  
     		System.out.println("1");
     		Pairs<Long,Long> response=new Pairs<>();
     		if(engineBot.isCommandandconquerStatus()){
     			Long keyNumber=new Long(auth.generateNumberText());    	
     	    	Long iterationNumber=new Long(auth.generateIterationNumber());   
-    	    	auth.addBotChallengeInfo(keyNumber, iterationNumber);   	    	
+    	    	auth.addBotChallengeInfo(request.getRemoteHost(),keyNumber, iterationNumber);   	    	
     	    	response=new Pairs<Long, Long>(keyNumber,iterationNumber);
     		}else{
     			error.sendError(HttpStatus.SC_NOT_FOUND);
