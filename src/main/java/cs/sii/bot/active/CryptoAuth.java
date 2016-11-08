@@ -21,7 +21,6 @@ public class CryptoAuth {
 
 	// TODO da decidere con stringa lunga
 	// Non necessità di essere cambiata nel tempo
-	private static final String seedNumberGenerator = "";
 
 	// TODO da decidere con stringa lunga
 	private String seedIterationGenerator1;
@@ -39,10 +38,10 @@ public class CryptoAuth {
 		
 		seedIterationGenerator1 = "5ffffffffffffffd";
 		seedIterationGenerator2 = "5fffffffffffffdd";
-		seedIterationGenerator1 = "5ffffffffffffffe";
+		seedIterationGenerator3 = "5ffffffffffffffe";
 
 		
-		if(eng.isCommandandconquerStatus()){
+		if(true){
 			rndIt.setSeed(Long.parseLong(seedIterationGenerator1, 16));
 			rndRnd.setSeed(Long.parseLong(seedIterationGenerator2, 16));
 			
