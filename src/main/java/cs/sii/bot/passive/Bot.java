@@ -41,36 +41,19 @@ public void initializeBot(){
 
 //Non necessario 
 //networkService.selectIp();
-//networkService.firstConnectToMockServerDns();
-	Long q=(Long.MAX_VALUE/4)*3;
-	byte l=q.to
+networkService.firstConnectToMockServerDns();
 	
-System.out.println(l);
-System.out.println(Long.toBinaryString(l));
-System.out.println(Long.toHexString(l));
-System.out.println(l.toString());
-System.out.println(Long.valueOf(l));
-System.out.println(String.valueOf(l));
-System.out.println(String.valueOf(Long.toBinaryString(l)));
-System.out.println(String.valueOf(Long.toHexString(l)));
-System.out.println(String.valueOf(l.toString()));
-//System.out.println(Long.parseLong(s));
+//	Long q=(Long.MAX_VALUE/4)*3;
+//	String s="5ffffffffffffffd";
+//System.out.println(q);
+//System.out.println(Long.parseLong(s,16));
+//
 
+if(challengeToCommandConquer())
+	System.out.println("Bot is Ready");
+else
+	System.out.println("Bot not Ready, authentication failed");
 
-//byte [] c=((Long.MAX_VALUE/4)*3);
-//System.out.println(c);
-//String s=new String(Conversions.longToBytes((Long.MAX_VALUE/4)*3));
-//Byte c=new Byte(s);
-//
-//System.out.println(s);
-//
-//if(s.equals(c))
-//System.out.println(s+" Uguali "+c);
-//if(challengeToCommandConquer())
-//	System.out.println("Bot is Ready");
-//else
-//	System.out.println("Bot not Ready, authentication failed");
-//
 
 }
 

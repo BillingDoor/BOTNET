@@ -17,7 +17,7 @@ private static final String TYPE_MAC="HmacSHA256";
 
 //TODO da decidere con stringa lunga
 //Non necessità di essere cambiata nel tempo
-private static final String seedNumberGenerator="seedNumberGenerator";
+private static final String seedNumberGenerator="";
 
 //TODO da decidere con stringa lunga
 private String seedIterationGenerator;
@@ -27,8 +27,8 @@ private Random rnd=new Random();
 private HashMap<Long, Long> botSeed=new HashMap<>();
 
 public CryptoAuth(){
-	seedIterationGenerator="seedIterationGenerator";
-	//rnd.setSeed(convertSeed(seedIterationGenerator));
+	seedIterationGenerator="5ffffffffffffffd";
+	rnd.setSeed(Long.parseLong(seedIterationGenerator,16));
 }
 
 
