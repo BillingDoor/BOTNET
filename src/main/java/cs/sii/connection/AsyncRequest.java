@@ -96,54 +96,67 @@ public class AsyncRequest {
 		return requestIp;
 	}
 	
-	//da valutare se devono essere asincroni
-	public String getIpBotNetFromCommandAndConquer(String url) {
-
-		System.out.println("getIpFromCommandAndConquer");
-
-		String requestIp = "";
-		String postRequest = "{\"user_ip\":\"" +  ":8080\"}";
-		try {
-			requestIp = doPost(url, postRequest);
-			System.out.println("getIpFromEntryPoint get RequestIp " + requestIp);
-		} catch (Exception e) {
-//			e.printStackTrace();
-			System.err.println("Errore ricezione Ip da Entry Point");
-		}
-		System.out.println(requestIp);
-		return requestIp;
-	}
+//	//da valutare se devono essere asincroni
+//	public String getIpBotNetFromCommandAndConquer(String url) {
+//
+//		System.out.println("getIpFromCommandAndConquer");
+//
+//		String requestIp = "";
+//		String postRequest = "{\"user_ip\":\"" +  ":8080\"}";
+//		try {
+//			requestIp = doPost(url, postRequest);
+//			System.out.println("getIpFromEntryPoint get RequestIp " + requestIp);
+//		} catch (Exception e) {
+////			e.printStackTrace();
+//			System.err.println("Errore ricezione Ip da Entry Point");
+//		}
+//		System.out.println(requestIp);
+//		return requestIp;
+//	}
 
 	//da valutare se devono essere asincroni
 	public Pairs<Long,Long> getChallengeFromCommandAndConquer(IP ipCeC){
-
-		Type type=new TypeToken<Pairs<Long,Long>>(){}.getType();	
 		Pairs<Long,Long> challenge = new Pairs<>();
+		Integer counter = 0;
+		while (counter <= REQNUMBER) {
+		Type type=new TypeToken<Pairs<Long,Long>>(){}.getType();	
+		
 		try {
-			challenge=doGetJSON("http://"+ipCeC+"/welcome", type);
-
+			String url="http://"+ipCeC+":8080/welcome";
+			System.out.println("Url:"+url);
+			challenge=doGetJSON(url, type);
+			System.out.println(challenge.getValue2());
+		
+			return challenge;
 		} catch (Exception e) {
-			e.printStackTrace();
+//			e.printStackTrace();
+			counter++;
 			System.out.println("Errore ricezione Challenge");
+		}		
 		}
-		return challenge;
+		return null;
 	}
 	
 	//da valutare se devono essere asincroni
-	public String getResponseFromCommandAndConquer(String url,Long keyNumber,Long iterationNumber,String hashMac){
-		
-		Type type=new TypeToken<Pairs<Long,Long>>(){}.getType();	
+	public String getResponseFromCommandAndConquer(IP ip,Long keyNumber,Long iterationNumber,String hashMac){
+		Integer counter = 0;
 		String response = "";
+		while (counter <= REQNUMBER) {
+		Type type=new TypeToken<Pairs<Long,Long>>(){}.getType();			
 		try {
-			response=doGetJSON("http://"+url+"/welcome/hmac?keyNumber="+keyNumber+"&iterationNumber="+iterationNumber+"&hashMac="+hashMac, type);
-
+			response=doGetJSON("http://"+ip+":8080/welcome/hmac?keyNumber="+keyNumber+"&iterationNumber="+iterationNumber+"&hashMac="+hashMac, type);
+			return response;
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			System.out.println("Errore ricezione Challenge");
+			counter++;
 		}
-		return response;
+		
 		
 	}
+		return null;
+	}
+	
 	
 	public static String doGet(String url) throws Exception {
 		
