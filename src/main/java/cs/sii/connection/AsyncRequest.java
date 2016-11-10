@@ -149,7 +149,7 @@ public class AsyncRequest {
 			//response = doPost("http://"+ip+":8080/welcome/hmac", hashMac);
 			RestTemplate rest=new RestTemplate();
 			
-			response=rest.postForObject("http://"+ip+":8080/welcome/hmac", hashMac, String.class);
+			response=rest.postForObject("http://"+ip+":8080/hmac", hashMac, String.class);
 			return response;
 		} catch (Exception e) {
 			//e.printStackTrace();

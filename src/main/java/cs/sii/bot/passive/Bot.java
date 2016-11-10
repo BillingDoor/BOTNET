@@ -38,23 +38,23 @@ public Bot(){}
 
 
 public void initializeBot(){
-
-//Non necessario 
-//networkService.selectIp();
-networkService.firstConnectToMockServerDns();
 	
-//	Long q=(Long.MAX_VALUE/4)*3;
-//	String s="5ffffffffffffffd";
-//System.out.println(q);
-//System.out.println(Long.parseLong(s,16));
-//
+if(!engineBot.isCommandandconquerStatus()){
+	//Non necessario 
+	//networkService.selectIp();
+	networkService.firstConnectToMockServerDns();
+		
+//		Long q=(Long.MAX_VALUE/4)*3;
+//		String s="5ffffffffffffffd";
+	//System.out.println(q);
+	//System.out.println(Long.parseLong(s,16));
+	//
 
-if(challengeToCommandConquer())
-	System.out.println("Bot is Ready");
-else
-	System.out.println("Bot not Ready, authentication failed");
-
-
+	if(challengeToCommandConquer())
+		System.out.println("Bot is Ready");
+	else
+		System.out.println("Bot not Ready, authentication failed");
+}
 }
 
 
