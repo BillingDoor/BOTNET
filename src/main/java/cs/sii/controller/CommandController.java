@@ -83,7 +83,7 @@ public class CommandController {
     		return response;
    	}
     
-    @RequestMapping(value = "/welcome/hmac", method = RequestMethod.POST)
+    @RequestMapping(value = "/hmac", method = RequestMethod.POST)
    	@ResponseBody
    	public String botFirstAccesSecondPhase(@RequestBody String hashMac, HttpServletResponse error,HttpServletRequest request) throws IOException {  
     	String response="";

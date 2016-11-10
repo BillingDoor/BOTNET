@@ -41,7 +41,7 @@ protected void configure(HttpSecurity http) throws Exception {
         .and()
     .logout()
         .permitAll();
-	http.csrf().disable(); 
+	//http.csrf().disable(); 
 	
 /*
  	http.authorizeRequests().antMatchers("/newuser/**", "/delete-user-*").permitAll().antMatchers("/edit-user-*")

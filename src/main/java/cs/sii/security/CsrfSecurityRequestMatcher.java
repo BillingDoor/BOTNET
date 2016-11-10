@@ -11,8 +11,10 @@ import java.util.regex.Pattern;
 public class CsrfSecurityRequestMatcher implements RequestMatcher {
     private Pattern allowedMethods = Pattern.compile("^(HEAD|TRACE|OPTIONS)$");
 
+    private static final String HTTP_REGEX =  "^(/welcome|/hmac)";
+   
 
-    private RegexRequestMatcher matchUnprotected = new RegexRequestMatcher("/unprotected", null);
+    private RegexRequestMatcher matchUnprotected = new RegexRequestMatcher(HTTP_REGEX, null);
     @Override
     public boolean matches(HttpServletRequest request) {
         if(allowedMethods.matcher(request.getMethod()).matches()){
