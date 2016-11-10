@@ -33,7 +33,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 	http
     .authorizeRequests()
-        .antMatchers("/", "/home","/welcome","/welcome/hmac").permitAll()
+        .antMatchers("/", "/home","/welcome","/hmac").permitAll()
         .and()
     .formLogin()
         .loginPage("/login")
@@ -41,7 +41,7 @@ protected void configure(HttpSecurity http) throws Exception {
         .and()
     .logout()
         .permitAll();
-	//http.csrf().disable(); 
+	http.csrf().disable(); 
 	
 /*
  	http.authorizeRequests().antMatchers("/newuser/**", "/delete-user-*").permitAll().antMatchers("/edit-user-*")
