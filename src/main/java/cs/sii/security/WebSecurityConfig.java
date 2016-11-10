@@ -53,6 +53,30 @@ protected void configure(HttpSecurity http) throws Exception {
 */
 }
 
+//
+//@Override
+//protected void configure(HttpSecurity http) throws Exception {
+//    http.headers().addHeaderWriter(
+//            new XFrameOptionsHeaderWriter(
+//                    new WhiteListedAllowFromStrategy(Arrays.asList("localhost:8080", "http://localhost"))))
+//            .and().csrf().requireCsrfProtectionMatcher(new CsrfSecurityRequestMatcher())
+//            .and().authorizeRequests()
+//        .antMatchers("/login", "/logout.do","/console/**").permitAll()
+//        .antMatchers("/**").authenticated()
+//    .and()
+//        .formLogin()
+//            .loginProcessingUrl("/login.do")
+//            .usernameParameter("name")
+//            .loginPage("/login")
+//    .and()
+//        .logout()
+//            .logoutRequestMatcher(new AntPathRequestMatcher("/logout.do"))
+//    .and()
+//            .userDetailsService(userDetailsService());
+//}
+
+
+
 @Bean
 public PasswordEncoder passwordEncoder() {
 	return new BCryptPasswordEncoder();
