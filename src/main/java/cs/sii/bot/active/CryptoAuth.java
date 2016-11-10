@@ -93,7 +93,7 @@ public class CryptoAuth {
 		Random rnd = new Random();
 		rnd.setSeed(Long.parseLong(seedIterationGenerator3, 16));
 		while (iteration > 0) {
-			rnd.nextLong();
+			rnd.nextInt((int)Long.MAX_VALUE);
 			iteration--;
 		}
 		return Long.toString(rnd.nextLong());
