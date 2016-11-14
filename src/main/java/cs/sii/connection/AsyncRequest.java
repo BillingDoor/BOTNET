@@ -40,7 +40,7 @@ public class AsyncRequest {
 
 	public final static Integer REQNUMBER = 6;
 	
-	private static final int TIMEOUT_MILLIS = 15000;
+	private static final int TIMEOUT_MILLIS = 30000;
 	
 	private RestTemplate restTemplate=new RestTemplate();
 	
@@ -159,7 +159,11 @@ public class AsyncRequest {
 			System.out.println("Errore ricezione Challenge");
 			counter++;
 		}
-		
+		try {
+			Thread.sleep(250);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		
 	}
 		return null;

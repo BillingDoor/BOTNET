@@ -20,6 +20,9 @@ public class Engine {
 		private String dnsip;
 		private int dnsport;
 		private String urirequest;
+		private int requestTimeout;
+		private int connectTimeout;
+		private int	readTimeout;
 
 
 		public boolean isCommandandconquerStatus() {
@@ -57,6 +60,24 @@ public class Engine {
 		}
 		public void setUrirequest(String urirequest) {
 			this.urirequest = urirequest;
+		}
+		public int getRequestTimeout() {
+			return requestTimeout;
+		}
+		public void setRequestTimeout(int requestTimeout) {
+			this.requestTimeout = requestTimeout;
+		}
+		public int getConnectTimeout() {
+			return connectTimeout;
+		}
+		public void setConnectTimeout(int connectTimeout) {
+			this.connectTimeout = connectTimeout;
+		}
+		public int getReadTimeout() {
+			return readTimeout;
+		}
+		public void setReadTimeout(int readTimeout) {
+			this.readTimeout = readTimeout;
 		}		
 		
 		
