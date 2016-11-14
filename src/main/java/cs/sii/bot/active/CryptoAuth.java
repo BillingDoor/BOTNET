@@ -13,6 +13,7 @@ import cs.sii.config.bot.Engine;
 import cs.sii.model.Conversions;
 import cs.sii.model.IP;
 import cs.sii.model.Pairs;
+import cs.sii.model.RWRandom;
 
 /**
  * @author chris
@@ -33,8 +34,8 @@ public class CryptoAuth {
 	private String seedIterationGenerator2;
 	private String seedIterationGenerator3;
 
-	private Random rndIt = new Random();
-	private Random rndRnd = new Random();
+	private RWRandom rndIt = new RWRandom();
+	private RWRandom rndRnd = new RWRandom();
 
 	
 	
@@ -75,14 +76,15 @@ public class CryptoAuth {
 	 * 
 	 */
 	public Long generateIterationNumber() {
-		return rndIt.nextLong();
+		return rndIt.nextPosLong(Long.MAX_VALUE);
 	}
 
+	
 	/**
 	 * genera un messaggio randomico utilizzato per la fase di hmac
 	 */
 	public Long generateNumberText() {
-		return rndRnd.nextLong();
+		return rndRnd.nextPosLong(Long.MAX_VALUE);
 	}
 
 	/**

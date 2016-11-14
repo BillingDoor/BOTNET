@@ -2,7 +2,9 @@ package cs.sii.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import cs.sii.bot.active.CryptoAuth;
 import cs.sii.config.bot.Engine;
+import cs.sii.model.RWRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,6 +19,9 @@ public class BotController {
 	
 	@Autowired
 	Engine engineBot;
+	
+	@Autowired
+	CryptoAuth crypto;
     
     @RequestMapping("/")
     public String index() {
@@ -48,5 +53,5 @@ public class BotController {
     	engineBot.setCommandandconquerStatus(true);
         return "Ready";
     }
-    
+        
 }
