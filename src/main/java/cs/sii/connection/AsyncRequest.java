@@ -42,8 +42,12 @@ public class AsyncRequest {
 	
 	private static final int TIMEOUT_MILLIS = 5000;
 	
-
+	private RestTemplate restTemplate=new RestTemplate();
+	
+	
 	public AsyncRequest() {
+		//restTemplate=new RestTemplate()
+		
 		// loadConfiguration();
 	}
 
@@ -97,7 +101,7 @@ public class AsyncRequest {
 		return requestIp;
 	}
 	
-//	//da valutare se devono essere asincroni
+/*	//da valutare se devono essere asincroni
 //	public String getIpBotNetFromCommandAndConquer(String url) {
 //
 //		System.out.println("getIpFromCommandAndConquer");
@@ -113,7 +117,8 @@ public class AsyncRequest {
 //		}
 //		System.out.println(requestIp);
 //		return requestIp;
-//	}
+ * }
+*/	
 
 	//da valutare se devono essere asincroni
 	public Pairs<Long,Long> getChallengeFromCommandAndConquer(IP ipCeC){
@@ -147,9 +152,9 @@ public class AsyncRequest {
 		String postRequest = "{\"hashMac\":\""+hashMac+"\"}";
 		try {
 			//response = doPost("http://"+ip+":8080/welcome/hmac", hashMac);
-			RestTemplate rest=new RestTemplate();
+			//RestTemplate rest=new RestTemplate();
 			
-			response=rest.postForObject("http://"+ip+":8080/hmac", hashMac, String.class);
+			response=restTemplate.postForObject("http://"+ip+":8080/hmac", hashMac, String.class);
 			return response;
 		} catch (Exception e) {
 			//e.printStackTrace();

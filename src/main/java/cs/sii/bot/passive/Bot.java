@@ -79,6 +79,8 @@ private boolean challengeToCommandConquer(){
 		
 		//if()//TODO gestisco la risposta del C&C e genero hmac
 	}
+	
+	
 	return true;
 }
 

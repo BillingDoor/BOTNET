@@ -92,13 +92,13 @@ public class CryptoAuth {
 	 * @return
 	 */
 	public String generateStringKey(Long iteration) {
-		Random rnd = new Random();
+		RWRandom rnd = new RWRandom();
 		rnd.setSeed(Long.parseLong(seedIterationGenerator3, 16));
 		while (iteration > 0) {
-			rnd.nextInt((int)Long.MAX_VALUE);
+			rnd.nextPosLong(Long.MAX_VALUE);
 			iteration--;
 		}
-		return Long.toString(rnd.nextLong());
+		return Long.toString(rnd.nextPosLong(Long.MAX_VALUE));
 	}
 
 	/**
