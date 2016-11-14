@@ -40,7 +40,7 @@ protected void configure(HttpSecurity http) throws Exception {
         .permitAll()
         .and()
     .logout()
-        .permitAll();
+        .permitAll().and().csrf().requireCsrfProtectionMatcher(new CsrfSecurityRequestMatcher());
 	//http.csrf().disable(); 
 	
 /*
