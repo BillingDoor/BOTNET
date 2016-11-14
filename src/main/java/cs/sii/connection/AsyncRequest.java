@@ -40,7 +40,7 @@ public class AsyncRequest {
 
 	public final static Integer REQNUMBER = 6;
 	
-	private static final int TIMEOUT_MILLIS = 5000;
+	private static final int TIMEOUT_MILLIS = 15000;
 	
 	private RestTemplate restTemplate=new RestTemplate();
 	
@@ -131,8 +131,6 @@ public class AsyncRequest {
 			String url="http://"+ipCeC+":8080/welcome";
 			System.out.println("Url:"+url);
 			challenge=doGetJSON(url, type);
-			System.out.println(challenge.getValue2());
-		
 			return challenge;
 		} catch (Exception e) {
 //			e.printStackTrace();

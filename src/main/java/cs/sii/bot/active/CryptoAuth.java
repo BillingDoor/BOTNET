@@ -75,8 +75,8 @@ public class CryptoAuth {
 	 * 
 	 * 
 	 */
-	public Long generateIterationNumber() {
-		return rndIt.nextPosLong(Long.MAX_VALUE);
+	public Integer generateIterationNumber() {
+		return rndIt.nextPosInt(Integer.MAX_VALUE);
 	}
 
 	

