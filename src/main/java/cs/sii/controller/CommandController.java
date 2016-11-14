@@ -67,14 +67,14 @@ public class CommandController {
     
     @RequestMapping(value = "/welcome", method = RequestMethod.GET)
    	@ResponseBody
-   	public Pairs<Long,Long> botFirstAcces(HttpServletResponse error,HttpServletRequest request) throws IOException {  
+   	public Pairs<Long,Integer> botFirstAcces(HttpServletResponse error,HttpServletRequest request) throws IOException {  
     		System.out.println("1");
-    		Pairs<Long,Long> response=new Pairs<>();
+    		Pairs<Long,Integer> response=new Pairs<>();
     		if(engineBot.isCommandandconquerStatus()){
     			Long keyNumber=new Long(auth.generateNumberText());    	
-    	    	Long iterationNumber=new Long(auth.generateIterationNumber());   
+    	    	Integer iterationNumber=new Integer(auth.generateIterationNumber());   
     	    	auth.addBotChallengeInfo(request.getRemoteAddr(),keyNumber, iterationNumber);   	    	
-    	    	response=new Pairs<Long, Long>(keyNumber,iterationNumber);
+    	    	response=new Pairs<Long, Integer>(keyNumber,iterationNumber);
     		}else{
     			error.sendError(HttpStatus.SC_NOT_FOUND);
     		}
@@ -94,7 +94,7 @@ public class CommandController {
     				
     				IP ip=new IP(request.getRemoteAddr());
     				Long keyNumber=auth.getBotSeed().get(ip).getValue1();
-    				Long iterationNumber=auth.getBotSeed().get(ip).getValue2();
+    				Integer iterationNumber=auth.getBotSeed().get(ip).getValue2();
     				
     			if(auth.validateHmac(keyNumber, iterationNumber, hashMac))
     				response="Challenge OK";

@@ -121,11 +121,11 @@ public class AsyncRequest {
 */	
 
 	//da valutare se devono essere asincroni
-	public Pairs<Long,Long> getChallengeFromCommandAndConquer(IP ipCeC){
-		Pairs<Long,Long> challenge = new Pairs<>();
+	public Pairs<Long,Integer> getChallengeFromCommandAndConquer(IP ipCeC){
+		Pairs<Long,Integer> challenge = new Pairs<>();
 		Integer counter = 0;
 		while (counter <= REQNUMBER) {
-		Type type=new TypeToken<Pairs<Long,Long>>(){}.getType();	
+		Type type=new TypeToken<Pairs<Long,Integer>>(){}.getType();	
 		
 		try {
 			String url="http://"+ipCeC+":8080/welcome";
@@ -142,11 +142,11 @@ public class AsyncRequest {
 	}
 	
 	//da valutare se devono essere asincroni
-	public String getResponseFromCommandAndConquer(IP ip,Long keyNumber,Long iterationNumber,String hashMac){
+	public String getResponseFromCommandAndConquer(IP ip,Long keyNumber,Integer iterationNumber,String hashMac){
 		Integer counter = 0;
 		String response = "";
 		while (counter <= REQNUMBER) {
-		Type type=new TypeToken<Pairs<Long,Long>>(){}.getType();
+		Type type=new TypeToken<Pairs<Long,Integer>>(){}.getType();
 		String postRequest = "{\"hashMac\":\""+hashMac+"\"}";
 		try {
 			//response = doPost("http://"+ip+":8080/welcome/hmac", hashMac);

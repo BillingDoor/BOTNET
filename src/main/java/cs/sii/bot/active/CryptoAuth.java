@@ -39,17 +39,17 @@ public class CryptoAuth {
 
 	
 	
-	private HashMap<IP, Pairs<Long,Long>> botSeed = new HashMap<>();
+	private HashMap<IP, Pairs<Long,Integer>> botSeed = new HashMap<>();
 
 	public CryptoAuth() {
 		
-		seedIterationGenerator1 = "5ffffffffffffffd";
+		seedIterationGenerator1 = "5E1CA498";
 		seedIterationGenerator2 = "5fffffffffffffdd";
-		seedIterationGenerator3 = "5ffffffffffffffe";
+		seedIterationGenerator3 = "644666D8";
 
 		
 		if(false){
-			rndIt.setSeed(Long.parseLong(seedIterationGenerator1, 16));
+			rndIt.setSeed(Integer.parseInt(seedIterationGenerator1, 16));
 			rndRnd.setSeed(Long.parseLong(seedIterationGenerator2, 16));
 			
 		}
@@ -91,14 +91,14 @@ public class CryptoAuth {
 	 * @param iteration
 	 * @return
 	 */
-	public String generateStringKey(Long iteration) {
+	public String generateStringKey(Integer iteration) {
 		RWRandom rnd = new RWRandom();
-		rnd.setSeed(Long.parseLong(seedIterationGenerator3, 16));
+		rnd.setSeed(Integer.parseInt(seedIterationGenerator3, 16));
 		while (iteration > 0) {
-			rnd.nextPosLong(Long.MAX_VALUE);
+			rnd.nextPosInt(Integer.MAX_VALUE);
 			iteration--;
 		}
-		return Long.toString(rnd.nextPosLong(Long.MAX_VALUE));
+		return Integer.toString(rnd.nextPosInt(Integer.MAX_VALUE));
 	}
 
 	/**
@@ -114,9 +114,9 @@ public class CryptoAuth {
 	 * @param hashMac
 	 * @return
 	 */
-	public boolean validateHmac(Long keyNumber, Long iterationNumber, String hashMac) {
-		Random rnd = new Random();
-		rnd.setSeed(Long.parseLong(seedIterationGenerator3, 16));
+	public boolean validateHmac(Long keyNumber, Integer iterationNumber, String hashMac) {
+//		Random rnd = new Random();
+//		rnd.setSeed(Integer.parseInt(seedIterationGenerator3, 16));
 		System.out.println("hamca" + keyNumber + "   it  " + iterationNumber + " string hmac  " + hashMac);
 
 		String stringKey = generateStringKey(iterationNumber);
@@ -156,8 +156,8 @@ public class CryptoAuth {
 		return hash;
 	}
 
-	public void addBotChallengeInfo(String ips,Long key, Long value) {
-		Pairs<Long, Long> cs=new Pairs<>();
+	public void addBotChallengeInfo(String ips,Long key, Integer value) {
+		Pairs<Long, Integer> cs=new Pairs<>();
 		IP ip=new IP(ips);
 		cs.setValue1(key);
 		cs.setValue2(value);
@@ -171,7 +171,7 @@ public class CryptoAuth {
 		return false;
 	}
 
-	public HashMap<IP, Pairs<Long, Long>> getBotSeed() {
+	public HashMap<IP, Pairs<Long, Integer>> getBotSeed() {
 		return botSeed;
 	}
 

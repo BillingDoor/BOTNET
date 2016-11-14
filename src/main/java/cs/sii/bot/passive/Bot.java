@@ -62,7 +62,7 @@ private boolean challengeToCommandConquer(){
 	//
 	System.out.println(networkService.getCommandConquerIps().getIPList().get(0));
 		
-	Pairs<Long,Long> challenge=request.getChallengeFromCommandAndConquer(networkService.getCommandConquerIps().getIPList().get(0));
+	Pairs<Long,Integer> challenge=request.getChallengeFromCommandAndConquer(networkService.getCommandConquerIps().getIPList().get(0));
 	
 	System.out.println("Rnd Number "+challenge.getValue1());
 	System.out.println("Rnd Iteration Number "+challenge.getValue2());
