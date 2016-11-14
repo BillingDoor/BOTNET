@@ -153,9 +153,11 @@ public class AsyncRequest {
 			//RestTemplate rest=new RestTemplate();
 			
 			response=restTemplate.postForObject("http://"+ip+":8080/hmac", hashMac, String.class);
+			System.out.println("Ok");
 			return response;
 		} catch (Exception e) {
 			//e.printStackTrace();
+			System.out.println("response:   "+response);
 			System.out.println("Errore ricezione Challenge");
 			counter++;
 		}

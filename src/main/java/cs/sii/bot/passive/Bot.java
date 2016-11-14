@@ -64,9 +64,6 @@ private boolean challengeToCommandConquer(){
 		
 	Pairs<Long,Integer> challenge=request.getChallengeFromCommandAndConquer(networkService.getCommandConquerIps().getIPList().get(0));
 	
-	System.out.println("Rnd Number "+challenge.getValue1());
-	System.out.println("Rnd Iteration Number "+challenge.getValue2());
-	
 	
 	if(challenge!=null){
 		
@@ -79,9 +76,9 @@ private boolean challengeToCommandConquer(){
 		System.out.println("Rnd Number "+challenge.getValue1());
 		System.out.println("Rnd Iteration Number "+challenge.getValue2());
 		System.out.println(hashMac);
-		
+		System.out.println("2");
 		String response=request.getResponseFromCommandAndConquer(networkService.getCommandConquerIps().getIPList().get(0),challenge.getValue1(), challenge.getValue2(), hashMac);
-		
+		System.out.println("3");
 		System.out.println("La risposta del CeC: "+response);
 		
 		//if()//TODO gestisco la risposta del C&C e genero hmac
