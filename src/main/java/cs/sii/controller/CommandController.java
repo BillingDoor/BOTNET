@@ -91,9 +91,8 @@ public class CommandController {
 
     	if(engineBot.isCommandandconquerStatus()){
     			if(auth.findBotChallengeInfo(request.getRemoteAddr())){
-    				
-    				
-    				
+    				System.out.println("Conosco il bot");
+   				
     				IP ip=new IP(request.getRemoteAddr());
     				Long keyNumber=auth.getBotSeed().get(ip).getValue1();
     				Integer iterationNumber=auth.getBotSeed().get(ip).getValue2();
