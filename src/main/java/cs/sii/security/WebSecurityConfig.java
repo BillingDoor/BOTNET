@@ -40,13 +40,13 @@ protected void configure(HttpSecurity http) throws Exception {
         .permitAll()
         .and()
     .logout()
-        .permitAll().and().csrf().requireCsrfProtectionMatcher(new CsrfSecurityRequestMatcher());
-	//http.csrf().disable(); 
+        .permitAll();
+	http.csrf().disable(); 
 	
 /*
  	http.authorizeRequests().antMatchers("/newuser/**", "/delete-user-*").permitAll().antMatchers("/edit-user-*")
  
-			.permitAll().and().formLogin().loginPage("/login")
+			.permitAll().and().formLogin().loginPage("/login").and().csrf().requireCsrfProtectionMatcher(new CsrfSecurityRequestMatcher());
 			.loginProcessingUrl("/login").usernameParameter("ssoId").passwordParameter("password").and()
 			.rememberMe().rememberMeParameter("remember-me").tokenRepository(tokenRepository)
 			.tokenValiditySeconds(86400).and().csrf().and().exceptionHandling().accessDeniedPage("/Access_Denied");
@@ -102,5 +102,11 @@ public AuthenticationTrustResolver getAuthenticationTrustResolver() {
 	return new AuthenticationTrustResolverImpl();
 }
 
+@Autowired
+public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+    auth
+        .inMemoryAuthentication()
+            .withUser("user").password("password").roles("USER");
+}
 	
 }
