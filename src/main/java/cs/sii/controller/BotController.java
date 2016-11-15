@@ -23,7 +23,7 @@ public class BotController {
 	@Autowired
 	CryptoAuth crypto;
     
-    @RequestMapping("/")
+    @RequestMapping("/cane")
     public String index() {
         return "Bot is Ready";
     }

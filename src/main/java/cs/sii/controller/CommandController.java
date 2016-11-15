@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,8 +24,7 @@ import cs.sii.connection.NetworkService;
 import cs.sii.model.IP;
 import cs.sii.model.Pairs;
 
-@Component
-@RestController
+@Controller
 public class CommandController {
 	
 	@Autowired
@@ -109,29 +109,28 @@ public class CommandController {
     
     /////////////////////////////////////////////////////////////////////////
     
-    @RequestMapping(value = "/rand", method = RequestMethod.GET)
-   	@ResponseBody
-   	public int test() {
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
+   	public String test() {
     	
-    	Random rnd=new Random();
-    	rnd.setSeed(100);
-    	int j=0;
+//    	Random rnd=new Random();
+//    	rnd.setSeed(100);
+//    	int j=0;
+//    	
+//    	j=rnd.nextInt();
+//    	int j2=rnd.nextInt();
+//    	
+//    	rnd.setSeed(j);
+//    	int j1=0;
+//    
+//    	j1=rnd.nextInt();
+//    	
+//    	
+//    	//Long keyNumber=new Long()
+//    	//Long iterationNumber=
+//    	System.out.println(j2);
+//    	System.out.println(j1);
     	
-    	j=rnd.nextInt();
-    	int j2=rnd.nextInt();
-    	
-    	rnd.setSeed(j);
-    	int j1=0;
-    
-    	j1=rnd.nextInt();
-    	
-    	
-    	//Long keyNumber=new Long()
-    	//Long iterationNumber=
-    	System.out.println(j2);
-    	System.out.println(j1);
-    	
-    	return j;
+    	return "login";
    	}
     
 }

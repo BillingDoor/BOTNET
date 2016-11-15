@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.google.common.reflect.TypeToken;
 
 import cs.sii.bot.active.CryptoAuth;
 import cs.sii.config.bot.Engine;

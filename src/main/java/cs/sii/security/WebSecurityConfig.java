@@ -33,7 +33,7 @@ protected void configure(HttpSecurity http) throws Exception {
 
 	http
     .authorizeRequests()
-        .antMatchers("/", "/home","/welcome","/hmac").permitAll()
+        .antMatchers("/", "/home","/welcome","/hmac","/index").permitAll()
         .and()
     .formLogin()
         .loginPage("/login")
