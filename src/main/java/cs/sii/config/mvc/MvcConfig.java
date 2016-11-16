@@ -14,6 +14,7 @@ import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
+import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
 import cs.sii.model.RoleToUserProfileConverter;
 
@@ -28,7 +29,7 @@ import cs.sii.model.RoleToUserProfileConverter;
 
 
 @Configuration
-public class MvcConfig {
+public class MvcConfig extends WebMvcConfigurerAdapter{
     
 //	@Override
 //  public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
@@ -53,26 +54,28 @@ public class MvcConfig {
 //		registry.addViewController("/").setViewName("test");
 //	}
 //	
-//	/**
-//     * Configure ResourceHandlers to serve static resources like CSS/ Javascript etc...
-//     */
-//    @Override
-//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-//        registry.addResourceHandler("/templates/**").addResourceLocations("/templates/");
-//    }
+	/**
+     * Configure ResourceHandlers to serve static resources like CSS/ Javascript etc...
+     */
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/templates/**").addResourceLocations("/templates/");
+        registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
+        registry.addResourceHandler("/static/**").addResourceLocations("/static/");
+    }
 //	
-//	/**
-//     * Configure ViewResolvers to deliver preferred views.
-//     */
-//	@Override
-//	public void configureViewResolvers(ViewResolverRegistry registry) {
-//
-//		InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-//		viewResolver.setViewClass(JstlView.class);
-//		viewResolver.setPrefix("classpath:/templates/");
-//		viewResolver.setSuffix(".jsp");
-//		registry.viewResolver(viewResolver);
-//	}
+	/**
+     * Configure ViewResolvers to deliver preferred views.
+     */
+	@Override
+	public void configureViewResolvers(ViewResolverRegistry registry) {
+
+		UrlBasedViewResolver viewResolver = new UrlBasedViewResolver();
+		viewResolver.setViewClass(JstlView.class);
+		viewResolver.setPrefix("classpath:/templates/");
+		viewResolver.setSuffix(".jsp");
+		registry.viewResolver(viewResolver);
+	}
 //	
 //    
 //    /**
