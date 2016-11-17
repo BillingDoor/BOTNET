@@ -16,29 +16,31 @@ import org.hibernate.validator.constraints.NotEmpty;
 import cs.sii.model.IP;
 
 @Entity
-@Table(name="Botter")
-public class Botter implements Serializable{
+@Table(name="Bot")
+public class Bot implements Serializable{
 	
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Integer id;
-	
+	private String id;
+		
 	@NotEmpty
 	@Column(name="Ip", nullable=false)
 	private String ip;
 	
+	@NotEmpty
+	@Column(name="Mac", nullable=false)
+	private String mac;
 	
-	//TODO bisogna cambiare  emttere la relazione many to many
-	// poiche ogni bot può essere assegnato a più utenti
 	@ManyToOne
 	@JoinColumn(name="User_id")
 	private User botUser;
 
 	
-	public Integer getId() {
+	public String getId() {
 		return id;
 	}
+	
 
-	public void setId(Integer id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -57,6 +59,17 @@ public class Botter implements Serializable{
 	public void setBotUser(User botUser) {
 		this.botUser = botUser;
 	}
+
+
+	public String getMac() {
+		return mac;
+	}
+
+
+	public void setMac(String mac) {
+		this.mac = mac;
+	}
+	
 	
 	
 	

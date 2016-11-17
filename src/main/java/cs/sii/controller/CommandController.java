@@ -112,7 +112,7 @@ public class CommandController {
     
     @RequestMapping(value = "/test", method = RequestMethod.GET)
    	public ModelAndView test() {
-    	ModelAndView mav = new ModelAndView("home");
+    	ModelAndView mav = new ModelAndView("test");
 
     	
     	return mav;

