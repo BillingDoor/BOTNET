@@ -26,6 +26,9 @@ public class Botter implements Serializable{
 	@Column(name="Ip", nullable=false)
 	private String ip;
 	
+	
+	//TODO bisogna cambiare  emttere la relazione many to many
+	// poiche ogni bot può essere assegnato a più utenti
 	@ManyToOne
 	@JoinColumn(name="User_id")
 	private User botUser;

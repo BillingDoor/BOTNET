@@ -111,27 +111,11 @@ public class CommandController {
     /////////////////////////////////////////////////////////////////////////
     
     @RequestMapping(value = "/test", method = RequestMethod.GET)
-   	public String test() {
+   	public ModelAndView test() {
+    	ModelAndView mav = new ModelAndView("home");
+
     	
-//    	Random rnd=new Random();
-//    	rnd.setSeed(100);
-//    	int j=0;
-//    	
-//    	j=rnd.nextInt();
-//    	int j2=rnd.nextInt();
-//    	
-//    	rnd.setSeed(j);
-//    	int j1=0;
-//    
-//    	j1=rnd.nextInt();
-//    	
-//    	
-//    	//Long keyNumber=new Long()
-//    	//Long iterationNumber=
-//    	System.out.println(j2);
-//    	System.out.println(j1);
-    	
-    	return "test";
+    	return mav;
    	}
     
 }
