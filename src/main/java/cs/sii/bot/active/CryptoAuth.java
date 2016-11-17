@@ -3,7 +3,9 @@ package cs.sii.bot.active;
 import java.util.HashMap;
 import java.util.Random;
 
+import javax.crypto.Cipher;
 import javax.crypto.Mac;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,19 +35,23 @@ public class CryptoAuth {
 	private String seedIterationGenerator1;
 	private String seedIterationGenerator2;
 	private String seedIterationGenerator3;
-
+	private String key;
+	private String initVector;
+	
 	private RWRandom rndIt = new RWRandom();
 	private RWRandom rndRnd = new RWRandom();
 
 	
 	
-	private HashMap<IP, Pairs<Long,Integer>> botSeed = new HashMap<>();
+	private HashMap<String, Pairs<Long,Integer>> botSeed = new HashMap<>();
 
 	public CryptoAuth() {
 		
 		seedIterationGenerator1 = "5E1CA498";
 		seedIterationGenerator2 = "5fffffffffffffdd";
 		seedIterationGenerator3 = "644666D8";
+		key = "af6ebe23eacced43"; // 128 bit key
+        initVector = "oggifuorepiove17"; // 16 bytes IV
 
 		
 		if(false){
@@ -156,12 +162,11 @@ public class CryptoAuth {
 		return hash;
 	}
 
-	public void addBotChallengeInfo(String ips,Long key, Integer value) {
+	public void addBotChallengeInfo(String idBot,Long key, Integer value) {
 		Pairs<Long, Integer> cs=new Pairs<>();
-		IP ip=new IP(ips);
 		cs.setValue1(key);
 		cs.setValue2(value);
-		botSeed.put(ip,cs);
+		botSeed.put(idBot,cs);
 	}
 
 	public boolean findBotChallengeInfo(String ips) {
@@ -171,10 +176,57 @@ public class CryptoAuth {
 		return false;
 	}
 
-	public HashMap<IP, Pairs<Long, Integer>> getBotSeed() {
+	public HashMap<String, Pairs<Long, Integer>> getBotSeed() {
 		return botSeed;
 	}
 
+	
+	
+	public String encrypt(String value) {
+        try {
+            IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
+            SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
+
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+            cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
+
+            byte[] encrypted = cipher.doFinal(value.getBytes());
+            System.out.println("encrypted string: "
+                    + Base64.encodeBase64String(encrypted));
+
+            return Base64.encodeBase64String(encrypted);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public String decrypt(String encrypted) {
+        try {
+            IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
+            SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
+
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+            cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
+
+            byte[] original = cipher.doFinal(Base64.decodeBase64(encrypted));
+
+            return new String(original);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return null;
+    }
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 

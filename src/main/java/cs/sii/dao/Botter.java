@@ -17,7 +17,7 @@ import cs.sii.model.IP;
 
 @Entity
 @Table(name="Bot")
-public class Bot implements Serializable{
+public class Botter implements Serializable{
 	
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private String id;
@@ -30,11 +30,24 @@ public class Bot implements Serializable{
 	@Column(name="Mac", nullable=false)
 	private String mac;
 	
+	@NotEmpty
+	@Column(name="OS", nullable=false)
+	private String os;
+	
 	@ManyToOne
-	@JoinColumn(name="User_id")
+	@JoinColumn(name="User_id",nullable= true)
 	private User botUser;
 
 	
+	public Botter(String idBot, String ip, String mac, String os) {
+		this.id=idBot;
+		this.ip=ip;
+		this.mac=mac;
+		this.os=os;
+		botUser=null;
+	}
+
+
 	public String getId() {
 		return id;
 	}

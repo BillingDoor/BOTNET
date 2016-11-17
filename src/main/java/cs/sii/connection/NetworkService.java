@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 import com.google.common.reflect.TypeToken;
 
 import cs.sii.config.bot.Engine;
-import cs.sii.dao.Bot;
+import cs.sii.dao.Botter;
 import cs.sii.model.Conversions;
 import cs.sii.model.IP;
 import cs.sii.model.SyncIpList;
@@ -89,7 +89,7 @@ public class NetworkService {
 		return ips;
 	}
 
-	private String getMac() {
+	public String getMac() {
 
 		InetAddress ip;
 		StringBuilder sb = new StringBuilder();
@@ -157,7 +157,7 @@ public class NetworkService {
 		return Boolean.FALSE;
 	}
 
-	public Bot generateID(){
+	public String generateID(){
 		
 		//TODO
 		//prendi il mac
@@ -172,10 +172,10 @@ public class NetworkService {
 	 	byte[] hash = DigestUtils.sha256(mac + milli + os);
 	 	
 	 	//salva hash su properties;
-	 	
+	 	engineBot.setIdBot(hash.toString());
 	 	
 		//genera Bot
-		return new Bot();
+		return hash.toString();
 		
 	}
 	

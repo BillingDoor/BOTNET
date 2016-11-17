@@ -23,6 +23,7 @@ public class Engine {
 		private int requestTimeout;
 		private int connectTimeout;
 		private int	readTimeout;
+		private String idBot;
 
 
 		public boolean isCommandandconquerStatus() {
@@ -78,6 +79,12 @@ public class Engine {
 		}
 		public void setReadTimeout(int readTimeout) {
 			this.readTimeout = readTimeout;
+		}
+		public String getIdBot() {
+			return idBot;
+		}
+		public void setIdBot(String idBot) {
+			this.idBot = idBot;
 		}		
 		
 		
