@@ -123,10 +123,10 @@ public class CommandController {
 	/////////////////////////////////////////////////////////////////////////
 
 	@RequestMapping(value = "/test", method = RequestMethod.GET)
-	public ModelAndView test() {
-		ModelAndView mav = new ModelAndView("test");
+	public String test() {
+		
 
-		return mav;
+		return "white";
 	}
 
 	@RequestMapping(value = "/prova", method = RequestMethod.GET)
