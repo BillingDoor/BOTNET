@@ -53,12 +53,10 @@ public class CryptoAuth {
 		key = "af6ebe23eacced43"; // 128 bit key
         initVector = "oggifuorepiove17"; // 16 bytes IV
 
-		
-		if(false){
-			rndIt.setSeed(Integer.parseInt(seedIterationGenerator1, 16));
-			rndRnd.setSeed(Long.parseLong(seedIterationGenerator2, 16));
+		rndIt.setSeed(Integer.parseInt(seedIterationGenerator1, 16));
+		rndRnd.setSeed(Long.parseLong(seedIterationGenerator2, 16));
 			
-		}
+		
 	
 	}
 
