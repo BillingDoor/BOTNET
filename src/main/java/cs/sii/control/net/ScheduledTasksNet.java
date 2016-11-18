@@ -1,4 +1,4 @@
-package cs.sii.bot.passive;
+package cs.sii.control.net;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -9,14 +9,15 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ScheduledTasks {
+public class ScheduledTasksNet {
 
-    private static final Logger log = LoggerFactory.getLogger(ScheduledTasks.class);
+    private static final Logger log = LoggerFactory.getLogger(ScheduledTasksNet.class);
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
     @Scheduled(fixedRate = 5000)
-    public void reportCurrentTime() {
+    public void pingCC() {
+    	//TODO PIng
         log.info("The time is now {}", dateFormat.format(new Date()));
     }
 }
