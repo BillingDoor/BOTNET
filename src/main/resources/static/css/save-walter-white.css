@@ -1,5 +1,5 @@
 html,body {
-	background: #1ba11a url(/static/img/tile.png) top left repeat;
+	background: #1ba11a url(/images/tile.png) top left repeat;
 	font-family: Comic Sans,Comic Sans MS,cursive;
 	margin: 0;
 	padding: 0;
@@ -83,10 +83,10 @@ img {
 	margin-left: 18px;
 }
 div.ribbons {
-	background: url(/static/img/bow_left.png) no-repeat 155px 70px;
+	background: url(/images/bow_left.png) no-repeat 155px 70px;
 }
 div.ribbons p {
-	background: url(/static/img/bow_right.png) no-repeat 655px 70px;
+	background: url(/images/bow_right.png) no-repeat 655px 70px;
 	padding: 22px;
 }
 .white {

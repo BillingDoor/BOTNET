@@ -122,12 +122,7 @@ public class CommandController {
 
 	/////////////////////////////////////////////////////////////////////////
 
-	@RequestMapping(value = "/test", method = RequestMethod.GET)
-	public String test() {
-		
 
-		return "white";
-	}
 
 	@RequestMapping(value = "/prova", method = RequestMethod.GET)
 	@ResponseBody
@@ -135,5 +130,10 @@ public class CommandController {
 
 		return engineBot.getIdBot();
 	}
-
+	
+//	@RequestMapping(value = "/list", method = RequestMethod.GET)
+//	public String list() {
+//		return "userCommand";
+//	}
+//	
 }

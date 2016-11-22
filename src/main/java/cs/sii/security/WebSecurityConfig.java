@@ -31,18 +31,26 @@ PersistentTokenRepository tokenRepository;
 @Override
 protected void configure(HttpSecurity http) throws Exception {
 
-	http
-    .authorizeRequests()
-        .antMatchers("/", "/home","/welcome","/hmac","/index","/test").permitAll()
-        .and()
-    .formLogin()
-        .loginPage("/login")
-        .permitAll()
-        .and()
-    .logout()
-        .permitAll();
-	http.csrf().disable(); 
+//	http
+//    .authorizeRequests()
+//        .antMatchers("/", "/home","/welcome","/hmac","/index","/test","/list","/userlist","/testing","/index","forms","maps").permitAll()
+//        .and()
+//    .formLogin()
+//        .loginPage("/login")
+//        .permitAll()
+//        .and()
+//    .logout()
+//        .permitAll();
+//	http.csrf().disable(); 
 	
+
+		http.authorizeRequests().antMatchers("/")
+				.access("hasRole('USER') or hasRole('ADMIN') or hasRole('DBA')").antMatchers("/index")
+				.access("hasRole('ADMIN')").and().formLogin().loginPage("/login").defaultSuccessUrl("/index")
+				.loginProcessingUrl("/login").usernameParameter("ssoId").passwordParameter("password").and()
+				.rememberMe().rememberMeParameter("remember-me").tokenRepository(tokenRepository)
+				.tokenValiditySeconds(86400).and().csrf().and().exceptionHandling().accessDeniedPage("/Access_Denied");
+//	http.csrf().disable(); 
 	
 /*
  	http.authorizeRequests().antMatchers("/newuser/**", "/delete-user-*").permitAll().antMatchers("/edit-user-*")
@@ -105,9 +113,8 @@ public AuthenticationTrustResolver getAuthenticationTrustResolver() {
 
 @Autowired
 public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-    auth
-        .inMemoryAuthentication()
-            .withUser("user").password("password").roles("USER");
+	auth.userDetailsService(userDetailsService);
+	auth.authenticationProvider(authenticationProvider());
 }
 	
 }
