@@ -30,11 +30,12 @@ public class SiteController {
 	
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login() {		
-			if (isCurrentAuthenticationAnonymous()) {
-				return "login";
-		    } else {
-		    	return "redirect:/index";  
-		    }
+//			if (isCurrentAuthenticationAnonymous()) {
+//				return "login";
+//		    } else {
+//		    	return "redirect:/index";  
+//		    }
+		return "login";
 	}
 	
 //	@PreAuthorize("hasRole('ADMIN')")
