@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import cs.sii.model.role.Role;
 import cs.sii.model.user.User;
 import cs.sii.model.user.UserRepository;
 
@@ -42,13 +43,13 @@ public class CustomUserDetailsService implements UserDetailsService{
 	
 	private List<GrantedAuthority> getGrantedAuthorities(User user){
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-		/*
-		for(Role role : user.getUserProfiles()){
+		
+		for(Role role : user.getUserRoles()){
 			logger.info("UserProfile : {}", role);
 			authorities.add(new SimpleGrantedAuthority("ROLE_"+role.getType()));
 		}
-		*/
-		authorities.add(new SimpleGrantedAuthority("ROLE_"+user.getUserRole().getType()));
+		
+//		authorities.add(new SimpleGrantedAuthority("ROLE_"+user.getUserRole().getType()));
 		
 		logger.info("authorities : {}", authorities);
 		return authorities;

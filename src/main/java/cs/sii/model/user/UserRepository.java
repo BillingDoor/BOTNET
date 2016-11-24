@@ -14,4 +14,6 @@ public interface UserRepository extends CrudRepository<User,String> {
 	User findBySsoId(@Param("ssoId")String ssoId);
 	
 	User findById(@Param("id")Integer id);
+	
+	List<User> findAll();
 }

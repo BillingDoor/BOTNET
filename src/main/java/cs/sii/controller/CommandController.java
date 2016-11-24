@@ -26,7 +26,7 @@ import cs.sii.connection.NetworkService;
 import cs.sii.domain.IP;
 import cs.sii.domain.Pairs;
 import cs.sii.model.bot.Bot;
-import cs.sii.model.bot.BotrRepository;
+import cs.sii.model.bot.BotRepository;
 
 @Controller
 public class CommandController {
@@ -38,7 +38,7 @@ public class CommandController {
 	private CryptoAuth auth;
 
 	@Autowired
-	private BotrRepository botRepository;
+	private BotRepository botRepository;
 
 	@Autowired
 	private NetworkService networkService;

@@ -8,13 +8,13 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>User Registration Form</title>
-	<link href="<c:url value='/static/css/bootstrap.css' />" rel="stylesheet"></link>
-	<link href="<c:url value='/static/css/app.css' />" rel="stylesheet"></link>
+	<link href="<c:url value='css/bootstrap.css' />" rel="stylesheet"></link>
+	<link href="<c:url value='css/app.css' />" rel="stylesheet"></link>
 </head>
 
 <body>
  	<div class="generic-container">
-		<%@include file="authheader.jsp" %>
+	<%-- 	<%@include file="authheader.jsp" %> --%>
 
 		<div class="well lead">User Registration Form</div>
 	 	<form:form method="POST" modelAttribute="user" class="form-horizontal">
@@ -89,11 +89,11 @@
 	
 			<div class="row">
 				<div class="form-group col-md-12">
-					<label class="col-md-3 control-lable" for="userProfiles">Roles</label>
+					<label class="col-md-3 control-lable" for="userRoles">Roles</label>
 					<div class="col-md-7">
-						<form:select path="userProfiles" items="${roles}" multiple="true" itemValue="id" itemLabel="type" class="form-control input-sm" />
+						<form:select path="userRoles" items="${roles}" multiple="true" itemValue="id" itemLabel="type" class="form-control input-sm" />
 						<div class="has-error">
-							<form:errors path="userProfiles" class="help-inline"/>
+							<form:errors path="userRoles" class="help-inline"/>
 						</div>
 					</div>
 				</div>
@@ -103,10 +103,10 @@
 				<div class="form-actions floatRight">
 					<c:choose>
 						<c:when test="${edit}">
-							<input type="submit" value="Update" class="btn btn-primary btn-sm"/> or <a href="<c:url value='/list' />">Cancel</a>
+							<input type="submit" value="Update" class="btn btn-primary btn-sm"/> or <a href="<c:url value='/white' />">Cancel</a>
 						</c:when>
 						<c:otherwise>
-							<input type="submit" value="Register" class="btn btn-primary btn-sm"/> or <a href="<c:url value='/list' />">Cancel</a>
+							<input type="submit" value="Register" class="btn btn-primary btn-sm"/> or <a href="<c:url value='/white' />">Cancel</a>
 						</c:otherwise>
 					</c:choose>
 				</div>

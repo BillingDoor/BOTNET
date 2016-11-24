@@ -48,18 +48,16 @@ public class User implements Serializable{
 	@Column(name="Email", nullable=false)
 	private String email;
 
-	@ManyToOne
-	@JoinColumn(name="Role_id")
-	private Role userRole;
+	//@ManyToOne
+	//@JoinColumn(name="Role_id")
+	//private Role userRole;
 	
-/*	
 	@NotEmpty
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "APP_USER_USER_PROFILE", 
-             joinColumns = { @JoinColumn(name = "USER_ID") }, 
-             inverseJoinColumns = { @JoinColumn(name = "USER_PROFILE_ID") })
-             */
-	
+	@JoinTable(name = "App_User_Role", 
+             joinColumns = { @JoinColumn(name = "User_id") }, 
+             inverseJoinColumns = { @JoinColumn(name = "Role_id") })
+	private Set<Role> userRoles = new HashSet<Role>();
 	
 	public Integer getId() {
 		return id;
@@ -109,12 +107,15 @@ public class User implements Serializable{
 		this.email = email;
 	}
 
-	public Role getUserRole() {
-		return userRole;
+	
+	
+	
+	public Set<Role> getUserRoles() {
+		return userRoles;
 	}
 
-	public void setUserRole(Role userRole) {
-		this.userRole = userRole;
+	public void setUserRoles(Set<Role> userRoles) {
+		this.userRoles = userRoles;
 	}
 
 	@Override
