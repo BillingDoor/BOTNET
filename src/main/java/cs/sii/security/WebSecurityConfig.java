@@ -49,7 +49,7 @@ protected void configure(HttpSecurity http) throws Exception {
 				.loginProcessingUrl("/login").usernameParameter("ssoId").passwordParameter("password").and()
 				.rememberMe().rememberMeParameter("remember-me").tokenRepository(tokenRepository)
 				.tokenValiditySeconds(86400).and().csrf().and().exceptionHandling().accessDeniedPage("/Access_Denied");
-//	http.csrf().disable(); 
+	//http.csrf().disable(); 
 	
 /*
  	http.authorizeRequests().antMatchers("/newuser/**", "/delete-user-*").permitAll().antMatchers("/edit-user-*")

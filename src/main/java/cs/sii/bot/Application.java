@@ -12,7 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
 
-import cs.sii.bot.passive.Bot;
+import cs.sii.bot.passive.BotInitialize;
 
 @SpringBootApplication
 @ComponentScan("cs.sii")
@@ -21,7 +21,7 @@ import cs.sii.bot.passive.Bot;
 public class Application {
 
 	@Autowired
-	private Bot bot;
+	private BotInitialize bot;
 	
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);

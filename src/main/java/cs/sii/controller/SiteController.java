@@ -1,7 +1,10 @@
 package cs.sii.controller;
 
+import java.util.Locale;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -11,8 +14,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
 
 @Controller
 public class SiteController {
@@ -71,6 +78,56 @@ public class SiteController {
 		}
 		return "white";
 	}
+	
+	
+	
+	
+	
+//	
+//	/**
+//	 * This method will be called on form submission, handling POST request for
+//	 * saving user in database. It also validates the user input
+//	 */
+//	@RequestMapping(value = { "/newuser" }, method = RequestMethod.POST)
+//	public String saveUser(@Valid User user, BindingResult result,ModelMap model) {
+//
+//		if (result.hasErrors()) {
+//			return "registration";
+//		}
+//
+//		/*
+//		 * Preferred way to achieve uniqueness of field [sso] should be implementing custom @Unique annotation 
+//		 * and applying it on field [sso] of Model class [User].
+//		 * 
+//		 * Below mentioned peace of code [if block] is to demonstrate that you can fill custom errors outside the validation
+//		 * framework as well while still using internationalized messages.
+//		 * 
+//		 */
+//		if(!userService.isUserSSOUnique(user.getId(), user.getSsoId())){
+//			FieldError ssoError =new FieldError("user","ssoId",messageSource.getMessage("non.unique.ssoId", new String[]{user.getSsoId()}, Locale.getDefault()));
+//		    result.addError(ssoError);
+//			return "registration";
+//		}
+//		
+//		userService.saveUser(user);
+//
+//		model.addAttribute("success", "User " + user.getFirstName() + " "+ user.getLastName() + " registered successfully");
+//		model.addAttribute("loggedinuser", getPrincipal());
+//		//return "success";
+//		return "registrationsuccess";
+//	}
+//	
+//	
+//	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	private String getPrincipal(){
 		String userName = null;

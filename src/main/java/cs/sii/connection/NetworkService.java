@@ -21,7 +21,7 @@ import cs.sii.config.bot.Engine;
 import cs.sii.domain.Conversions;
 import cs.sii.domain.IP;
 import cs.sii.domain.SyncIpList;
-import cs.sii.model.bot.Botter;
+import cs.sii.model.bot.Bot;
 
 @Service("NetworkService")
 public class NetworkService {

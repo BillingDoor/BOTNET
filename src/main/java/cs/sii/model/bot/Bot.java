@@ -18,11 +18,14 @@ import cs.sii.model.user.User;
 
 @Entity
 @Table(name="Bot")
-public class Botter implements Serializable{
+public class Bot implements Serializable{
 	
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
-	private String id;
+	private Integer id;
 		
+	@Column(name="idBot", nullable=false)
+	private String idBot;
+	
 	@NotEmpty
 	@Column(name="Ip", nullable=false)
 	private String ip;
@@ -40,22 +43,28 @@ public class Botter implements Serializable{
 	private User botUser;
 
 	
-	public Botter(String idBot, String ip, String mac, String os) {
-		this.id=idBot;
-		this.ip=ip;
-		this.mac=mac;
-		this.os=os;
-		botUser=null;
+	public Bot(String idBot, String ip, String mac, User botUser) {
+		super();
+		this.idBot = idBot;
+		this.ip = ip;
+		this.mac = mac;
+		this.botUser = botUser;
 	}
 
-
-	public String getId() {
+	public Integer getId() {
 		return id;
 	}
-	
 
-	public void setId(String id) {
+	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public String getIdBot() {
+		return idBot;
+	}
+
+	public void setIdBot(String idBot) {
+		this.idBot = idBot;
 	}
 
 	public String getIp() {
@@ -64,6 +73,22 @@ public class Botter implements Serializable{
 
 	public void setIp(String ip) {
 		this.ip = ip;
+	}
+
+	public String getMac() {
+		return mac;
+	}
+
+	public void setMac(String mac) {
+		this.mac = mac;
+	}
+
+	public String getOs() {
+		return os;
+	}
+
+	public void setOs(String os) {
+		this.os = os;
 	}
 
 	public User getBotUser() {
@@ -75,16 +100,6 @@ public class Botter implements Serializable{
 	}
 
 
-	public String getMac() {
-		return mac;
-	}
-
-
-	public void setMac(String mac) {
-		this.mac = mac;
-	}
-	
-	
 	
 	
 }

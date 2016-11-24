@@ -167,9 +167,9 @@ public class CryptoAuth {
 		botSeed.put(idBot,cs);
 	}
 
-	public boolean findBotChallengeInfo(String ips) {
-		IP ip=new IP(ips);
-		if (botSeed.get(ip) != null)
+	public boolean findBotChallengeInfo(String idBot) {
+		//IP ip=new IP(ips);
+		if (botSeed.get(idBot) != null)
 			return true;
 		return false;
 	}
