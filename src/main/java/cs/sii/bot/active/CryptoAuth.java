@@ -12,10 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cs.sii.config.bot.Engine;
-import cs.sii.model.Conversions;
-import cs.sii.model.IP;
-import cs.sii.model.Pairs;
-import cs.sii.model.RWRandom;
+import cs.sii.domain.Conversions;
+import cs.sii.domain.IP;
+import cs.sii.domain.Pairs;
+import cs.sii.domain.RWRandom;
 
 /**
  * @author chris

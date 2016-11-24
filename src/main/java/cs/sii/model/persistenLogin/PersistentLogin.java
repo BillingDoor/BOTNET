@@ -1,4 +1,4 @@
-package cs.sii.dao;
+package cs.sii.model.persistenLogin;
 
 import java.io.Serializable;
 import java.util.Date;

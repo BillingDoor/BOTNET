@@ -14,8 +14,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import cs.sii.dao.User;
-import cs.sii.dao.UserRepository;
+import cs.sii.model.user.User;
+import cs.sii.model.user.UserRepository;
 
 
 

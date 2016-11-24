@@ -1,4 +1,4 @@
-package cs.sii.dao;
+package cs.sii.model.role;
 
 import java.io.Serializable;
 

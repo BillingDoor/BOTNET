@@ -23,10 +23,10 @@ import cs.sii.bot.active.CryptoAuth;
 import cs.sii.bot.passive.Bot;
 import cs.sii.config.bot.Engine;
 import cs.sii.connection.NetworkService;
-import cs.sii.dao.Botter;
-import cs.sii.dao.BotterRepository;
-import cs.sii.model.IP;
-import cs.sii.model.Pairs;
+import cs.sii.domain.IP;
+import cs.sii.domain.Pairs;
+import cs.sii.model.bot.Botter;
+import cs.sii.model.bot.BotterRepository;
 
 @Controller
 public class CommandController {

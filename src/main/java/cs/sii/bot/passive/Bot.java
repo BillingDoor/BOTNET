@@ -18,9 +18,9 @@ import cs.sii.bot.active.CryptoAuth;
 import cs.sii.config.bot.Engine;
 import cs.sii.connection.AsyncRequest;
 import cs.sii.connection.NetworkService;
-import cs.sii.model.Conversions;
-import cs.sii.model.FileUtil;
-import cs.sii.model.Pairs;
+import cs.sii.domain.Conversions;
+import cs.sii.domain.FileUtil;
+import cs.sii.domain.Pairs;
 import javassist.bytecode.ByteArray;
 import javassist.compiler.SymbolTable;
 

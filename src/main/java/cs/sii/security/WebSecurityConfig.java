@@ -31,21 +31,20 @@ PersistentTokenRepository tokenRepository;
 @Override
 protected void configure(HttpSecurity http) throws Exception {
 
-//	http
-//    .authorizeRequests()
-//        .antMatchers("/", "/home","/welcome","/hmac","/index","/test","/list","/userlist","/testing","/index","forms","maps").permitAll()
-//        .and()
-//    .formLogin()
-//        .loginPage("/login")
-//        .permitAll()
-//        .and()
-//    .logout()
-//        .permitAll();
-//	http.csrf().disable(); 
-	
+/*	http
+    .authorizeRequests()
+        .antMatchers("/", "/home","/welcome","/hmac","/index","/test","/list","/userlist","/testing","/index","forms","maps").permitAll()
+        .and()
+    .formLogin()
+        .loginPage("/login")
+       .permitAll()
+       .and()
+   .logout()
+        .permitAll();
+	http.csrf().disable(); 
+*/	
 
-		http.authorizeRequests().antMatchers("/")
-				.access("hasRole('USER') or hasRole('ADMIN') or hasRole('DBA')").antMatchers("/index")
+		http.authorizeRequests().antMatchers("/").permitAll().antMatchers("/index")
 				.access("hasRole('ADMIN')").and().formLogin().loginPage("/login").defaultSuccessUrl("/index")
 				.loginProcessingUrl("/login").usernameParameter("ssoId").passwordParameter("password").and()
 				.rememberMe().rememberMeParameter("remember-me").tokenRepository(tokenRepository)

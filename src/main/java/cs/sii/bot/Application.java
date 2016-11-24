@@ -9,12 +9,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 import cs.sii.bot.passive.Bot;
 
 @SpringBootApplication
 @ComponentScan("cs.sii")
+@EnableJpaRepositories("cs.sii")
 @EnableAsync
 public class Application {
 

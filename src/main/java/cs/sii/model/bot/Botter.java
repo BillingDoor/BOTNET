@@ -1,4 +1,4 @@
-package cs.sii.dao;
+package cs.sii.model.bot;
 
 import java.io.Serializable;
 
@@ -13,7 +13,8 @@ import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-import cs.sii.model.IP;
+import cs.sii.domain.IP;
+import cs.sii.model.user.User;
 
 @Entity
 @Table(name="Bot")

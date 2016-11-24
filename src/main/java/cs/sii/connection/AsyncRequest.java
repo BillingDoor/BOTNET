@@ -3,9 +3,9 @@ package cs.sii.connection;
 
 import com.google.common.reflect.TypeToken;
 
-import cs.sii.model.Conversions;
-import cs.sii.model.IP;
-import cs.sii.model.Pairs;
+import cs.sii.domain.Conversions;
+import cs.sii.domain.IP;
+import cs.sii.domain.Pairs;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;

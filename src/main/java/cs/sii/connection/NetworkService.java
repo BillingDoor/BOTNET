@@ -18,10 +18,10 @@ import org.springframework.stereotype.Service;
 import com.google.common.reflect.TypeToken;
 
 import cs.sii.config.bot.Engine;
-import cs.sii.dao.Botter;
-import cs.sii.model.Conversions;
-import cs.sii.model.IP;
-import cs.sii.model.SyncIpList;
+import cs.sii.domain.Conversions;
+import cs.sii.domain.IP;
+import cs.sii.domain.SyncIpList;
+import cs.sii.model.bot.Botter;
 
 @Service("NetworkService")
 public class NetworkService {

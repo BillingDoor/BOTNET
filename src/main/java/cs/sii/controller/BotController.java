@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cs.sii.bot.active.CryptoAuth;
 import cs.sii.config.bot.Engine;
-import cs.sii.model.RWRandom;
+import cs.sii.domain.RWRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

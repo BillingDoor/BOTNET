@@ -1,4 +1,4 @@
-package cs.sii.model;
+package cs.sii.domain;
 
 import java.util.Random;
 import org.springframework.stereotype.Component;
