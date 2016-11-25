@@ -9,6 +9,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import cs.sii.config.bot.Engine;
@@ -17,10 +18,7 @@ import cs.sii.domain.IP;
 import cs.sii.domain.Pairs;
 import cs.sii.domain.RWRandom;
 
-/**
- * @author chris
- *
- */
+
 @Service
 public class CryptoAuth {
 
@@ -54,10 +52,7 @@ public class CryptoAuth {
         initVector = "oggifuorepiove17"; // 16 bytes IV
 
 		rndIt.setSeed(Integer.parseInt(seedIterationGenerator1, 16));
-		rndRnd.setSeed(Long.parseLong(seedIterationGenerator2, 16));
-			
-		
-	
+		rndRnd.setSeed(Long.parseLong(seedIterationGenerator2, 16));	
 	}
 
 	// TODO creare metodo per la generazione del Seed

@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.h2.util.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,13 +35,16 @@ public void encodeToFile(ArrayList<Object> data) throws FileNotFoundException, U
 }
 	
 
-public String decodeFromFile(){
-	String data=new String();
+public ArrayList<String> decodeFromFile(){
 	BufferedReader br;
-
+	ArrayList<String> data=new ArrayList<String>();
 	try {
 		 br = new BufferedReader(new FileReader(filename));
-		data=br.readLine();
+		 String rd;
+		 while((rd=br.readLine())!=null){
+			 data.add(auth.decrypt(rd));
+		 }
+		
 	} catch (IOException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();

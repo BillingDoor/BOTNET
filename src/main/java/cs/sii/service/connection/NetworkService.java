@@ -175,7 +175,9 @@ public class NetworkService {
 	 	engineBot.setIdBot(hash.toString());
 	 	
 		//genera Bot
-		return hash.toString();
+		String result=hash.toString();
+		System.out.println("test "+result);
+		return result;
 		
 	}
 	
