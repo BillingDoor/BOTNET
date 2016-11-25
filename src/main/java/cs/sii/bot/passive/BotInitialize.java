@@ -16,11 +16,11 @@ import org.springframework.web.client.RestTemplate;
 
 import cs.sii.bot.active.CryptoAuth;
 import cs.sii.config.bot.Engine;
-import cs.sii.connection.AsyncRequest;
-import cs.sii.connection.NetworkService;
 import cs.sii.domain.Conversions;
 import cs.sii.domain.FileUtil;
 import cs.sii.domain.Pairs;
+import cs.sii.service.connection.AsyncRequest;
+import cs.sii.service.connection.NetworkService;
 import javassist.bytecode.ByteArray;
 import javassist.compiler.SymbolTable;
 

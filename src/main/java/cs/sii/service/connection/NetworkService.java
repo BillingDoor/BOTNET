@@ -1,4 +1,4 @@
-package cs.sii.connection;
+package cs.sii.service.connection;
 
 import java.lang.reflect.Type;
 import java.net.InetAddress;

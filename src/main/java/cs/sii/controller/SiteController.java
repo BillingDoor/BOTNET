@@ -26,7 +26,8 @@ import cs.sii.model.role.Role;
 import cs.sii.model.role.RoleRepository;
 import cs.sii.model.user.User;
 import cs.sii.model.user.UserRepository;
-import cs.sii.service.user.UserServiceImpl;
+import cs.sii.service.dao.RoleServiceImpl;
+import cs.sii.service.dao.UserServiceImpl;
 
 
 @Controller
@@ -42,7 +43,8 @@ public class SiteController {
 	UserServiceImpl userService;
 	
 	@Autowired
-	RoleRepository roleRepository;
+	RoleServiceImpl roleService;
+	
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String Home() {
@@ -158,7 +160,7 @@ public class SiteController {
 	 */
 	@ModelAttribute("roles")
 	public List<Role> initializeProfiles() {
-		return roleRepository.findAll();
+		return roleService.getRoleRepository().findAll();
 	}
 	
 	

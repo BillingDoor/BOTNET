@@ -1,4 +1,4 @@
-package cs.sii.connection;
+package cs.sii.service.connection;
 
 
 import com.google.common.reflect.TypeToken;
