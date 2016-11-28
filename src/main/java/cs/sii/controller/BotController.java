@@ -23,10 +23,10 @@ public class BotController {
 	@Autowired
 	CryptoAuth crypto;
     
-    @RequestMapping("/Bot")
-    public String index() {
-        return "Bot is Ready";
-    }
+//    @RequestMapping("/Bot")
+//    public String index() {
+//        return "Bot is Ready";
+//    }
     
     
     @RequestMapping("/SetDelay")
