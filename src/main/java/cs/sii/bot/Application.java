@@ -17,7 +17,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import cs.sii.bot.active.CryptoPKI;
 import cs.sii.bot.passive.BotInitialize;
 import cs.sii.domain.FileUtil;
-import cs.sii.service.connection.NetworkService;
 
 @SpringBootApplication
 @ComponentScan("cs.sii")
