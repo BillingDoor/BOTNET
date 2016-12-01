@@ -14,43 +14,68 @@ import org.h2.util.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import cs.sii.bot.active.CryptoAuth;
+import cs.sii.bot.active.BotAuth;
+import cs.sii.service.crypto.CryptoUtils;
 
 @Component
 public class FileUtil {
 	
 	@Autowired
-	CryptoAuth auth;
+	CryptoUtils cryptoUtils;
 	
 	private String filename="nfo.dll";
 	private String codec="UTF-8";
 	
-public void encodeToFile(ArrayList<Object> data) throws FileNotFoundException, UnsupportedEncodingException{
-	PrintWriter writer = new PrintWriter(filename, codec);
-	for(Object obj:data){
-		writer.println(auth.encrypt(obj.toString()));
-	}
-    writer.close();
 	
-}
+	public void writeObjToFile(String filename, ArrayList<Object> data) {
+		if (filename == "") filename= this.filename;
+
+		PrintWriter writer;
+		try {
+			writer = new PrintWriter(filename, codec);
+			for(Object obj:data){
+				writer.println(obj.toString());
+			}
+		    writer.close();
+		} catch (FileNotFoundException | UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}	
 	
 
-public ArrayList<String> decodeFromFile(){
+
+
+public ArrayList<String> readObjFromFile(String filename){
+	if (filename == "") filename= this.filename;
 	BufferedReader br;
 	ArrayList<String> data=new ArrayList<String>();
 	try {
 		 br = new BufferedReader(new FileReader(filename));
 		 String rd;
 		 while((rd=br.readLine())!=null){
-			 data.add(auth.decrypt(rd));
+			 data.add(rd);
 		 }
 		
 	} catch (IOException e) {
-		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
 	return data;
 	}
+	
+	
+	
+//public void encodeObjToFile(String data) throws FileNotFoundException, UnsupportedEncodingException{
+//	PrintWriter writer = new PrintWriter(filename, codec);
+//		writer.println(cryptoUtils.encryptAES(data));
+//    writer.close();
+//	
+//}
+
+
+
 	
 	
 }

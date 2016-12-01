@@ -17,14 +17,17 @@ import cs.sii.domain.Conversions;
 import cs.sii.domain.IP;
 import cs.sii.domain.Pairs;
 import cs.sii.domain.RWRandom;
+import cs.sii.service.crypto.CryptoUtils;
 
 
 @Service
-public class CryptoAuth {
+public class BotAuth {
 
 	@Autowired
 	private Engine eng;
-	private static final String TYPE_MAC = "HmacSHA256";
+	
+	@Autowired
+	private CryptoUtils cry;
 
 	// TODO da decidere con stringa lunga
 	// Non necessità di essere cambiata nel tempo
@@ -33,8 +36,7 @@ public class CryptoAuth {
 	private String seedIterationGenerator1;
 	private String seedIterationGenerator2;
 	private String seedIterationGenerator3;
-	private String key;
-	private String initVector;
+
 	
 	private RWRandom rndIt = new RWRandom();
 	private RWRandom rndRnd = new RWRandom();
@@ -43,14 +45,12 @@ public class CryptoAuth {
 	
 	private HashMap<String, Pairs<Long,Integer>> botSeed = new HashMap<>();
 
-	public CryptoAuth() {
+	public BotAuth() {
 		
 		seedIterationGenerator1 = "5E1CA498";
 		seedIterationGenerator2 = "5fffffffffffffdd";
 		seedIterationGenerator3 = "644666D8";
-		key = "af6ebe23eacced43"; // 128 bit key
-        initVector = "oggifuorepiove17"; // 16 bytes IV
-
+	
 		rndIt.setSeed(Integer.parseInt(seedIterationGenerator1, 16));
 		rndRnd.setSeed(Long.parseLong(seedIterationGenerator2, 16));	
 	}
@@ -104,9 +104,27 @@ public class CryptoAuth {
 	 * genera la secret key da utilizzare per la funziona di Hmac
 	 */
 	public SecretKeySpec generateSecretKey(String stringKey) {
-		return new SecretKeySpec(stringKey.getBytes(), TYPE_MAC);
+		return new SecretKeySpec(stringKey.getBytes(), CryptoUtils.getTypeMac());
 	}
 
+	
+	
+	
+	
+
+	/**
+	 * genera un hmac 
+	 * 	 * 
+	 * @param hashMac
+	 * @return
+	 */
+	public String generateHmac(Long message, SecretKeySpec secretKey) {
+		 return cry.generateHmac(message, secretKey);
+	}
+	
+	
+	
+	
 	/**
 	 * valida un hmac generando localmente e verificando con i dati inviati
 	 * 
@@ -123,7 +141,7 @@ public class CryptoAuth {
 		SecretKeySpec secretKey = generateSecretKey(stringKey);
 		System.out.println("sck  "+secretKey);
 
-		if (generateHmac(keyNumber, secretKey).equals(hashMac)) {
+		if (cry.generateHmac(keyNumber, secretKey).equals(hashMac)) {
     		System.out.println("tr");
 
 			return true;
@@ -135,25 +153,6 @@ public class CryptoAuth {
 		}
 	}
 
-	/**
-	 * genera la stringa hash hmac
-	 * 
-	 * @param message
-	 * @return
-	 */
-	public String generateHmac(Long message, SecretKeySpec secretKey) {
-		String hash = "";
-		try {
-			Mac sha256_HMAC = Mac.getInstance(TYPE_MAC);
-			sha256_HMAC.init(secretKey);
-			hash = Base64.encodeBase64String(sha256_HMAC.doFinal(Conversions.longToBytes(message)));
-    		System.out.println("hash rifatto "+hash);
-
-		} catch (Exception e) {
-			System.out.println("Error");
-		}
-		return hash;
-	}
 
 	public void addBotChallengeInfo(String idBot,Long key, Integer value) {
 		Pairs<Long, Integer> cs=new Pairs<>();
@@ -172,49 +171,6 @@ public class CryptoAuth {
 	public HashMap<String, Pairs<Long, Integer>> getBotSeed() {
 		return botSeed;
 	}
-
-	
-	
-	public String encrypt(String value) {
-        try {
-            IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
-            SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
-
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
-            cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
-
-            byte[] encrypted = cipher.doFinal(value.getBytes());
-            System.out.println("encrypted string: "
-                    + Base64.encodeBase64String(encrypted));
-
-            return Base64.encodeBase64String(encrypted);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-        return null;
-    }
-
-    public String decrypt(String encrypted) {
-        try {
-            IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
-            SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
-
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
-            cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
-
-            byte[] original = cipher.doFinal(Base64.decodeBase64(encrypted));
-
-            return new String(original);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-        return null;
-    }
-	
-	
-	
 	
 	
 	

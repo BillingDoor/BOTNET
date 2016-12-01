@@ -14,9 +14,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
 
-import cs.sii.bot.active.CryptoPKI;
 import cs.sii.bot.passive.BotInitialize;
 import cs.sii.domain.FileUtil;
+import cs.sii.service.crypto.CryptoPKI;
 
 @SpringBootApplication
 @ComponentScan("cs.sii")

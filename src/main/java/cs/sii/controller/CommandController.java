@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import cs.sii.bot.active.CryptoAuth;
+import cs.sii.bot.active.BotAuth;
 import cs.sii.bot.passive.BotInitialize;
 import cs.sii.config.bot.Engine;
 import cs.sii.domain.IP;
@@ -37,7 +37,7 @@ public class CommandController {
 	private Engine engineBot;
 
 	@Autowired
-	private CryptoAuth auth;
+	private BotAuth auth;
 
 	@Autowired
 	private BotServiceImpl botService;
