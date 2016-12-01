@@ -1,5 +1,6 @@
 package cs.sii.service.crypto;
 
+import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
@@ -15,20 +16,22 @@ import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.ArrayList;
 
-import javax.crypto.*;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import cs.sii.domain.FileUtil;
-
 @Service
 public class CryptoPKI {
 
 	@Autowired
-	private FileUtil utils;
+	private CryptoUtils crypto;
 
 	/** Holds the cipher for this object **/
 	private Cipher cipher;
@@ -40,6 +43,11 @@ public class CryptoPKI {
 	/** Holds the public RSA key of this object **/
 	private PublicKey pubRSAKey;
 
+	/** Holds the private RSA key of this object **/
+	private PrivateKey privERSAKey;
+	/** Holds the public RSA key of this object **/
+	private PublicKey pubERSAKey;
+
 	/**
 	 * Creates a new MsgEncrypt object with no parameters in it
 	 * 
@@ -48,71 +56,141 @@ public class CryptoPKI {
 	 * @throws NoSuchProviderException
 	 * @throws InvalidKeyException
 	 */
+
 	public CryptoPKI()
 			throws NoSuchAlgorithmException, NoSuchProviderException, NoSuchPaddingException, InvalidKeyException {
 		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
-		cipher = Cipher.getInstance("RSA/None/NoPadding", "BC");
+		 //cipher = Cipher.getInstance("RSA/None/NoPadding", "BC");
+		cipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding", "BC");
+	//	cipher = Cipher.getInstance("RSA/None/PKCS1Padding","BC");
+		
 		signature = Signature.getInstance("SHA512WithRSA", "BC");
 	}
 
-
-	public void generateKeyRSA() throws NoSuchAlgorithmException, NoSuchProviderException {
+	public void generateKeyRSA() throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException {
 		// byte[] input = "aa".getBytes();
+
 		KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA", "BC");
 		generator.initialize(4096, new SecureRandom());
+
 		KeyPair keyPair = generator.generateKeyPair();
-		pubRSAKey = keyPair.getPublic();
-		privRSAKey = keyPair.getPrivate();
+		KeyFactory fact = KeyFactory.getInstance("RSA", "BC");
+
+		pubERSAKey = fact.generatePublic(new X509EncodedKeySpec(keyPair.getPublic().getEncoded()));
+		privERSAKey = fact.generatePrivate(new PKCS8EncodedKeySpec(keyPair.getPrivate().getEncoded()));
+		
+		pubRSAKey =pubERSAKey;
+		privRSAKey = privERSAKey;//privERSAKey;//
+	
+		
+		String encryptedValue = Base64.encodeBase64String(pubRSAKey.getEncoded());
+		String encryptedValue2 = Base64.encodeBase64String(pubERSAKey.getEncoded());
+		String encryptedValue3 = Base64.encodeBase64String(privRSAKey.getEncoded());
+		String encryptedValue4 = Base64.encodeBase64String(privERSAKey.getEncoded());
+
+		ArrayList<Object> pr = new ArrayList<Object>();
+		ArrayList<Object> pr2 = new ArrayList<Object>();
+		pr.add(encryptedValue);
+		pr.add(encryptedValue2);
+		pr2.add(encryptedValue3);
+		pr2.add(encryptedValue4);
+		crypto.encodeObjToFile("pub.txt", pr);
+		crypto.encodeObjToFile("priv.txt", pr2);
+
+		ArrayList<String> prB = crypto.decodeStringFromFile("pub.txt");
+		ArrayList<String> prB2 = crypto.decodeStringFromFile("priv.txt");
+		byte[] encoded = Base64.decodeBase64(prB.get(0));
+		pubRSAKey=fact.generatePublic(new X509EncodedKeySpec(encoded));
+	
+		byte[] encoded2 = Base64.decodeBase64(prB.get(1));
+		pubRSAKey=pubERSAKey=fact.generatePublic(new X509EncodedKeySpec(encoded2));
+	
+		byte[] encoded3 = Base64.decodeBase64(prB2.get(0));
+		privRSAKey=fact.generatePrivate(new PKCS8EncodedKeySpec(encoded3));
+	
+		byte[] encoded4 = Base64.decodeBase64(prB2.get(1));
+		privRSAKey=privERSAKey=fact.generatePrivate(new PKCS8EncodedKeySpec(encoded4));
+	
+				
+			
+			
+
+		System.out.println("pr " + pubRSAKey);
+		System.out.println("prE " + pubERSAKey);
+		System.out.println("pErFF " + privERSAKey);
+		System.out.println("prFF " + privRSAKey);
+		System.out.println("cane".getBytes("utf-8"));
+		System.out.println("cane".getBytes("utf-8").length);
+		
+		
+		String enc=encryptMessageRSA("gwugcauw",pubERSAKey);		
+		String dec=decryptMessageRSA(enc);
+		System.out.println("Risultato dog1= "+dec);
+		
+		// X509EncodedKeySpec publicKeySpec = new
+		// X509EncodedKeySpec(prB.get(0).getBytes());
+		//
+		// System.out.println("prFF " +
+		// fact.generatePublic(publicKeySpec).toString());
 
 	}
 
-	public String getPrKey(KeyPair keys) {
-		PrivateKey prKey = keys.getPrivate();
-		byte[] encodedKey = prKey.getEncoded();
-		return Base64.encodeBase64String(encodedKey);
+	private PublicKey rebuildPuK(String keyEncoding) throws NoSuchAlgorithmException, InvalidKeySpecException {
+		byte[] encoded = Base64.decodeBase64(keyEncoding);
+		PublicKey puK = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(encoded));
+		return puK;
 	}
+	// public String getPrKey(KeyPair keys) {
+	// PrivateKey prKey = keys.getPrivate();
+	// byte[] encodedKey = prKey.getEncoded();
+	// return Base64.encodeBase64String(encodedKey);
+	// }
+	//
+	// public String getPuKey(KeyPair keys) {
+	// PublicKey puKey = keys.getPublic();
+	// byte[] encodedKey = puKey.getEncoded();
+	// return Base64.encodeBase64String(encodedKey);
+	// }
 
-	public String getPuKey(KeyPair keys) {
-		PublicKey puKey = keys.getPublic();
-		byte[] encodedKey = puKey.getEncoded();
-		return Base64.encodeBase64String(encodedKey);
-	}
-
-	public String encryptMessageRSA(byte[] input, PublicKey receiverPubKey)
-			throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-		cipher.init(Cipher.ENCRYPT_MODE, receiverPubKey, new SecureRandom());
-		byte[] cipherText = cipher.doFinal(input);
-		System.out.println("cipher: " + new String(cipherText));
-		return new String(cipherText);
-	}
-
-	public  String cifra(String key, String msg) throws Exception {
-		Cipher cipher = Cipher.getInstance("RSA");
-		cipher.init(Cipher.ENCRYPT_MODE, rebuildPrK(key));
-		byte[] encVal = cipher.doFinal(msg.getBytes());
-		String encryptedValue = Base64.encodeBase64String(encVal);
+	public String encryptMessageRSA(String input, PublicKey receiverPubKey)
+			throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException {
+		
+		cipher.init(Cipher.ENCRYPT_MODE, receiverPubKey);
+		byte[] inputByte = input.getBytes("utf-8");
+		byte[] cipherText = cipher.doFinal(inputByte);
+		String encryptedValue = Base64.encodeBase64String(cipherText);
+		System.out.println("cipher: " + encryptedValue);
 		return encryptedValue;
 	}
 
-	public String decryptMessageRSA(byte[] cipherText)
-			throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+	// public String cifra(String key, String msg) throws Exception {
+	// Cipher cipher = Cipher.getInstance("RSA");
+	// cipher.init(Cipher.ENCRYPT_MODE, rebuildPrK(key));
+	// byte[] encVal = cipher.doFinal(msg.getBytes());
+	// String encryptedValue = Base64.encodeBase64String(encVal);
+	// return encryptedValue;
+	// }
+
+	public String decryptMessageRSA(String cipherText)
+			throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException {
 		cipher.init(Cipher.DECRYPT_MODE, privRSAKey);
-		byte[] plainText = cipher.doFinal(cipherText);
+		byte[] decodedValue = Base64.decodeBase64(cipherText);
+		byte[] plainText = cipher.doFinal(decodedValue);
 		System.out.println("plain : " + new String(plainText));
-		return new String(plainText);
+		return new String(plainText,"utf-8");
 	}
 
-	public  String decifra(String key, String msg) throws InvalidKeyException, IllegalBlockSizeException,
-			BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeySpecException {
-		Cipher cipher = Cipher.getInstance("RSA");
-		cipher.init(Cipher.DECRYPT_MODE, rebuildPuK(key));
-		byte[] decordedValue = Base64.decodeBase64(msg);
-		byte[] decValue = cipher.doFinal(decordedValue);
-		String decryptedValue = new String(decValue);
-		return decryptedValue;
-	}
-
-
+	// public String decifra(String key, String msg) throws InvalidKeyException,
+	// IllegalBlockSizeException,
+	// BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException,
+	// InvalidKeySpecException {
+	// Cipher cipher = Cipher.getInstance("RSA");
+	// cipher.init(Cipher.DECRYPT_MODE, rebuildPuK(key));
+	// byte[] decordedValue = Base64.decodeBase64(msg);
+	// byte[] decValue = cipher.doFinal(decordedValue);
+	// String decryptedValue = new String(decValue);
+	// return decryptedValue;
+	// }
 
 	public byte[] signMessageRSA(String message) throws SignatureException, InvalidKeyException {
 		signature.initSign(privRSAKey);
@@ -121,7 +199,6 @@ public class CryptoPKI {
 		byte[] sigBytes = signature.sign();
 		return sigBytes;
 	}
-
 
 	public Boolean validateSignedMessageRSA(String clearMessage, byte[] cipherMessage, PublicKey senderPubKey)
 			throws InvalidKeyException, SignatureException {
@@ -132,71 +209,62 @@ public class CryptoPKI {
 		return signature.verify(sigBytes);
 	}
 
-	private  PublicKey rebuildPuK(String keyEncoding) throws NoSuchAlgorithmException, InvalidKeySpecException {
-		byte[] encoded = Base64.decodeBase64(keyEncoding);
-		PublicKey puK = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(encoded));
-		return puK;
-	}
-
 	// NUll
-	private  PrivateKey rebuildPrK(String keyEncoding) throws Exception {
+	private PrivateKey rebuildPrK(String keyEncoding) throws Exception {
 		byte[] encoded = Base64.decodeBase64(keyEncoding);
 		PrivateKey prK = KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(encoded));
 		return prK;
 	}
-	
-	
-	
-	
 
-//	public void SaveKeyPair(String path, KeyPair keyPair) throws IOException {
-//		PrivateKey privateKey = keyPair.getPrivate();
-//		PublicKey publicKey = keyPair.getPublic();
-// 
-//		// Store Public Key.
-//		X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(
-//				publicKey.getEncoded());
-//		FileOutputStream fos = new FileOutputStream(path + "/public.key");
-//		fos.write(x509EncodedKeySpec.getEncoded());
-//		fos.close();
-// 
-//		// Store Private Key.
-//		PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(
-//				privateKey.getEncoded());
-//		fos = new FileOutputStream(path + "/private.key");
-//		fos.write(pkcs8EncodedKeySpec.getEncoded());
-//		fos.close();
-//	}
-// 
-//	public KeyPair LoadKeyPair(String path, String algorithm)
-//			throws IOException, NoSuchAlgorithmException,
-//			InvalidKeySpecException {
-//		// Read Public Key.
-//		File filePublicKey = new File(path + "/public.key");
-//		FileInputStream fis = new FileInputStream(path + "/public.key");
-//		byte[] encodedPublicKey = new byte[(int) filePublicKey.length()];
-//		fis.read(encodedPublicKey);
-//		fis.close();
-// 
-//		// Read Private Key.
-//		File filePrivateKey = new File(path + "/private.key");
-//		fis = new FileInputStream(path + "/private.key");
-//		byte[] encodedPrivateKey = new byte[(int) filePrivateKey.length()];
-//		fis.read(encodedPrivateKey);
-//		fis.close();
-// 
-//		// Generate KeyPair.
-//		KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
-//		X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(
-//				encodedPublicKey);
-//		PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
-// 
-//		PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(
-//				encodedPrivateKey);
-//		PrivateKey privateKey = keyFactory.generatePrivate(privateKeySpec);
-// 
-//		return new KeyPair(publicKey, privateKey);
-//	}
+	// public void SaveKeyPair(String path, KeyPair keyPair) throws IOException
+	// {
+	// PrivateKey privateKey = keyPair.getPrivate();
+	// PublicKey publicKey = keyPair.getPublic();
+	//
+	// // Store Public Key.
+	// X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(
+	// publicKey.getEncoded());
+	// FileOutputStream fos = new FileOutputStream(path + "/public.key");
+	// fos.write(x509EncodedKeySpec.getEncoded());
+	// fos.close();
+	//
+	// // Store Private Key.
+	// PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(
+	// privateKey.getEncoded());
+	// fos = new FileOutputStream(path + "/private.key");
+	// fos.write(pkcs8EncodedKeySpec.getEncoded());
+	// fos.close();
+	// }
+	//
+	// public KeyPair LoadKeyPair(String path, String algorithm)
+	// throws IOException, NoSuchAlgorithmException,
+	// InvalidKeySpecException {
+	// // Read Public Key.
+	// File filePublicKey = new File(path + "/public.key");
+	// FileInputStream fis = new FileInputStream(path + "/public.key");
+	// byte[] encodedPublicKey = new byte[(int) filePublicKey.length()];
+	// fis.read(encodedPublicKey);
+	// fis.close();
+	//
+	// // Read Private Key.
+	// File filePrivateKey = new File(path + "/private.key");
+	// fis = new FileInputStream(path + "/private.key");
+	// byte[] encodedPrivateKey = new byte[(int) filePrivateKey.length()];
+	// fis.read(encodedPrivateKey);
+	// fis.close();
+	//
+	// // Generate KeyPair.
+	// KeyFactory keyFactory = KeyFactory.getInstance(algorithm);
+	// X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(
+	// encodedPublicKey);
+	// PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
+	//
+	// PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(
+	// encodedPrivateKey);
+	// PrivateKey privateKey = keyFactory.generatePrivate(privateKeySpec);
+	//
+	// return new KeyPair(publicKey, privateKey);
+	// }
 
 	public PublicKey getPubRSAKey() {
 		return pubRSAKey;
@@ -214,7 +282,6 @@ public class CryptoPKI {
 		this.pubRSAKey = pubRSAkey;
 	}
 
-	
 	public void saveToFilePublic() {
 	}
 
@@ -227,7 +294,6 @@ public class CryptoPKI {
 	public void readFromFilePrivate() {
 	}
 
-	
 	//
 	// /**
 	// * Sets the public parameters to the ones given in string

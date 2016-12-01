@@ -12,12 +12,12 @@ import java.util.List;
 
 import org.h2.util.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import cs.sii.bot.active.BotAuth;
 import cs.sii.service.crypto.CryptoUtils;
 
-@Component
+@Service
 public class FileUtil {
 	
 	@Autowired

@@ -1,11 +1,5 @@
 package cs.sii.service.crypto;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import javax.crypto.Cipher;
@@ -15,11 +9,13 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.autoconfigure.ActuatorMetricWriter;
+import org.springframework.stereotype.Service;
 
 import cs.sii.domain.Conversions;
 import cs.sii.domain.FileUtil;
 
+
+@Service
 public class CryptoUtils {
 
 	
@@ -68,7 +64,7 @@ public class CryptoUtils {
 			cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
 
 			byte[] encrypted = cipher.doFinal(value.getBytes());
-			System.out.println("encrypted string: " + Base64.encodeBase64String(encrypted));
+//			System.out.println("encrypted string: " + Base64.encodeBase64String(encrypted));
 
 			return Base64.encodeBase64String(encrypted);
 		} catch (Exception ex) {
