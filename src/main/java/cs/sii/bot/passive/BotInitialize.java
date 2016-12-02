@@ -4,12 +4,14 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,27 +48,11 @@ public class BotInitialize {
 	public BotInitialize() {
 	}
 
-	public void initializeBot() throws IOException, NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+	public void initializeBot() throws IOException, NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, SignatureException {
 
-		ArrayList<String> param = new ArrayList<String>();
-		param = cryptoUtils.decodeStringFromFile("");
-		pki.generateKeyRSA();
-//
-//		if (param.size() > 0) {
-//			String idBot = param.get(0);
-//			
-//			System.out.println("pubK " + param.get(1));
-//			System.out.println("pivK " + param.get(2));
-//
-//		} else {
-//			pki.generateKeyRSA();
-//			ArrayList<Object> data = new ArrayList<Object>();
-//			data.add(networkService.generateID());
-//			data.add(pki.getPubRSAKey());
-//			data.add(pki.getPrivRSAKey());
-//			cryptoUtils.encodeObjToFile("",data);
-//			
-//		}
+//		ArrayList<String> param = new ArrayList<String>();
+//		param = cryptoUtils.decodeStringsFromFile("");
+		pki.readKeyFromFile();
 
 		if (!engineBot.isCommandandconquerStatus()) {
 

@@ -27,7 +27,46 @@ public class FileUtil {
 	private String codec="UTF-8";
 	
 	
-	public void writeObjToFile(String filename, ArrayList<Object> data) {
+	public void writeObjToFile(String filename, Object data) {
+		if (filename == "") filename= this.filename;
+
+		PrintWriter writer;
+		try {
+			writer = new PrintWriter(filename, codec);
+			
+				writer.println(data);
+			
+		    writer.close();
+		} catch (FileNotFoundException | UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}	
+	
+
+
+public String readObjFromFile(String filename){
+	if (filename == "") filename= this.filename;
+	BufferedReader br;
+	
+	try {
+		 br = new BufferedReader(new FileReader(filename));
+		 String rd;
+		 if((rd=br.readLine())!=null){
+			return rd;
+		 }
+		
+	} catch (IOException e) {
+		e.printStackTrace();
+	}
+	return null;
+	}
+	
+	
+	
+	public void writeObjsToFile(String filename, ArrayList<Object> data) {
 		if (filename == "") filename= this.filename;
 
 		PrintWriter writer;
@@ -48,7 +87,7 @@ public class FileUtil {
 
 
 
-public ArrayList<String> readObjFromFile(String filename){
+public ArrayList<String> readObjsFromFile(String filename){
 	if (filename == "") filename= this.filename;
 	BufferedReader br;
 	ArrayList<String> data=new ArrayList<String>();

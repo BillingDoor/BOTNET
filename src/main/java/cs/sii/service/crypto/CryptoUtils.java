@@ -1,9 +1,16 @@
 package cs.sii.service.crypto;
 
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.Mac;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -14,11 +21,9 @@ import org.springframework.stereotype.Service;
 import cs.sii.domain.Conversions;
 import cs.sii.domain.FileUtil;
 
-
 @Service
 public class CryptoUtils {
 
-	
 	@Autowired
 	private FileUtil fUtils;
 	private static final String TYPE_MAC = "HmacSHA256";
@@ -55,8 +60,19 @@ public class CryptoUtils {
 		return hash;
 	}
 
-	public String encryptAES(String value) {
-		try {
+	/**
+	 * @param value
+	 * @return
+	 * @throws NoSuchPaddingException 
+	 * @throws NoSuchAlgorithmException 
+	 * @throws UnsupportedEncodingException 
+	 * @throws InvalidAlgorithmParameterException 
+	 * @throws InvalidKeyException 
+	 * @throws BadPaddingException 
+	 * @throws IllegalBlockSizeException 
+	 */
+	public String encryptAES(String value) throws NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
+		
 			IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
 			SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
 
@@ -64,19 +80,25 @@ public class CryptoUtils {
 			cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
 
 			byte[] encrypted = cipher.doFinal(value.getBytes());
-//			System.out.println("encrypted string: " + Base64.encodeBase64String(encrypted));
+			// System.out.println("encrypted string: " +
+			// Base64.encodeBase64String(encrypted));
 
 			return Base64.encodeBase64String(encrypted);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-
-		return null;
 
 	}
 
-	public String decryptAES(String encrypted) {
-		try {
+	/**
+	 * @param encrypted
+	 * @return
+	 * @throws InvalidAlgorithmParameterException 
+	 * @throws InvalidKeyException 
+	 * @throws BadPaddingException 
+	 * @throws IllegalBlockSizeException 
+	 * @throws NoSuchPaddingException 
+	 * @throws NoSuchAlgorithmException 
+	 * @throws UnsupportedEncodingException 
+	 */
+	public String decryptAES(String encrypted) throws InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException {
 			IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
 			SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
 
@@ -86,38 +108,79 @@ public class CryptoUtils {
 			byte[] original = cipher.doFinal(Base64.decodeBase64(encrypted));
 
 			return new String(original);
-		} catch (Exception ex) {
-			ex.printStackTrace();
+	}
+
+	/**
+	 * @param filename
+	 * @param data
+	 * @throws BadPaddingException 
+	 * @throws IllegalBlockSizeException 
+	 * @throws InvalidAlgorithmParameterException 
+	 * @throws UnsupportedEncodingException 
+	 * @throws NoSuchPaddingException 
+	 * @throws NoSuchAlgorithmException 
+	 * @throws InvalidKeyException 
+	 */
+	public void encodeObjToFile(String filename, Object data) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
+
+		fUtils.writeObjToFile(filename, encryptAES(data.toString()));
+	}
+
+	/**
+	 * @param filename
+	 * @return
+	 * @throws UnsupportedEncodingException 
+	 * @throws NoSuchPaddingException 
+	 * @throws NoSuchAlgorithmException 
+	 * @throws BadPaddingException 
+	 * @throws IllegalBlockSizeException 
+	 * @throws InvalidAlgorithmParameterException 
+	 * @throws InvalidKeyException 
+	 */
+	public String decodeStringFromFile(String filename) throws InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException {
+		String data = fUtils.readObjFromFile(filename);
+
+		return decryptAES(data);
+	}
+
+	/**
+	 * @param filename
+	 * @param data
+	 * @throws BadPaddingException 
+	 * @throws IllegalBlockSizeException 
+	 * @throws InvalidAlgorithmParameterException 
+	 * @throws UnsupportedEncodingException 
+	 * @throws NoSuchPaddingException 
+	 * @throws NoSuchAlgorithmException 
+	 * @throws InvalidKeyException 
+	 */
+	public void encodeObjsToFile(String filename, ArrayList<Object> data) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
+		ArrayList<Object> dataEncrypted = new ArrayList<Object>();
+		for (Object obj : data) {
+			dataEncrypted.add(encryptAES(obj.toString()));
 		}
-
-		return null;
+		fUtils.writeObjsToFile(filename, dataEncrypted);
 	}
 
+	/**
+	 * @param filename
+	 * @return
+	 * @throws UnsupportedEncodingException 
+	 * @throws NoSuchPaddingException 
+	 * @throws NoSuchAlgorithmException 
+	 * @throws BadPaddingException 
+	 * @throws IllegalBlockSizeException 
+	 * @throws InvalidAlgorithmParameterException 
+	 * @throws InvalidKeyException 
+	 */
+	public ArrayList<String> decodeStringsFromFile(String filename) throws InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException {
+		ArrayList<String> data = fUtils.readObjsFromFile(filename);
 
-	
-public void encodeObjToFile(String filename, ArrayList<Object> data) {
-	ArrayList<Object> dataEncrypted= new ArrayList<Object>();
-	for(Object obj:data){
-		dataEncrypted.add(encryptAES(obj.toString()));
+		ArrayList<String> dataDecrypted = new ArrayList<String>();
+		for (String str : data) {
+			dataDecrypted.add(decryptAES(str));
+		}
+		return dataDecrypted;
 	}
-	fUtils.writeObjToFile(filename, dataEncrypted);
-}
 
-
-
-public ArrayList<String> decodeStringFromFile(String filename){
-	ArrayList<String> data= fUtils.readObjFromFile(filename);
-	
-	ArrayList<String> dataDecrypted= new ArrayList<String>();
-	for(String str:data){
-		dataDecrypted.add(decryptAES(str));
-	}
-	return dataDecrypted;
-}
-	
-
-
-
-	
-	
 }
