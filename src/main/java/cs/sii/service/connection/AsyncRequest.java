@@ -36,7 +36,9 @@ import java.util.concurrent.Future;
 public class AsyncRequest {
 
 
-	private Integer timeoutSeconds;
+	private static final String PORT = ":8443";
+
+	private static final String HTTPS = "https://";
 
 	public final static Integer REQNUMBER = 6;
 	
@@ -44,6 +46,7 @@ public class AsyncRequest {
 	
 	private RestTemplate restTemplate=new RestTemplate();
 	
+	private Integer timeoutSeconds;
 	
 	public AsyncRequest() {
 		//restTemplate=new RestTemplate()
@@ -65,7 +68,7 @@ public class AsyncRequest {
 			try {
 				System.out.println("\nRichiesta ad :" + uriMiner);
 //				String response = restTemplate.postForObject("http://" + uriMiner + "/user_ping", null, String.class);
-				String response = doPost("http://" + uriMiner + "/user_ping", "");
+				String response = doPost(HTTPS + uriMiner + "/user_ping", "");
 				return new AsyncResult<>(response);
 			} catch (Exception e) {
 				// e.printStackTrace();
@@ -109,7 +112,7 @@ public class AsyncRequest {
 //		Type type=new TypeToken<Pairs<Long,Integer>>(){}.getType();	
 //		String postRequest = "{\"idBot\":\""+idBot+"\"}";
 		try {
-			String url="http://"+ipCeC+":8080/welcome";
+			String url=HTTPS+ipCeC+PORT+"/welcome";
 			response=restTemplate.postForObject(url, idBot,response.getClass());
 			//System.out.println("Url:"+url);
 			//challenge=doGetJSON(url, type);
@@ -142,7 +145,7 @@ public class AsyncRequest {
 			
 			
 			
-			response=restTemplate.postForObject("http://"+dest+":8080/hmac", objects, String.class);
+			response=restTemplate.postForObject(HTTPS+dest+PORT+"/hmac", objects, String.class);
 			System.out.println("Ok");
 			return response;
 		} catch (Exception e) {
