@@ -1,5 +1,7 @@
 package cs.sii.service.crypto;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -110,7 +112,7 @@ public class CryptoPKI {
 
 		} catch (NoSuchAlgorithmException | NoSuchProviderException | InvalidKeyException | NoSuchPaddingException
 				| UnsupportedEncodingException | InvalidAlgorithmParameterException | IllegalBlockSizeException
-				| BadPaddingException | InvalidKeySpecException e) {
+				| BadPaddingException | InvalidKeySpecException | FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -276,8 +278,7 @@ public class CryptoPKI {
 			privERSAKey = fact.generatePrivate(new PKCS8EncodedKeySpec(encoded2));
 
 		} catch (InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException
-				| BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException | UnsupportedEncodingException
-				| InvalidKeySpecException e1) {
+				| BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeySpecException | IOException e1) {
 
 			generateKeyRSA();
 			// TODO Auto-generated catch block

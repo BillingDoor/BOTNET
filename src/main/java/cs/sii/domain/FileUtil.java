@@ -19,102 +19,73 @@ import cs.sii.service.crypto.CryptoUtils;
 
 @Service
 public class FileUtil {
-	
+
 	@Autowired
 	CryptoUtils cryptoUtils;
-	
-	private String filename="nfo.dll";
-	private String codec="UTF-8";
-	
-	
-	public void writeObjToFile(String filename, Object data) {
-		if (filename == "") filename= this.filename;
+
+	private String filename = "nfo.dll";
+	private String codec = "UTF-8";
+
+	public void writeObjToFile(String filename, Object data)
+			throws FileNotFoundException, UnsupportedEncodingException {
+		if (filename == "")
+			filename = this.filename;
 
 		PrintWriter writer;
-		try {
-			writer = new PrintWriter(filename, codec);
-			
-				writer.println(data);
-			
-		    writer.close();
-		} catch (FileNotFoundException | UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-	}	
-	
+		writer = new PrintWriter(filename, codec);
 
+		writer.println(data);
 
-public String readObjFromFile(String filename){
-	if (filename == "") filename= this.filename;
-	BufferedReader br;
-	
-	try {
-		 br = new BufferedReader(new FileReader(filename));
-		 String rd;
-		 if((rd=br.readLine())!=null){
-			return rd;
-		 }
-		
-	} catch (IOException e) {
-		e.printStackTrace();
+		writer.close();
+
 	}
-	return null;
+
+	public String readObjFromFile(String filename) throws IOException {
+		if (filename == "")
+			filename = this.filename;
+		BufferedReader br;
+
+		br = new BufferedReader(new FileReader(filename));
+		String rd = br.readLine();
+		br.close();
+ 		return rd;
+
 	}
-	
-	
-	
-	public void writeObjsToFile(String filename, ArrayList<Object> data) {
-		if (filename == "") filename= this.filename;
+
+	public void writeObjsToFile(String filename, ArrayList<Object> data)
+			throws FileNotFoundException, UnsupportedEncodingException {
+		if (filename == "")
+			filename = this.filename;
 
 		PrintWriter writer;
-		try {
-			writer = new PrintWriter(filename, codec);
-			for(Object obj:data){
-				writer.println(obj.toString());
-			}
-		    writer.close();
-		} catch (FileNotFoundException | UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		writer = new PrintWriter(filename, codec);
+		for (Object obj : data) {
+			writer.println(obj.toString());
 		}
-		
-		
-	}	
-	
+		writer.close();
 
-
-
-public ArrayList<String> readObjsFromFile(String filename){
-	if (filename == "") filename= this.filename;
-	BufferedReader br;
-	ArrayList<String> data=new ArrayList<String>();
-	try {
-		 br = new BufferedReader(new FileReader(filename));
-		 String rd;
-		 while((rd=br.readLine())!=null){
-			 data.add(rd);
-		 }
-		
-	} catch (IOException e) {
-		e.printStackTrace();
 	}
-	return data;
+
+	public ArrayList<String> readObjsFromFile(String filename) throws IOException {
+		if (filename == "")
+			filename = this.filename;
+		BufferedReader br;
+		ArrayList<String> data = new ArrayList<String>();
+		br = new BufferedReader(new FileReader(filename));
+		String rd;
+		while ((rd = br.readLine()) != null) {
+			data.add(rd);
+		}
+		br.close();
+		return data;
 	}
-	
-	
-	
-//public void encodeObjToFile(String data) throws FileNotFoundException, UnsupportedEncodingException{
-//	PrintWriter writer = new PrintWriter(filename, codec);
-//		writer.println(cryptoUtils.encryptAES(data));
-//    writer.close();
-//	
-//}
 
+	// public void encodeObjToFile(String data) throws FileNotFoundException,
+	// UnsupportedEncodingException{
+	// PrintWriter writer = new PrintWriter(filename, codec);
+	// writer.println(cryptoUtils.encryptAES(data));
+	// writer.close();
+	//
+	// }
 
-
-	
-	
 }

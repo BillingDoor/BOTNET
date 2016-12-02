@@ -1,5 +1,7 @@
 package cs.sii.service.crypto;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -120,8 +122,9 @@ public class CryptoUtils {
 	 * @throws NoSuchPaddingException 
 	 * @throws NoSuchAlgorithmException 
 	 * @throws InvalidKeyException 
+	 * @throws FileNotFoundException 
 	 */
-	public void encodeObjToFile(String filename, Object data) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
+	public void encodeObjToFile(String filename, Object data) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, FileNotFoundException {
 
 		fUtils.writeObjToFile(filename, encryptAES(data.toString()));
 	}
@@ -129,15 +132,15 @@ public class CryptoUtils {
 	/**
 	 * @param filename
 	 * @return
-	 * @throws UnsupportedEncodingException 
 	 * @throws NoSuchPaddingException 
 	 * @throws NoSuchAlgorithmException 
 	 * @throws BadPaddingException 
 	 * @throws IllegalBlockSizeException 
 	 * @throws InvalidAlgorithmParameterException 
 	 * @throws InvalidKeyException 
+	 * @throws IOException 
 	 */
-	public String decodeStringFromFile(String filename) throws InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException {
+	public String decodeStringFromFile(String filename) throws InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException, IOException {
 		String data = fUtils.readObjFromFile(filename);
 
 		return decryptAES(data);
@@ -153,8 +156,9 @@ public class CryptoUtils {
 	 * @throws NoSuchPaddingException 
 	 * @throws NoSuchAlgorithmException 
 	 * @throws InvalidKeyException 
+	 * @throws FileNotFoundException 
 	 */
-	public void encodeObjsToFile(String filename, ArrayList<Object> data) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
+	public void encodeObjsToFile(String filename, ArrayList<Object> data) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, FileNotFoundException {
 		ArrayList<Object> dataEncrypted = new ArrayList<Object>();
 		for (Object obj : data) {
 			dataEncrypted.add(encryptAES(obj.toString()));
@@ -165,15 +169,15 @@ public class CryptoUtils {
 	/**
 	 * @param filename
 	 * @return
-	 * @throws UnsupportedEncodingException 
 	 * @throws NoSuchPaddingException 
 	 * @throws NoSuchAlgorithmException 
 	 * @throws BadPaddingException 
 	 * @throws IllegalBlockSizeException 
 	 * @throws InvalidAlgorithmParameterException 
 	 * @throws InvalidKeyException 
+	 * @throws IOException 
 	 */
-	public ArrayList<String> decodeStringsFromFile(String filename) throws InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException {
+	public ArrayList<String> decodeStringsFromFile(String filename) throws InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException, IOException {
 		ArrayList<String> data = fUtils.readObjsFromFile(filename);
 
 		ArrayList<String> dataDecrypted = new ArrayList<String>();
