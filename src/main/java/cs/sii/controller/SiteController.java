@@ -186,4 +186,10 @@ public class SiteController {
 	    return authenticationTrustResolver.isAnonymous(authentication);
 	}
 
+	
+	@RequestMapping(value = { "/tryit" }, method = RequestMethod.GET)
+	public String tryit(){
+		return "tryit";
+	}
+	
 }

