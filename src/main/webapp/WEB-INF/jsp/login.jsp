@@ -3,15 +3,16 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
 	<head>
+		<link rel="icon" type="image/x-icon" href="images/favicon.ico">
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-		<title>Login page</title>
-		<link href="<c:url value='css/bootstrap.css' />"  rel="stylesheet"></link>
+		<title>&#9618;&#9618;&#9618;&#9618;&#9618;&#9618;&#9618;&#9618;&#9618;&#9618;</title>
+		<%-- <link href="<c:url value='css/bootstrap.css' />"  rel="stylesheet"></link> --%>
 		<link href="<c:url value='css/app.css' />" rel="stylesheet"></link>
 		<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.css" />
 	</head>
 
 	<body>
-		<div id="mainWrapper">
+		<div id="mainWrapper" align="center">
 			<div class="login-container">
 				<div class="login-card">
 					<div class="login-form">
@@ -42,9 +43,12 @@
                             </div>
 							<input type="hidden" name="${_csrf.parameterName}"  value="${_csrf.token}" />
 								
+								<p></p>
+								
 							<div class="form-actions">
-								<input type="submit"
-									class="btn btn-block btn-primary btn-default" value="Log in">
+								<!-- <input type="submit"
+									class="btn btn-block btn-primary btn-default" value="Log in"> -->
+								<button value="Log in">login</button>
 							</div>
 						</form>
 					</div>
