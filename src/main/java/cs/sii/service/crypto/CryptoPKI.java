@@ -230,20 +230,18 @@ public class CryptoPKI {
 	public void readFromFilePrivate() {
 	}
 
-	// private PrivateKey rebuildPrK(String keyEncoding) throws Exception {
-	// byte[] encoded = Base64.decodeBase64(keyEncoding);
-	// PrivateKey prK = KeyFactory.getInstance("RSA").generatePrivate(new
-	// PKCS8EncodedKeySpec(encoded));
-	// return prK;
-	// }
+//	 private PrivateKey rebuildPrK(String keyEncoding) throws Exception {
+//	 byte[] encoded = Base64.decodeBase64(keyEncoding);
+//	 PrivateKey prK = KeyFactory.getInstance("RSA").generatePrivate(new
+//	 PKCS8EncodedKeySpec(encoded));
+//	 return prK;
+//	 }
 	//
-	// private PublicKey rebuildPuK(String keyEncoding) throws
-	// NoSuchAlgorithmException, InvalidKeySpecException {
-	// byte[] encoded = Base64.decodeBase64(keyEncoding);
-	// PublicKey puK = KeyFactory.getInstance("RSA").generatePublic(new
-	// X509EncodedKeySpec(encoded));
-	// return puK;
-	// }
+	 public PublicKey rebuildPuK(String keyEncoding) throws NoSuchAlgorithmException, InvalidKeySpecException {
+	 byte[] encoded = Base64.decodeBase64(keyEncoding);
+	 PublicKey puK = fact.generatePublic(new X509EncodedKeySpec(encoded));
+	 return puK;
+	 }
 
 	//
 	// /**
