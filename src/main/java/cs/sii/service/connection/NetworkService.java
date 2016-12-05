@@ -269,6 +269,14 @@ public class NetworkService {
 	private String getMyIpCheckInternet() {
 		String result = "";
 		Integer counter = 0;
+		InetAddress ip = null ;
+		 try {
+			ip = InetAddress.getLocalHost();
+			return ip.toString();//TODO ELIMINA MOCK LOCAL IP
+		} catch (UnknownHostException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		while (true) {
 			try {
 				result = asyncRequest.askMyIpToAmazon();
