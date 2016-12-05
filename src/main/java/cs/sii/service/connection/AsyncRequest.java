@@ -8,6 +8,7 @@ import cs.sii.domain.IP;
 import cs.sii.domain.Pairs;
 import javassist.compiler.ast.Pair;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
@@ -27,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.security.PublicKey;
+import java.security.spec.EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
@@ -129,15 +131,19 @@ public class AsyncRequest {
 	//TODO aggiungere una nuova pairs<Pairs<IP,PK>, Signature>;
 	//da valutare se devono essere asincroni
 	public Boolean sendInfoToDnsServer(String dnsUrl,IP myIp,PublicKey myPublicKey){
-		Pairs<IP,PublicKey> data = new Pairs<>();
+		Pairs<IP,String> data = new Pairs<>();
 		data.setValue1(myIp);
-		data.setValue2(myPublicKey);
+		String str =  Base64.encodeBase64String(myPublicKey.getEncoded());
+		data.setValue2(str);
 		Boolean response=false;
 		Integer counter = 0;
 		while (counter <= REQNUMBER) {//while(!response)
 		try {
-			String url=HTTP+dnsUrl+PORT+"/alter";
+			String url=HTTP+dnsUrl+"/alter";
+			System.out.println("url "+ url);
 			response=restTemplate.postForObject(url, data,response.getClass());
+			if (response!=null)
+			System.out.println(response);
 			return response;
 		} catch (Exception e) {
 			counter++;

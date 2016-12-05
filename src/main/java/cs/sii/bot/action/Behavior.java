@@ -67,9 +67,6 @@ public class Behavior {
 		}else{
 			networkService.updateDnsInformation();
 
-			
-			
-			
 		}
 	}
 

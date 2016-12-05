@@ -289,7 +289,7 @@ public class NetworkService {
 	 */
 	public Boolean updateDnsInformation() {
 
-		String url =  engineBot.getDnsip() + ":" + engineBot.getDnsport() + engineBot.getUrirequest();
+		String url =  engineBot.getDnsip() + ":" + engineBot.getDnsport();
 		Boolean result = false;
 		Integer counter = 0;
 
