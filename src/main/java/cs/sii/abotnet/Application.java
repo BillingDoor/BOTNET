@@ -1,4 +1,4 @@
-package cs.sii.bot;
+package cs.sii.abotnet;
 
 
 import java.awt.List;
@@ -14,7 +14,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
 
-import cs.sii.bot.passive.BotInitialize;
+import cs.sii.bot.action.Behavior;
 import cs.sii.domain.FileUtil;
 import cs.sii.service.crypto.CryptoPKI;
 
@@ -25,7 +25,7 @@ import cs.sii.service.crypto.CryptoPKI;
 public class Application {
 
 	@Autowired
-	private BotInitialize bot;	
+	private Behavior bot;	
 	
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);

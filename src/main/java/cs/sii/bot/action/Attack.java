@@ -1,4 +1,4 @@
-package cs.sii.bot.active;
+package cs.sii.bot.action;
 
 import org.springframework.stereotype.Service;
 

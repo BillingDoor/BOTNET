@@ -1,4 +1,4 @@
-package cs.sii.config.bot;
+package cs.sii.config.onLoad;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -6,13 +6,13 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ConfigurationProperties(
-		prefix = "engine",
-		locations = "classpath:bot.properties",
+		prefix = "config",
+		locations = "classpath:config.properties",
 		exceptionIfInvalid = true,
 		ignoreInvalidFields = false, 
 		ignoreUnknownFields = false
 		)
-public class Engine {
+public class Config {
 	
 		private boolean commandandconquerStatus;
 		private int pingdelay;
@@ -24,7 +24,7 @@ public class Engine {
 		private int connectTimeout;
 		private int	readTimeout;
 		private String idBot;
-
+		
 
 		public boolean isCommandandconquerStatus() {
 			return commandandconquerStatus;

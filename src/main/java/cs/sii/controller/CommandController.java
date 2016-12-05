@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import cs.sii.bot.active.BotAuth;
-import cs.sii.bot.passive.BotInitialize;
-import cs.sii.config.bot.Engine;
+import cs.sii.bot.action.Auth;
+import cs.sii.bot.action.Behavior;
+import cs.sii.config.onLoad.Config;
 import cs.sii.domain.IP;
 import cs.sii.domain.Pairs;
 import cs.sii.model.bot.Bot;
@@ -34,10 +34,10 @@ import cs.sii.service.dao.RoleServiceImpl;
 public class CommandController {
 
 	@Autowired
-	private Engine engineBot;
+	private Config engineBot;
 
 	@Autowired
-	private BotAuth auth;
+	private Auth auth;
 
 	@Autowired
 	private BotServiceImpl botService;
@@ -58,19 +58,19 @@ public class CommandController {
 		return response;
 
 	}
-
-	@RequestMapping(value = "/BotNet", method = RequestMethod.GET)
-	@ResponseBody
-	public List<IP> getAllBotNet(HttpServletResponse error) throws IOException {
-		List<IP> response = new ArrayList<IP>();
-
-		if (engineBot.isCommandandconquerStatus()) {
-			response = networkService.getBotIps().getIPList();
-		} else {
-			error.sendError(HttpStatus.SC_NOT_FOUND);
-		}
-		return response;
-	}
+//TODO
+//	@RequestMapping(value = "/BotNet", method = RequestMethod.GET)
+//	@ResponseBody
+//	public List<IP> getAllBotNet(HttpServletResponse error) throws IOException {
+//		List<IP> response = new ArrayList<IP>();
+//
+//		if (engineBot.isCommandandconquerStatus()) {
+//			response = networkService.getBotIps().getIPList();
+//		} else {
+//			error.sendError(HttpStatus.SC_NOT_FOUND);
+//		}
+//		return response;
+//	}
 
 	// CONTROLLER PER LA GESTIONE DELLA CHALLENGE DI AUTENTICAZIONE//////
 

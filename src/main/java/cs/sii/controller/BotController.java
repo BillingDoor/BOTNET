@@ -2,8 +2,8 @@ package cs.sii.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import cs.sii.bot.active.BotAuth;
-import cs.sii.config.bot.Engine;
+import cs.sii.bot.action.Auth;
+import cs.sii.config.onLoad.Config;
 import cs.sii.domain.RWRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class BotController {
 	
 	@Autowired
-	Engine engineBot;
+	Config engineBot;
 	
 	@Autowired
-	BotAuth crypto;
+	Auth crypto;
     
     @RequestMapping("/Bot")
     public String index() {

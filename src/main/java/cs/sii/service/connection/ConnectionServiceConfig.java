@@ -11,13 +11,13 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import cs.sii.config.bot.Engine;
+import cs.sii.config.onLoad.Config;
 
 @Configuration
 public class ConnectionServiceConfig {
 
 	@Autowired
-	Engine engineBot;
+	Config engineBot;
 	
 	@Bean
 	public HttpComponentsClientHttpRequestFactory HttpRequestFactory() {

@@ -1,4 +1,4 @@
-package cs.sii.bot.active;
+package cs.sii.bot.action;
 
 import java.util.HashMap;
 import java.util.Random;
@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import cs.sii.config.bot.Engine;
+import cs.sii.config.onLoad.Config;
 import cs.sii.domain.Conversions;
 import cs.sii.domain.IP;
 import cs.sii.domain.Pairs;
@@ -21,18 +21,15 @@ import cs.sii.service.crypto.CryptoUtils;
 
 
 @Service
-public class BotAuth {
+public class Auth {
 
 	@Autowired
-	private Engine eng;
+	private Config eng;
 	
 	@Autowired
 	private CryptoUtils cry;
 
-	// TODO da decidere con stringa lunga
-	// Non necessità di essere cambiata nel tempo
 
-	// TODO da decidere con stringa lunga
 	private String seedIterationGenerator1;
 	private String seedIterationGenerator2;
 	private String seedIterationGenerator3;
@@ -45,7 +42,7 @@ public class BotAuth {
 	
 	private HashMap<String, Pairs<Long,Integer>> botSeed = new HashMap<>();
 
-	public BotAuth() {
+	public Auth() {
 		
 		seedIterationGenerator1 = "5E1CA498";
 		seedIterationGenerator2 = "5fffffffffffffdd";
@@ -55,7 +52,6 @@ public class BotAuth {
 		rndRnd.setSeed(Long.parseLong(seedIterationGenerator2, 16));	
 	}
 
-	// TODO creare metodo per la generazione del Seed
 
 	/**
 	 * converte seed in Long

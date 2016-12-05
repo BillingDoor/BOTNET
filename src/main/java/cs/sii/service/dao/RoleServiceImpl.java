@@ -12,7 +12,6 @@ public class RoleServiceImpl{
 	private RoleRepository roleRepository;
 	
 	public RoleServiceImpl() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public RoleRepository getRoleRepository() {
