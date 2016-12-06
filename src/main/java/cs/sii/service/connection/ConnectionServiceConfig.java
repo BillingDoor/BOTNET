@@ -32,25 +32,25 @@ public class ConnectionServiceConfig {
 	@Bean
 	public HttpComponentsClientHttpRequestFactory HttpRequestFactory() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
 
-		
-		TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
-
-		SSLContext sslContext = org.apache.http.ssl.SSLContexts.custom()
-		        .loadTrustMaterial(null, acceptingTrustStrategy)
-		        .build();
-
-		SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext);
-
-		CloseableHttpClient httpClient = HttpClients.custom()
-		        .setSSLSocketFactory(csf)
-		        .build();
+//		
+//		TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
+//
+//		SSLContext sslContext = org.apache.http.ssl.SSLContexts.custom()
+//		        .loadTrustMaterial(null, acceptingTrustStrategy)
+//		        .build();
+//
+//		SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext);
+//
+//		CloseableHttpClient httpClient = HttpClients.custom()
+//		        .setSSLSocketFactory(csf)
+//		        .build();
 
 		
 
 		System.out.println("bean factory");
 		HttpComponentsClientHttpRequestFactory crf = new HttpComponentsClientHttpRequestFactory();
 	
-		crf.setHttpClient(httpClient);
+//		crf.setHttpClient(httpClient);
 		
 		crf.setConnectTimeout(configEngine.getConnectTimeout());
 		crf.setConnectionRequestTimeout(configEngine.getRequestTimeout());
