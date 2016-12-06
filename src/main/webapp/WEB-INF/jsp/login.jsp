@@ -1,3 +1,4 @@
+
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ page isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -6,7 +7,6 @@
 		<link rel="icon" type="image/x-icon" href="images/favicon.ico">
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 		<title>&#9618;&#9618;&#9618;&#9618;&#9618;&#9618;&#9618;&#9618;&#9618;&#9618;</title>
-		<%-- <link href="<c:url value='css/bootstrap.css' />"  rel="stylesheet"></link> --%>
 		<link href="<c:url value='css/app.css' />" rel="stylesheet"></link>
 		<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.css" />
 	</head>
@@ -19,35 +19,28 @@
 						<c:url var="loginUrl" value="" />
 						<form action="${loginUrl}" method="post" class="form-horizontal">
 							<c:if test="${param.error != null}">
-								<div class="alert alert-danger">
+								<div class="alert alert-danger" style="color: red">
 									<p>Invalid username and password.</p>
 								</div>
 							</c:if>
 							<c:if test="${param.logout != null}">
-								<div class="alert alert-success">
+								<div class="alert alert-success" style="color: green">
 									<p>You have been logged out successfully.</p>
 								</div>
 							</c:if>
-							<div class="input-group input-sm">
-								<label class="input-group-addon" for="username"><i class="fa fa-user"></i></label>
-								<input type="text" class="form-control" id="username" name="ssoId" placeholder="Enter Username" required>
+							<div>
+								<input type="text" class="hiddbox" id="username" name="ssoId" onfocus="if(this.placeholder == '&#xf007';  Username') { this.placeholder = ''; }" onblur="if(this.placeholder == '') { this.placeholder = '&#xf007';  Username'; } " placeholder="&#xf007;  Username"><span class="highlight"></span><span class="bar"></span>
 							</div>
-							<div class="input-group input-sm">
-								<label class="input-group-addon" for="password"><i class="fa fa-lock"></i></label> 
-								<input type="password" class="form-control" id="password" name="password" placeholder="Enter Password" required>
-							</div>
-							<div class="input-group input-sm">
-                              <div class="checkbox">
-                                <label><input type="checkbox" id="rememberme" name="remember-me"> Remember Me</label>  
-                              </div>
-                            </div>
+							<div>
+								<input type="password" class="hiddbox" id="password" name="password" onfocus="if(this.placeholder == '&#xf023';  Password') { this.placeholder = ''; }" onblur="if(this.placeholder == '') { this.placeholder = '&#xf023';  Password'; }" placeholder="&#xf023;  Password"><span class="highlight"></span><span class="bar"></span>
+                          	</div>
+							<p>
+   							<input type="checkbox" id="rememberme" name="remember-me"/>  							
+   							<label for="rememberme">Remember me</label>
+							</p><p></p>
 							<input type="hidden" name="${_csrf.parameterName}"  value="${_csrf.token}" />
-								
-								<p></p>
-								
+
 							<div class="form-actions">
-								<!-- <input type="submit"
-									class="btn btn-block btn-primary btn-default" value="Log in"> -->
 								<button value="Log in">login</button>
 							</div>
 						</form>
@@ -55,6 +48,5 @@
 				</div>
 			</div>
 		</div>
-
 	</body>
 </html>
