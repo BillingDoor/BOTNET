@@ -153,7 +153,7 @@ public class NetworkService {
 	/**
 	 * @return mac address of the machine running the program
 	 */
-	public String getMac() {
+	public String loadMachineMac() {
 
 		InetAddress ip;
 		StringBuilder sb = new StringBuilder();
@@ -223,7 +223,7 @@ public class NetworkService {
 		ip = new IP(getMyIpCheckInternet());
 
 		// prendi il mac
-		mac = getMac();
+		mac = loadMachineMac();
 
 		// prendi il sistema operativo
 		os = System.getProperty("os.name");
@@ -367,8 +367,16 @@ public class NetworkService {
 		this.mac = mac;
 	}
 
+	public String getMac() {
+		if((mac==null)||(mac==""))
+			mac=loadMachineMac();
+		return mac;
+	}
+
 	// public SyncCeCList getBotIps() {
 	// return botIps;
 	// }
 
+	
+	
 }
