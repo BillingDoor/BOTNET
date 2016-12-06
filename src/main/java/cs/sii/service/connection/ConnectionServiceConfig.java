@@ -17,16 +17,17 @@ import cs.sii.config.onLoad.Config;
 public class ConnectionServiceConfig {
 
 	@Autowired
-	Config engineBot;
+	Config configEngine;
 	
 	@Bean
 	public HttpComponentsClientHttpRequestFactory HttpRequestFactory() {
 
-
+		System.out.println("bean factory");
 		HttpComponentsClientHttpRequestFactory crf = new HttpComponentsClientHttpRequestFactory();
-		crf.setConnectTimeout(engineBot.getConnectTimeout());
-		crf.setConnectionRequestTimeout(engineBot.getRequestTimeout());
-		crf.setReadTimeout(engineBot.getReadTimeout());
+		crf.setConnectTimeout(configEngine.getConnectTimeout());
+		crf.setConnectionRequestTimeout(configEngine.getRequestTimeout());
+		crf.setReadTimeout(configEngine.getReadTimeout());
+		System.out.println("crf  "+crf.hashCode());
 		return crf;
 	}
 
@@ -40,7 +41,7 @@ public class ConnectionServiceConfig {
 
 		MappingJackson2HttpMessageConverter mc = new MappingJackson2HttpMessageConverter();
 		mc.setSupportedMediaTypes(mediaTypes);
-
+System.out.println("hhhh   "+HttpRequestFactory().hashCode());
 		restTemplate.getMessageConverters().add(mc);
 		return restTemplate;
 	}

