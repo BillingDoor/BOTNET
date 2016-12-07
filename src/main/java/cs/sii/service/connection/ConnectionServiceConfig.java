@@ -10,6 +10,7 @@ import java.util.List;
 import javax.net.ssl.SSLContext;
 
 import org.apache.http.client.HttpClient;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.conn.ssl.TrustStrategy;
@@ -49,9 +50,9 @@ public class ConnectionServiceConfig {
 
 		
 		
-		  SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(new SSLContextBuilder().loadTrustMaterial(null, new TrustSelfSignedStrategy()).build());
+//		  SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(new SSLContextBuilder().loadTrustMaterial(null, new TrustSelfSignedStrategy()).build());
 
-	      HttpClient httpClient = HttpClients.custom().setSSLSocketFactory(socketFactory).build();
+//	      HttpClient httpClient = HttpClients.custom().setSSLSocketFactory(socketFactory).build();
 
 
 //	      ((HttpComponentsClientHttpRequestFactory) template.getRequestFactory()).setHttpClient(httpClient);
@@ -59,7 +60,7 @@ public class ConnectionServiceConfig {
 		
 		HttpComponentsClientHttpRequestFactory crf = new HttpComponentsClientHttpRequestFactory();
 	
-		crf.setHttpClient(httpClient);
+//		crf.setHttpClient(httpClient);
 		
 		crf.setConnectTimeout(configEngine.getConnectTimeout());
 		crf.setConnectionRequestTimeout(configEngine.getRequestTimeout());
@@ -72,10 +73,22 @@ public class ConnectionServiceConfig {
 		return crf;
 	}
 
+	
+
+	private static HttpComponentsClientHttpRequestFactory useApacheHttpClientWithSelfSignedSupport() {
+		CloseableHttpClient httpClient = HttpClients.custom().setSSLHostnameVerifier(new NoopHostnameVerifier()).build();
+		HttpComponentsClientHttpRequestFactory useApacheHttpClient = new HttpComponentsClientHttpRequestFactory();
+		useApacheHttpClient.setHttpClient(httpClient);
+		return useApacheHttpClient;
+	}
+
+
+	
+	
 	@Bean
 	public RestTemplate RestTemplate() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
 
-		RestTemplate restTemplate = new RestTemplate(HttpRequestFactory());
+		RestTemplate restTemplate = new RestTemplate(useApacheHttpClientWithSelfSignedSupport());
 
 		List<MediaType> mediaTypes = new ArrayList<MediaType>();
 		mediaTypes.add(MediaType.TEXT_PLAIN);
