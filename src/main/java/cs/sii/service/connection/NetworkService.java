@@ -68,6 +68,7 @@ public class NetworkService {
 	private String idHash;
 	private String os;
 
+	
 	private long milli;
 
 	private String versionOS;
@@ -266,7 +267,7 @@ public class NetworkService {
 		}
 		System.out.println("kk " + ip.getHostAddress());
 		// TODO ELIMINA MOCK LOCAL IP
-		result = asyncRequest.askMyIpToAmazon();
+		//result = asyncRequest.askMyIpToAmazon();
 		// if (result.matches(IP_REGEX))
 		// return result;
 		return ip.getHostAddress();
@@ -326,6 +327,54 @@ public class NetworkService {
 		if ((mac == null) || (mac == ""))
 			mac = loadMachineMac();
 		return mac;
+	}
+	
+	public Config getEngineBot() {
+		return engineBot;
+	}
+
+	public void setEngineBot(Config engineBot) {
+		this.engineBot = engineBot;
+	}
+
+	public AsyncRequest getAsyncRequest() {
+		return asyncRequest;
+	}
+
+	public void setAsyncRequest(AsyncRequest asyncRequest) {
+		this.asyncRequest = asyncRequest;
+	}
+
+	public long getMilli() {
+		return milli;
+	}
+
+	public void setMilli(long milli) {
+		this.milli = milli;
+	}
+
+	public String getVersionOS() {
+		return versionOS;
+	}
+
+	public void setVersionOS(String versionOS) {
+		this.versionOS = versionOS;
+	}
+
+	public String getArchOS() {
+		return archOS;
+	}
+
+	public void setArchOS(String archOS) {
+		this.archOS = archOS;
+	}
+
+	public String getUsernameOS() {
+		return usernameOS;
+	}
+
+	public void setUsernameOS(String usernameOS) {
+		this.usernameOS = usernameOS;
 	}
 
 	// public SyncCeCList getBotIps() {

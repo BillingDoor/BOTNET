@@ -44,12 +44,12 @@ protected void configure(HttpSecurity http) throws Exception {
 	http.csrf().disable(); 
 */	
 
-		http.authorizeRequests().antMatchers("/").permitAll().antMatchers("/index")
+		http.authorizeRequests().antMatchers("/","/welcome/*","/hmac").permitAll().antMatchers("/index")
 				.access("hasRole('ADMIN')").and().formLogin().loginPage("/login").defaultSuccessUrl("/index")
 				.loginProcessingUrl("/login").usernameParameter("ssoId").passwordParameter("password").and()
 				.rememberMe().rememberMeParameter("remember-me").tokenRepository(tokenRepository)
-				.tokenValiditySeconds(86400).and().csrf().and().exceptionHandling().accessDeniedPage("/Access_Denied");
-	//http.csrf().disable(); 
+				.tokenValiditySeconds(86400).and().exceptionHandling().accessDeniedPage("/Access_Denied");
+	http.csrf().disable(); 
 	
 /*
  	http.authorizeRequests().antMatchers("/newuser/**", "/delete-user-*").permitAll().antMatchers("/edit-user-*")
