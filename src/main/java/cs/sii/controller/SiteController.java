@@ -1,5 +1,6 @@
 package cs.sii.controller;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
@@ -7,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import cs.sii.config.onLoad.Config;
 import cs.sii.model.role.Role;
 import cs.sii.model.role.RoleRepository;
 import cs.sii.model.user.User;
@@ -33,6 +36,9 @@ import cs.sii.service.dao.UserServiceImpl;
 @Controller
 @RequestMapping("/site")
 public class SiteController {
+	
+	@Autowired
+	private Config configEngine;
 	
 	@Autowired
 	AuthenticationTrustResolver authenticationTrustResolver;
@@ -48,47 +54,76 @@ public class SiteController {
 	
 	
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public String login() {		
+	public String login(HttpServletResponse error) throws IOException {			
+		String result = "";
+		if (configEngine.isCommandandconquerStatus()) {
+			result="login";  
+		}else{
+			error.sendError(HttpStatus.SC_NOT_FOUND);
+		}
+	    	return result;  			
 //			if (isCurrentAuthenticationAnonymous()) {
 //				return "login";
 //		    } else {
 //		    	return "redirect:/index";  
 //		    }
-		return "login";
 	}
+	
+	
+	
 	
 //	@PreAuthorize("hasRole('ADMIN')")
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
-	public String index() {
-	    	return "index";  
+	public String index(HttpServletResponse error) throws IOException {
+		String result = "";
+		if (configEngine.isCommandandconquerStatus()) {
+			result="index";  
+		}else{
+			error.sendError(HttpStatus.SC_NOT_FOUND);
+		}
+	    	return result;  
 	    
 	}
 
 	@RequestMapping(value = "/forms", method = RequestMethod.GET)
-	public String forms() {
-	    	return "forms";		
+	public String forms(HttpServletResponse error) throws IOException {
+		String result = "";
+		if (configEngine.isCommandandconquerStatus()) {
+			result="forms";		
+		}else{
+			error.sendError(HttpStatus.SC_NOT_FOUND);
+		}
+	    	return result;  
+	    	
 	}
 	
-	@PreAuthorize("hasRole('ADMIN')")
-	@RequestMapping(value = "/maps", method = RequestMethod.GET)
-	public String maps() {
-	    	 return "maps";
-	}
+//	@PreAuthorize("hasRole('ADMIN')")
+//	@RequestMapping(value = "/maps", method = RequestMethod.GET)
+//	public String maps() {
+//	    	 return "maps";
+//	}
 	
 	
 	/**
 	 * This method handles logout requests.
 	 * Toggle the handlers if you are RememberMe functionality is useless in your app.
+	 * @throws IOException 
 	 */
 	@RequestMapping(value="/logout", method = RequestMethod.GET)
-	public String logoutPage (HttpServletRequest request, HttpServletResponse response){
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (auth != null){    
-			//new SecurityContextLogoutHandler().logout(request, response, auth);
-			persistentTokenBasedRememberMeServices.logout(request, response, auth);
-			SecurityContextHolder.getContext().setAuthentication(null);
+	public String logoutPage (HttpServletRequest request, HttpServletResponse response,HttpServletResponse error) throws IOException{	
+		String result = "";
+		if (configEngine.isCommandandconquerStatus()) {
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			if (auth != null){    
+				//new SecurityContextLogoutHandler().logout(request, response, auth);
+				persistentTokenBasedRememberMeServices.logout(request, response, auth);
+				SecurityContextHolder.getContext().setAuthentication(null);
+			}
+			result="white";		
+		}else{
+			error.sendError(HttpStatus.SC_NOT_FOUND);
 		}
-		return "white";
+	    	return result; 
 	}
 	
 	
@@ -117,14 +152,6 @@ public class SiteController {
 			return "registration";
 		}
 
-		/*
-		 * Preferred way to achieve uniqueness of field [sso] should be implementing custom @Unique annotation 
-		 * and applying it on field [sso] of Model class [User].
-		 * 
-		 * Below mentioned peace of code [if block] is to demonstrate that you can fill custom errors outside the validation
-		 * framework as well while still using internationalized messages.
-		 * 
-		 */
 		if(userService.getUserRepository().findBySsoId(user.getSsoId()) != null){
 			System.out.println("2");
 			return "registration";
@@ -146,9 +173,6 @@ public class SiteController {
 		return "registrationsuccess";
 		}
 	}
-	
-	
-	
 	
 	
 	/**
