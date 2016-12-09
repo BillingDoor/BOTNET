@@ -115,8 +115,7 @@ public class CommandController {
 					Bot bot = new Bot(objects.get(0).toString(), objects.get(1).toString(), objects.get(2).toString(), objects.get(3).toString(), objects.get(4).toString(), objects.get(5).toString(),objects.get(6).toString());
 					botService.getBotRepository().save(bot);
 					//TODO DA decidere send some peers
-				}
-
+				}else
 				response = "Challenge con HMAC non valido";
 			}
 		} else {
