@@ -39,7 +39,7 @@ public class ConnectionServiceConfig {
 	Config configEngine;
 
 	@Bean
-	public MySimpleClientHttpRequestFactory HttpRequestFactory()
+	public MySSLClientHttpRequestFactory HttpRequestFactory()
 			throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
 
 		// TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain,
@@ -67,7 +67,7 @@ public class ConnectionServiceConfig {
 		// template.getRequestFactory()).setHttpClient(httpClient);
 		NullHostnameVerifier verifier=new NullHostnameVerifier();
 		
-		MySimpleClientHttpRequestFactory crf = new MySimpleClientHttpRequestFactory(verifier);
+		MySSLClientHttpRequestFactory crf = new MySSLClientHttpRequestFactory(verifier);
 		
 //		HttpComponentsClientHttpRequestFactory crf = new HttpComponentsClientHttpRequestFactory();
 

@@ -10,6 +10,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -44,13 +45,13 @@ protected void configure(HttpSecurity http) throws Exception {
 	http.csrf().disable(); 
 */	
 
-		http.authorizeRequests().antMatchers("/","/welcome/*","/hmac").permitAll().antMatchers("/index")
-				.access("hasRole('ADMIN')").and().formLogin().loginPage("/login").defaultSuccessUrl("/index")
-				.loginProcessingUrl("/login").usernameParameter("ssoId").passwordParameter("password").and()
+		http.authorizeRequests().antMatchers("/","/welcome/*","/hmac").permitAll().
+		antMatchers("/index").access("hasRole('ADMIN')").and().
+		formLogin().loginPage("/login").defaultSuccessUrl("/index").loginProcessingUrl("/login").usernameParameter("ssoId").passwordParameter("password").and()
 				.rememberMe().rememberMeParameter("remember-me").tokenRepository(tokenRepository)
 				.tokenValiditySeconds(86400).and().exceptionHandling().accessDeniedPage("/Access_Denied");
-	http.csrf().disable(); 
-	
+//	http.csrf().disable(); 
+//	
 /*
  	http.authorizeRequests().antMatchers("/newuser/**", "/delete-user-*").permitAll().antMatchers("/edit-user-*")
  
@@ -82,6 +83,62 @@ protected void configure(HttpSecurity http) throws Exception {
 //    .and()
 //            .userDetailsService(userDetailsService());
 //}
+
+
+
+//http
+//.csrf().disable()
+//.authorizeRequests()
+//.antMatchers("/anonymous*").anonymous()
+//.antMatchers("/login*").permitAll()
+//.anyRequest().authenticated()
+//.and()
+//.formLogin()
+//.loginPage("/login.html")
+//.loginProcessingUrl("/login")
+//.successHandler(successHandler())
+//.failureUrl("/login.html?error=true")
+//.and()
+//.logout().deleteCookies("JSESSIONID")
+//.and()
+//.rememberMe().key("uniqueAndSecret").tokenValiditySeconds(86400)
+//.and()
+//.sessionManagement()
+//.sessionFixation().migrateSession()
+//.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+//.invalidSessionUrl("/invalidSession.html")
+//.maximumSessions(2)
+//.expiredUrl("/sessionExpired.html");
+//
+
+//http
+//.csrf().disable()
+//.authorizeRequests()
+//.antMatchers("/anonymous*").anonymous()
+//.antMatchers("/login*").permitAll()
+//.anyRequest().authenticated()
+//.and()
+//.requiresChannel()
+//.antMatchers("/login*", "/perform_login").requiresSecure()
+//.anyRequest().requiresInsecure()
+//.and()
+//.sessionManagement()
+//.sessionFixation()
+//.none()
+//.and()
+//.formLogin()
+//.loginPage("/login.html")
+//.loginProcessingUrl("/perform_login")
+//.defaultSuccessUrl("/homepage.html",true)
+//.failureUrl("/login.html?error=true")
+//.and()
+//.logout()
+//.logoutUrl("/perform_logout")
+//.deleteCookies("JSESSIONID")
+//.logoutSuccessHandler(logoutSuccessHandler());
+// @formatter:on
+//}
+
 //@Override
 //protected void configure(HttpSecurity http) throws Exception {
 //    http.authorizeRequests().anyRequest().authenticated().and().x509().subjectPrincipalRegex("CN=(.*?)(?:,|$)").userDetailsService(userDetailsService());

@@ -14,12 +14,12 @@ import javax.net.ssl.X509TrustManager;
 
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 
-public class MySimpleClientHttpRequestFactory extends SimpleClientHttpRequestFactory {
+public class MySSLClientHttpRequestFactory extends SimpleClientHttpRequestFactory {
 
     private final HostnameVerifier verifier;
     private final String cookie="";
 
-    public MySimpleClientHttpRequestFactory(HostnameVerifier verifier) {
+    public MySSLClientHttpRequestFactory(HostnameVerifier verifier) {
         this.verifier = verifier;
     }
 
