@@ -30,13 +30,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	PersistentTokenRepository tokenRepository;
 
+	@Autowired
+
+	CsrfSecurityRequestMatcher kk;
+	
 	@Override
 	 @Order('1')
 	protected void configure(HttpSecurity http) throws Exception {
 
 
 	    // Enable csrf for login form
-//	    http.csrf().requireCsrfProtectionMatcher(new CsrfSecurityRequestMatcher());
+	    http.csrf().requireCsrfProtectionMatcher(kk );
 	    // Configure login page
 	    http.formLogin().loginPage("/site/login").usernameParameter("ssoId").passwordParameter("password").failureUrl("/login?error").defaultSuccessUrl("/site/index").loginProcessingUrl("/site/login");
 	    //Configure remember me
@@ -52,6 +56,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	    http.exceptionHandling().accessDeniedPage("/404");
 	}
 
+	
+	@Bean
+	public CsrfSecurityRequestMatcher csrfMatch() {
+		
+		return new CsrfSecurityRequestMatcher();
+	}
+	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();

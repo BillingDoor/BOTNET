@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 public class CsrfSecurityRequestMatcher implements RequestMatcher {
     private Pattern allowedMethods = Pattern.compile("^(GET|HEAD|TRACE|OPTIONS)$");
 
-    private static final String HTTP_REGEX =  "^(/bot/**)";
+    private static final String HTTP_REGEX =  "(/cec/*)";
     
     
     ///"^(/bot/**|/hmac)"
@@ -19,6 +19,8 @@ public class CsrfSecurityRequestMatcher implements RequestMatcher {
     private RegexRequestMatcher matchUnprotected = new RegexRequestMatcher(HTTP_REGEX, null);
     @Override
     public boolean matches(HttpServletRequest request) {
+    	System.out.println("req "+request.getRequestURL() + allowedMethods.matcher(request.getMethod()).matches());
+    	
         if(allowedMethods.matcher(request.getMethod()).matches()){
             return false;
         }
