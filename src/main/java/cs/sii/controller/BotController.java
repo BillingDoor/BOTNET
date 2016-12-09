@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Component
 @RestController
+@RequestMapping("/bot")
 public class BotController {
 	
 	@Autowired
@@ -23,7 +24,7 @@ public class BotController {
 	@Autowired
 	Auth crypto;
     
-    @RequestMapping("/Bot")
+    @RequestMapping("/")
     public String index() {
         return "Bot is Ready";
     }
