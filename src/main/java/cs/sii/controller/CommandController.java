@@ -31,7 +31,7 @@ import cs.sii.service.dao.BotServiceImpl;
 import cs.sii.service.dao.RoleServiceImpl;
 
 @Controller
-@RequestMapping("/CeC")
+@RequestMapping("/cec")
 public class CommandController {
 
 	@Autowired
