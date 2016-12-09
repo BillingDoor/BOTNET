@@ -51,7 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	    // Ensure admin pages have correct role
 	    http.authorizeRequests().antMatchers("/site/user/**").access("hasRole('ADMIN') and hasRole('USER')");
 	    http.authorizeRequests().antMatchers("/site/admin/**").hasRole("ADMIN");
-	    http.authorizeRequests().antMatchers("/", "/bot**", "/site/login*"/* ,"/resources/**" */).permitAll();
+	    http.authorizeRequests().antMatchers("/", "/bot**", "/cec**", "/site/login*"/* ,"/resources/**" */).permitAll();
 	    // Configure access denied exception redirect
 	    http.exceptionHandling().accessDeniedPage("/404");
 	}
