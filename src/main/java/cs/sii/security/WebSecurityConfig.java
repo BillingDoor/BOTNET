@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -30,21 +31,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	PersistentTokenRepository tokenRepository;
 
 	@Override
+	 @Order('1')
 	protected void configure(HttpSecurity http) throws Exception {
 
 
-		http.authorizeRequests()
-
-				.antMatchers("/site/user/**").access("hasRole('ADMIN') and hasRole('USER')")
-				.antMatchers("/site/admin/**").hasRole("ADMIN")
-				.antMatchers("/", "/bot**", "/site/login*"/* ,"/resources/**" */).permitAll().and().formLogin()
-				.loginPage("/site/login").defaultSuccessUrl("/site/index").loginProcessingUrl("/site/login")
-				.usernameParameter("ssoId").passwordParameter("password").and().rememberMe()
-				.rememberMeParameter("remember-me").tokenRepository(tokenRepository).tokenValiditySeconds(86400).and()
-				.exceptionHandling().accessDeniedPage("/Access_Denied").and().logout().logoutUrl("/site/logout")
-				.logoutSuccessUrl("/").invalidateHttpSession(true).deleteCookies("remember-me")
-				.deleteCookies("JSESSIONID").and().csrf()
-				.requireCsrfProtectionMatcher(new CsrfSecurityRequestMatcher());
+	    // Enable csrf for login form
+//	    http.csrf().requireCsrfProtectionMatcher(new CsrfSecurityRequestMatcher());
+	    // Configure login page
+	    http.formLogin().loginPage("/site/login").usernameParameter("ssoId").passwordParameter("password").failureUrl("/login?error").defaultSuccessUrl("/site/index").loginProcessingUrl("/site/login");
+	    //Configure remember me
+	    http.rememberMe().rememberMeParameter("remember-me").tokenRepository(tokenRepository).tokenValiditySeconds(86400);
+	    
+	    // Configure logout redirect
+	    http.logout().logoutSuccessUrl("/").invalidateHttpSession(true).deleteCookies("remember-me");
+	    // Ensure admin pages have correct role
+	    http.authorizeRequests().antMatchers("/site/user/**").access("hasRole('ADMIN') and hasRole('USER')");
+	    http.authorizeRequests().antMatchers("/site/admin/**").hasRole("ADMIN");
+	    http.authorizeRequests().antMatchers("/", "/bot**", "/site/login*"/* ,"/resources/**" */).permitAll();
+	    // Configure access denied exception redirect
+	    http.exceptionHandling().accessDeniedPage("/404");
 	}
 
 	@Bean

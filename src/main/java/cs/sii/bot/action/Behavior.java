@@ -65,7 +65,7 @@ public class Behavior {
 			} else
 				System.out.println("Bot not Ready, authentication failed");
 		}else{
-			networkService.updateDnsInformation();
+			//networkService.updateDnsInformation();
 
 		}
 	}
