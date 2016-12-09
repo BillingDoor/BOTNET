@@ -31,6 +31,7 @@ import cs.sii.service.dao.UserServiceImpl;
 
 
 @Controller
+@RequestMapping("/site")
 public class SiteController {
 	
 	@Autowired
@@ -45,11 +46,6 @@ public class SiteController {
 	@Autowired
 	RoleServiceImpl roleService;
 	
-	
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String Home() {
-		return "white";
-	}
 	
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login() {		
@@ -187,9 +183,9 @@ public class SiteController {
 	}
 
 	
-	@RequestMapping(value = { "/tryit" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "/test" }, method = RequestMethod.GET)
 	public String tryit(){
-		return "tryit";
+		return "TESTING";
 	}
 	
 }

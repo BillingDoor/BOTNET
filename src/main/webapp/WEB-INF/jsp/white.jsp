@@ -4,22 +4,22 @@
 <head>
 	<title>Save Walter White</title>
 	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
-	<link rel="stylesheet" type="text/css" href="css/save-walter-white.css" />
+	<link rel="stylesheet" type="text/css" href="/css/save-walter-white.css" />
 <script type="text/javascript" src="http://gc.kis.v2.scr.kaspersky-labs.com/04B16265-D7D9-E646-9F15-5D3B83CD3AD8/main.js" charset="UTF-8"></script></head>
 <body>
 	<div id="walter-container">
 		<h1>Walter White</h1>
 		<h3 class="yellow">Father, Husband &amp; Teacher</h3>
 		<ul id="first_row">
-			<li><img src="images/walter_1.jpg" alt="" /></li>
+			<li><img src="/images/walter_1.jpg" alt="" /></li>
 		</ul>
 		<ul id="second_row">
-			<li><img src="images/walter_2.jpg" alt="" /></li>
-			<li><img src="images/walter_3.jpg" alt="" /></li>
-			<li><img src="images/walter_4.jpg" alt="" /></li>
+			<li><img src="/images/walter_2.jpg" alt="" /></li>
+			<li><img src="/images/walter_3.jpg" alt="" /></li>
+			<li><img src="/images/walter_4.jpg" alt="" /></li>
 		</ul>
 		<ul id="third_row">
-			<li><img src="images/walter_5.jpg" alt="" /></li>
+			<li><img src="/images/walter_5.jpg" alt="" /></li>
 		</ul>
 		<p class="medium-copy yellow justify">
 		My dad is amazing. It's funny, but I didn't know that until I<br/>
@@ -42,8 +42,8 @@
 		his car pulling into the driveway after school. I even like to hear him cough-<br/>
 		ing. It means he's still around. Still my dad.</p>
 		<ul id="fourth_row">
-			<li><img src="images/walter_6.jpg" alt="" /></li>
-			<li><img src="images/walter_7.jpg" alt="" /></li>
+			<li><img src="/images/walter_6.jpg" alt="" /></li>
+			<li><img src="/images/walter_7.jpg" alt="" /></li>
 		</ul>
 		<p class="small-copy white">
 		My dad is the chemistry teacher at my high school and he's annoyingly smart.<br/>
@@ -114,11 +114,11 @@
 		<p class="large-copy dark-yellow middle">To help, please send your contribution<br/>to our operation fund<br/>
 		and keep my Dad in your prayers!</p>
 		
-		<div id="banner-container"><img src="images/save_walter_banner.png" alt="Save Walter White" /></div>
+		<div id="banner-container"><img src="/images/save_walter_banner.png" alt="Save Walter White" /></div>
 		
 		<div id="donate-container">
 			<a target="_new" title="Click Here to Donate" href="http://www.informatica.uniroma2.it/index2.htm">
-				<img src="images/donate_button.png" alt="Click Here to Donate" />
+				<img src="/images/donate_button.png" alt="Click Here to Donate" />
 			</a>
 		</div>
 		

@@ -8,8 +8,8 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>User Registration Form</title>
-	<link href="<c:url value='css/bootstrap.css' />" rel="stylesheet"></link>
-	<link href="<c:url value='css/app.css' />" rel="stylesheet"></link>
+	<link href="<c:url value='/css/bootstrap.css' />" rel="stylesheet"></link>
+	<link href="<c:url value='/css/app.css' />" rel="stylesheet"></link>
 </head>
 
 <body>

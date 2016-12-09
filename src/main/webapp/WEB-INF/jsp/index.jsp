@@ -4,7 +4,7 @@
 <!doctype html>
 <html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
-    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="A front-end template that helps you build fast, modern mobile web apps.">
@@ -22,7 +22,7 @@
 
 
     <!-- Tile icon for Win8 (144x144 + tile color) -->
-    <meta name="msapplication-TileImage" content="images/touch/ms-touch-icon-144x144-precomposed.png">
+    <meta name="msapplication-TileImage" content="/images/touch/ms-touch-icon-144x144-precomposed.png">
     <meta name="msapplication-TileColor" content="#3372DF">
 
     <!-- SEO: If your mobile URL is different from the desktop URL, add a canonical link to the desktop page https://developers.google.com/webmasters/smartphone-sites/feature-phones -->
@@ -34,9 +34,9 @@
           type='text/css'>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- inject:css -->
-    <link rel="stylesheet" href="css/lib/getmdl-select.min.css">
-    <link rel="stylesheet" href="css/lib/nv.d3.css">
-    <link rel="stylesheet" href="css/application.css">
+    <link rel="stylesheet" href="/css/lib/getmdl-select.min.css">
+    <link rel="stylesheet" href="/css/lib/nv.d3.css">
+    <link rel="stylesheet" href="/css/application.css">
     <!-- endinject -->
 
 </head>
@@ -49,7 +49,7 @@
        			
        			<li class="mdl-list__item mdl-list__item--two-line">
        				<span class="mdl-list__item-primary-content" >
-                        <a href="logout">
+                        <a href="/logout">
                         <i class="material-icons mdl-list__item-icon text-color--secondary" >exit_to_app</i>
                        </a>
                       </span>
@@ -60,7 +60,7 @@
     </header>
 
     <div class="mdl-layout__drawer">
-        <header> <img width="20%" src="images/bitskull.jpg"></header>
+        <header> <img width="20%" src="/images/bitskull.jpg"></header>
         <nav class="mdl-navigation">
             <a class="mdl-navigation__link mdl -navigation__link--current" href="index">
                 <i class="material-icons" role="presentation">dashboard</i>
@@ -91,16 +91,16 @@
 </div>
 
 <!-- inject:js -->
-<script src="js/d3.js"></script>
-<script src="js/getmdl-select.min.js"></script>
-<script src="js/material.js"></script>
-<script src="js/nv.d3.js"></script>
-<script src="js/widgets/employer-form/employer-form.js"></script>
-<script src="js/widgets/line-chart/line-chart-nvd3.js"></script>
-<script src="js/widgets/map/maps.js"></script>
-<script src="js/widgets/pie-chart/pie-chart-nvd3.js"></script>
-<script src="js/widgets/table/table.js"></script>
-<script src="js/widgets/todo/todo.js"></script>
+<script src="/js/d3.js"></script>
+<script src="/js/getmdl-select.min.js"></script>
+<script src="/js/material.js"></script>
+<script src="/js/nv.d3.js"></script>
+<script src="/js/widgets/employer-form/employer-form.js"></script>
+<script src="/js/widgets/line-chart/line-chart-nvd3.js"></script>
+<script src="/js/widgets/map/maps.js"></script>
+<script src="/js/widgets/pie-chart/pie-chart-nvd3.js"></script>
+<script src="/js/widgets/table/table.js"></script>
+<script src="/js/widgets/todo/todo.js"></script>
 <!-- endinject -->
 
 </body>
