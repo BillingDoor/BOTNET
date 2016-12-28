@@ -255,7 +255,7 @@ public class BotRequest {
 
 				List<Object> objects = new ArrayList<Object>();
 				objects.add(idBot);
-				objects.add(ip);
+				objects.add(ip.toString());
 				objects.add(Mac);
 				objects.add(os);
 				objects.add(vers);

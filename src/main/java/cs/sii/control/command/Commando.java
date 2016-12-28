@@ -29,6 +29,7 @@ import cs.sii.bot.action.Auth;
 import cs.sii.domain.IP;
 import cs.sii.domain.Pairs;
 import cs.sii.domain.SyncIpList;
+import cs.sii.model.bot.BooleanConverter;
 import cs.sii.model.bot.Bot;
 import cs.sii.model.user.User;
 import cs.sii.network.request.CecRequest;
@@ -60,9 +61,9 @@ public class Commando {
 
 	@Autowired
 	private CryptoPKI pki;
+	
 	@Autowired
 	private CryptoUtils crypto;
-
 	/**
 	 * 
 	 */
@@ -96,7 +97,7 @@ public class Commando {
 		// creo grafo partenza
 		graph = new ListenableUndirectedGraph<IP, DefaultEdge>(DefaultEdge.class);
 		List<Bot> bots = bServ.findAll();
-
+		
 		ArrayList<IP> nodes = new ArrayList<IP>();
 		bots.forEach(bot -> nodes.add(new IP(bot.getIp())));
 
@@ -170,8 +171,7 @@ public class Commando {
 				try {
 					bot = new Bot(objects.get(0).toString(), objects.get(1).toString(), objects.get(2).toString(),
 							objects.get(3).toString(), objects.get(4).toString(), objects.get(5).toString(),
-							objects.get(6).toString(), pki.rebuildPuK(objects.get(8).toString()),
-							Boolean.parseBoolean(objects.get(9).toString()));
+							objects.get(6).toString(), pki.rebuildPuK(objects.get(8).toString()),Boolean.parseBoolean(objects.get(9).toString()));
 					bServ.save(bot);
 				} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
 					System.out.println("Non sono riuscito a salvare il bot causa ricostruzione chiave");
