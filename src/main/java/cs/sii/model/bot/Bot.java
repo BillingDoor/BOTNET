@@ -50,7 +50,7 @@ public class Bot implements Serializable {
 	private String usernameOS;
 	@NotEmpty
 	@Column(name = "elegible", nullable = false)
-	@Type(type="org.hibernate.type.NumericBooleanType")
+//	@Type(type="org.hibernate.type.NumericBooleanType")
 	private boolean elegible;
 	
 	@NotEmpty
@@ -72,7 +72,7 @@ public class Bot implements Serializable {
 	}
 	
 	public Bot(String idBot, String ip, String mac, String os, String ver, String arch, String usernameOS, PublicKey pk,
-			User botUser, Boolean elegible) {
+			User botUser, boolean elegible) {
 		super();
 		this.idBot = idBot;
 		this.ip = ip;
@@ -88,7 +88,7 @@ public class Bot implements Serializable {
 
 	
 	public Bot(String idBot, String ip, String mac, String os, String ver, String arch, String usernameOS,
-			PublicKey pk, Boolean elegible) {
+			PublicKey pk, boolean elegible) {
 		super();
 		this.idBot = idBot;
 		this.ip = ip;
