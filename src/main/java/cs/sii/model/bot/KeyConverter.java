@@ -22,7 +22,7 @@ public class KeyConverter implements AttributeConverter<PublicKey, String> {
 	 */
 	@Override
 	public String convertToDatabaseColumn(PublicKey key) {
-
+		System.out.println("converterTODB");
 		try {
 			if(key!=null){
 				String s = pki.demolishPuK(key);
@@ -42,9 +42,14 @@ public class KeyConverter implements AttributeConverter<PublicKey, String> {
 	 */
 	@Override
 	public PublicKey convertToEntityAttribute(String keyEncoding) {
+		System.out.println("converterFromDB"+keyEncoding);
+
 		try {
-			if ((keyEncoding != null))
-				return pki.rebuildPuK(keyEncoding);
+			if ((keyEncoding != null)){
+				PublicKey p = pki.rebuildPuK(keyEncoding);
+				System.out.println("PD");
+				return p;
+			}
 		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
 			System.out.println("errore convert from DB");
 			e.printStackTrace();

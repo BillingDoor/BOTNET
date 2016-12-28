@@ -21,6 +21,7 @@ public class BotServiceImpl {
 	}
 
 	public Boolean save(Bot bot) {
+		System.out.println(" porco dio  "+ Base64.encodeBase64String(bot.getPubKey().getEncoded()).length());
 		System.out.println(" bot "+bot.getIdBot() + " "+ bot.getIp()  + " "+ bot.isElegible()  + " "+ Base64.encodeBase64String(bot.getPubKey().getEncoded()));
 		if (bRep.findByIdBot(bot.getIdBot()) == null) {
 			bRep.save(bot);
