@@ -19,6 +19,8 @@ import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.google.common.reflect.TypeToken;
+
 import cs.sii.domain.IP;
 import cs.sii.domain.Pairs;
 import cs.sii.domain.SyncIpList;
@@ -146,8 +148,9 @@ public class BotRequest {
 			try {
 				System.out.println("url request " + dnsUrl);
 				String url = HTTP + dnsUrl;
+				//Type type=new TypeToken<Pairs<IP,String>>(){}.getType();
 				// TODO capire se la richiesta è fatta bene
-				cec = restTemplate.getForObject(HTTP + dnsUrl, cec.getClass());
+				cec = restTemplate.getForObject(url,Pairs.class);
 				return cec;
 			} catch (Exception e) {
 				System.err.println("Errore ricezione Ip da Mock Dns Server" + e);
