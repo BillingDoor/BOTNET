@@ -20,7 +20,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import cs.sii.model.user.User;
 
-
 @Entity
 @Table(name = "Bot")
 public class Bot implements Serializable {
@@ -49,28 +48,21 @@ public class Bot implements Serializable {
 	@Column(name = "UsernameOS", nullable = false)
 	private String usernameOS;
 	@NotEmpty
-	@Column(name = "elegible", nullable = false)
-//	@Type(type="org.hibernate.type.NumericBooleanType")
+	@Column(name = "elegible", columnDefinition = "BOOLEAN", nullable = false)
 	private boolean elegible;
-	
 	@NotEmpty
-	@Column(name = "PubKey", nullable = false , length = 4000)
+	@Column(name = "PubKey", nullable = false, length = 4000)
 	@Convert(converter = KeyConverter.class)
 	private PublicKey pubKey;
 
-	
-
-	
-	
-	
 	@ManyToOne
 	@JoinColumn(name = "User_id", nullable = true)
 	private User botUser;
 
-	public  Bot() {
+	public Bot() {
 
 	}
-	
+
 	public Bot(String idBot, String ip, String mac, String os, String ver, String arch, String usernameOS, PublicKey pk,
 			User botUser, boolean elegible) {
 		super();
@@ -86,9 +78,8 @@ public class Bot implements Serializable {
 		this.elegible = elegible;
 	}
 
-	
-	public Bot(String idBot, String ip, String mac, String os, String ver, String arch, String usernameOS,
-			PublicKey pk, boolean elegible) {
+	public Bot(String idBot, String ip, String mac, String os, String ver, String arch, String usernameOS, PublicKey pk,
+			boolean elegible) {
 		super();
 		this.idBot = idBot;
 		this.ip = ip;
@@ -173,8 +164,6 @@ public class Bot implements Serializable {
 	public void setBotUser(User botUser) {
 		this.botUser = botUser;
 	}
-
-	
 
 	public boolean getElegible() {
 		return elegible;
