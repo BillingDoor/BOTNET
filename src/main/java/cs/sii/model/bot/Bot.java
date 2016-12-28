@@ -49,7 +49,7 @@ public class Bot implements Serializable {
 	private String usernameOS;
 	@NotEmpty
 	@Column(name = "elegible", nullable = false)
-	private Boolean elegible;
+	private boolean elegible;
 	
 	@NotEmpty
 	@Column(name = "PubKey", nullable = false , length = 4000)
