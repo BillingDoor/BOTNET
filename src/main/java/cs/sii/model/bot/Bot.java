@@ -176,11 +176,11 @@ public class Bot implements Serializable {
 
 	
 
-	public Boolean getElegible() {
+	public boolean getElegible() {
 		return elegible;
 	}
 
-	public void setElegible(Boolean elegible) {
+	public void setElegible(boolean elegible) {
 		this.elegible = elegible;
 	}
 
