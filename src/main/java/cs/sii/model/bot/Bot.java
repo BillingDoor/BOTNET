@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.apache.commons.codec.binary.Base64;
+import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -49,6 +50,7 @@ public class Bot implements Serializable {
 	private String usernameOS;
 	@NotEmpty
 	@Column(name = "elegible", nullable = false)
+	@Type(type="org.hibernate.type.NumericBooleanType")
 	private boolean elegible;
 	
 	@NotEmpty
