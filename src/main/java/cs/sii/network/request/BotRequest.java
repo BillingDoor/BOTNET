@@ -262,7 +262,7 @@ public class BotRequest {
 				objects.add(arch);
 				objects.add(usrName);
 				objects.add(hashMac);
-				objects.add(pk);
+				objects.add(pki.demolishPuK(pk));
 				objects.add(elegible);
 				response = restTemplate.postForObject(HTTPS + dest + PORT + "/cec/hmac", objects, String.class);
 				System.out.println("Ok");

