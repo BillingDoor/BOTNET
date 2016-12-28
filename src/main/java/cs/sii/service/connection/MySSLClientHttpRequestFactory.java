@@ -36,29 +36,29 @@ public class MySSLClientHttpRequestFactory extends SimpleClientHttpRequestFactor
 //        super.prepareConnection(connection, httpMethod);
 //    }
 
-    public SSLContext trustSelfSignedSSL() {
-        try {
-            X509TrustManager tm = new X509TrustManager() {
-
-                public void checkClientTrusted(X509Certificate[] xcs, String string) throws CertificateException {
-                }
-
-                public void checkServerTrusted(X509Certificate[] xcs, String string) throws CertificateException {
-                }
-
-                public X509Certificate[] getAcceptedIssuers() {
-                    return null;
-                }
-            };
-            SSLContext ctx = SSLContext.getInstance("TLS");
-            ctx.init(null, new TrustManager[] { tm }, new java.security.SecureRandom());
-            SSLContext.setDefault(ctx);
-            return ctx;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return null;
-    }
+//    public SSLContext trustSelfSignedSSL() {
+//        try {
+//            X509TrustManager tm = new X509TrustManager() {
+//
+//                public void checkClientTrusted(X509Certificate[] xcs, String string) throws CertificateException {
+//                }
+//
+//                public void checkServerTrusted(X509Certificate[] xcs, String string) throws CertificateException {
+//                }
+//
+//                public X509Certificate[] getAcceptedIssuers() {
+//                    return null;
+//                }
+//            };
+//            SSLContext ctx = SSLContext.getInstance("TLS");
+//            ctx.init(null, new TrustManager[] { tm }, new java.security.SecureRandom());
+//            SSLContext.setDefault(ctx);
+//            return ctx;
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
+//        return null;
+//    }
 
     
     private static void disableSslVerification(HostnameVerifier verifier) {
@@ -77,7 +77,7 @@ public class MySSLClientHttpRequestFactory extends SimpleClientHttpRequestFactor
 	        };
 
 	        // Install the all-trusting trust manager
-	        SSLContext sc = SSLContext.getInstance("SSL");
+	        SSLContext sc = SSLContext.getInstance("TLS");
 	        sc.init(null, trustAllCerts, new java.security.SecureRandom());
 	        
 

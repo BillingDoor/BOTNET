@@ -237,11 +237,60 @@ public class CryptoPKI {
 //	 return prK;
 //	 }
 	//
-	 public PublicKey rebuildPuK(String keyEncoding) throws NoSuchAlgorithmException, InvalidKeySpecException {
-	 byte[] encoded = Base64.decodeBase64(keyEncoding);
-	 PublicKey puK = fact.generatePublic(new X509EncodedKeySpec(encoded));
+	 /**
+	 * @param keyEncoding
+	 * @return
+	 * @throws NoSuchAlgorithmException
+	 * @throws InvalidKeySpecException
+	 */
+	public PublicKey rebuildPuK(String keyEncoding) throws NoSuchAlgorithmException, InvalidKeySpecException {
+	 PublicKey puK = fact.generatePublic(new X509EncodedKeySpec(Base64.decodeBase64(keyEncoding)));
 	 return puK;
 	 }
+	 
+	 /**
+	 * @param key
+	 * @return
+	 * @throws NoSuchAlgorithmException
+	 * @throws InvalidKeySpecException
+	 */
+	public String demolishPuK(PublicKey key) throws NoSuchAlgorithmException, InvalidKeySpecException {
+	 return  Base64.encodeBase64String(key.getEncoded());
+	 }
+	 
+	 
+	 
+	public CryptoUtils getCrypto() {
+		return crypto;
+	}
+
+	public void setCrypto(CryptoUtils crypto) {
+		this.crypto = crypto;
+	}
+
+	public Signature getSignature() {
+		return signature;
+	}
+
+	public void setSignature(Signature signature) {
+		this.signature = signature;
+	}
+
+	public PrivateKey getPrivERSAKey() {
+		return privERSAKey;
+	}
+
+	public void setPrivERSAKey(PrivateKey privERSAKey) {
+		this.privERSAKey = privERSAKey;
+	}
+
+	public PublicKey getPubERSAKey() {
+		return pubERSAKey;
+	}
+
+	public void setPubERSAKey(PublicKey pubERSAKey) {
+		this.pubERSAKey = pubERSAKey;
+	}
 
 	//
 	// /**

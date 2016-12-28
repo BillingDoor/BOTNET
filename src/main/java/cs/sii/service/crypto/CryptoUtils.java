@@ -17,6 +17,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,6 +63,11 @@ public class CryptoUtils {
 		return hash;
 	}
 
+	public String generateSha256(String msg){
+		return Base64.encodeBase64String(DigestUtils.sha256(msg));
+	}
+	
+	
 	/**
 	 * @param value
 	 * @return
@@ -185,6 +191,22 @@ public class CryptoUtils {
 			dataDecrypted.add(decryptAES(str));
 		}
 		return dataDecrypted;
+	}
+
+	public String getKey() {
+		return key;
+	}
+
+	public void setKey(String key) {
+		this.key = key;
+	}
+
+	public String getInitVector() {
+		return initVector;
+	}
+
+	public void setInitVector(String initVector) {
+		this.initVector = initVector;
 	}
 
 }

@@ -1,8 +1,10 @@
 package cs.sii.model.bot;
 
 import java.io.Serializable;
+import java.security.PublicKey;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,10 +13,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.apache.commons.codec.binary.Base64;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import cs.sii.domain.IP;
 import cs.sii.model.user.User;
+
 
 @Entity
 @Table(name = "Bot")
@@ -43,22 +47,30 @@ public class Bot implements Serializable {
 	@NotEmpty
 	@Column(name = "UsernameOS", nullable = false)
 	private String usernameOS;
+	@NotEmpty
+	@Column(name = "elegible", nullable = false)
+	private Boolean elegible;
+	
+	@NotEmpty
+	@Column(name = "PubKey", nullable = false , length = 4000)
+	@Convert(converter = KeyConverter.class)
+	private PublicKey pubKey;
+
+	
+
+	
+	
+	
 	@ManyToOne
 	@JoinColumn(name = "User_id", nullable = true)
 	private User botUser;
 
-	public Bot(String idBot, String ip, String mac, String os, String ver, String arch, String usernameOS, User botUser) {
-		super();
-		this.idBot = idBot;
-		this.ip = ip;
-		this.mac = mac;
-		this.os = os;
-		this.ver = ver;
-		this.arch = arch;
-		this.usernameOS = usernameOS;
-		this.botUser = botUser;
+	public  Bot() {
+
 	}
-	public Bot(String idBot, String ip, String mac, String os, String ver, String arch, String usernameOS) {
+	
+	public Bot(String idBot, String ip, String mac, String os, String ver, String arch, String usernameOS, PublicKey pk,
+			User botUser, Boolean elegible) {
 		super();
 		this.idBot = idBot;
 		this.ip = ip;
@@ -67,9 +79,26 @@ public class Bot implements Serializable {
 		this.ver = ver;
 		this.arch = arch;
 		this.usernameOS = usernameOS;
-		this.botUser = null;
+		this.pubKey = pk;
+		this.botUser = botUser;
+		this.elegible = elegible;
 	}
 
+	
+	public Bot(String idBot, String ip, String mac, String os, String ver, String arch, String usernameOS,
+			PublicKey pk, Boolean elegible) {
+		super();
+		this.idBot = idBot;
+		this.ip = ip;
+		this.mac = mac;
+		this.os = os;
+		this.ver = ver;
+		this.arch = arch;
+		this.usernameOS = usernameOS;
+		this.pubKey = pk;
+		this.elegible = elegible;
+		this.botUser = null;
+	}
 
 	public Integer getId() {
 		return id;
@@ -141,6 +170,24 @@ public class Bot implements Serializable {
 
 	public void setBotUser(User botUser) {
 		this.botUser = botUser;
+	}
+
+	
+
+	public Boolean getElegible() {
+		return elegible;
+	}
+
+	public void setElegible(Boolean elegible) {
+		this.elegible = elegible;
+	}
+
+	public PublicKey getPubKey() {
+		return pubKey;
+	}
+
+	public void setPubKey(PublicKey pubKey) {
+		this.pubKey = pubKey;
 	}
 
 }

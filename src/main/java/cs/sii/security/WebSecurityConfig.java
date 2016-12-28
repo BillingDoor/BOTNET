@@ -31,14 +31,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	PersistentTokenRepository tokenRepository;
 
 	@Autowired
-
 	CsrfSecurityRequestMatcher kk;
 	
+	
+	
+//	@Autowired
+//	XUserAgentFilter myuserAgentFilter ;
+	
 	@Override
-	 @Order('1')
+	 @Order('9')
 	protected void configure(HttpSecurity http) throws Exception {
 
-
+//		http.addFilter(XUserAgent());
 	    // Enable csrf for login form
 	    http.csrf().requireCsrfProtectionMatcher(kk );
 	    // Configure login page
@@ -51,10 +55,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	    // Ensure admin pages have correct role
 	    http.authorizeRequests().antMatchers("/site/user/**").access("hasRole('ADMIN') and hasRole('USER')");
 	    http.authorizeRequests().antMatchers("/site/admin/**").hasRole("ADMIN");
-	    http.authorizeRequests().antMatchers("/", "/bot**", "/cec**", "/site/login*"/* ,"/resources/**" */).permitAll();
+	    http.authorizeRequests().antMatchers("/", "/bot**", "/cec**"/* ,"/resources/**" */).permitAll();
+	    
+	    
+//	    http.authorizeRequests().antMatchers( "/site/login*").anonymous().
 	    // Configure access denied exception redirect
 	    http.exceptionHandling().accessDeniedPage("/404");
+	    //configure flter
+	  
 	}
+//	@Bean
+//	public XUserAgentFilter userAgentFilter() {
+//		
+//		return new XUserAgentFilter();
+//	}
 
 	
 	@Bean
@@ -87,6 +101,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public AuthenticationTrustResolver getAuthenticationTrustResolver() {
 		return new AuthenticationTrustResolverImpl();
 	}
+	
 
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
