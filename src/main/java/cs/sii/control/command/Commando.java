@@ -24,12 +24,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import ch.qos.logback.classic.net.SyslogAppender;
 import cs.sii.bot.action.Auth;
 import cs.sii.domain.IP;
 import cs.sii.domain.Pairs;
 import cs.sii.domain.SyncIpList;
-import cs.sii.model.bot.BooleanConverter;
 import cs.sii.model.bot.Bot;
 import cs.sii.model.user.User;
 import cs.sii.network.request.CecRequest;

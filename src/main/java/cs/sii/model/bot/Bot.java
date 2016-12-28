@@ -49,9 +49,13 @@ public class Bot implements Serializable {
 	private String usernameOS;
 	@NotEmpty
 	@Column(name = "elegible", nullable = false)
-//	@Type(type="org.hibernate.type.NumericBooleanType")
-	@Convert(converter = BooleanConverter.class)
+	@Type(type="boolean")
 	private Boolean elegible;
+
+	
+	//	@Type(type="org.hibernate.type.NumericBooleanType")
+//	@Convert(converter = BooleanConverter.class)
+	
 	@NotEmpty
 	@Column(name = "PubKey", nullable = false, length = 5000)
 	@Convert(converter = KeyConverter.class)
