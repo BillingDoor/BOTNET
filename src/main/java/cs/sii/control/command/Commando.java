@@ -85,7 +85,7 @@ public class Commando {
 					nServ.getArchOS(), 
 					nServ.getUsernameOS(),
 					pki.getPubRSAKey(),
-					nServ.isElegible());
+					("  "+nServ.isElegible()));
 			bServ.save(bot);
 	}
 
@@ -179,7 +179,7 @@ public class Commando {
 				try {
 					bot = new Bot(objects.get(0).toString(), objects.get(1).toString(), objects.get(2).toString(),
 							objects.get(3).toString(), objects.get(4).toString(), objects.get(5).toString(),
-							objects.get(6).toString(), pki.rebuildPuK(objects.get(8).toString()),Boolean.parseBoolean(objects.get(9).toString()));
+							objects.get(6).toString(), pki.rebuildPuK(objects.get(8).toString()),objects.get(9).toString());
 					bServ.save(bot);
 				} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
 					System.out.println("Non sono riuscito a salvare il bot causa ricostruzione chiave");

@@ -7,6 +7,7 @@ import java.security.spec.InvalidKeySpecException;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import cs.sii.service.crypto.CryptoPKI;
@@ -23,17 +24,12 @@ public class KeyConverter implements AttributeConverter<PublicKey, String> {
 	@Override
 	public String convertToDatabaseColumn(PublicKey key) {
 		System.out.println("converterTODB");
-		try {
-			if(key!=null){
-				String s = pki.demolishPuK(key);
-				System.out.println("conversion" + s.length());
-				return s;
-			}
-			System.out.println("conversione fallita");
-		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-			System.out.println("errore convert to DB");
-			e.printStackTrace();
+		if(key!=null){
+			String s=Base64.encodeBase64String(key.getEncoded());
+			System.out.println("conversion" + s.length());
+			return s;
 		}
+		System.out.println("conversione fallita");
 		return "";
 	}
 
