@@ -73,8 +73,10 @@ public class Commando {
 	 * 
 	 */
 	public void initializeCeC() {
+		nServ.updateDnsInformation();
 		graph = createNetworkP2P();
 		System.out.println("blab " + graph);
+		
 
 	}
 
