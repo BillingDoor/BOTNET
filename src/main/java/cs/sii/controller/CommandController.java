@@ -3,36 +3,23 @@ package cs.sii.controller;
 import java.io.IOException;
 import java.security.PublicKey;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
-import cs.sii.bot.action.Auth;
-import cs.sii.bot.action.Behavior;
 import cs.sii.config.onLoad.Config;
 import cs.sii.control.command.Commando;
 import cs.sii.domain.IP;
 import cs.sii.domain.Pairs;
 import cs.sii.domain.SyncIpList;
-import cs.sii.model.bot.Bot;
-import cs.sii.model.bot.BotRepository;
-import cs.sii.service.connection.NetworkService;
-import cs.sii.service.crypto.CryptoPKI;
-import cs.sii.service.dao.BotServiceImpl;
-import cs.sii.service.dao.RoleServiceImpl;
 
 @Controller
 @RequestMapping("/cec")
