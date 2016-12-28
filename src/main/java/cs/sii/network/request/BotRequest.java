@@ -142,15 +142,16 @@ public class BotRequest {
 	}
 
 	// da valutare se devono essere asincroni
-	public Pairs<IP, String> getIpCeCFromDnsServer(String dnsUrl) {
-		Pairs<IP, String> cec = new Pairs<IP, String>();
+	public Pairs<String, String> getIpCeCFromDnsServer(String dnsUrl) {
+		Pairs<String, String> cec = new Pairs<>();
 		while (true) {
 			try {
 				System.out.println("url request " + dnsUrl);
 				String url = HTTP + dnsUrl;
 				//Type type=new TypeToken<Pairs<IP,String>>(){}.getType();
 				// TODO capire se la richiesta è fatta bene
-				cec = restTemplate.getForObject(url,Pairs.class);
+//				cec = restTemplate.getForObject(url,Pairs.class);
+				cec = restTemplate.postForObject(url, null, cec.getClass());
 				return cec;
 			} catch (Exception e) {
 				System.err.println("Errore ricezione Ip da Mock Dns Server" + e);
@@ -213,6 +214,10 @@ public class BotRequest {
 		}
 	}
 
+	
+	
+	
+	
 	// da valutare se devono essere asincroni
 	/**
 	 * @param idBot
@@ -265,7 +270,7 @@ public class BotRequest {
 			} catch (Exception e) {
 				// e.printStackTrace();
 				System.out.println("response:   " + response);
-				System.out.println("Errore ricezione Challenge");
+				System.out.println("Errore risoluzione Hmac con CeC");
 				counter++;
 				try {
 					Thread.sleep(WAIT_RANGE);
