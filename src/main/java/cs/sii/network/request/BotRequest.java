@@ -7,8 +7,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Future;
 
@@ -22,11 +20,8 @@ import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.google.common.reflect.TypeToken;
-
 import cs.sii.domain.IP;
 import cs.sii.domain.Pairs;
-import cs.sii.domain.SyncIpList;
 import cs.sii.service.crypto.CryptoPKI;
 
 @Service("BotRequest")
