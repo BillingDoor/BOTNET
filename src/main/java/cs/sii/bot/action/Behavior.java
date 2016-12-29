@@ -71,7 +71,13 @@ public class Behavior {
 		List<Pairs<IP, PublicKey>> ips = nServ.getCommandConquerIps().getList();
 		List<Object> newOb= new ArrayList<Object>();
 		try {
-			newOb.addAll(pki.getCrypto().decodeStrings(request.askNeighbours(ips.get(0).getValue1().toString(), nServ.getMyIp().toString(), data)));
+			ArrayList<String> response=null;
+			response=request.askNeighbours(ips.get(0).getValue1().toString(), nServ.getMyIp().toString(),data);
+			if(response!=null){
+				newOb.addAll(pki.getCrypto().decodeStrings(response));
+			}else
+				System.out.println("torno null");
+			
 		} catch (InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException
 				| BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException | IOException e) {
 			e.printStackTrace();
