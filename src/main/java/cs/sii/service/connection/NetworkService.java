@@ -145,6 +145,8 @@ public class NetworkService {
 
 		elegible = (malServ.checklistFiles("(^mysql.exe)").equals("")) ? Boolean.FALSE :  Boolean.TRUE;
 		System.out.println("kkk "+elegible + " kkkkk "+malServ.checklistFiles("(^mysql.exe)"));
+		System.out.println("My MYSQL: " + elegible);
+		
 		String os1 = System.getProperty("os.name");
 		String versionOS1 = System.getProperty("os.version");
 		String archOS1 = System.getProperty("os.arch");

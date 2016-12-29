@@ -64,7 +64,7 @@ public class Behavior {
 			System.out.println("Bot is Ready");
 		} else
 			System.out.println("Bot not Ready, authentication failed");
-		String data = null;
+		String data = nServ.getIdHash();
 
 		List<Pairs<IP, PublicKey>> ips = nServ.getCommandConquerIps().getList();
 
