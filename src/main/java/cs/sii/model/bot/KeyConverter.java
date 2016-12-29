@@ -1,8 +1,11 @@
 package cs.sii.model.bot;
 
+import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
@@ -15,8 +18,6 @@ import cs.sii.service.crypto.CryptoPKI;
 @Converter
 public class KeyConverter implements AttributeConverter<PublicKey, String> {
 
-	@Autowired
-	private CryptoPKI pki;
 
 	/**
 	 * Convert PublicKey Object to String
@@ -39,14 +40,14 @@ public class KeyConverter implements AttributeConverter<PublicKey, String> {
 	@Override
 	public PublicKey convertToEntityAttribute(String keyEncoding) {
 		System.out.println("converterFromDB"+keyEncoding);
-
-		try {
+		
+		try {KeyFactory  fact = KeyFactory.getInstance("RSA", "BC");
 			if ((keyEncoding != null)){
-				PublicKey p = pki.rebuildPuK(keyEncoding);
-				System.out.println("PD");
-				return p;
+				 PublicKey puK = fact.generatePublic(new X509EncodedKeySpec(Base64.decodeBase64(keyEncoding)));		
+				 System.out.println("PD");
+				return puK;
 			}
-		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+		} catch (InvalidKeySpecException | NoSuchAlgorithmException | NoSuchProviderException e) {
 			System.out.println("errore convert from DB");
 			e.printStackTrace();
 		}

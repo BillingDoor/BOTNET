@@ -35,7 +35,7 @@ public class CommandController {
 	
 	
 	
-	@RequestMapping(value = "/Neighbours", method = RequestMethod.POST)
+	@RequestMapping(value = "/neighbours", method = RequestMethod.POST)
 	@ResponseBody
 	public SyncIpList<IP, PublicKey> getNeighbours(@RequestBody String data, HttpServletResponse error) throws IOException {
 		return cmm.getNeighbours(data);
