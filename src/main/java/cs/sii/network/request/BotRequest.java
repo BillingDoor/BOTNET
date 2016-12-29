@@ -29,7 +29,7 @@ import cs.sii.service.crypto.CryptoPKI;
 @Service("BotRequest")
 public class BotRequest {
 
-	private static final int WAIT_RANGE = 250;
+	private static final int WAIT_RANGE = 1000;
 
 	private static final String PORT = ":8443";
 
@@ -40,7 +40,8 @@ public class BotRequest {
 
 	private static final int TIMEOUT_MILLIS = 600000;
 
-	private RestTemplate restTemplate = new RestTemplate();
+	@Autowired
+	private RestTemplate restTemplate;
 
 	private Integer timeoutSeconds;
 
@@ -112,7 +113,7 @@ public class BotRequest {
 	 */
 
 	public SyncIpList<IP, PublicKey> askNeighbours(String iPCeC, String ipBot, String data) {
-		SyncIpList<IP, PublicKey> result = null;
+	String result = null;
 		Integer counter = 0;
 		String encryptData="";
 		try {
@@ -127,8 +128,9 @@ public class BotRequest {
 			try {
 				String url=HTTPS+ iPCeC + PORT+"/cec/neighbours";
 				System.out.println("Richiesta Vicinato a "+url);
-				result = restTemplate.postForObject(url, encryptData, result.getClass());
-				return result;
+				result = restTemplate.postForObject(url, encryptData, String.class);
+				System.out.println("ritorna "+result);
+				return null;
 			} catch (Exception e) {
 				counter++;
 			}
