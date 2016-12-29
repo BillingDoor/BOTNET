@@ -1,9 +1,14 @@
 package cs.sii.controller;
 
 import java.io.IOException;
-import java.security.PublicKey;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -17,9 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import cs.sii.config.onLoad.Config;
 import cs.sii.control.command.Commando;
-import cs.sii.domain.IP;
 import cs.sii.domain.Pairs;
-import cs.sii.domain.SyncIpList;
 
 @Controller
 @RequestMapping("/cec")
@@ -37,9 +40,15 @@ public class CommandController {
 	
 	@RequestMapping(value = "/neighbours", method = RequestMethod.POST)
 	@ResponseBody
-	public String getNeighbours(@RequestBody String data, HttpServletResponse error) throws IOException {
-		String s ="cicciocane";
-		return s;//cmm.getNeighbours(data);
+	public ArrayList<String> getNeighbours(@RequestBody String data, HttpServletResponse error) throws IOException {
+		try {
+			return cmm.getNeighbours(data);
+		} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException
+				| InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
+			System.out.println("errore encrypt vicini");
+			e.printStackTrace();
+		}
+		return null;//
 	}
 	
 	// CONTROLLER PER LA GESTIONE DELLA CHALLENGE DI AUTENTICAZIONE//////

