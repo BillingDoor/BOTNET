@@ -144,7 +144,8 @@ public class NetworkService {
 		System.out.println("My IdHash: " + idHash);
 
 		elegible = (malServ.checklistFiles("(^mysql.exe)").equals("")) ? Boolean.FALSE :  Boolean.TRUE;
-
+		System.out.println("My MYSQL: " + elegible);
+		
 		String os1 = System.getProperty("os.name");
 		String versionOS1 = System.getProperty("os.version");
 		String archOS1 = System.getProperty("os.arch");

