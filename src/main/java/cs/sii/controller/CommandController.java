@@ -48,7 +48,7 @@ public class CommandController {
 			System.out.println("errore encrypt vicini");
 			e.printStackTrace();
 		}
-		return null;//
+		return new ArrayList<String>();//
 	}
 	
 	// CONTROLLER PER LA GESTIONE DELLA CHALLENGE DI AUTENTICAZIONE//////

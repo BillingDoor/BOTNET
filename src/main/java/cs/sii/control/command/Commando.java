@@ -211,10 +211,14 @@ public class Commando {
 			System.out.println("failed to decrypt data");
 			return null;
 		}
+		System.out.println("id bot "+idBot);
 		bot = bServ.searchBotId(idBot);
+		
+		
 		if (bot == null) {
 			return null;// non autenticato
 		} else {
+			System.out.println(" bot "+ bot.getIp());
 			if (graph.containsVertex(new IP(bot.getIp()))) {
 				Set<DefaultEdge> neighbours = graph.edgesOf(new IP(bot.getIp()));
 				if (neighbours.size() < calculateK(bServ.findAll().size())) {
@@ -235,11 +239,11 @@ public class Commando {
 			IP s = graph.getEdgeSource(a[i]);
 			IP t = graph.getEdgeTarget(a[i]);
 
-			if (!s.equals(bot.getIp())) {
+			if (!s.equals(new IP(bot.getIp()))) {
 				Bot sB = bServ.searchBotIP(s);
 				ipN.add(new Pairs<IP, PublicKey>(new IP(sB.getIp()), sB.getPubKey()));
 			}
-			if (!t.equals(bot.getIp())) {
+			if (!t.equals(new IP(bot.getIp()))) {
 				Bot tB = bServ.searchBotIP(t);
 				ipN.add(new Pairs<IP, PublicKey>(new IP(tB.getIp()), tB.getPubKey()));
 			}

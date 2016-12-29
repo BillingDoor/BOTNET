@@ -30,15 +30,15 @@ public class ScheduledTasksNet {
 	private Behavior botB;
 	
 	
-//TODO da fare un pò di cose vedi sotto
-	@Scheduled(fixedRate = 3600000)
-	public void computeNet() {
-		if (configEngine.isCommandandconquerStatus())
-//			nServ.setConstructList(botServ.findAll());
-			cmm.updateNetworkP2P();
-
-	}
-	
+////TODO da fare un pò di cose vedi sotto
+//	@Scheduled(fixedRate = 3600000)
+//	public void computeNet() {
+//		if (configEngine.isCommandandconquerStatus())
+////			nServ.setConstructList(botServ.findAll());
+//			cmm.updateNetworkP2P();
+//
+//	}
+//	
 	
 	public void getNeighbours() {
 		if (!configEngine.isCommandandconquerStatus())
