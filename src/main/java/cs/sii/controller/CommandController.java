@@ -37,8 +37,9 @@ public class CommandController {
 	
 	@RequestMapping(value = "/neighbours", method = RequestMethod.POST)
 	@ResponseBody
-	public SyncIpList<IP, PublicKey> getNeighbours(@RequestBody String data, HttpServletResponse error) throws IOException {
-		return cmm.getNeighbours(data);
+	public String getNeighbours(@RequestBody String data, HttpServletResponse error) throws IOException {
+		String s ="cicciocane";
+		return s;//cmm.getNeighbours(data);
 	}
 	
 	// CONTROLLER PER LA GESTIONE DELLA CHALLENGE DI AUTENTICAZIONE//////

@@ -85,7 +85,7 @@ public class Commando {
 					nServ.getArchOS(), 
 					nServ.getUsernameOS(),
 					pki.getPubRSAKey(),
-					("  "+nServ.isElegible()));
+					(nServ.isElegible()+""));
 			bServ.save(bot);
 	}
 
