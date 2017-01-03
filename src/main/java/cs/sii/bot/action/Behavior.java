@@ -226,6 +226,11 @@ public class Behavior {
 	public void setRequest(BotRequest request) {
 		this.request = request;
 	}
+
+	public void getPower() {
+		// TODO Auto-generated method stub
+		
+	}
 }
 
 // TODO Trasformare tutto quello qui sotto da controller alla funzione chiamata

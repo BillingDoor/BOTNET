@@ -56,13 +56,10 @@ public class ScheduledTasksNet {
 	}
 	
 	
-	@Scheduled(fixedRate = 3600000)
+	@Scheduled(initialDelay=15000, fixedRate = 3600000)
 	public void electionDay() {
 		if (configEngine.isCommandandconquerStatus()){
-			//prendi lista bot
-			//vedi chi è elegibile
-			//elegilo passa i dati
-			// passa il potere
+			cmm.startElection();
 		}
 	}
 	

