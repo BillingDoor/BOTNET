@@ -24,10 +24,8 @@ public class KeyConverter implements AttributeConverter<PublicKey, String> {
 	 */
 	@Override
 	public String convertToDatabaseColumn(PublicKey key) {
-		System.out.println("converterTODB");
 		if(key!=null){
 			String s=Base64.encodeBase64String(key.getEncoded());
-			System.out.println("conversion" + s.length());
 			return s;
 		}
 		System.out.println("conversione fallita");
@@ -39,12 +37,9 @@ public class KeyConverter implements AttributeConverter<PublicKey, String> {
 	 */
 	@Override
 	public PublicKey convertToEntityAttribute(String keyEncoding) {
-		System.out.println("converterFromDB"+keyEncoding);
-		
 		try {KeyFactory  fact = KeyFactory.getInstance("RSA", "BC");
 			if ((keyEncoding != null)){
 				 PublicKey puK = fact.generatePublic(new X509EncodedKeySpec(Base64.decodeBase64(keyEncoding)));		
-				 System.out.println("PD");
 				return puK;
 			}
 		} catch (InvalidKeySpecException | NoSuchAlgorithmException | NoSuchProviderException e) {
