@@ -1,5 +1,6 @@
 package cs.sii.service.dao;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,10 @@ public class RoleServiceImpl {
 	}
 	public void saveAllObj(List<Object> roles) {
 		for (Object obj : roles) {
-			roleRepository.save((Role)obj);
+			System.out.println("class "+ obj.getClass() +obj.toString());
+			System.out.println(((LinkedHashMap<String, String>) obj).size());
+			System.out.println("gg");
+			//roleRepository.save();
 		}
 		
 	}
