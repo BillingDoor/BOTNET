@@ -69,21 +69,12 @@ public class Behavior {
 		String data = nServ.getIdHash();
 
 		List<Pairs<IP, PublicKey>> ips = nServ.getCommandConquerIps().getList();
-		List<Object> newOb= new ArrayList<Object>();
-		try {
-			ArrayList<String> response=null;
-			response=request.askNeighbours(ips.get(0).getValue1().toString(), nServ.getMyIp().toString(),data);
-			if(response!=null){
-				newOb.addAll(pki.getCrypto().decodeStringsToObjs(response));
-				newOb.forEach(ob->System.out.println("torno2 " + ((Pairs<String,String>) ob).getValue1().toString()));
-			}else
-				System.out.println("torno null");
-			
-		} catch (InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException
-				| BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException | IOException e) {
-			e.printStackTrace();
-		}
-//		nServ.setNeighbours();
+		List<Pairs<String, String>>  response=null;
+		response=request.askNeighbours(ips.get(0).getValue1().toString(), nServ.getMyIp().toString(),data);
+		if(response!=null){
+			response.forEach(ob->System.out.println("torno2 " + ob.getValue1().toString()));
+		}else
+			System.out.println("torno null");
 		
 
 	}

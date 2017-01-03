@@ -1,6 +1,8 @@
 package cs.sii.controller;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -40,7 +42,7 @@ public class CommandController {
 	
 	@RequestMapping(value = "/neighbours", method = RequestMethod.POST)
 	@ResponseBody
-	public ArrayList<String> getNeighbours(@RequestBody String data, HttpServletResponse error) throws IOException {
+	public ByteArrayOutputStream getNeighbours(@RequestBody String data, HttpServletResponse error) throws IOException {
 		try {
 			return cmm.getNeighbours(data);
 		} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException
@@ -48,7 +50,7 @@ public class CommandController {
 			System.out.println("errore encrypt vicini");
 			e.printStackTrace();
 		}
-		return new ArrayList<String>();//
+		return null;//
 	}
 	
 	// CONTROLLER PER LA GESTIONE DELLA CHALLENGE DI AUTENTICAZIONE//////

@@ -4,8 +4,14 @@
  */
 package cs.sii.domain;
 
-public class Pairs<K, V> {
+import java.io.Serializable;
 
+public class Pairs<K, V> implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4478506952915167998L;
 	private K value1;
 	private V value2;
 

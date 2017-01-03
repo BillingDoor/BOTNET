@@ -2,6 +2,11 @@ package cs.sii.service.crypto;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -10,9 +15,12 @@ import java.util.ArrayList;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.CipherInputStream;
+import javax.crypto.CipherOutputStream;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.Mac;
 import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SealedObject;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -30,12 +38,10 @@ public class CryptoUtils {
 	@Autowired
 	private FileUtil fUtils;
 	private static final String TYPE_MAC = "HmacSHA256";
-	private String key;
-	private String initVector;
+	private static String key = "af6ebe23eacced43";// 128 bit key
+	private static String initVector = "oggifuorepiove17"; // 16 bytes IV;
 
 	public CryptoUtils() {
-		key = "af6ebe23eacced43"; // 128 bit key
-		initVector = "oggifuorepiove17"; // 16 bytes IV
 
 	}
 
@@ -119,6 +125,68 @@ public class CryptoUtils {
 		byte[] original = cipher.doFinal(Base64.decodeBase64(encrypted));
 
 		return new String(original);
+	}
+
+	/**
+	 * @param object
+	 * @param ostream
+	 * @throws IOException
+	 * @throws NoSuchAlgorithmException
+	 * @throws NoSuchPaddingException
+	 * @throws InvalidKeyException
+	 * @throws InvalidAlgorithmParameterException
+	 */
+	public void encrypt(Serializable object, OutputStream ostream) throws IOException, NoSuchAlgorithmException,
+			NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException {
+		try {
+			// Length is 16 byte
+
+			// Create cipher
+			IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
+			SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
+
+			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+			cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
+
+			SealedObject sealedObject = new SealedObject(object, cipher);
+
+			// Wrap the output stream
+			CipherOutputStream cos = new CipherOutputStream(ostream, cipher);
+			ObjectOutputStream outputStream = new ObjectOutputStream(cos);
+			outputStream.writeObject(sealedObject);
+			outputStream.close();
+		} catch (IllegalBlockSizeException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * @param istream
+	 * @return
+	 * @throws IOException
+	 * @throws NoSuchAlgorithmException
+	 * @throws NoSuchPaddingException
+	 * @throws InvalidKeyException
+	 */
+	public  Object decrypt(InputStream istream)
+			throws IOException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException {
+		IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
+		SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
+		try {
+			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+			cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
+
+			CipherInputStream cipherInputStream = new CipherInputStream(istream, cipher);
+			ObjectInputStream inputStream = new ObjectInputStream(cipherInputStream);
+			SealedObject sealedObject;
+
+			sealedObject = (SealedObject) inputStream.readObject();
+			return sealedObject.getObject(cipher);
+		} catch (ClassNotFoundException | IllegalBlockSizeException | BadPaddingException
+				| InvalidAlgorithmParameterException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	/**
@@ -250,16 +318,10 @@ public class CryptoUtils {
 		return key;
 	}
 
-	public void setKey(String key) {
-		this.key = key;
-	}
 
 	public String getInitVector() {
 		return initVector;
 	}
 
-	public void setInitVector(String initVector) {
-		this.initVector = initVector;
-	}
 
 }
