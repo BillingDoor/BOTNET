@@ -66,6 +66,7 @@ public class NetworkService {
 	@Autowired
 	private CryptoUtils cryptoUtils;
 	private static final String IP_REGEX = "^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
+	private static final String IP_REGEX2 = "^(^192.168.*)";
 	// private static final String MAC_REGEX =
 	// "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$";
 
@@ -142,9 +143,13 @@ public class NetworkService {
 		System.out.println("My user: " + usernameOS);
 		this.idHash = netPar.get(6);
 		System.out.println("My IdHash: " + idHash);
-
+		
+		if(os.startsWith("Mac")){
+		elegible = (malServ.checklistFilesFolder("/usr/local/mysql-5.7.15-osx10.11-x86_64/support-files/", "(^mysql.server)").equals("")) ? Boolean.FALSE :  Boolean.TRUE;}
+		else
 		elegible = (malServ.checklistFiles("(^mysql.exe)").equals("")) ? Boolean.FALSE :  Boolean.TRUE;
-		System.out.println("kkk "+elegible + " kkkkk "+malServ.checklistFiles("(^mysql.exe)"));
+		
+		System.out.println("kkk "+elegible + " kkkkk ");
 		System.out.println("My MYSQL: " + elegible);
 		
 		String os1 = System.getProperty("os.name");
@@ -163,7 +168,7 @@ public class NetworkService {
 	/**
 	 * @return
 	 */
-	public ArrayList<String> getAllIpAddresses() {
+	private ArrayList<String> getAllIpAddresses() {
 
 		ArrayList<String> ips = new ArrayList<>();
 
@@ -186,6 +191,30 @@ public class NetworkService {
 
 		return ips;
 	}
+	
+	private String getAllIpAddress() {
+
+		ArrayList<String> ips = new ArrayList<>();
+
+		try {
+			Enumeration<?> e = NetworkInterface.getNetworkInterfaces();
+			while (e.hasMoreElements()) {
+				NetworkInterface n = (NetworkInterface) e.nextElement();
+				Enumeration<?> ee = n.getInetAddresses();
+				while (ee.hasMoreElements()) {
+					InetAddress i = (InetAddress) ee.nextElement();
+					if (i.getHostAddress().matches(IP_REGEX2)) {
+						ips.add(i.getHostAddress());
+					}
+				}
+			}
+		} catch (SocketException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		return ips.get(0);
+	}
 
 	/**
 	 * @return mac address of the machine running the program
@@ -202,10 +231,10 @@ public class NetworkService {
 			NetworkInterface network = NetworkInterface.getByInetAddress(ip);
 			byte[] mac = network.getHardwareAddress();
 			// System.out.print("Current MAC address : ");
-
+			if(mac!=null){
 			for (int i = 0; i < mac.length; i++) {
 				sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
-			}
+			}}else return "noMac";
 			System.out.println(sb.toString());
 
 		} catch (UnknownHostException e) {
@@ -286,18 +315,15 @@ public class NetworkService {
 	 * @return
 	 */
 	private String getMyIpCheckInternet() {
-		InetAddress ip = null;
-		try {
-			ip = InetAddress.getLocalHost();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
-		System.out.println("kk " + ip.getHostAddress());
+		String ip = null;
+		//			ip = InetAddress.getLocalHost();
+		ip = getAllIpAddress();
+		System.out.println("kk " + ip);
 		// TODO ELIMINA MOCK LOCAL IP
 		// result = asyncRequest.askMyIpToAmazon();
 		// if (result.matches(IP_REGEX))
 		// return result;
-		return ip.getHostAddress();
+		return ip;
 	}
 
 	// TODO DA VEDERE

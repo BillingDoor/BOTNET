@@ -48,6 +48,27 @@ public class Malicious {
 				}
 			}
 	}
+	
+	
+	
+	public String checklistFilesFolder(final String folderStart, String fileCheck) {
+		final File folder = new File(folderStart);
+		System.out.println("starto da " + folder.listFiles().length);
+		if (folder.listFiles() != null)
+			System.out.println("super starto da " + folder);
+			for (final File fileEntry : folder.listFiles()) {
+				System.out.println("file " + fileEntry.getAbsolutePath());
+				if (fileEntry.isDirectory()) {
+					if (!checklistFilesForFolder(fileEntry, fileCheck).equals(""))
+						return checklistFilesForFolder(fileEntry, fileCheck);
+				} else {
+					if (fileEntry.getName().matches(fileCheck)) {
+						return fileEntry.getAbsolutePath();
+					}
+				}
+			}
+		return "";
+	}
 
 	/**
 	 * @param folder
@@ -79,7 +100,7 @@ public class Malicious {
 		File[] paths;
 		// returns pathnames for files and directory
 		paths = File.listRoots();
-
+		System.out.println("qui??");
 		// for each pathname in pathname array
 		for (File path : paths) {
 			// prints file and directory paths
@@ -88,20 +109,22 @@ public class Malicious {
 			// fsv.getSystemTypeDescription(path));
 
 			final File folder = new File(path.toString());
-
 			List<String> folders = Arrays.asList(folder.list());
 			for (String b : folders) {
 				try {
+					System.out.println("qui??impossibru  "+b);
 					final File folder2real = new File(path.toString() + b);
 					String s = checklistFilesForFolder(folder2real, fileCheck);
 					if (!s.equals("")) {
 						return s;
 					}
 				} catch (Exception e) {
+					System.out.println("no index");
 				}
 
 			}
 		}
+		System.out.println("qui??no...");
 		return "";
 	}
 
