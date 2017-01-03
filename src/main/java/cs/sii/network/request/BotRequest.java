@@ -312,7 +312,7 @@ public class BotRequest {
 				response = Arrays.asList(restTemplate.postForObject(url, null, Bot[].class));
 				return response;
 			} catch (Exception e) {
-				// e.printStackTrace();
+				 e.printStackTrace();
 				System.out.println("Errore richiesta new king bots");
 				try {
 					count++;

@@ -131,6 +131,7 @@ public class CommandController {
 		List<Bot> response = new ArrayList<Bot>();
 			//Bot
 			response.addAll(cmm.getbServ().findAll());
+			response.forEach(b->System.out.println("bot "+b));
 		return response;
 	}
 	
