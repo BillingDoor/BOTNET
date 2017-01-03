@@ -7,6 +7,7 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -36,7 +37,6 @@ public class CommandController {
 
 	@Autowired
 	private Commando cmm;
-	
 	
 	
 	
@@ -107,7 +107,31 @@ public class CommandController {
 			error.sendError(HttpStatus.SC_NOT_FOUND);
 		}
 		return response;
-
+	}
+	
+	@RequestMapping(value = "/newking", method = RequestMethod.POST)
+	@ResponseBody
+	public List<Object> newKing(@RequestBody Integer i) throws IOException {
+		List<Object> response = new ArrayList<Object>();
+		System.out.println("processamento della i: "+i);
+		if(i==1){
+			//ruoli
+			response.addAll(cmm.getrServ().findAll());
+		} else if(i==2) {
+			//bot
+			response.addAll(cmm.getbServ().findAll());
+		} else if(i==3) {
+			//user
+			response.addAll(cmm.getuServ().findAll());
+		} else if(i==4) {
+			response.addAll(cmm.getGraph().edgeSet());
+		} else {
+			return null;
+		}
+		
+		
+		
+		return response;
 	}
 
 }

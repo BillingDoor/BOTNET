@@ -39,6 +39,7 @@ import cs.sii.service.connection.NetworkService;
 import cs.sii.service.crypto.CryptoPKI;
 import cs.sii.service.crypto.CryptoUtils;
 import cs.sii.service.dao.BotServiceImpl;
+import cs.sii.service.dao.RoleServiceImpl;
 import cs.sii.service.dao.UserServiceImpl;
 
 @Service("Commando")
@@ -52,6 +53,12 @@ public class Commando {
 
 	@Autowired
 	private BotServiceImpl bServ;
+	
+	@Autowired
+	private RoleServiceImpl rServ;
+	
+	@Autowired
+	private UserServiceImpl uServ;
 
 	@Autowired
 	private NetworkService nServ;
@@ -82,6 +89,7 @@ public class Commando {
 	public void initializeCeC() {
 		nServ.updateDnsInformation();
 		graph = createNetworkP2P();
+		//TODO impostare vicinato cc
 		System.out.println("blab " + graph);
 		newKing = nServ.getMyIp().toString();
 
@@ -345,6 +353,46 @@ public class Commando {
 
 	public void setNewKing(String newKing) {
 		this.newKing = newKing;
+	}
+
+	public RoleServiceImpl getrServ() {
+		return rServ;
+	}
+
+	public void setrServ(RoleServiceImpl rServ) {
+		this.rServ = rServ;
+	}
+
+	public UserServiceImpl getuServ() {
+		return uServ;
+	}
+
+	public void setuServ(UserServiceImpl uServ) {
+		this.uServ = uServ;
+	}
+
+	public BotServiceImpl getbServ() {
+		return bServ;
+	}
+
+	public void setbServ(BotServiceImpl bServ) {
+		this.bServ = bServ;
+	}
+
+	public NetworkService getnServ() {
+		return nServ;
+	}
+
+	public void setnServ(NetworkService nServ) {
+		this.nServ = nServ;
+	}
+
+	public UndirectedGraph<IP, DefaultEdge> getGraph() {
+		return graph;
+	}
+
+	public void setGraph(UndirectedGraph<IP, DefaultEdge> graph) {
+		this.graph = graph;
 	}
 
 }

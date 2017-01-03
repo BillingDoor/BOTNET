@@ -51,10 +51,12 @@ public class BotController {
 	@RequestMapping("/newKing")
 	public Boolean newKing(HttpServletRequest req) {
 		if (nServ.isElegible()) {
+			
+			//TODO scegliere quello giusto
 			System.out.println("addr: "+req.getRemoteAddr());
 			System.out.println("host: "+req.getRemoteHost());
 
-//			bhv.getPower(req.getRemoteAddr());
+		bhv.getPower(req.getRemoteAddr());
 			return true;
 		} else {
 			return false;
