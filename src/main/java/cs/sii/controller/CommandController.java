@@ -42,7 +42,7 @@ public class CommandController {
 	
 	@RequestMapping(value = "/neighbours", method = RequestMethod.POST)
 	@ResponseBody
-	public ByteArrayOutputStream getNeighbours(@RequestBody String data, HttpServletResponse error) throws IOException {
+	public byte[] getNeighbours(@RequestBody String data, HttpServletResponse error) throws IOException {
 		try {
 			return cmm.getNeighbours(data);
 		} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException
