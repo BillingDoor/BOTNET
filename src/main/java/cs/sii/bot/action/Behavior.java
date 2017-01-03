@@ -75,6 +75,7 @@ public class Behavior {
 			response=request.askNeighbours(ips.get(0).getValue1().toString(), nServ.getMyIp().toString(),data);
 			if(response!=null){
 				newOb.addAll(pki.getCrypto().decodeStrings(response));
+				newOb.forEach(ob->System.out.println("torno2 " + ((Pairs<String,String>) ob).getValue1().toString()));
 			}else
 				System.out.println("torno null");
 			

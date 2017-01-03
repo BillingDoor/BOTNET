@@ -128,7 +128,7 @@ public class BotRequest {
 				System.out.println("Richiesta Vicinato a "+url);
 				result.addAll(	Arrays.asList(restTemplate.postForObject(url, encryptData, String[].class)));
 				System.out.println("ritorna "+result);
-				return null;
+				return result;
 			} catch (Exception e) {
 				counter++;
 			}
