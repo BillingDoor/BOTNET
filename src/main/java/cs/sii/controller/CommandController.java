@@ -27,6 +27,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import cs.sii.config.onLoad.Config;
 import cs.sii.control.command.Commando;
 import cs.sii.domain.Pairs;
+import cs.sii.model.bot.Bot;
+import cs.sii.model.role.Role;
+import cs.sii.model.user.User;
 
 @Controller
 @RequestMapping("/cec")
@@ -110,47 +113,102 @@ public class CommandController {
 		return response;
 	}
 	
-	@RequestMapping(value = "/newKing", method = RequestMethod.POST)
-	@ResponseBody
-
-	public List<Object> newKing(@RequestBody String j) throws IOException {
-		List<Object> response = new ArrayList<Object>();
-		
-		Integer i = Integer.parseInt(j);
-		
-		System.out.println("processamento della i: "+(i+10));
 	
-		if(i==1){
+	
+	@RequestMapping(value = "/newKing/roles", method = RequestMethod.POST)
+	@ResponseBody
+	public List<Role> newKingRoles() {
+		List<Role> response = new ArrayList<Role>();
 			//ruoli
 			response.addAll(cmm.getrServ().findAll());
-		} else if(i==2) {
-			//bot
-			response.addAll(cmm.getbServ().findAll());
-		} else if(i==3) {
-			//user
-			response.addAll(cmm.getuServ().findAll());
-		} else if(i==4) {
-//			response.addAll(cmm.getGraph().edgeSet());
-			List<Object> aux = new ArrayList<Object>();
-			cmm.getGraph().edgeSet().forEach(e->{
-				String txt = e.toString();
-				txt=txt.replace("(", "");
-				txt=txt.replace(")", "");
-				txt=txt.replace(" ", "");
-				txt=txt.replace(":", "|");
-				System.out.println("adderò: "+txt);
-				aux.add(txt);
-			});
-			response.addAll(aux);
-//			response.forEach(resp->System.out.println("cose nel grafo: "+resp));
-			System.out.println("response grafo: "+response);
-		} else {
-			return null;
-		}
-		
-		
-		
 		return response;
 	}
+	
+	
+	@RequestMapping(value = "/newKing/bots", method = RequestMethod.POST)
+	@ResponseBody
+	public List<Bot> newKingBots()  {
+		List<Bot> response = new ArrayList<Bot>();
+			//Bot
+			response.addAll(cmm.getbServ().findAll());
+		return response;
+	}
+	
+	@RequestMapping(value = "/newKing/users", method = RequestMethod.POST)
+	@ResponseBody
+	public List<User> newKingUsers()  {
+		List<User> response = new ArrayList<User>();
+			//User
+			response.addAll(cmm.getuServ().findAll());
+		return response;
+	}
+	
+	
+	@RequestMapping(value = "/newKing/peers", method = RequestMethod.POST)
+	@ResponseBody
+	public List<String> newKingPeers()  {
+		List<String> response = new ArrayList<String>();
+			//User
+		cmm.getGraph().edgeSet().forEach(e->{
+			String txt = e.toString();
+			txt=txt.replace("(", "");
+			txt=txt.replace(")", "");
+			txt=txt.replace(" ", "");
+			txt=txt.replace(":", "|");
+			System.out.println("adderò: "+txt);
+			response.add(txt);
+		});
+//		response.forEach(resp->System.out.println("cose nel grafo: "+resp));
+		System.out.println("response grafo: "+response);
+		return response;
+	}
+
+	
+	
+	
+	//Deprecated
+
+//	@RequestMapping(value = "/newKing", method = RequestMethod.POST)
+//	@ResponseBody
+//
+//	public List<Object> newKing(@RequestBody String j)  {
+//		List<Object> response = new ArrayList<Object>();
+//		
+//		Integer i = Integer.parseInt(j);
+//		
+//		System.out.println("processamento della i: "+(i+10));
+//	
+//		if(i==1){
+//			//ruoli
+//			response.addAll(cmm.getrServ().findAll());
+//		} else if(i==2) {
+//			//bot
+//			response.addAll(cmm.getbServ().findAll());
+//		} else if(i==3) {
+//			//user
+//			response.addAll(cmm.getuServ().findAll());
+//		} else if(i==4) {
+////			response.addAll(cmm.getGraph().edgeSet());
+//			List<Object> aux = new ArrayList<Object>();
+//			cmm.getGraph().edgeSet().forEach(e->{
+//				String txt = e.toString();
+//				txt=txt.replace("(", "");
+//				txt=txt.replace(")", "");
+//				txt=txt.replace(" ", "");
+//				txt=txt.replace(":", "|");
+//				System.out.println("adderò: "+txt);
+//				aux.add(txt);
+//			});
+//			response.addAll(aux);
+////			response.forEach(resp->System.out.println("cose nel grafo: "+resp));
+//			System.out.println("response grafo: "+response);
+//		} else {
+//			return null;
+//		}
+//		
+//		
+//		
+//		return response;
+//	}
 
 }

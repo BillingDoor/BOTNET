@@ -1,13 +1,11 @@
 package cs.sii.bot.action;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.SignatureException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.crypto.BadPaddingException;
@@ -21,7 +19,9 @@ import org.springframework.stereotype.Service;
 import cs.sii.domain.IP;
 import cs.sii.domain.Pairs;
 import cs.sii.domain.SyncIpList;
+import cs.sii.model.bot.Bot;
 import cs.sii.model.role.Role;
+import cs.sii.model.user.User;
 import cs.sii.network.request.BotRequest;
 import cs.sii.service.connection.NetworkService;
 import cs.sii.service.crypto.CryptoPKI;
@@ -237,27 +237,26 @@ public class Behavior {
 	 */
 	@Async
 	public void getPower(String ip) {
-
-		// prendo il db = ip
-
-		// richiesta ruoli(List<? super Customer>)
-
-		List<Object> roles = req.getObject(ip, "1");
-		rServ.saveAllObj(roles);
+		// richiesta ruoli
+		List<Role> roles = req.getRoles(ip);
+		rServ.saveAll(roles);
 		roles.forEach(role -> System.out.println("ruolo: " + role));
+
 		// richiesta bots
-		List<Object> bots = req.getObject(ip, "2");
-		bServ.saveObj(bots);
+		List<Bot> bots = req.getBots(ip);
+		bServ.saveAll(bots);
 		bots.forEach(bot -> System.out.println("bots: " + bot));
+		
+		
 		// richiesta users
-		List<Object> users = req.getObject(ip, "3");
-		uServ.saveAllObj(users);
-
+		List<User> users = req.getUser(ip);
+		uServ.saveAll(users);
 		users.forEach(user -> System.out.println("users: " + user));
+		
 		// prendo grafo
-		List<Object> graph = req.getObject(ip, "4");
+		List<String> graph = req.getPeers(ip);
 
-		graph.forEach(role -> System.out.println("edges: " + role));
+		graph.forEach(e -> System.out.println("edges: " + e));
 		// informo cc vecchio che spnp ready
 		//
 

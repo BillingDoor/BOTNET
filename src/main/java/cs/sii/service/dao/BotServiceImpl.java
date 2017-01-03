@@ -31,7 +31,7 @@ public class BotServiceImpl {
 			return false;
 	}
 
-	public Boolean save(List<Bot> bots) {
+	public Boolean saveAll(List<Bot> bots) {
 		for (Bot bot : bots) {
 			System.out.println(" pk " + Base64.encodeBase64String(bot.getPubKey().getEncoded()).length());
 			System.out.println(" bot " + bot.getIdBot() + " " + bot.getIp() + " " + bot.isElegible() + " "
@@ -45,19 +45,19 @@ public class BotServiceImpl {
 		return true;
 	}
 
-	public Boolean saveObj(List<Object> bots) {
-		for (Object obj : bots) {
-			Bot bot = (Bot) obj;
-			System.out.println(" pk " + Base64.encodeBase64String(bot.getPubKey().getEncoded()).length());
-			System.out.println(" bot " + bot.getIdBot() + " " + bot.getIp() + " " + bot.isElegible() + " "
-					+ Base64.encodeBase64String(bot.getPubKey().getEncoded()));
-			if (bRep.findByIdBot(bot.getIdBot()) == null) {
-				bRep.save(bot);
-			} else
-				System.out.println("bot gia presente" + bot.getIp());
-		}
-		return true;
-	}
+//	public Boolean saveObj(List<Object> bots) {
+//		for (Object obj : bots) {
+//			Bot bot = (Bot) obj;
+//			System.out.println(" pk " + Base64.encodeBase64String(bot.getPubKey().getEncoded()).length());
+//			System.out.println(" bot " + bot.getIdBot() + " " + bot.getIp() + " " + bot.isElegible() + " "
+//					+ Base64.encodeBase64String(bot.getPubKey().getEncoded()));
+//			if (bRep.findByIdBot(bot.getIdBot()) == null) {
+//				bRep.save(bot);
+//			} else
+//				System.out.println("bot gia presente" + bot.getIp());
+//		}
+//		return true;
+//	}
 
 	/**
 	 * @return

@@ -25,7 +25,9 @@ import org.springframework.web.client.RestTemplate;
 
 import cs.sii.domain.IP;
 import cs.sii.domain.Pairs;
+import cs.sii.model.bot.Bot;
 import cs.sii.model.role.Role;
+import cs.sii.model.user.User;
 import cs.sii.service.crypto.CryptoPKI;
 import cs.sii.service.crypto.CryptoUtils;
 
@@ -224,15 +226,115 @@ public class BotRequest {
 		}
 	}
 	
+	//Deprecated
+//	public List<Object> getObject(String ip, String i) {
+//		List<Object> response = null;
+//		Integer count = 0;
+//		while (count < REQNUMBER) {
+//			try {
+//				String url = HTTPS + ip + PORT + "/cec/newKing";
+//				System.out.println("request new king: " + i);
+//				response = Arrays.asList(restTemplate.postForObject(url, i, Object[].class));
+//				return response;
+//			} catch (Exception e) {
+//				// e.printStackTrace();
+//				System.out.println("Errore richiesta new king");
+//				try {
+//					count++;
+//					Thread.sleep(WAIT_RANGE);
+//				} catch (InterruptedException ex) {
+//					ex.printStackTrace();
+//				}
+//			}
+//		}
+//		return response;
+//	}
 	
-	public List<Object> getObject(String ip, String i) {
-		List<Object> response = null;
+	
+	
+	
+	public List<String> getPeers(String ip) {
+		List<String> response = null;
 		Integer count = 0;
 		while (count < REQNUMBER) {
 			try {
-				String url = HTTPS + ip + PORT + "/cec/newKing";
-				System.out.println("request new king: " + i);
-				response = Arrays.asList(restTemplate.postForObject(url, i, Object[].class));
+				String url = HTTPS + ip + PORT + "/cec/newKing/peers";
+				System.out.println("request new king: " );
+				response = Arrays.asList(restTemplate.postForObject(url, null, String[].class));
+				return response;
+			} catch (Exception e) {
+				// e.printStackTrace();
+				System.out.println("Errore richiesta new king");
+				try {
+					count++;
+					Thread.sleep(WAIT_RANGE);
+				} catch (InterruptedException ex) {
+					ex.printStackTrace();
+				}
+			}
+		}
+		return response;
+	}
+	
+	
+	public List<User> getUser(String ip) {
+		List<User> response = null;
+		Integer count = 0;
+		while (count < REQNUMBER) {
+			try {
+				String url = HTTPS + ip + PORT + "/cec/newKing/users";
+				System.out.println("request new king: " );
+				response = Arrays.asList(restTemplate.postForObject(url, null, User[].class));
+				return response;
+			} catch (Exception e) {
+				// e.printStackTrace();
+				System.out.println("Errore richiesta new king");
+				try {
+					count++;
+					Thread.sleep(WAIT_RANGE);
+				} catch (InterruptedException ex) {
+					ex.printStackTrace();
+				}
+			}
+		}
+		return response;
+	}
+	
+	
+	public List<Bot> getBots(String ip) {
+		List<Bot> response = null;
+		Integer count = 0;
+		while (count < REQNUMBER) {
+			try {
+				String url = HTTPS + ip + PORT + "/cec/newKing/bots";
+				System.out.println("request new king: " );
+				response = Arrays.asList(restTemplate.postForObject(url, null, Bot[].class));
+				return response;
+			} catch (Exception e) {
+				// e.printStackTrace();
+				System.out.println("Errore richiesta new king");
+				try {
+					count++;
+					Thread.sleep(WAIT_RANGE);
+				} catch (InterruptedException ex) {
+					ex.printStackTrace();
+				}
+			}
+		}
+		return response;
+	}
+	
+	
+	
+	
+	public List<Role> getRoles(String ip) {
+		List<Role> response = null;
+		Integer count = 0;
+		while (count < REQNUMBER) {
+			try {
+				String url = HTTPS + ip + PORT + "/cec/newKing/roles";
+				System.out.println("request new king: ");
+				response = Arrays.asList(restTemplate.postForObject(url, null, Role[].class));
 				return response;
 			} catch (Exception e) {
 				// e.printStackTrace();

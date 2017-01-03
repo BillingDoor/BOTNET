@@ -45,12 +45,12 @@ public class UserServiceImpl {
 			userRepository.save(user);
 		}
 	}
-	public void saveAllObj(List<Object> users) {
-		for (Object obj : users) {
-			User user= (User) obj;
-			user.setPassword(passwordEncoder.encode(user.getPassword()));
-			userRepository.save(user);
-		}
-	}
+//	public void saveAllObj(List<Object> users) {
+//		for (Object obj : users) {
+//			User user= (User) obj;
+//			user.setPassword(passwordEncoder.encode(user.getPassword()));
+//			userRepository.save(user);
+//		}
+//	}
 
 }
