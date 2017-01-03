@@ -213,10 +213,10 @@ public class CryptoUtils {
 	 * @throws InvalidKeyException
 	 * @throws IOException
 	 */
-	public ArrayList<String> decodeStrings(ArrayList<String> data)
+	public ArrayList<Object> decodeStringsToObjs(ArrayList<String> data)
 			throws InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException,
 			BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException, IOException {
-		ArrayList<String> dataDecrypted = new ArrayList<String>();
+		ArrayList<Object> dataDecrypted = new ArrayList<Object>();
 		for (String str : data) {
 			dataDecrypted.add(decryptAES(str));
 		}
