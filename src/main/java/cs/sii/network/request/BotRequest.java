@@ -144,12 +144,13 @@ public class BotRequest {
 				return result;
 			} catch (Exception e) {
 				counter++;
-			}
-			try {
-				Thread.sleep(WAIT_RANGE);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+				System.out.println("errore richiesta vicinato");
+				try {
+					Thread.sleep(WAIT_RANGE);
+				} catch (InterruptedException e2) {
+					e2.printStackTrace();
+				}}
+			
 		}
 		return null;
 	}
