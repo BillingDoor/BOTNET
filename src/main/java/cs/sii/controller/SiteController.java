@@ -1,18 +1,14 @@
 package cs.sii.controller;
 
-import java.awt.color.CMMException;
 import java.io.IOException;
 import java.util.List;
-import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.apache.http.HttpStatus;
-import org.h2.engine.SysProperties;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,7 +17,6 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,9 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import cs.sii.config.onLoad.Config;
 import cs.sii.control.command.Commando;
 import cs.sii.model.role.Role;
-import cs.sii.model.role.RoleRepository;
 import cs.sii.model.user.User;
-import cs.sii.model.user.UserRepository;
 import cs.sii.service.dao.RoleServiceImpl;
 import cs.sii.service.dao.UserServiceImpl;
 

@@ -282,13 +282,12 @@ public class Commando {
 				signature = pki.signMessageRSA(hashIdMsg);
 				msg = hashIdMsg + "|" + cmd + "|" + signature;
 			} catch (InvalidKeyException | SignatureException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				System.out.println("Non sono riuscito a firmare il messaggio pre Flood");
 			}
 
 			startFlood(msg);
-		}
+		} return;
 	}
 
 	public void startFlood(String msg) {
