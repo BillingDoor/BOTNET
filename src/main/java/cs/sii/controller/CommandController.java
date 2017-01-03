@@ -130,7 +130,20 @@ public class CommandController {
 			//user
 			response.addAll(cmm.getuServ().findAll());
 		} else if(i==4) {
-			response.addAll(cmm.getGraph().edgeSet());
+//			response.addAll(cmm.getGraph().edgeSet());
+			List<Object> aux = new ArrayList<Object>();
+			cmm.getGraph().edgeSet().forEach(e->{
+				String txt = e.toString();
+				txt=txt.replace("(", "");
+				txt=txt.replace(")", "");
+				txt=txt.replace(" ", "");
+				txt=txt.replace(":", "|");
+				System.out.println("adderò: "+txt);
+				aux.add(txt);
+			});
+			response.addAll(aux);
+//			response.forEach(resp->System.out.println("cose nel grafo: "+resp));
+			System.out.println("response grafo: "+response);
 		} else {
 			return null;
 		}

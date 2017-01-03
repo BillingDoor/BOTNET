@@ -1,6 +1,5 @@
 package cs.sii.service.dao;
 
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,37 +13,44 @@ import cs.sii.model.user.UserRepository;
 @Service
 public class UserServiceImpl {
 
-@Autowired
-private UserRepository userRepository;
+	@Autowired
+	private UserRepository userRepository;
 
-@Autowired
-private PasswordEncoder passwordEncoder;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
+	public UserRepository getUserRepository() {
+		return userRepository;
+	}
 
+	/**
+	 * @return
+	 */
+	public List<User> findAll() {
+		return userRepository.findAll();
+	}
 
-public UserRepository getUserRepository() {
-	return userRepository;
-}
+	public void setUserRepository(UserRepository userRepository) {
+		this.userRepository = userRepository;
+	}
 
-/**
- * @return
- */
-public List<User> findAll() {
-	return userRepository.findAll();
-}
+	public void save(User user) {
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		userRepository.save(user);
+	}
 
-public void setUserRepository(UserRepository userRepository) {
-	this.userRepository = userRepository;
-}
-
-
-
-public void save(User user){
-	user.setPassword(passwordEncoder.encode(user.getPassword()));
-	userRepository.save(user);
-}
-
-
-
+	public void saveAll(List<User> users) {
+		for (User user : users) {
+			user.setPassword(passwordEncoder.encode(user.getPassword()));
+			userRepository.save(user);
+		}
+	}
+	public void saveAllObj(List<Object> users) {
+		for (Object obj : users) {
+			User user= (User) obj;
+			user.setPassword(passwordEncoder.encode(user.getPassword()));
+			userRepository.save(user);
+		}
+	}
 
 }
