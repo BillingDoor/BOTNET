@@ -230,9 +230,9 @@ public class BotRequest {
 		Integer count = 0;
 		while (count < REQNUMBER) {
 			try {
-				String url = HTTPS + ip + PORT + "/cec/getdb/";
+				String url = HTTPS + ip + PORT + "/cec/newKing";
 				System.out.println("request new king: " + i);
-				response = restTemplate.postForObject(url, i, response.getClass());
+				response = Arrays.asList(restTemplate.postForObject(url, i, Object[].class));
 				return response;
 			} catch (Exception e) {
 				// e.printStackTrace();

@@ -21,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import cs.sii.config.onLoad.Config;
@@ -109,8 +110,9 @@ public class CommandController {
 		return response;
 	}
 	
-	@RequestMapping(value = "/newking", method = RequestMethod.POST)
+	@RequestMapping(value = "/newKing", method = RequestMethod.POST)
 	@ResponseBody
+
 	public List<Object> newKing(@RequestBody String j) throws IOException {
 		List<Object> response = new ArrayList<Object>();
 		
@@ -134,8 +136,7 @@ public class CommandController {
 		}
 		
 		
-		if(response==null)
-			response = new ArrayList<>();
+		
 		return response;
 	}
 
