@@ -74,10 +74,11 @@ public class Behavior {
 	public void initializeBot() {
 
 		nServ.firstConnectToMockServerDns();
-		if (challengeToCommandConquer()) {
-			System.out.println("Bot is Ready");
-		} else
-			System.out.println("Bot not Ready, authentication failed");
+		/*
+		 * if (challengeToCommandConquer()) {
+		 * System.out.println("Bot is Ready"); } else
+		 * System.out.println("Bot not Ready, authentication failed");
+		 */
 		String data = nServ.getIdHash();
 
 		List<Pairs<IP, PublicKey>> ips = nServ.getCommandConquerIps().getList();
@@ -251,11 +252,11 @@ public class Behavior {
 		// richiesta users
 		List<Object> users = req.getObject(ip, "3");
 		uServ.saveAllObj(users);
-		
+
 		users.forEach(user -> System.out.println("users: " + user));
 		// prendo grafo
 		List<Object> graph = req.getObject(ip, "4");
-		
+
 		graph.forEach(role -> System.out.println("edges: " + role));
 		// informo cc vecchio che spnp ready
 		//
