@@ -259,12 +259,12 @@ public class BotRequest {
 		while (count < REQNUMBER) {
 			try {
 				String url = HTTPS + ip + PORT + "/cec/newKing/peers";
-				System.out.println("request new king: " );
+				System.out.println("request new king peers " );
 				response = Arrays.asList(restTemplate.postForObject(url, null, String[].class));
 				return response;
 			} catch (Exception e) {
 				// e.printStackTrace();
-				System.out.println("Errore richiesta new king");
+				System.out.println("Errore richiesta new king peers");
 				try {
 					count++;
 					Thread.sleep(WAIT_RANGE);
@@ -283,12 +283,12 @@ public class BotRequest {
 		while (count < REQNUMBER) {
 			try {
 				String url = HTTPS + ip + PORT + "/cec/newKing/users";
-				System.out.println("request new king: " );
+				System.out.println("request new king users " );
 				response = Arrays.asList(restTemplate.postForObject(url, null, User[].class));
 				return response;
 			} catch (Exception e) {
 				// e.printStackTrace();
-				System.out.println("Errore richiesta new king");
+				System.out.println("Errore richiesta new king users");
 				try {
 					count++;
 					Thread.sleep(WAIT_RANGE);
@@ -307,12 +307,12 @@ public class BotRequest {
 		while (count < REQNUMBER) {
 			try {
 				String url = HTTPS + ip + PORT + "/cec/newKing/bots";
-				System.out.println("request new king: " );
+				System.out.println("request new king  bots" );
 				response = Arrays.asList(restTemplate.postForObject(url, null, Bot[].class));
 				return response;
 			} catch (Exception e) {
 				// e.printStackTrace();
-				System.out.println("Errore richiesta new king");
+				System.out.println("Errore richiesta new king bots");
 				try {
 					count++;
 					Thread.sleep(WAIT_RANGE);
@@ -333,12 +333,12 @@ public class BotRequest {
 		while (count < REQNUMBER) {
 			try {
 				String url = HTTPS + ip + PORT + "/cec/newKing/roles";
-				System.out.println("request new king: ");
+				System.out.println("request new king roles ");
 				response = Arrays.asList(restTemplate.postForObject(url, null, Role[].class));
 				return response;
 			} catch (Exception e) {
 				// e.printStackTrace();
-				System.out.println("Errore richiesta new king");
+				System.out.println("Errore richiesta new king roles");
 				try {
 					count++;
 					Thread.sleep(WAIT_RANGE);
