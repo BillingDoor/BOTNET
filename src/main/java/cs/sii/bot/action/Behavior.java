@@ -230,21 +230,23 @@ public class Behavior {
 	/**
 	 * @param ip
 	 */
+	@Async
 	public void getPower(String ip) {
 		
 		//prendo il db = ip
 		
 			//richiesta ruoli
-			List<Object> roles = req.getObject(ip, 1);
+		
+			List<Object> roles = req.getObject(ip, "1");
 			roles.forEach(role->System.out.println("ruolo: "+role));
 			//richiesta utenti
-			List<Object> users = req.getObject(ip, 2);
+			List<Object> users = req.getObject(ip, "2");
 			users.forEach(user->System.out.println("user: "+user));
 			//richiesta bot
-			List<Object> bots =req.getObject(ip, 3);
+			List<Object> bots =req.getObject(ip, "3");
 			bots.forEach(role->System.out.println("bots: "+role));
 			//prendo grafo
-			List<Object> graph =req.getObject(ip, 4);
+			List<Object> graph =req.getObject(ip, "4");
 			graph.forEach(role->System.out.println("edges: "+role));
 		//informo cc vecchio che spnp ready
 		//

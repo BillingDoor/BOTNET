@@ -94,7 +94,7 @@ public class CecRequest {
 				return response;
 			} catch (Exception e) {
 				// e.printStackTrace();
-				System.out.println("Errore invio richiesta king");
+				System.out.println("Errore invio richiesta kingsivcuuto");
 				try {
 					count++;
 					Thread.sleep(WAIT_RANGE);

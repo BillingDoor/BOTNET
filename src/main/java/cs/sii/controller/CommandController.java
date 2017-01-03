@@ -111,9 +111,13 @@ public class CommandController {
 	
 	@RequestMapping(value = "/newking", method = RequestMethod.POST)
 	@ResponseBody
-	public List<Object> newKing(@RequestBody Integer i) throws IOException {
+	public List<Object> newKing(@RequestBody String j) throws IOException {
 		List<Object> response = new ArrayList<Object>();
-		System.out.println("processamento della i: "+i);
+		
+		Integer i = Integer.parseInt(j);
+		
+		System.out.println("processamento della i: "+(i+10));
+	
 		if(i==1){
 			//ruoli
 			response.addAll(cmm.getrServ().findAll());
@@ -130,7 +134,8 @@ public class CommandController {
 		}
 		
 		
-		
+		if(response==null)
+			response = new ArrayList<>();
 		return response;
 	}
 
