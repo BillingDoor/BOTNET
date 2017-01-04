@@ -150,12 +150,19 @@ public class P2PMan {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public UndirectedGraph<IP, DefaultEdge> updateNetworkP2P(List<Pairs<IP, IP>> Edge, List<IP> nodes) {
+	public UndirectedGraph<IP, DefaultEdge> updateNetworkP2P(List<Pairs<IP, IP>> edge, List<IP> nodes) {
 
 		MyGnmRandomGraphDispenser<IP, DefaultEdge> g2 = new MyGnmRandomGraphDispenser<IP, DefaultEdge>(nodes.size(), 0,	new SecureRandom(), true, false);
 		ListenableUndirectedGraph<IP, DefaultEdge> graph2 = new ListenableUndirectedGraph<IP, DefaultEdge>(DefaultEdge.class);
 		MyVertexFactory<IP> nodeIp2 = new MyVertexFactory<IP>((List<IP>) nodes, new SecureRandom());
-		g2 = new MyGnmRandomGraphDispenser<IP, DefaultEdge>(nodes.size(), 0, new SecureRandom(), true, false);
+//		g2 = new MyGnmRandomGraphDispenser<IP, DefaultEdge>(nodes.size(), 0, new SecureRandom(), true, false);
+		for (IP ip : nodes) {
+			graph.addVertex(ip);
+		}
+		//controllare se inserire anche arco  inverso
+		for (Pairs<IP, IP> pair : edge) {
+			graph.addEdge(pair.getValue1(), pair.getValue2());
+		}
 		g2.updateConnectedGraph(graph, graph2, nodeIp2, null, calculateK(nodes.size()));
 		for (IP ip2 : nodes) {
 			System.out.println("gli archi di  " + graph2.degreeOf(ip2));
