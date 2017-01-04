@@ -70,7 +70,6 @@ public class Commando {
 	@Autowired
 	private P2PMan pServ;
 
-
 	@Autowired
 	private CryptoPKI pki;
 
