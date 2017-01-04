@@ -186,7 +186,7 @@ public class Commando {
 			String signature;
 			try {
 				signature = pki.signMessageRSA(hashIdMsg);
-				msg = hashIdMsg + "|" + cmd + "|" + signature;
+				msg = hashIdMsg + "<HH>" + cmd + "<HH>" + signature;
 				request = pki.getCrypto().encryptAES(msg);
 			} catch (InvalidKeyException | SignatureException e) {
 				e.printStackTrace();
