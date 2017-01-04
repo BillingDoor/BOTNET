@@ -1,10 +1,8 @@
 package cs.sii.model.bot;
 
 import java.io.Serializable;
-import java.security.PublicKey;
 
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,9 +11,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.apache.commons.codec.binary.Base64;
-import org.hibernate.annotations.Type;
-import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import cs.sii.model.user.User;
@@ -27,6 +22,11 @@ public class Bot implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	@NotEmpty
+	@Column(name = "Arch", nullable = false)
+	private String arch;
+	@Column(name = "elegible", nullable = false)
+	private String elegible;
 	@Column(name = "idBot", nullable = false)
 	private String idBot;
 	@NotEmpty
@@ -38,28 +38,21 @@ public class Bot implements Serializable {
 	@NotEmpty
 	@Column(name = "OS", nullable = false)
 	private String os;
-	@NotEmpty
-	@Column(name = "Version", nullable = false)
-	private String ver;
-	@NotEmpty
-	@Column(name = "Arch", nullable = false)
-	private String arch;
-	@NotEmpty
-	@Column(name = "UsernameOS", nullable = false)
-	private String usernameOS;
-	@Column(name = "elegible", nullable = false)
-	private String elegible;
-
-	// @Type(type="org.hibernate.type.NumericBooleanType")
-	// @Convert(converter = BooleanConverter.class)
-
 	// @Convert(converter = KeyConverter.class)
 	@Column(name = "PubKey", length = 5000)
 	private String pubKey;
-
+	@NotEmpty
+	@Column(name = "UsernameOS", nullable = false)
+	private String usernameOS;
+	@NotEmpty
+	@Column(name = "Version", nullable = false)
+	private String ver;
 	@ManyToOne
 	@JoinColumn(name = "User_id", nullable = true)
 	private User botUser;
+
+	// @Type(type="org.hibernate.type.NumericBooleanType")
+	// @Convert(converter = BooleanConverter.class)
 
 	public Bot() {
 

@@ -340,7 +340,7 @@ public class Commando {
 				newKing = ip;
 			}
 			System.out.println("erection completed ");
-			} System.out.println("nessuno da eleggere");
+			} else System.out.println("nessuno da eleggere");
 		//elegilo passa i dati
 		// passa il potere	
 		}
