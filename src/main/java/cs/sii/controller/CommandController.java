@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -158,6 +159,16 @@ public class CommandController {
 		 cmm.setNewKing("");
 		return true;
 	}
+	
+	
+	@RequestMapping(value = "/election", method = RequestMethod.GET)
+	@ResponseBody
+	public boolean startElection(){
+			if (configEngine.isCommandandconquerStatus()){
+				cmm.startElection();
+			}
+			return true;
+		}
 	
 	
 	//Deprecated
