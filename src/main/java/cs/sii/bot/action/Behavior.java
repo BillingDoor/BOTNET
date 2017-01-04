@@ -152,7 +152,7 @@ public class Behavior {
 	 * @param rawData
 	 */
 	@Async
-	public void floodAndExecute(String rawData) {
+	public void floodAndExecute(String rawData,IP ip) {
 
 		String msg = "";
 
@@ -183,7 +183,7 @@ public class Behavior {
 					msgHashList.add(data);
 					System.out.println("SIGNATURE OK");
 					// se verificato inoltralo ai vicini
-					floodNeighoours(msg);
+					floodNeighoours(msg,ip);
 					System.out.println("FLOOD A VICINI");
 					// inoltra all'interpretedei msg
 					executeCommand(msgs[1]);
@@ -200,13 +200,13 @@ public class Behavior {
 	}
 
 	@Async
-	private void floodNeighoours(String msg) {
-		
+	private void floodNeighoours(String msg, IP ip) {
+
 System.out.println("size lista "+ nServ.getNeighbours().getList().size());
 		for (Pairs<IP,PublicKey> p : nServ.getNeighbours().getList()) {
 			IP test=new IP(new String(p.getValue1().getIp().toString()));
 			System.out.println("vicino "+test);
-		
+			if(!ip.equals(test))
 			req.sendFloodToOtherBot(p.getValue1(), msg);
 		}
 		
