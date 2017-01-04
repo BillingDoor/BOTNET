@@ -84,21 +84,27 @@ public class CryptoUtils {
 	 * @throws BadPaddingException
 	 * @throws IllegalBlockSizeException
 	 */
-	public String encryptAES(String value)
-			throws NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException, InvalidKeyException,
-			InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
+	public String encryptAES(String value){
 
-		IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
-		SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
+		IvParameterSpec iv;
+		try {
+			iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
+			SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
 
-		Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
-		cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
+			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+			cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
 
-		byte[] encrypted = cipher.doFinal(value.getBytes());
+			byte[] encrypted = cipher.doFinal(value.getBytes());
+		
+			return Base64.encodeBase64String(encrypted);
+		} catch (UnsupportedEncodingException | NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		// System.out.println("encrypted string: " +
 		// Base64.encodeBase64String(encrypted));
-
-		return Base64.encodeBase64String(encrypted);
+		return null;
 
 	}
 
@@ -113,18 +119,25 @@ public class CryptoUtils {
 	 * @throws NoSuchAlgorithmException
 	 * @throws UnsupportedEncodingException
 	 */
-	public String decryptAES(String encrypted)
-			throws InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException,
-			BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException {
-		IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
-		SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
+	public String decryptAES(String encrypted) {
+		IvParameterSpec iv;
+		try {
+			iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
+			
+			SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
 
-		Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
-		cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
+			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+			cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
 
-		byte[] original = cipher.doFinal(Base64.decodeBase64(encrypted));
+			byte[] original = cipher.doFinal(Base64.decodeBase64(encrypted));
 
-		return new String(original);
+			return new String(original);
+			
+		} catch (UnsupportedEncodingException | NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	/**

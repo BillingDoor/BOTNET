@@ -162,17 +162,8 @@ public class Behavior {
 		String msg = "";
 
 		// decritta il msg
-		try {
 			msg = pki.getCrypto().decryptAES(rawData);
-		} catch (InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException
-				| BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException
-				| UnsupportedEncodingException e) {
-			System.out.println("error decrypting message");
-			e.printStackTrace();
-			return;
-		}
-		
-
+			
 		// Per comodità
 		String[] msgs = msg.split("|");
 		

