@@ -203,11 +203,14 @@ public class Behavior {
 
 		System.out.println("size lista " + nServ.getNeighbours().getList().size());
 		for (Pairs<IP, PublicKey> p : nServ.getNeighbours().getList()) {
-//			IP test = p.getValue1();
+			//IP test = p.getValue1();
 			Object x=p.getValue1();
 			System.out.println("dasdsa "+x.toString());
+			IP test = new IP(x.toString());
+			System.out.println("dsasaddavvvvvv "+test.getIp());
+			
 			System.out.println("vicino " + nServ.getNeighbours().getList().get(1).getValue1().getIp());
-			IP test = p.getValue1();
+			
 			if (!ip.equals(test)) {
 				req.sendFloodToOtherBot(p.getValue1(), msg);
 				System.out.println("flood vicino "+ test);

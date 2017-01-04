@@ -38,7 +38,7 @@ public class SyncIpList<V, T> {
 	 */
 	public List<Pairs<V, T>> getList() {
 		synchronized (list) {
-			return new ArrayList<>(list);
+			return new ArrayList<Pairs<V,T>>(list);
 		}
 	}
 
