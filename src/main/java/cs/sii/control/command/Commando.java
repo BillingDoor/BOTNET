@@ -191,6 +191,7 @@ public class Commando {
 	 * @return
 	 */
 	public boolean newKingDns() {
+		System.out.println("dns nk");
 		Bot b = bServ.searchBotIP(newKing);
 		if (b != null) {
 			System.out.println("bot dns"+ b.getIp());
