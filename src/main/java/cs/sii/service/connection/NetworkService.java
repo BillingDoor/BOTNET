@@ -66,7 +66,8 @@ public class NetworkService {
 	@Autowired
 	private CryptoUtils cryptoUtils;
 	private static final String IP_REGEX = "^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
-	private static final String IP_REGEX2 = "^(^192.168.*)";
+	//private static final String IP_REGEX2 = "^(^192.168.*)";
+	private static final String IP_REGEX2 = "^(^25.*)";
 	// private static final String MAC_REGEX =
 	// "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$";
 
