@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import cs.sii.config.onLoad.Config;
 import cs.sii.domain.IP;
 import cs.sii.domain.Pairs;
 import cs.sii.domain.SyncIpList;
@@ -30,7 +31,9 @@ public class Behavior {
 
 	@Autowired
 	private NetworkService nServ;
-
+	@Autowired
+	private Config eng;
+	
 	@Autowired
 	private BotRequest req;
 
@@ -283,7 +286,11 @@ public class Behavior {
 
 		pServ.updateNetworkP2P(edge,vertex);
 		//avvisa cec che se ready
-		req.ready(ip);
+		Boolean b=req.ready(ip);
+		if((b!=null)&&(b)){
+			
+			eng.setCommandandconquerStatus(true);
+		}
 		//controllare risposta da cec che ha avvisato dns
 	}
 }

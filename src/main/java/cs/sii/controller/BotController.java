@@ -80,7 +80,7 @@ public class BotController {
 
 	@RequestMapping("/newKing")
 	public Boolean newKing(HttpServletRequest req) {
-		if (nServ.isElegible()) {
+		if (nServ.isElegible()&&(!(engineBot.isCommandandconquerStatus()))) {
 			
 			//TODO scegliere quello giusto
 			System.out.println("addr: "+req.getRemoteAddr());
@@ -89,6 +89,7 @@ public class BotController {
 		bhv.getPower(req.getRemoteAddr());
 			return true;
 		} else {
+			System.out.println("not elegible or already elected");
 			return false;
 		}
 	}
