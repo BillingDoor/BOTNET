@@ -298,6 +298,9 @@ public class Behavior {
 		}
 
 		pServ.updateNetworkP2P(edge,vertex);
+		//avvisa cec che se ready
+		req.ready(ip);
+		//controllare risposta da cec che ha avvisato dns
 	}
 }
 

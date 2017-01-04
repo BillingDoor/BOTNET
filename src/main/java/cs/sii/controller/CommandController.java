@@ -158,6 +158,12 @@ public class CommandController {
 	}
 
 	
+	@RequestMapping(value = "/newKing/ready", method = RequestMethod.POST)
+	@ResponseBody
+	public boolean newKingReady()  {
+		//avvisa dns
+		return true;
+	}
 	
 	
 	//Deprecated

@@ -252,15 +252,19 @@ public class BotRequest {
 	
 	
 	
-	
+	//TODO Aggiungere parametro per renderlo sicuro
+	/**
+	 * @param ip
+	 * @return
+	 */
 	public List<String> getPeers(String ip) {
 		List<String> response = null;
 		Integer count = 0;
 		while (count < REQNUMBER) {
 			try {
 				String url = HTTPS + ip + PORT + "/cec/newKing/peers";
-				System.out.println("request new king peers " );
 				response = Arrays.asList(restTemplate.postForObject(url, null, String[].class));
+				System.out.println("request new king peers " );
 				return response;
 			} catch (Exception e) {
 				// e.printStackTrace();
@@ -277,14 +281,18 @@ public class BotRequest {
 	}
 	
 	
+	/**
+	 * @param ip
+	 * @return
+	 */
 	public List<User> getUser(String ip) {
 		List<User> response = null;
 		Integer count = 0;
 		while (count < REQNUMBER) {
 			try {
 				String url = HTTPS + ip + PORT + "/cec/newKing/users";
-				System.out.println("request new king users " );
 				response = Arrays.asList(restTemplate.postForObject(url, null, User[].class));
+				System.out.println("request new king users " );
 				return response;
 			} catch (Exception e) {
 				// e.printStackTrace();
@@ -300,15 +308,19 @@ public class BotRequest {
 		return response;
 	}
 	
-	//TODO Aggiungere parametro per renderlo sicuro
+	//
+	/**
+	 * @param ip
+	 * @return
+	 */
 	public List<Bot> getBots(String ip) {
 		List<Bot> response = null;
 		Integer count = 0;
 		while (count < REQNUMBER) {
 			try {
 				String url = HTTPS + ip + PORT + "/cec/newKing/bots";
-				System.out.println("request new king  bots" );
 				Bot[] bots = restTemplate.postForObject(url, null, Bot[].class);
+				System.out.println("request new king  bots" );
 				for (int i = 0; i < bots.length; i++) {
 					System.out.println("bot "+ bots [i].toString());
 				}
@@ -332,18 +344,48 @@ public class BotRequest {
 	
 	
 	
+	/**
+	 * @param ip
+	 * @return
+	 */
 	public List<Role> getRoles(String ip) {
 		List<Role> response = null;
 		Integer count = 0;
 		while (count < REQNUMBER) {
 			try {
 				String url = HTTPS + ip + PORT + "/cec/newKing/roles";
-				System.out.println("request new king roles ");
 				response = Arrays.asList(restTemplate.postForObject(url, null, Role[].class));
+				System.out.println("request new king roles ");
 				return response;
 			} catch (Exception e) {
 				// e.printStackTrace();
 				System.out.println("Errore richiesta new king roles");
+				try {
+					count++;
+					Thread.sleep(WAIT_RANGE);
+				} catch (InterruptedException ex) {
+					ex.printStackTrace();
+				}
+			}
+		}
+		return response;
+	}
+	/**
+	 * @param ip
+	 * @return
+	 */
+	public boolean ready(String ip) {
+		boolean response = false;
+		Integer count = 0;
+		while (count < REQNUMBER) {
+			try {
+				String url = HTTPS + ip + PORT + "/cec/newKing/ready";
+				response =restTemplate.postForObject(url, null, boolean.class);
+				System.out.println("ready cec ");
+				return response;
+			} catch (Exception e) {
+				// e.printStackTrace();
+				System.out.println("Errore richiesta conferma to old cec");
 				try {
 					count++;
 					Thread.sleep(WAIT_RANGE);
