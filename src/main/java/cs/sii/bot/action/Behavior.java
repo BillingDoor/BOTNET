@@ -163,7 +163,8 @@ public class Behavior {
 
 		// decritta il msg
 			msg = pki.getCrypto().decryptAES(rawData);
-			
+			if(msg == null)
+				return;
 		// Per comodità
 		String[] msgs = msg.split("|");
 		
@@ -284,7 +285,9 @@ public class Behavior {
 		for (String str : graph) {
 			String[] sts = str.split("|");
 			edge.add(new Pairs<IP, IP>(new IP(sts[0]), new IP(sts[1])));
+			if(!vertex.contains(new IP(sts[0])))
 			vertex.add(new IP(sts[0]));
+			if(!vertex.contains(new IP(sts[1])))
 			vertex.add(new IP(sts[1]));
 		}
 

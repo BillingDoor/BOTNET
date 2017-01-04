@@ -187,14 +187,9 @@ public class P2PMan {
 	public byte[] getNeighbours(String data) {
 		String idBot;
 		Bot bot = null;
-		try {
-			idBot = pki.getCrypto().decryptAES(data);
-		} catch (InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException
-				| BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException
-				| UnsupportedEncodingException e) {
-			System.out.println("failed to decrypt data");
+		idBot = pki.getCrypto().decryptAES(data);
+		if(idBot==null)
 			return null;
-		}
 		System.out.println("id bot " + idBot);
 		bot = bServ.searchBotId(idBot);
 
