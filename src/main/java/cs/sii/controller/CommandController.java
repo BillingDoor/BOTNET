@@ -46,15 +46,8 @@ public class CommandController {
 	
 	@RequestMapping(value = "/neighbours", method = RequestMethod.POST)
 	@ResponseBody
-	public byte[] getNeighbours(@RequestBody String data, HttpServletResponse error) throws IOException {
-		try {
-			return cmm.getNeighbours(data);
-		} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException
-				| InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
-			System.out.println("errore encrypt vicini");
-			e.printStackTrace();
-		}
-		return null;//
+	public byte[] getNeighbours(@RequestBody String data, HttpServletResponse error)  {
+		return cmm.getNeighbours(data);
 	}
 	
 	// CONTROLLER PER LA GESTIONE DELLA CHALLENGE DI AUTENTICAZIONE//////

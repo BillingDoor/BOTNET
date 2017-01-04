@@ -163,7 +163,6 @@ public class BotRequest {
 				System.out.println("url request " + dnsUrl);
 				String url = HTTP + dnsUrl;
 				// Type type=new TypeToken<Pairs<IP,String>>(){}.getType();
-				// TODO capire se la richiesta è fatta bene
 				// cec = restTemplate.getForObject(url,Pairs.class);
 				cec = restTemplate.postForObject(url, null, cec.getClass());
 				return cec;
@@ -301,7 +300,7 @@ public class BotRequest {
 		return response;
 	}
 	
-	
+	//TODO Aggiungere parametro per renderlo sicuro
 	public List<Bot> getBots(String ip) {
 		List<Bot> response = null;
 		Integer count = 0;

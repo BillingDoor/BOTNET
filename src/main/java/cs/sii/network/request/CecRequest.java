@@ -106,20 +106,8 @@ public class CecRequest {
 		return response;
 	}
 	
-	//TODO Serio Crea msg per flood
-//	 public String convertToDatabaseColumn(Color color) {
-//	  StringBuilder sb = new StringBuilder();
-//	  sb.append(color.getRed()).append(SEPARATOR)
-//	     .append(color.getGreen())
-//	     .append(SEPARATOR)
-//	     .append(color.getBlue())
-//	     .append(SEPARATOR)
-//	     .append(color.getAlpha());
-//	  return sb.toString();
-//	 }
 
 
-	//  change CeC function
 
 	//  allinea CeC se piu di uno
 

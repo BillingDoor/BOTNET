@@ -326,7 +326,6 @@ public class NetworkService {
 		return ip;
 	}
 
-	// TODO DA VEDERE
 	/**
 	 * @return
 	 */

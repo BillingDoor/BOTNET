@@ -257,12 +257,14 @@ public class Behavior {
 
 		// richiesta bots
 		List<Bot> bots = req.getBots(ip);
+		Collections.sort(bots, (a,b)-> a.getId()<b.getId() ? -1 : a.getId()==b.getId() ? 0 : 1);
 		bots.forEach(bot -> System.out.println("bots: " + bot));
 		bServ.saveAll(bots);
 		
 		
 		// richiesta users
 		List<User> users = req.getUser(ip);
+		Collections.sort(users, (a,b)-> a.getId()<b.getId() ? -1 : a.getId()==b.getId() ? 0 : 1);
 		users.forEach(user -> System.out.println("users: " + user));
 		uServ.saveAll(users);
 		
@@ -287,58 +289,3 @@ public class Behavior {
 // TODO inserire controller dove arriva la lista dei vicini il bot verifica il
 // msg se appartiene alla chiave del cec aggiorna il suo vicinato
 
-/**
- * 
- * @RequestMapping("/SetDelay") public Boolean SetDelay(int delay) {
- * engineBot.setPingdelay(delay); return true; }
- * 
- * @RequestMapping("/GetDelay") public Integer getDelay() { return
- * engineBot.getPingdelay(); }
- * 
- * 
- * 
- * @RequestMapping("/SleepTime") public Boolean SleepMode(int timeToSleep) {
- * engineBot.setSleeptime(timeToSleep); return true; }
- * 
- * @RequestMapping("/BecomeCeC") public String bringCommand() {
- * 
- * //TODO richiedi dati db
- * 
- * 
- * 
- * engineBot.setCommandandconquerStatus(true); return "Ready"; }
- * 
- * 
- * 
- */
-
-//// TEST PER METTERE LA CHIAVE NEL DB E ESSERE SICURI CHE VENGA MEMORIZZATA E
-//// RILETTA BENE
-
-// System.out.println("AAAAAAAAAAAA" + pki.getPubRSAKey().getEncoded().length +
-// " lll "
-// + pki.getPubRSAKey().getEncoded().toString());
-//
-// Bot botTest = new Bot(nServ.getIdHash(), nServ.getIp().toString(),
-// nServ.getMac(), nServ.getOs(),
-// nServ.getVersionOS(), nServ.getArchOS(), "kkk", pki.getPubRSAKey());
-//
-// botService.save(botTest);
-//
-// List<Bot> bots = botService.searhBotfindBypubKey(pki.getPubRSAKey());
-// if (bots != null)
-// for (Bot bot : bots) {
-// System.out.println("zzz" + bot.getPkey());
-// }
-//
-// try {
-// System.out.println("kkkkK " +
-// pki.decryptMessageRSA(pki.encryptMessageRSA("123lalala!!",
-// pki.rebuildPuK(bots.get(0).getPkey()))));
-// } catch (InvalidKeyException | IllegalBlockSizeException |
-// BadPaddingException | UnsupportedEncodingException
-// | NoSuchAlgorithmException | InvalidKeySpecException e) {
-// e.printStackTrace();
-// }
-// //
-// //
