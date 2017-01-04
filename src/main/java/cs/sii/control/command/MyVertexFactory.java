@@ -1,12 +1,9 @@
 package cs.sii.control.command;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import org.jgrapht.VertexFactory;
-
-import cs.sii.domain.IP;
 
 public class MyVertexFactory<T> implements VertexFactory<T> {
 

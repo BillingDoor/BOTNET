@@ -1,21 +1,14 @@
 package cs.sii.control.command;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.SignatureException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -23,7 +16,6 @@ import javax.crypto.NoSuchPaddingException;
 
 import org.jgrapht.UndirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.ListenableUndirectedGraph;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -31,7 +23,6 @@ import org.springframework.stereotype.Service;
 import cs.sii.bot.action.Auth;
 import cs.sii.domain.IP;
 import cs.sii.domain.Pairs;
-import cs.sii.domain.SyncIpList;
 import cs.sii.model.bot.Bot;
 import cs.sii.model.user.User;
 import cs.sii.network.request.BotRequest;

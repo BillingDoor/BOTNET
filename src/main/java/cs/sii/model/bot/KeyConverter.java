@@ -11,9 +11,6 @@ import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
 import org.apache.commons.codec.binary.Base64;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import cs.sii.service.crypto.CryptoPKI;
 
 @Converter
 public class KeyConverter implements AttributeConverter<PublicKey, String> {
