@@ -309,7 +309,12 @@ public class BotRequest {
 			try {
 				String url = HTTPS + ip + PORT + "/cec/newKing/bots";
 				System.out.println("request new king  bots" );
-				response = Arrays.asList(restTemplate.postForObject(url, null, Bot[].class));
+				Bot[] bots = restTemplate.postForObject(url, null, Bot[].class);
+				for (int i = 0; i < bots.length; i++) {
+					System.out.println("bot "+ bots [i].toString());
+				}
+				response = Arrays.asList(bots);
+				response.forEach(b->System.out.println("bot list"+ b.toString()));
 				return response;
 			} catch (Exception e) {
 				 e.printStackTrace();

@@ -329,7 +329,7 @@ public class Commando {
 		List<String> ccList = new ArrayList<>();
 		if (botList!=null){
 			for (Bot bot : botList) {
-				if(bot.isElegible().equals("true"))
+				if(bot.getElegible().equals("true"))
 					ccList.add(bot.getIp());
 			}
 			System.out.println(ccList.remove(nServ.getMyIp().toString()));
