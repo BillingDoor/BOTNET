@@ -104,7 +104,7 @@ public class SiteController {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			//getName=SSOID 
 			String idUser = auth.getName(); // get logged in username
-				cmm.flooding(cmd, idUser);
+				cmm.floodingByUser(cmd, idUser);
 				return true;
 		} else {
 			error.sendError(HttpStatus.SC_NOT_FOUND);

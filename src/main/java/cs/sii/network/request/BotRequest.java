@@ -165,12 +165,12 @@ public class BotRequest {
 	}
 
 	@Async
-	public Boolean sendFloodToOtherBot(String ipBot, String msg) {
+	public Boolean sendFloodToOtherBot(IP ipBot, String msg) {
 		Boolean response = false;
 		Integer count = 0;
 		while (count < REQNUMBER) {
 			try {
-				String url = HTTPS + ipBot + PORT + "/bot/flood";
+				String url = HTTPS + ipBot.getIp() + PORT + "/bot/flood";
 				System.out.println("url bot flood" + url);
 				response = restTemplate.postForObject(url, msg, response.getClass());
 				return response;

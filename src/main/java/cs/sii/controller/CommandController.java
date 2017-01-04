@@ -153,7 +153,7 @@ public class CommandController {
 	@ResponseBody
 	public boolean newKingReady()  {
 		//avvisa dns
-		 cmm.newKingDns();
+		cmm.abdicate();
 		 configEngine.setCommandandconquerStatus(false);
 		 cmm.setNewKing("");
 		return true;

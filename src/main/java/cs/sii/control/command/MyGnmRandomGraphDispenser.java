@@ -142,6 +142,8 @@ public class MyGnmRandomGraphDispenser<V, E> extends GnmRandomGraphGenerator<V, 
 		if ((vertexFactory.nodesLenght() == 0) || (vertexFactory.nodesLenght() < n)) {
 			throw new IllegalArgumentException("Nodes list empty or too little" + "");
 		}
+
+		System.out.println("grafo generato 1");
 		// check whether to create loops
 		boolean createLoops = loops;
 		if (createLoops) {
@@ -187,11 +189,13 @@ public class MyGnmRandomGraphDispenser<V, E> extends GnmRandomGraphGenerator<V, 
 				maxAllowedEdges = Integer.MAX_VALUE;
 			}
 		}
+		System.out.println("grafo generato 2");
 		if ((m > maxAllowedEdges) || (m < 0)) {
 			throw new IllegalArgumentException(
 					"number of edges is not valid for the graph type " + "\n-> invalid number of edges=" + m + " for:"
 							+ " graph type=" + target.getClass() + ", number of vertices=" + n);
 		}
+		System.out.println("grafo generato 3");
 		// create vertices
 		Map<Integer, V> vertices = new HashMap<>(n);
 		int previousVertexSetSize = target.vertexSet().size();
@@ -204,7 +208,10 @@ public class MyGnmRandomGraphDispenser<V, E> extends GnmRandomGraphGenerator<V, 
 			throw new IllegalArgumentException("Vertex factory did not produce " + n + " distinct vertices.");
 		}
 		boolean flag = true;
+		System.out.println("grafo generato 4");
+		int c = 0;
 		while ((!GraphTests.isConnected(target)) || (flag)) {
+			c++;
 			List<V> verticesLow = new ArrayList<V>();
 			for (Map.Entry<Integer, V> entry : vertices.entrySet()) {
 				Integer deg = target.degreeOf(entry.getValue());
@@ -214,39 +221,55 @@ public class MyGnmRandomGraphDispenser<V, E> extends GnmRandomGraphGenerator<V, 
 			}
 			V s = null, t = null;
 			Integer size = verticesLow.size();
-			if (size > 0) {
-				s = verticesLow.get(rng.nextInt(size));
-				t = vertices.get(rng.nextInt(size));
 
-				// check whether to add the edge
-				boolean addEdge = false;
-				if (s.equals(t)) { // self-loop
-					if (createLoops) {
-						addEdge = true;
-					}
-				} else {
-					if (createMultipleEdges) {
-						addEdge = true;
-					} else {
-						if (!target.containsEdge(s, t)) {
-							addEdge = true;
-						}
-					}
+			if (vertices.size() > 0) {
+				s = vertices.get(rng.nextInt(vertices.size()));
+				t = vertices.get(rng.nextInt(vertices.size()));
+			} else {
+				break;
+			}
+
+			if (verticesLow.size() > 0) {
+				s = verticesLow.get(rng.nextInt(size));
+			} else {
+				flag = false;
+			}
+
+			// check whether to add the edge
+			boolean addEdge = false;
+			if (s.equals(t)) { // self-loop
+				if (createLoops) {
+					addEdge = true;
 				}
-				// if yes, add it
-				if (addEdge) {
-					try {
-						E resultEdge = target.addEdge(s, t);
-						if (resultEdge != null) {
-						}
-					} catch (IllegalArgumentException e) {
-						// do nothing, just ignore the edge
+			} else {
+				if (createMultipleEdges) {
+					addEdge = true;
+				} else {
+					if (!target.containsEdge(s, t)) {
+						addEdge = true;
 					}
 				}
 			}
-			else flag = false;
+			// if yes, add it
+			if (addEdge) {
+				try {
+					E resultEdge = target.addEdge(s, t);
+					if (resultEdge != null) {
+					}
+				} catch (IllegalArgumentException e) {
+					System.out.println("grafo catch");
+					// do nothing, just ignore the edge
+				}
+			}
+
+			if ((c % 5000) == 0)
+				System.out.println("grafo while");
+
 		}
+		System.out.println("grafo generato 5");
 	}
+
+	//
 
 	/**
 	 * Updates a random graph based on the G(n, M) model For this method
@@ -360,39 +383,48 @@ public class MyGnmRandomGraphDispenser<V, E> extends GnmRandomGraphGenerator<V, 
 			}
 			V s = null, t = null;
 			Integer size = verticesLow.size();
-			if (size > 0) {
-				s = verticesLow.get(rng.nextInt(size));//change to vertices fo have less efficent more random topology
-				t = vertices.get(rng.nextInt(size));//same as above, if change all two method could not converge
-				// check whether to add the edge
-				boolean addEdge = false;
-				if (s.equals(t)) { // self-loop
-					if (createLoops) {
-						addEdge = true;
-					}
-				} else {
-					if (createMultipleEdges) {
-						addEdge = true;
-					} else {
-						if (!target.containsEdge(s, t)) {
-							addEdge = true;
-						}
-					}
+
+			if (vertices.size() > 0) {
+				s = vertices.get(rng.nextInt(vertices.size()));
+				t = vertices.get(rng.nextInt(vertices.size()));
+			} else {
+				break;
+			}
+
+			if (verticesLow.size() > 0) {
+				s = verticesLow.get(rng.nextInt(size));
+			} else {
+				flag = false;
+			}
+
+			// check whether to add the edge
+			boolean addEdge = false;
+			if (s.equals(t)) { // self-loop
+				if (createLoops) {
+					addEdge = true;
 				}
-				// if yes, add it
-				if (addEdge) {
-					try {
-						E resultEdge = target.addEdge(s, t);
-						if (resultEdge != null) {
-						}
-					} catch (IllegalArgumentException e) {
-						// do nothing, just ignore the edge
+			} else {
+				if (createMultipleEdges) {
+					addEdge = true;
+				} else {
+					if (!target.containsEdge(s, t)) {
+						addEdge = true;
 					}
 				}
 			}
-			else flag = false;
+			// if yes, add it
+			if (addEdge) {
+				try {
+					E resultEdge = target.addEdge(s, t);
+					if (resultEdge != null) {
+					}
+				} catch (IllegalArgumentException e) {
+					System.out.println("grafo catch");
+					// do nothing, just ignore the edge
+				}
+			}
 		}
 	}
-
 }
 
 // End GnmRandomGraphGenerator.java
