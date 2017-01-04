@@ -162,6 +162,7 @@ public class CommandController {
 	@ResponseBody
 	public boolean newKingReady()  {
 		//avvisa dns
+		
 		return true;
 	}
 	
