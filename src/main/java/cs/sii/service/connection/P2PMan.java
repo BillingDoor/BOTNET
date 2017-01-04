@@ -49,12 +49,10 @@ public class P2PMan {
 		this.graph = graph;
 	}
 
-	public void initP2P(){
+	public void initP2P() {
 		graph = createNetworkP2P();
 		System.out.println("blab " + graph);
 
-		
-		
 	}
 
 	/**
@@ -121,6 +119,54 @@ public class P2PMan {
 	}
 
 	/**
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public UndirectedGraph<IP, DefaultEdge> updateNetworkP2P(UndirectedGraph<IP, DefaultEdge> graph) {
+
+		List<Bot> bots = bServ.findAll();
+		ArrayList<IP> nodes = new ArrayList<IP>();
+
+		bots.forEach(bot -> nodes.add(new IP(bot.getIp())));
+
+		MyGnmRandomGraphDispenser<IP, DefaultEdge> g2 = new MyGnmRandomGraphDispenser<IP, DefaultEdge>(nodes.size(), 0,
+				new SecureRandom(), true, false);
+		ListenableUndirectedGraph<IP, DefaultEdge> graph2 = new ListenableUndirectedGraph<IP, DefaultEdge>(
+				DefaultEdge.class);
+		MyVertexFactory<IP> nodeIp2 = new MyVertexFactory<IP>((List<IP>) nodes.clone(), new SecureRandom());
+		g2 = new MyGnmRandomGraphDispenser<IP, DefaultEdge>(nodes.size(), 0, new SecureRandom(), true, false);
+		g2.updateConnectedGraph(graph, graph2, nodeIp2, null, calculateK(nodes.size()));
+		for (IP ip2 : nodes) {
+			System.out.println("gli archi di  " + graph2.degreeOf(ip2));
+		}
+		System.out.println("graph" + graph2);
+		System.out.println("gdegree " + calculateK(nodes.size()));
+		this.graph = graph2;
+		return graph;
+	}
+
+	/**
+	 * @param nodes
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public UndirectedGraph<IP, DefaultEdge> updateNetworkP2P(List<Pairs<IP, IP>> Edge, List<IP> nodes) {
+
+		MyGnmRandomGraphDispenser<IP, DefaultEdge> g2 = new MyGnmRandomGraphDispenser<IP, DefaultEdge>(nodes.size(), 0,	new SecureRandom(), true, false);
+		ListenableUndirectedGraph<IP, DefaultEdge> graph2 = new ListenableUndirectedGraph<IP, DefaultEdge>(DefaultEdge.class);
+		MyVertexFactory<IP> nodeIp2 = new MyVertexFactory<IP>((List<IP>) nodes, new SecureRandom());
+		g2 = new MyGnmRandomGraphDispenser<IP, DefaultEdge>(nodes.size(), 0, new SecureRandom(), true, false);
+		g2.updateConnectedGraph(graph, graph2, nodeIp2, null, calculateK(nodes.size()));
+		for (IP ip2 : nodes) {
+			System.out.println("gli archi di  " + graph2.degreeOf(ip2));
+		}
+		System.out.println("graph" + graph2);
+		System.out.println("gdegree " + calculateK(nodes.size()));
+		this.graph = graph2;
+		return graph;
+	}
+
+	/**
 	 * @param data
 	 * @return
 	 * @throws BadPaddingException
@@ -131,8 +177,7 @@ public class P2PMan {
 	 * @throws NoSuchAlgorithmException
 	 * @throws InvalidKeyException
 	 */
-	public byte[] getNeighbours(String data)
-			 {
+	public byte[] getNeighbours(String data) {
 		String idBot;
 		Bot bot = null;
 		try {
@@ -187,7 +232,8 @@ public class P2PMan {
 			if (ipN.equals(pki.getCrypto().decrypt(kk)))
 				System.out.println("ggg0");
 
-		} catch (IOException | InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException e) {
+		} catch (IOException | InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException
+				| InvalidAlgorithmParameterException e) {
 			System.out.println("fail encrypt neighbours");
 		}
 

