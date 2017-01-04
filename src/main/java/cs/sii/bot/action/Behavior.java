@@ -75,10 +75,9 @@ public class Behavior {
 	 */
 	public void initializeBot() {
 
-		nServ.firstConnectToMockServerDns();
+//		nServ.firstConnectToMockServerDns();
 		
-		if(nServ.getCommandConquerIps().getList().get(0).getValue1().getIp().equals(nServ.getMyIp().getIp()))
-			eng.setCommandandconquerStatus(true);
+		
 		
 		if (challengeToCommandConquer()) {
 			System.out.println("Bot is Ready");

