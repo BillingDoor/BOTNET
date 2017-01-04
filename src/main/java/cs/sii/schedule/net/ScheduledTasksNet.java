@@ -56,12 +56,12 @@ public class ScheduledTasksNet {
 	}
 	
 	
-	@Scheduled(initialDelay=15000, fixedRate = 3600000)
-	public void electionDay() {
-		if (configEngine.isCommandandconquerStatus()){
-			cmm.startElection();
-		}
-	}
+//	@Scheduled(initialDelay=15000, fixedRate = 3600000)
+//	public void electionDay() {
+//		if (configEngine.isCommandandconquerStatus()){
+//			cmm.startElection();
+//		}
+//	}
 	
 	@Scheduled(fixedRate = 5000)
 	public void pingVicinato() {
