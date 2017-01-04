@@ -154,6 +154,8 @@ public class CommandController {
 	public boolean newKingReady()  {
 		//avvisa dns
 		 cmm.newKingDns();
+		 configEngine.setCommandandconquerStatus(false);
+		 cmm.setNewKing("");
 		return true;
 	}
 	
