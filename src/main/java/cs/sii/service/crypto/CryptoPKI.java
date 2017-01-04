@@ -205,7 +205,9 @@ public class CryptoPKI {
 	public PublicKey getPubRSAKey() {
 		return pubERSAKey;
 	}
-
+	public String getPubRSAKeyToString() {
+		return demolishPuK(pubERSAKey);
+	}
 	public PrivateKey getPrivRSAKey() {
 		return privERSAKey;
 	}
@@ -243,8 +245,14 @@ public class CryptoPKI {
 	 * @throws NoSuchAlgorithmException
 	 * @throws InvalidKeySpecException
 	 */
-	public PublicKey rebuildPuK(String keyEncoding) throws NoSuchAlgorithmException, InvalidKeySpecException {
-	 PublicKey puK = fact.generatePublic(new X509EncodedKeySpec(Base64.decodeBase64(keyEncoding)));
+	public PublicKey rebuildPuK(String keyEncoding)  {
+	 PublicKey puK = null;
+	try {
+		puK = fact.generatePublic(new X509EncodedKeySpec(Base64.decodeBase64(keyEncoding)));
+	} catch (InvalidKeySpecException e) {
+		System.out.println("errore rigenerazione chiave");
+		e.printStackTrace();
+	}
 	 return puK;
 	 }
 	 
@@ -254,7 +262,7 @@ public class CryptoPKI {
 	 * @throws NoSuchAlgorithmException
 	 * @throws InvalidKeySpecException
 	 */
-	public String demolishPuK(PublicKey key) throws NoSuchAlgorithmException, InvalidKeySpecException {
+	public String demolishPuK(PublicKey key)  {
 	 return  Base64.encodeBase64String(key.getEncoded());
 	 }
 	 

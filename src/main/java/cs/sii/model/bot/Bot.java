@@ -50,15 +50,12 @@ public class Bot implements Serializable {
 	@Column(name = "elegible", nullable = false)
 	private String elegible;
 
-	
-	//	@Type(type="org.hibernate.type.NumericBooleanType")
-//	@Convert(converter = BooleanConverter.class)
-	
+	// @Type(type="org.hibernate.type.NumericBooleanType")
+	// @Convert(converter = BooleanConverter.class)
 
-	
+	// @Convert(converter = KeyConverter.class)
 	@Column(name = "PubKey", length = 5000)
-	@Convert(converter = KeyConverter.class)
-	private PublicKey pubKey;
+	private String pubKey;
 
 	@ManyToOne
 	@JoinColumn(name = "User_id", nullable = true)
@@ -68,7 +65,7 @@ public class Bot implements Serializable {
 
 	}
 
-	public Bot(String idBot, String ip, String mac, String os, String ver, String arch, String usernameOS, PublicKey pk,
+	public Bot(String idBot, String ip, String mac, String os, String ver, String arch, String usernameOS, String pk,
 			User botUser, String elegible) {
 		super();
 		this.idBot = idBot;
@@ -83,7 +80,7 @@ public class Bot implements Serializable {
 		this.elegible = elegible;
 	}
 
-	public Bot(String idBot, String ip, String mac, String os, String ver, String arch, String usernameOS, PublicKey pk,
+	public Bot(String idBot, String ip, String mac, String os, String ver, String arch, String usernameOS, String pk,
 			String elegible) {
 		super();
 		this.idBot = idBot;
@@ -170,11 +167,11 @@ public class Bot implements Serializable {
 		this.botUser = botUser;
 	}
 
-	public PublicKey getPubKey() {
+	public String getPubKey() {
 		return pubKey;
 	}
 
-	public void setPubKey(PublicKey pubKey) {
+	public void setPubKey(String pubKey) {
 		this.pubKey = pubKey;
 	}
 
@@ -185,7 +182,5 @@ public class Bot implements Serializable {
 	public void setElegible(String elegible) {
 		this.elegible = elegible;
 	}
-
-
 
 }

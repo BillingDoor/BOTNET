@@ -95,7 +95,7 @@ public class NetworkService {
 	public List<Pairs<IP, PublicKey>> setConstructList(Set<Bot> botList) {
 		List<Pairs<IP, PublicKey>> buff = new ArrayList<Pairs<IP, PublicKey>>();
 		botList.forEach((bot) -> {
-			buff.add(new Pairs<IP, PublicKey>(new IP(bot.getIp()), bot.getPubKey()));
+			buff.add(new Pairs<IP, PublicKey>(new IP(bot.getIp()),pki.rebuildPuK(bot.getPubKey())));
 		});
 		return buff;
 	}
@@ -108,7 +108,7 @@ public class NetworkService {
 	public List<Pairs<IP, PublicKey>> setConstructList(List<Bot> list) {
 		List<Pairs<IP, PublicKey>> buff = new ArrayList<Pairs<IP, PublicKey>>();
 		list.forEach((bot) -> {
-			buff.add(new Pairs<IP, PublicKey>(new IP(bot.getIp()), bot.getPubKey()));
+			buff.add(new Pairs<IP, PublicKey>(new IP(bot.getIp()),pki.rebuildPuK( bot.getPubKey())));
 		});
 		return buff;
 	}

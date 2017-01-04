@@ -21,9 +21,8 @@ public class BotServiceImpl {
 	}
 
 	public Boolean save(Bot bot) {
-		System.out.println(" pk " + Base64.encodeBase64String(bot.getPubKey().getEncoded()).length());
 		System.out.println(" bot " + bot.getIdBot() + " " + bot.getIp() + " " + bot.isElegible() + " "
-				+ Base64.encodeBase64String(bot.getPubKey().getEncoded()));
+				+bot.getPubKey());
 		if (bRep.findByIdBot(bot.getIdBot()) == null) {
 			bRep.save(bot);
 			return true;
@@ -33,9 +32,8 @@ public class BotServiceImpl {
 
 	public Boolean saveAll(List<Bot> bots) {
 		for (Bot bot : bots) {
-			System.out.println(" pk " + Base64.encodeBase64String(bot.getPubKey().getEncoded()).length());
 			System.out.println(" bot " + bot.getIdBot() + " " + bot.getIp() + " " + bot.isElegible() + " "
-					+ Base64.encodeBase64String(bot.getPubKey().getEncoded()));
+					+ bot.getPubKey());
 			if (bRep.findByIdBot(bot.getIdBot()) == null) {
 				bRep.save(bot);
 			} else
