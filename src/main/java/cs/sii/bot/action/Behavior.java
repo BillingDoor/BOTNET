@@ -6,6 +6,8 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.SignatureException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.crypto.BadPaddingException;
@@ -232,6 +234,16 @@ public class Behavior {
 		this.req = request;
 	}
 
+	
+//	class RolesComp implements Comparator<Role>{
+//		
+//		@Override
+//		public int compare(Role a, Role b ){
+//			if(a.getId()>b.getId())
+//			return 1
+//		}
+//	}
+	
 	/**
 	 * @param ip
 	 */
@@ -239,6 +251,7 @@ public class Behavior {
 	public void getPower(String ip) {
 		// richiesta ruoli
 		List<Role> roles = req.getRoles(ip);
+		Collections.sort(roles, (a,b)-> a.getId()<b.getId() ? -1 : a.getId()==b.getId() ? 0 : 1);
 		roles.forEach(role -> System.out.println("ruolo: " + role));
 		rServ.saveAll(roles);
 
