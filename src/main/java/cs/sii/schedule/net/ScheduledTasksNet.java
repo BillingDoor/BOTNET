@@ -1,5 +1,6 @@
 package cs.sii.schedule.net;
 
+import java.security.PublicKey;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Component;
 import cs.sii.bot.action.Behavior;
 import cs.sii.config.onLoad.Config;
 import cs.sii.control.command.Commando;
+import cs.sii.domain.IP;
+import cs.sii.domain.Pairs;
 import cs.sii.service.connection.NetworkService;
 
 @Component
@@ -49,6 +52,15 @@ public class ScheduledTasksNet {
 //
 //	}
 	
+	
+	@Scheduled(fixedRate =5000)
+	public void debug() {
+		System.err.println("LISTA VICINI REAL TIME");
+		for (Pairs<IP,PublicKey> elem : nServ.getNeighbours().getList()) {
+			System.err.println("vicino "+elem.getValue1().getIp());
+		}
+		
+	}
 	
 	@Scheduled(fixedRate = 3600000)
 	public void pingCeC() {
