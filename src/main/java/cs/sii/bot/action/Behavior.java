@@ -60,8 +60,8 @@ public class Behavior {
 
 	// Il secondo valore è vuoto però ci serviva una lista sincata per non
 	// implementarla di nuovo
-	@Autowired
-	private SyncIpList<Integer, String> msgHashList;
+	
+	private SyncIpList<Integer, String> msgHashList=new SyncIpList<Integer,String>();
 
 	/**
 	 * just needed for initialize beans

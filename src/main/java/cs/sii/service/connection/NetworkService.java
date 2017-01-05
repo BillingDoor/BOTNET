@@ -42,12 +42,12 @@ public class NetworkService {
 	@Autowired
 	private Config engineBot;
 
-	@Autowired
-	private SyncIpList<IP,PublicKey> commandConquerIps;
+	
+	private SyncIpList<IP,PublicKey> commandConquerIps=new SyncIpList<IP,PublicKey>();
 
 //	 Ip dei command e conquer
-	@Autowired
-	private SyncIpList<IP,PublicKey> neighbours;
+	
+	private SyncIpList<IP,PublicKey> neighbours=new SyncIpList<IP,PublicKey>();
 
 	@Autowired
 	private Malicious malServ;
