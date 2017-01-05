@@ -164,6 +164,25 @@ public class NetworkService {
 
 	}
 
+	
+	
+	/**
+	 * @param response
+	 * @return
+	 */
+	public List<Pairs<IP, PublicKey>> tramsuteNeigha(List<Pairs<String, String> > response){
+		List<Pairs<IP, PublicKey>> newNeighbours = new ArrayList<Pairs<IP, PublicKey>>();
+		for (Pairs<String, String> pairs : response) {
+			Pairs<IP, PublicKey> in = new Pairs<IP, PublicKey>();
+			in.setValue1(new IP(pairs.getValue1()));
+			in.setValue2(pki.rebuildPuK(pairs.getValue2()));
+			newNeighbours.add(in);
+		}
+		return newNeighbours;
+	}
+	
+	
+	
 	/**
 	 * @return
 	 */

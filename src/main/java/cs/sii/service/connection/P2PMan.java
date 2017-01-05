@@ -58,7 +58,9 @@ public class P2PMan {
 		graph = createNetworkP2P();
 		System.out.println("blab " + graph);
 		if(graph.degreeOf(nServ.getMyIp())>0){
-			nServ.setNeighbours(myNeighbours(nServ.getMyIp().getIp()));
+			SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
+			buf.setAll(myNeighbours(nServ.getMyIp().getIp()).getList());
+			nServ.setNeighbours(buf);
 			for (Pairs<IP, PublicKey> p : nServ.getNeighbours().getList()) {
 				System.out.println("ip vicinato= " + p.getValue1());
 			}
@@ -130,6 +132,10 @@ public class P2PMan {
 		System.out.println("graph" + graph2);
 		System.out.println("gdegree " + calculateK(nodes.size()));
 		this.graph = graph2;
+		
+		SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
+		buf.setAll(myNeighbours(nServ.getMyIp().getIp()).getList());
+		nServ.setNeighbours(buf);
 		return graph;
 	}
 
@@ -276,6 +282,7 @@ public class P2PMan {
 				Bot sB = bServ.searchBotIP(s);
 				Pairs<IP, PublicKey> ps = new Pairs<IP, PublicKey>();
 				ps.setValue1(new IP(sB.getIp()));
+				System.out.println("nuovi vicini "+sB.getIp());
 				ps.setValue2(pki.rebuildPuK(sB.getPubKey()));
 				ipN.add(ps);
 				// ipN.getList().add(ps);
@@ -287,6 +294,7 @@ public class P2PMan {
 				Bot tB = bServ.searchBotIP(t);
 				Pairs<IP, PublicKey> pt = new Pairs<IP, PublicKey>();
 				pt.setValue1(new IP(tB.getIp()));
+				System.out.println("nuovi vicini "+tB.getIp());
 				pt.setValue2(pki.rebuildPuK(tB.getPubKey()));
 				ipN.add(pt);
 				// ipN.getList().add(pt);
