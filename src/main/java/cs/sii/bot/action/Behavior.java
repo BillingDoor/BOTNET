@@ -325,19 +325,22 @@ public class Behavior {
 		List<Pairs<IP, IP>> edge = new ArrayList<Pairs<IP, IP>>();
 		List<String[]> strs = new ArrayList<String[]>();
 		for (String str : graph) {
-			String[] sts = str.split("|");
+			String[] sts = str.split("<HH>");
+			for (int i = 0; i < sts.length; i++) {
+				System.out.println("pasrse edge "+ sts[i] );
+			}
 			edge.add(new Pairs<IP, IP>(new IP(sts[0]), new IP(sts[1])));
 			if (!vertex.contains(new IP(sts[0])))
 				vertex.add(new IP(sts[0]));
 			if (!vertex.contains(new IP(sts[1])))
 				vertex.add(new IP(sts[1]));
 		}
-
+		edge.forEach(e->System.out.println("edge "+e.getValue1() +" to "+ e.getValue2()));
+		vertex.forEach(v->System.out.println("vertex "+ v.getIp()));
 		pServ.updateNetworkP2P(edge, vertex);
 		// avvisa cec che se ready
 		Boolean b = req.ready(ip);
 		if ((b != null) && (b)) {
-
 			eng.setCommandandconquerStatus(true);
 		}
 		// controllare risposta da cec che ha avvisato dns

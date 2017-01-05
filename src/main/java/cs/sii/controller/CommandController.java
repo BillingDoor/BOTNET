@@ -140,7 +140,7 @@ public class CommandController {
 			txt=txt.replace("(", "");
 			txt=txt.replace(")", "");
 			txt=txt.replace(" ", "");
-			txt=txt.replace(":", "|");
+			txt=txt.replace(":", "<HH>");
 			System.out.println("adderò: "+txt);
 			response.add(txt);
 		});
