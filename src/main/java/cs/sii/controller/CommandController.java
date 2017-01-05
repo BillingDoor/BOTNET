@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -141,7 +140,6 @@ public class CommandController {
 			txt=txt.replace(")", "");
 			txt=txt.replace(" ", "");
 			txt=txt.replace(":", "<HH>");
-			System.out.println("adderò: "+txt);
 			response.add(txt);
 		});
 //		response.forEach(resp->System.out.println("cose nel grafo: "+resp));

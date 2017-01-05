@@ -143,7 +143,7 @@ public class BotRequest {
 
 	// da valutare se devono essere asincroni
 	public Pairs<String, String> getIpCeCFromDnsServer(String dnsUrl) {
-		Pairs<String, String> cec = new Pairs<>();
+		Pairs<String, String> cec = new Pairs<String, String>();
 		while (true) {
 			try {
 				System.out.println("url request " + dnsUrl);
