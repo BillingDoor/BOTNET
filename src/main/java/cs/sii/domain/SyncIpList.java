@@ -26,10 +26,16 @@ public class SyncIpList<V, T> {
 	 */
 	public SyncIpList() {
 		list = new ArrayList<Pairs<V, T>>();
+		for (Pairs<V, T> pairs : list) {
+			System.out.println("construct sync ip "+pairs.getValue1() );
+		}
 	}
 
 	
 	public Integer getSize(){
+		for (Pairs<V, T> pairs : list) {
+			System.out.println("size sync ip "+pairs.getValue1() );
+		}
 		return list.size();
 	}
 	
@@ -47,8 +53,14 @@ public class SyncIpList<V, T> {
 	 */
 	public void setAll(List<Pairs<V, T>> ipList) {
 		synchronized (list) {
+			for (Pairs<V, T> pairs : list) {
+				System.out.println("setAllOLD sync ip "+pairs.getValue1() );
+			}
 			list.clear();
 			list.addAll(ipList);
+			for (Pairs<V, T> pairs : ipList) {
+				System.out.println("setAllNEW sync ip "+pairs.getValue1() );
+			}
 		}
 	}
 	
@@ -66,6 +78,12 @@ public class SyncIpList<V, T> {
 	 */
 	public void addAll(List<Pairs<V, T>> ipList) {
 		synchronized (list) {
+			for (Pairs<V, T> pairs : list) {
+				System.out.println("addALLOLD sync ip "+pairs.getValue1() );
+			}
+			for (Pairs<V, T> pairs : ipList) {
+				System.out.println("AddAllNew sync ip "+pairs.getValue1() );
+			}
 			list.addAll(ipList);
 		}
 	}
@@ -102,8 +120,9 @@ public class SyncIpList<V, T> {
 	 */
 	public void add(Pairs<V, T> ip) {
 		synchronized (list) {
-			if (list.indexOf(ip) < 0)
+			if (list.indexOf(ip) < 0){
 				list.add(ip);
+				System.out.println("sync ip Add "+ip.getValue1());}
 		}
 	}
 
