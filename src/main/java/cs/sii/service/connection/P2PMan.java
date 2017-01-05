@@ -163,6 +163,9 @@ public class P2PMan {
 		System.out.println("graph" + graph2);
 		System.out.println("gdegree " + calculateK(nodes.size()));
 		this.graph = graph2;
+		SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
+		buf.setAll(myNeighbours(nServ.getMyIp().getIp()).getList());
+		nServ.setNeighbours(buf);
 		return graph;
 	}
 
@@ -194,6 +197,9 @@ public class P2PMan {
 		System.out.println("graph" + graph2);
 		System.out.println("gdegree " + calculateK(nodes.size()));
 		this.graph = graph2;
+		SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
+		buf.setAll(myNeighbours(nServ.getMyIp().getIp()).getList());
+		nServ.setNeighbours(buf);
 		return graph;
 	}
 
