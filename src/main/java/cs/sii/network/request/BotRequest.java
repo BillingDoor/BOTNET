@@ -430,7 +430,6 @@ public class BotRequest {
 				objects.add(pki.demolishPuK(pk));
 				objects.add(elegible);
 				response = restTemplate.postForObject(HTTPS + dest + PORT + "/cec/hmac", objects, String.class);
-				System.out.println("Ok");
 				return response;
 			} catch (Exception e) {
 				// e.printStackTrace();

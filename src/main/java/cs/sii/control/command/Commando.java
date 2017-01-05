@@ -230,6 +230,7 @@ public class Commando {
 			String pk = b.getPubKey();
 			newKingDns(ip,pk);
 			newKingFlood(ip,pk);
+			//TODO DropDATABASE
 			return true;
 		}
 		return false;

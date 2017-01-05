@@ -18,6 +18,7 @@ public class BotServiceImpl {
 	private BotRepository bRep;
 
 	public BotServiceImpl() {
+	
 	}
 
 	public Boolean save(Bot bot) {
@@ -41,6 +42,10 @@ public class BotServiceImpl {
 			;
 		}
 		return true;
+	}
+	
+	public void deleteAll(){
+		bRep.deleteAll();
 	}
 
 //	public Boolean saveObj(List<Object> bots) {

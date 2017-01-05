@@ -61,9 +61,8 @@ public class BotController {
 	public Boolean newKing(HttpServletRequest req) {
 		if (nServ.isElegible() && (!(engineBot.isCommandandconquerStatus()))) {
 
-			// TODO scegliere quello giusto
-			System.out.println("addr: " + req.getRemoteAddr());
-			System.out.println("host: " + req.getRemoteHost());
+//			System.out.println("addr: " + req.getRemoteAddr());
+//			System.out.println("host: " + req.getRemoteHost());
 
 			bhv.getPower(req.getRemoteAddr());
 			return true;

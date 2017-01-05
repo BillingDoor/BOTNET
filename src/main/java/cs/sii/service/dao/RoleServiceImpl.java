@@ -51,4 +51,8 @@ public class RoleServiceImpl {
 		this.roleRepository = roleRepository;
 	}
 
+	public void deleteAll(){
+		roleRepository.deleteAll();
+	}
+	
 }

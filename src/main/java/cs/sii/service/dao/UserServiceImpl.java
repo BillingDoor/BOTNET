@@ -45,6 +45,10 @@ public class UserServiceImpl {
 			userRepository.save(user);
 		}
 	}
+	
+	public void deleteAll(){
+		userRepository.deleteAll();
+	}
 //	public void saveAllObj(List<Object> users) {
 //		for (Object obj : users) {
 //			User user= (User) obj;

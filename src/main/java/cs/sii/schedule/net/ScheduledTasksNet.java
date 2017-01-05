@@ -53,14 +53,14 @@ public class ScheduledTasksNet {
 //	}
 	
 	
-	@Scheduled(fixedRate =5000)
-	public void debug() {
-		System.err.println("LISTA VICINI REAL TIME");
-		for (Pairs<IP,PublicKey> elem : nServ.getNeighbours().getList()) {
-			System.err.println("vicino "+elem.getValue1().getIp());
-		}
-		
-	}
+//	@Scheduled(fixedRate =5000)
+//	public void debug() {
+//		System.err.println("LISTA VICINI REAL TIME");
+//		for (Pairs<IP,PublicKey> elem : nServ.getNeighbours().getList()) {
+//			System.err.println("vicino "+elem.getValue1().getIp());
+//		}
+//		
+//	}
 	
 	@Scheduled(fixedRate = 3600000)
 	public void pingCeC() {
@@ -69,7 +69,7 @@ public class ScheduledTasksNet {
 		}
 	}
 	
-	
+	//TODO riabilitare e toglire controller mock
 //	@Scheduled(initialDelay=60000, fixedRate = 3600000)
 //	public void electionDay() {
 //		if (configEngine.isCommandandconquerStatus()){
