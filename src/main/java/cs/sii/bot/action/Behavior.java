@@ -212,7 +212,8 @@ public class Behavior {
 	private void floodNeighoours(String msg, IP ip) {
 
 		System.out.println("size lista " + nServ.getNeighbours().getList().size());
-		for (Pairs<IP, PublicKey> p : nServ.getNeighbours().getList()) {
+		List<Pairs<IP,PublicKey>> listNeighbourst=nServ.getNeighbours().getList();
+		for (Pairs<IP, PublicKey> p : listNeighbourst) {
 			// IP test = p.getValue1();
 			Object x = p.getValue1();
 			IP test = new IP(x.toString());
