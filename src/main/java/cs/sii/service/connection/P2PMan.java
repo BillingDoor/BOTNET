@@ -57,9 +57,11 @@ public class P2PMan {
 	public void initP2P() {
 		graph = createNetworkP2P();
 		System.out.println("blab " + graph);
-		nServ.setNeighbours(myNeighbours(nServ.getMyIp().getIp()));
-		for (Pairs<IP, PublicKey> p : nServ.getNeighbours().getList()) {
-			System.out.println("ip vicinato= " + p.getValue1());
+		if(graph.degreeOf(nServ.getMyIp())>0){
+			nServ.setNeighbours(myNeighbours(nServ.getMyIp().getIp()));
+			for (Pairs<IP, PublicKey> p : nServ.getNeighbours().getList()) {
+				System.out.println("ip vicinato= " + p.getValue1());
+			}
 		}
 	}
 

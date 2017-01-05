@@ -40,12 +40,14 @@ public class ScheduledTasksNet {
 //	}
 //	
 	
-	public void getNeighbours() {
-		if (!configEngine.isCommandandconquerStatus())
-//			nServ.setConstructList(botServ.findAll());
-			botB.getRequest().askNeighbours(nServ.getCommandConquerIps().getList().get(0).getValue1().toString(), nServ.getMyIp().toString(), nServ.getIdHash());
-
-	}
+	
+	//TODO da verificare
+//	public void getNeighbours() {
+//		if (!configEngine.isCommandandconquerStatus())
+////			nServ.setConstructList(botServ.findAll());
+//			botB.getRequest().askNeighbours(nServ.getCommandConquerIps().getList().get(0).getValue1().toString(), nServ.getMyIp().toString(), nServ.getIdHash());
+//
+//	}
 	
 	
 	@Scheduled(fixedRate = 3600000)

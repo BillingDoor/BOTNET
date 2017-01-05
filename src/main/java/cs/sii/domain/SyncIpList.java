@@ -51,6 +51,15 @@ public class SyncIpList<V, T> {
 			list.addAll(ipList);
 		}
 	}
+	
+//	/**
+//	 * @param list
+//	 *            the ipList to set
+//	 */
+//	public void setList(List<Pairs<V, T>> list) {
+//		this.list = list;
+//	}
+
 
 	/**
 	 * @param ips
@@ -121,13 +130,6 @@ public class SyncIpList<V, T> {
 	}
 	
 	
-	/**
-	 * @param list
-	 *            the ipList to set
-	 */
-	public void setList(List<Pairs<V, T>> list) {
-		this.list = list;
-	}
 
 
 	
