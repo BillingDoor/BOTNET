@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -191,6 +192,7 @@ public class Behavior {
 			// verifica la firma con chiave publica c&c
 			try {
 				System.out.println("signature" + msgs[2]);
+				System.out.println(" pk "+ pki.demolishPuK(nServ.getCommandConquerIps().getList().get(0).getValue2()));
 				if (pki.validateSignedMessageRSA(msgs[0], msgs[2],
 						nServ.getCommandConquerIps().getList().get(0).getValue2())) {
 					Pairs<Integer, String> data = new Pairs<>();

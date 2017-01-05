@@ -183,7 +183,7 @@ public class Commando {
 
 			String hashIdMsg = crypto.generateSha256(nounce.toString());
 
-			String signature;
+			String signature = null;
 			try {
 				signature = pki.signMessageRSA(hashIdMsg);
 				msg = hashIdMsg + "<HH>" + cmd + "<HH>" + signature;
@@ -192,6 +192,11 @@ public class Commando {
 				e.printStackTrace();
 				System.out.println("Non sono riuscito a firmare il messaggio pre Flood");
 			}
+			System.out.println("hash "+ hashIdMsg);
+			System.out.println("cmd "+ cmd);
+			System.out.println("signature " + signature);
+			System.out.println("msg "+msg);
+			System.out.println("request "+request);
 
 			startFlood(request);
 		return;
