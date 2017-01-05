@@ -215,13 +215,13 @@ public class Behavior {
 		List<Pairs<IP,PublicKey>> listNeighbourst=nServ.getNeighbours().getList();
 		for (Pairs<IP, PublicKey> p : listNeighbourst) {
 			// IP test = p.getValue1();
-			Object x = p.getValue1();
-			IP test = new IP(x.toString());
-			System.out.println("dsasaddavvvvvv " + test.getIp());
-			// if (!ip.equals(test)) {
-			// req.sendFloodToOtherBot(p.getValue1(), msg);
-			// System.out.println("flood vicino "+ test);
-			// }
+//			Object x = p.getValue1();
+//			IP test = new IP(x.toString());
+//			System.out.println("dsasaddavvvvvv " + test.getIp());
+			 if (!ip.getIp().equals(p.getValue1().getIp())) {
+			 req.sendFloodToOtherBot(p.getValue1(), msg);
+			 System.out.println("flood vicino "+ p.getValue1().getIp());
+			 }
 		}
 
 		// nServ.getNeighbours().getList().forEach((pairs) -> {
