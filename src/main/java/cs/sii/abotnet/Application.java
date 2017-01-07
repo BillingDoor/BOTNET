@@ -49,7 +49,9 @@ public class Application {
 	@Bean
 	public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
 		return args -> {
+			System.out.println("CARICO CONFIGURAZIONI E INFORMAZIONI DI SISTEMA");
 			init.loadInfo();
+			System.out.println("EFFETTUO PRIMA CONNESIONE AL DNS SERVER");
 			nServ.firstConnectToMockServerDns();
 						
 			if(nServ.getCommandConquerIps().getList().get(0).getValue1().getIp().equals(nServ.getMyIp().getIp()))

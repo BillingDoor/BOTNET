@@ -62,7 +62,7 @@ public class P2PMan {
 			buf.setAll(myNeighbours(nServ.getMyIp().getIp()).getList());
 			nServ.setNeighbours(buf);
 			for (Pairs<IP, PublicKey> p : nServ.getNeighbours().getList()) {
-				System.out.println("ip vicinato= " + p.getValue1());
+				System.out.println("Ip vicinato= " + p.getValue1());
 			}
 		}
 	}

