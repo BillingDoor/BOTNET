@@ -143,7 +143,6 @@ public class MyGnmRandomGraphDispenser<V, E> extends GnmRandomGraphGenerator<V, 
 			throw new IllegalArgumentException("Nodes list empty or too little" + "");
 		}
 		System.out.println("K:"+k);
-		System.out.println("grafo generato 1");
 		// check whether to create loops
 		boolean createLoops = loops;
 		if (createLoops) {
@@ -189,13 +188,11 @@ public class MyGnmRandomGraphDispenser<V, E> extends GnmRandomGraphGenerator<V, 
 				maxAllowedEdges = Integer.MAX_VALUE;
 			}
 		}
-		System.out.println("grafo generato 2");
 		if ((m > maxAllowedEdges) || (m < 0)) {
 			throw new IllegalArgumentException(
 					"number of edges is not valid for the graph type " + "\n-> invalid number of edges=" + m + " for:"
 							+ " graph type=" + target.getClass() + ", number of vertices=" + n);
 		}
-		System.out.println("grafo generato 3");
 		// create vertices
 		Map<Integer, V> vertices = new HashMap<>(n);
 		int previousVertexSetSize = target.vertexSet().size();
@@ -208,7 +205,6 @@ public class MyGnmRandomGraphDispenser<V, E> extends GnmRandomGraphGenerator<V, 
 			throw new IllegalArgumentException("Vertex factory did not produce " + n + " distinct vertices.");
 		}
 		boolean flag = true;
-		System.out.println("grafo generato 4");
 		int c = 0;
 		while ((!GraphTests.isConnected(target)) || (flag)) {
 			c++;
@@ -266,7 +262,6 @@ public class MyGnmRandomGraphDispenser<V, E> extends GnmRandomGraphGenerator<V, 
 				System.out.println("grafo while");
 
 		}
-		System.out.println("grafo generato 5");
 	}
 
 	//

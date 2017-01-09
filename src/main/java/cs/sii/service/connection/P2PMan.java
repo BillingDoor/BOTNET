@@ -56,7 +56,8 @@ public class P2PMan {
 
 	public void initP2P() {
 		graph = createNetworkP2P();
-		System.out.println("blab " + graph);
+		System.out.println("Grafo completato " + graph);
+		System.out.println("Inizio calcolo vicini");
 		if(graph.degreeOf(nServ.getMyIp())>0){
 			SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
 			buf.setAll(myNeighbours(nServ.getMyIp().getIp()).getList());
@@ -99,11 +100,11 @@ public class P2PMan {
 		MyVertexFactory<IP> nodeIp = new MyVertexFactory<IP>((List<IP>) nodes.clone(), new SecureRandom());
 		
 		g2.generateConnectedGraph(graph, nodeIp, null, calculateK(nodes.size()));
-		for (IP ip2 : nodes) {
-			System.out.println("gli archi di  " + graph.degreeOf(ip2));
-		}
+//		for (IP ip2 : nodes) {
+//			System.out.println("gli archi di  " + graph.degreeOf(ip2));
+//		}
 		System.out.println("create/update graph" + graph);
-		System.out.println("minium degree 4e nodes " + calculateK(nodes.size()));
+		System.out.println("minium degree " + calculateK(nodes.size()));
 		return graph;
 	}
 
