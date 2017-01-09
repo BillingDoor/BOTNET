@@ -79,7 +79,7 @@ public class BotController {
 		}
 	}
 	
-	@RequestMapping("/myneighbours/welcome")
+	@RequestMapping(value="/myneighbours/welcome",method = RequestMethod.POST)
 	public Pairs<Long, Integer> myNeighbours(@RequestBody String idBot,HttpServletRequest req) {
 		System.out.println("Richiesta challenge dal mio vicino ricevuta da"+req.getRemoteAddr());
 		Pairs<Long, Integer> response = new Pairs<>();
@@ -88,7 +88,7 @@ public class BotController {
 		}
 	
 	
-	@RequestMapping("/myneighbours/hmac")
+	@RequestMapping(value="/myneighbours/hmac",method = RequestMethod.POST)
 	public void myNeighboursHmac(@RequestBody ArrayList<Object> objects,HttpServletRequest req) {
 		System.out.println("Richiesta con hmac de ricevuta da"+req.getRemoteAddr());
 		Boolean response = false;
