@@ -73,7 +73,7 @@ public class P2PMan {
 	 */
 	private Integer calculateK(Integer nodes) {
 		Integer k = (int) Math.ceil(Math.log10(nodes + 10));
-		if (nodes > 2) {
+		if (nodes > 3) {
 			k++;
 		}
 		return k;
