@@ -89,7 +89,7 @@ public class BotController {
 	
 	
 	@RequestMapping(value="/myneighbours/hmac",method = RequestMethod.POST)
-	public void myNeighboursHmac(@RequestBody ArrayList<Object> objects,HttpServletRequest req) {
+	public Boolean myNeighboursHmac(@RequestBody ArrayList<Object> objects,HttpServletRequest req) {
 		System.out.println("Richiesta con hmac de ricevuta da"+req.getRemoteAddr());
 		Boolean response = false;
 		response =bhv.checkHmacBot(objects);
@@ -99,6 +99,8 @@ public class BotController {
 			PublicKey pubKey=pki.rebuildPuK(objects.get(2).toString());
 			nServ.getNeighbours().add(bot);
 		}
+		System.out.println("risposta"+response);
+		return response;
 	}
 	
 

@@ -288,6 +288,9 @@ public class Behavior {
 		Pairs<Long, Integer> response;
 		Long keyNumber = new Long(auth.generateNumberText());
 		Integer iterationNumber = new Integer(auth.generateIterationNumber());
+		System.out.println("keyNumber "+keyNumber);
+		System.out.println("IterationNumber "+iterationNumber);
+		System.out.println("idbot "+idBot);
 		auth.addBotChallengeInfo(idBot, keyNumber, iterationNumber);
 		response = new Pairs<Long, Integer>(keyNumber, iterationNumber);
 		return response;
@@ -330,7 +333,7 @@ public class Behavior {
 					pairs.getValue1());
 			botResp.add(element);
 		}
-
+System.out.println("Richieste inviate attendo le risposte");
 		while (!botResp.isEmpty()) {
 			for (Pairs<Future<Pairs<Long, Integer>>, IP> coppia : botResp) {
 				if (coppia.getValue1().isDone()) {

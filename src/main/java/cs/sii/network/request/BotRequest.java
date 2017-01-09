@@ -484,14 +484,15 @@ public class BotRequest {
 	@Async
 	public void getResponseFromBot(IP sorg, IP dest, String hashMac, PublicKey pk) {
 		Integer counter = 0;
-		String response = "";
+		Boolean response = false;
 		while (counter < REQNUMBER) {
 			try {
-				List<Object> objects = new ArrayList<Object>();
+				List<String> objects = new ArrayList<String>();
 				objects.add(sorg.toString());
 				objects.add(hashMac);
 				objects.add(pki.demolishPuK(pk));
-				response = restTemplate.postForObject(HTTPS + dest + PORT + "/myneighbours/hmac", objects, String.class);
+				response = restTemplate.postForObject(HTTPS + dest + PORT + "/bot/myneighbours/hmac", objects, boolean.class);
+				System.out.println("Risposta richiesta "+response);
 			} catch (Exception e) {
 				// e.printStackTrace();
 				System.out.println("response:   " + response);
