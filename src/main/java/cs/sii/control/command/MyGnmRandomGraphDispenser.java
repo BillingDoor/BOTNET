@@ -142,7 +142,7 @@ public class MyGnmRandomGraphDispenser<V, E> extends GnmRandomGraphGenerator<V, 
 		if ((vertexFactory.nodesLenght() == 0) || (vertexFactory.nodesLenght() < n)) {
 			throw new IllegalArgumentException("Nodes list empty or too little" + "");
 		}
-
+		System.out.println("K:"+k);
 		System.out.println("grafo generato 1");
 		// check whether to create loops
 		boolean createLoops = loops;

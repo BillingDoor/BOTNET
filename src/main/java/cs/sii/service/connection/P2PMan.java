@@ -89,11 +89,13 @@ public class P2PMan {
 		List<Bot> bots = bServ.findAll();
 
 		ArrayList<IP> nodes = new ArrayList<IP>();
+	
 		bots.forEach(bot -> nodes.add(new IP(bot.getIp())));
-
+		System.out.println("Nodes Size: "+nodes.size());
 		MyGnmRandomGraphDispenser<IP, DefaultEdge> g2 = new MyGnmRandomGraphDispenser<IP, DefaultEdge>(nodes.size(), 0,
 				new SecureRandom(), true, false);
 		MyVertexFactory<IP> nodeIp = new MyVertexFactory<IP>((List<IP>) nodes.clone(), new SecureRandom());
+		
 		g2.generateConnectedGraph(graph, nodeIp, null, calculateK(nodes.size()));
 		for (IP ip2 : nodes) {
 			System.out.println("gli archi di  " + graph.degreeOf(ip2));
