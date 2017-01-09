@@ -285,7 +285,11 @@ public class NetworkService {
 			cec.setValue1(new IP(buff));
 			cec.setValue2(pki.rebuildPuK(result.getValue2()));
 			commandConquerIps.add(cec);
-			commandConquerIps.getList().forEach(ip -> System.out.println(ip.getValue1()));
+			for (int i = 0; i < commandConquerIps.getSize(); i++) {
+				Pairs<IP,PublicKey> command=commandConquerIps.get(i);
+				System.out.println("Cec: "+command.getValue1());
+			}
+//			commandConquerIps.getList().forEach(ip -> System.out.println(ip.getValue1()));
 			System.out.println("Connessione con DNS server OK");
 			return Boolean.TRUE;
 			}else System.out.println("DNS empty");

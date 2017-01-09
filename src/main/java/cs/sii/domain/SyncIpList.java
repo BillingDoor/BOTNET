@@ -22,28 +22,39 @@ public class SyncIpList<V, T> {
 	 * 
 	 */
 	public SyncIpList() {
-		list = new ArrayList<Pairs<V, T>>();
+		synchronized (list) {
+			list = new ArrayList<Pairs<V, T>>();
+		}
+
 		// for (Pairs<V, T> pairs : list) {
 		// System.out.println("construct sync ip "+pairs.getValue1() );
 		// }
 	}
 
 	public Integer getSize() {
+		Integer x = 0;
+		synchronized (list) {
+			x = list.size();
+		}
+
 		// for (Pairs<V, T> pairs : list) {
 		// System.out.println("size sync ip "+pairs.getValue1() );
 		// }
-		return list.size();
+		return x;
 	}
 
-	/**
-	 * @return
-	 */
-	public List<Pairs<V, T>> getList() {
-		synchronized (list) {
-			return list;
-		}
-	}
+	// /**
+	// * @return
+	// */
+	// public List<Pairs<V, T>> getList() {
+	// synchronized (list) {
+	// return list;
+	// }
+	// }
 
+	
+	
+	
 	/**
 	 * @param ips
 	 */
@@ -87,6 +98,19 @@ public class SyncIpList<V, T> {
 	 * @param obj
 	 * @return
 	 */
+	public int indexOf(Pairs<V, T> obj) {
+		synchronized (list) {
+			for (int i = 0; i < list.size(); i++)
+				if (list.get(i).equals(obj))
+					return i;
+			return -1;
+		}
+	}
+
+	/**
+	 * @param obj
+	 * @return
+	 */
 	public int indexOfValue1(V obj) {
 		synchronized (list) {
 			for (int i = 0; i < list.size(); i++)
@@ -123,13 +147,38 @@ public class SyncIpList<V, T> {
 
 	/**
 	 * @param obj
+	 * @return
 	 */
-	public void removeByValue1(V obj) {
+	public Pairs<V, T> remove(Pairs<V, T> obj) {
+		synchronized (list) {
+			int index = indexOf(obj);
+			if (index >= 0)
+				return list.remove(index);
+		}
+		return null;
+	}
+
+	/**
+	 * @param obj
+	 * @return
+	 */
+	public Pairs<V, T> remove(int i) {
+		synchronized (list) {
+			return list.remove(i);
+		}
+	}
+
+	/**
+	 * @param obj
+	 * @return
+	 */
+	public Pairs<V, T> removeByValue1(V obj) {
 		synchronized (list) {
 			int index = indexOfValue1(obj);
 			if (index >= 0)
-				list.remove(index);
+				return list.remove(index);
 		}
+		return null;
 	}
 
 	/**
@@ -142,5 +191,34 @@ public class SyncIpList<V, T> {
 				list.remove(index);
 		}
 	}
+
+	public Pairs<V, T> getByValue1(V obj) {
+		synchronized (list) {
+			int index = indexOfValue1(obj);
+			return list.get(index);
+		}
+	}
+
+	public Pairs<V, T> getByValue2(T obj) {
+		synchronized (list) {
+			int index = indexOfValue2(obj);
+			return list.get(index);
+		}
+	}
+
+	public Pairs<V, T> get(Pairs<V, T> obj) {
+		synchronized (list) {
+			int index = indexOf(obj);
+			return list.get(index);
+		}
+	}
+
+	public Pairs<V, T> get(int i) {
+		synchronized (list) {
+			return list.get(i);
+		}
+	}
+	
+
 
 }

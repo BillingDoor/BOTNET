@@ -54,7 +54,7 @@ public class Application {
 			System.out.println("EFFETTUO PRIMA CONNESIONE AL DNS SERVER");
 			if (nServ.firstConnectToMockServerDns()) {
 
-				if (nServ.getCommandConquerIps().getList().get(0).getValue1().getIp().equals(nServ.getMyIp().getIp()))
+				if (nServ.getCommandConquerIps().get(0).getValue1().getIp().equals(nServ.getMyIp().getIp()))
 					configEngine.setCommandandconquerStatus(true);
 
 				if (!configEngine.isCommandandconquerStatus()) {

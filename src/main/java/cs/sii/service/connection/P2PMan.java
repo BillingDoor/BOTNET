@@ -59,10 +59,10 @@ public class P2PMan {
 		System.out.println("Grafo completato " + graph);
 		System.out.println("Inizio calcolo vicini");
 		if(graph.degreeOf(nServ.getMyIp())>0){
-			SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
-			buf.setAll(myNeighbours(nServ.getMyIp().getIp()).getList());
-			nServ.setNeighbours(buf);
-			for (Pairs<IP, PublicKey> p : nServ.getNeighbours().getList()) {
+//			SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
+			nServ.setNeighbours(myNeighbours(nServ.getMyIp().getIp()));
+			for (int i = 0; i < nServ.getNeighbours().getSize(); i++) {
+				Pairs<IP, PublicKey> p = nServ.getNeighbours().get(i);			
 				System.out.println("Ip vicinato= " + p.getValue1());
 			}
 		}
@@ -135,9 +135,9 @@ public class P2PMan {
 		System.out.println("minium degree 4e nodes " + calculateK(nodes.size()));
 		this.graph = graph2;
 		
-		SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
-		buf.setAll(myNeighbours(nServ.getMyIp().getIp()).getList());
-		nServ.setNeighbours(buf);
+//		SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
+//		buf.setAll(myNeighbours(nServ.getMyIp().getIp()).getList());
+		nServ.setNeighbours(myNeighbours(nServ.getMyIp().getIp()));
 		return graph;
 	}
 
@@ -165,9 +165,10 @@ public class P2PMan {
 		System.out.println("create/update graph" + graph);
 		System.out.println("minium degree 4e nodes " + calculateK(nodes.size()));
 		this.graph = graph2;
-		SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
-		buf.setAll(myNeighbours(nServ.getMyIp().getIp()).getList());
-		nServ.setNeighbours(buf);
+//		SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
+//		buf.setAll(myNeighbours(nServ.getMyIp().getIp()).getList());
+//		nServ.setNeighbours(buf);
+		nServ.setNeighbours(myNeighbours(nServ.getMyIp().getIp()));
 		return graph;
 	}
 
@@ -199,9 +200,10 @@ public class P2PMan {
 		System.out.println("create/update graph" + graph);
 		System.out.println("minium degree 4e nodes " + calculateK(nodes.size()));
 		this.graph = graph2;
-		SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
-		buf.setAll(myNeighbours(nServ.getMyIp().getIp()).getList());
-		nServ.setNeighbours(buf);
+//		SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
+//		buf.setAll(myNeighbours(nServ.getMyIp().getIp()).getList());
+		nServ.setNeighbours(myNeighbours(nServ.getMyIp().getIp()));
+//		nServ.setNeighbours(buf);
 		return graph;
 	}
 

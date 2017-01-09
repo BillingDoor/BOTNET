@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import cs.sii.domain.Conversions;
 import cs.sii.domain.Pairs;
 import cs.sii.domain.RWRandom;
+import cs.sii.domain.SyncIpList;
 import cs.sii.service.crypto.CryptoUtils;
 
 @Service
@@ -25,7 +26,7 @@ public class Auth {
 	private RWRandom rndIt = new RWRandom();
 	private RWRandom rndRnd = new RWRandom();
 
-	private HashMap<String, Pairs<Long, Integer>> botSeed = new HashMap<>();
+	private SyncIpList<String, Pairs<Long, Integer>> botSeed = new SyncIpList<String, Pairs<Long, Integer>>();
 
 	/**
 	 * 
@@ -115,34 +116,13 @@ public class Auth {
 		}
 	}
 
-	/**
-	 * @param idBot
-	 * @param key
-	 * @param value
-	 */
-	public void addBotChallengeInfo(String idBot, Long key, Integer value) {
-		Pairs<Long, Integer> cs = new Pairs<>();
-		cs.setValue1(key);
-		cs.setValue2(value);
-		botSeed.put(idBot, cs);
-	}
-
-	/**
-	 * @param idBot
-	 * @return
-	 */
-	public boolean findBotChallengeInfo(String idBot) {
-		// IP ip=new IP(ips);
-		if (botSeed.get(idBot) != null)
-			return true;
-		return false;
-	}
-
-	/**
-	 * @return
-	 */
-	public HashMap<String, Pairs<Long, Integer>> getBotSeed() {
+	public SyncIpList<String, Pairs<Long, Integer>> getBotSeed() {
 		return botSeed;
 	}
+
+	public void setBotSeed(SyncIpList<String, Pairs<Long, Integer>> botSeed) {
+		this.botSeed = botSeed;
+	}
+
 
 }
