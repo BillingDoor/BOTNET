@@ -22,9 +22,7 @@ public class SyncIpList<V, T> {
 	 * 
 	 */
 	public SyncIpList() {
-		synchronized (list) {
 			list = new ArrayList<Pairs<V, T>>();
-		}
 
 		// for (Pairs<V, T> pairs : list) {
 		// System.out.println("construct sync ip "+pairs.getValue1() );
