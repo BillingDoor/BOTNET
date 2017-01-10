@@ -336,7 +336,7 @@ public class Behavior {
 
 		SyncIpList<IP, PublicKey> listNegh = nServ.getNeighbours();
 
-		List<Pairs<Future<Pairs<Long, Integer>>, IP>> botResp = new ArrayList<Pairs<Future<Pairs<Long, Integer>>, IP>>();
+		SyncIpList<Future<Pairs<Long, Integer>>, IP> botResp = new SyncIpList<Future<Pairs<Long, Integer>>, IP>();
 
 		for (int i = 0; i < listNegh.getSize(); i++) {
 			Pairs<IP, PublicKey> pairs = listNegh.get(i);
@@ -346,8 +346,9 @@ public class Behavior {
 			botResp.add(element);
 		}
 		System.out.println("Richieste inviate attendo le risposte");
-		while (!botResp.isEmpty()) {
-			for (Pairs<Future<Pairs<Long, Integer>>, IP> coppia : botResp) {
+		while (botResp.getSize()!=0) {
+			for (int i = 0; i < botResp.getSize(); i++)  {
+				Pairs<Future<Pairs<Long, Integer>>, IP> coppia = botResp.get(i);
 				if (coppia.getValue1().isDone()) {
 					if (coppia.getValue1() != null) {
 
