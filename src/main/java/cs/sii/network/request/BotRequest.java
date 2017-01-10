@@ -109,24 +109,25 @@ public class BotRequest {
 	 * @param iDBot
 	 */
 
-	public ArrayList<Pairs<String,String>> askNeighbours(String iPCeC, String ipBot, String data) {
-		ArrayList<Pairs<String,String>> result = new ArrayList<Pairs<String,String>>();
+	public ArrayList<Pairs<String, String>> askNeighbours(String iPCeC, String ipBot, String data) {
+		ArrayList<Pairs<String, String>> result = new ArrayList<Pairs<String, String>>();
 		Integer counter = 0;
-		String encryptData="";
-		
-			// richiesta del vicinato
-			encryptData = pki.getCrypto().encryptAES(data);
-	
+		String encryptData = "";
+
+		// richiesta del vicinato
+		encryptData = pki.getCrypto().encryptAES(data);
+
 		while (counter <= REQNUMBER) {
 			try {
-				String url=HTTPS+ iPCeC + PORT+"/cec/neighbours";
-				System.out.println("Richiesta Vicinato a "+url);
+				String url = HTTPS + iPCeC + PORT + "/cec/neighbours";
+				System.out.println("Richiesta Vicinato a " + url);
 				byte[] buf;
-				//result.addAll(	Arrays.asList(restTemplate.postForObject(url, encryptData, String[].class)));
-				buf =restTemplate.postForObject(url, encryptData, byte[].class);
-				 ByteArrayInputStream rawData = new ByteArrayInputStream(buf);
-				 result= (ArrayList<Pairs<String, String>>) cUtil.decrypt(rawData);
-				System.out.println("ritorna "+result);
+				// result.addAll( Arrays.asList(restTemplate.postForObject(url,
+				// encryptData, String[].class)));
+				buf = restTemplate.postForObject(url, encryptData, byte[].class);
+				ByteArrayInputStream rawData = new ByteArrayInputStream(buf);
+				result = (ArrayList<Pairs<String, String>>) cUtil.decrypt(rawData);
+				System.out.println("ritorna " + result);
 				return result;
 			} catch (Exception e) {
 				counter++;
@@ -135,8 +136,9 @@ public class BotRequest {
 					Thread.sleep(WAIT_RANGE);
 				} catch (InterruptedException e2) {
 					e2.printStackTrace();
-				}}
-			
+				}
+			}
+
 		}
 		return null;
 	}
@@ -211,74 +213,71 @@ public class BotRequest {
 			}
 		}
 	}
-	
-	
+
 	// da valutare se devono essere asincroni
 	@Async
 	public Future<Pairs<Long, Integer>> getChallengeFromBot(String idBot, IP ipBotDest) {
 
 		Pairs<Long, Integer> response = new Pairs<>();
-			Integer counter = 0;
-			while (counter < REQNUMBER) {
+		Integer counter = 0;
+		while (counter < REQNUMBER) {
+			try {
+				String url = HTTPS + ipBotDest + PORT + "/bot/myneighbours/welcome";
+				System.out.println("url challenge request " + url);
+				response = restTemplate.postForObject(url, idBot, response.getClass());
+				return new AsyncResult<Pairs<Long, Integer>>(response);
+			} catch (Exception e) {
+				// e.printStackTrace();
+				counter++;
+				System.out.println("Errore ricezione Challenge");
 				try {
-					String url = HTTPS + ipBotDest + PORT + "/bot/myneighbours/welcome";
-					System.out.println("url challenge request " + url);
-					response = restTemplate.postForObject(url, idBot, response.getClass());
-					return new AsyncResult<Pairs<Long,Integer>>(response);
-				} catch (Exception e) {
-					// e.printStackTrace();
-					counter++;
-					System.out.println("Errore ricezione Challenge");
-					try {
-						Thread.sleep(WAIT_RANGE);
-					} catch (InterruptedException ex) {
-						ex.printStackTrace();
-					}
+					Thread.sleep(WAIT_RANGE);
+				} catch (InterruptedException ex) {
+					ex.printStackTrace();
 				}
 			}
-			return null;
 		}
-	
-	
-	//Deprecated
-//	public List<Object> getObject(String ip, String i) {
-//		List<Object> response = null;
-//		Integer count = 0;
-//		while (count < REQNUMBER) {
-//			try {
-//				String url = HTTPS + ip + PORT + "/cec/newKing";
-//				System.out.println("request new king: " + i);
-//				response = Arrays.asList(restTemplate.postForObject(url, i, Object[].class));
-//				return response;
-//			} catch (Exception e) {
-//				// e.printStackTrace();
-//				System.out.println("Errore richiesta new king");
-//				try {
-//					count++;
-//					Thread.sleep(WAIT_RANGE);
-//				} catch (InterruptedException ex) {
-//					ex.printStackTrace();
-//				}
-//			}
-//		}
-//		return response;
-//	}
-	
-	
-	
-	//TODO Aggiungere parametro per renderlo sicuro
+		return null;
+	}
+
+	// Deprecated
+	// public List<Object> getObject(String ip, String i) {
+	// List<Object> response = null;
+	// Integer count = 0;
+	// while (count < REQNUMBER) {
+	// try {
+	// String url = HTTPS + ip + PORT + "/cec/newKing";
+	// System.out.println("request new king: " + i);
+	// response = Arrays.asList(restTemplate.postForObject(url, i,
+	// Object[].class));
+	// return response;
+	// } catch (Exception e) {
+	// // e.printStackTrace();
+	// System.out.println("Errore richiesta new king");
+	// try {
+	// count++;
+	// Thread.sleep(WAIT_RANGE);
+	// } catch (InterruptedException ex) {
+	// ex.printStackTrace();
+	// }
+	// }
+	// }
+	// return response;
+	// }
+
+	// TODO Aggiungere parametro per renderlo sicuro
 	/**
 	 * @param ip
 	 * @return
 	 */
-	public List<String> getPeers(String ip) {
+	public List<String> getPeers(String ip, String idBot) {
 		List<String> response = null;
 		Integer count = 0;
 		while (count < REQNUMBER) {
 			try {
 				String url = HTTPS + ip + PORT + "/cec/newKing/peers";
-				response = Arrays.asList(restTemplate.postForObject(url, null, String[].class));
-				System.out.println("request new king peers " );
+				response = Arrays.asList(restTemplate.postForObject(url, idBot, String[].class));
+				System.out.println("request new king peers ");
 				return response;
 			} catch (Exception e) {
 				// e.printStackTrace();
@@ -293,20 +292,19 @@ public class BotRequest {
 		}
 		return response;
 	}
-	
-	
+
 	/**
 	 * @param ip
 	 * @return
 	 */
-	public List<User> getUser(String ip) {
+	public List<User> getUser(String ip, String idBot) {
 		List<User> response = null;
 		Integer count = 0;
 		while (count < REQNUMBER) {
 			try {
 				String url = HTTPS + ip + PORT + "/cec/newKing/users";
-				response = Arrays.asList(restTemplate.postForObject(url, null, User[].class));
-				System.out.println("request new king users " );
+				response = Arrays.asList(restTemplate.postForObject(url, idBot, User[].class));
+				System.out.println("request new king users ");
 				return response;
 			} catch (Exception e) {
 				// e.printStackTrace();
@@ -321,28 +319,28 @@ public class BotRequest {
 		}
 		return response;
 	}
-	
+
 	//
 	/**
 	 * @param ip
 	 * @return
 	 */
-	public List<Bot> getBots(String ip) {
+	public List<Bot> getBots(String ip, String idBot) {
 		List<Bot> response = null;
 		Integer count = 0;
 		while (count < REQNUMBER) {
 			try {
 				String url = HTTPS + ip + PORT + "/cec/newKing/bots";
-				Bot[] bots = restTemplate.postForObject(url, null, Bot[].class);
-				System.out.println("request new king  bots" );
+				Bot[] bots = restTemplate.postForObject(url, idBot, Bot[].class);
+				System.out.println("request new king  bots");
 				for (int i = 0; i < bots.length; i++) {
-					System.out.println("bot "+ bots [i].toString());
+					System.out.println("bot " + bots[i].toString());
 				}
 				response = Arrays.asList(bots);
-				response.forEach(b->System.out.println("bot list"+ b.toString()));
+				response.forEach(b -> System.out.println("bot list" + b.toString()));
 				return response;
 			} catch (Exception e) {
-				 e.printStackTrace();
+				e.printStackTrace();
 				System.out.println("Errore richiesta new king bots");
 				try {
 					count++;
@@ -354,21 +352,18 @@ public class BotRequest {
 		}
 		return response;
 	}
-	
-	
-	
-	
+
 	/**
 	 * @param ip
 	 * @return
 	 */
-	public List<Role> getRoles(String ip) {
+	public List<Role> getRoles(String ip, String idBot) {
 		List<Role> response = null;
 		Integer count = 0;
 		while (count < REQNUMBER) {
 			try {
 				String url = HTTPS + ip + PORT + "/cec/newKing/roles";
-				response = Arrays.asList(restTemplate.postForObject(url, null, Role[].class));
+				response = Arrays.asList(restTemplate.postForObject(url, idBot, Role[].class));
 				System.out.println("request new king roles ");
 				return response;
 			} catch (Exception e) {
@@ -384,17 +379,18 @@ public class BotRequest {
 		}
 		return response;
 	}
+
 	/**
 	 * @param ip
 	 * @return
 	 */
-	public boolean ready(String ip) {
+	public boolean ready(String ip, String idBot) {
 		boolean response = false;
 		Integer count = 0;
 		while (count < REQNUMBER) {
 			try {
 				String url = HTTPS + ip + PORT + "/cec/newKing/ready";
-				response =restTemplate.postForObject(url, null, boolean.class);
+				response = restTemplate.postForObject(url, idBot, boolean.class);
 				return response;
 			} catch (Exception e) {
 				// e.printStackTrace();
@@ -472,8 +468,6 @@ public class BotRequest {
 		}
 	}
 
-	
-
 	/**
 	 * @param ip
 	 * @param dest
@@ -491,8 +485,9 @@ public class BotRequest {
 				objects.add(sorg.toString());
 				objects.add(hashMac);
 				objects.add(pki.demolishPuK(pk));
-				response = restTemplate.postForObject(HTTPS + dest + PORT + "/bot/myneighbours/hmac", objects, boolean.class);
-				System.out.println("Risposta richiesta "+response);
+				response = restTemplate.postForObject(HTTPS + dest + PORT + "/bot/myneighbours/hmac", objects,
+						boolean.class);
+				System.out.println("Risposta richiesta " + response);
 			} catch (Exception e) {
 				// e.printStackTrace();
 				System.out.println("response:   " + response);
@@ -506,7 +501,7 @@ public class BotRequest {
 			}
 		}
 	}
-	
+
 	public String askMyIpToAmazon() {
 		String amazing = "http://checkip.amazonaws.com/";
 		String response = "";

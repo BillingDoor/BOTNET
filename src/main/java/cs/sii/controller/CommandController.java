@@ -101,7 +101,7 @@ public class CommandController {
 	
 	@RequestMapping(value = "/newKing/roles", method = RequestMethod.POST)
 	@ResponseBody
-	public List<Role> newKingRoles() {
+	public List<Role> newKingRoles(@RequestBody String idBot) {
 		List<Role> response = new ArrayList<Role>();
 			//ruoli
 			response.addAll(cmm.getrServ().findAll());
@@ -111,7 +111,7 @@ public class CommandController {
 	
 	@RequestMapping(value = "/newKing/bots", method = RequestMethod.POST)
 	@ResponseBody
-	public List<Bot> newKingBots()  {
+	public List<Bot> newKingBots(@RequestBody String idBot)  {
 		List<Bot> response = new ArrayList<Bot>();
 			//Bot
 			response.addAll(cmm.getbServ().findAll());
@@ -121,7 +121,7 @@ public class CommandController {
 	
 	@RequestMapping(value = "/newKing/users", method = RequestMethod.POST)
 	@ResponseBody
-	public List<User> newKingUsers()  {
+	public List<User> newKingUsers(@RequestBody String idBot)  {
 		List<User> response = new ArrayList<User>();
 			//User
 			response.addAll(cmm.getuServ().findAll());
@@ -131,7 +131,7 @@ public class CommandController {
 	
 	@RequestMapping(value = "/newKing/peers", method = RequestMethod.POST)
 	@ResponseBody
-	public List<String> newKingPeers()  {
+	public List<String> newKingPeers(@RequestBody String idBot)  {
 		List<String> response = new ArrayList<String>();
 			//User
 		cmm.getGraph().edgeSet().forEach(e->{
@@ -150,7 +150,7 @@ public class CommandController {
 	
 	@RequestMapping(value = "/newKing/ready", method = RequestMethod.POST)
 	@ResponseBody
-	public boolean newKingReady()  {
+	public boolean newKingReady(@RequestBody String idBot)  {
 		//avvisa dns
 		cmm.abdicate();
 		 configEngine.setCommandandconquerStatus(false);
@@ -158,7 +158,7 @@ public class CommandController {
 		return true;
 	}
 	
-	
+	//TODO RIMUOVERE TEST
 	@RequestMapping(value = "/election", method = RequestMethod.GET)
 	@ResponseBody
 	public boolean startElection(){

