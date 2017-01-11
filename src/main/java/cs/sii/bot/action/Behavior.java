@@ -293,10 +293,10 @@ public class Behavior {
 		System.out.println("idbot " + idBot);
 		Pairs<Long, Integer> challenge = new Pairs<Long, Integer>(keyNumber, iterationNumber);
 		Pairs<String, Pairs<Long, Integer>> map = new Pairs<String, Pairs<Long, Integer>>(idBot, challenge);
-		
-		System.out.println("map "+map.getValue1());
-		boolean x= auth.getNeighSeed().add(map);
-		System.out.println("add challenge bot neigh "+ x);
+
+		System.out.println("map " + map.getValue1());
+		boolean x = auth.getNeighSeed().add(map);
+		System.out.println("add challenge bot neigh " + x);
 		return challenge;
 	}
 
@@ -304,9 +304,9 @@ public class Behavior {
 		Boolean response = false;
 		SyncIpList<String, Pairs<Long, Integer>> lista = auth.getNeighSeed();
 		String idBot = objects.get(0).toString();
-		System.out.println("Id bot ricevuto"+idBot);
+		System.out.println("Id bot ricevuto" + idBot);
 		String hashMac = objects.get(1).toString();
-		if (lista != null && lista.getSize()>0) {
+		if (lista != null && lista.getSize() > 0) {
 			Pairs<String, Pairs<Long, Integer>> buff = lista.getByValue1(idBot);
 			if (buff != null) {
 				Pairs<Long, Integer> coppia = buff.getValue2();
@@ -321,8 +321,10 @@ public class Behavior {
 						}
 					}
 				}
-			}else System.out.println("hmac bot nofound "+idBot);
-		} System.out.println("");
+			} else
+				System.out.println("hmac bot nofound " + idBot);
+		}
+		System.out.println("");
 		return response;
 	}
 
@@ -354,18 +356,21 @@ public class Behavior {
 				Pairs<Future<Pairs<Long, Integer>>, IP> coppia = botResp.get(i);
 				if (coppia.getValue1().isDone()) {
 					if (coppia.getValue1() != null) {
-
 						Pairs<Long, Integer> resp;
 						try {
 							resp = coppia.getValue1().get();
 							IP dest = coppia.getValue2();
 							botResp.remove(coppia);
+							System.out.println("dest " + dest);
 							if (resp != null) {
+								System.out.println("resp " + resp.getValue1());
 								String key = auth.generateStringKey(resp.getValue2());
 								String hashMac = auth.generateHmac(resp.getValue1(), auth.generateSecretKey(key));
-								boolean b =req.getResponseFromBot(nServ.getIdHash(), dest, hashMac, pki.getPubRSAKey());
-								if(b)
+								boolean b = req.getResponseFromBot(nServ.getIdHash(), dest, hashMac, pki.getPubRSAKey());
+								if (b) {
 									botResp.remove(coppia);
+									System.out.println("botSize "+botResp.getSize());
+								}
 							} else {
 								System.out.println("Il vicino ha risposto  null, nessun valore challenge");
 							}
@@ -374,7 +379,6 @@ public class Behavior {
 							e.printStackTrace();
 						}
 					} else {
-
 						botResp.remove(coppia);
 						System.out.println("Rimosso hmac in attesa vicinato " + coppia.getValue2());
 
