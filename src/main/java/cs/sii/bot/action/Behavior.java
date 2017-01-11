@@ -366,11 +366,11 @@ public class Behavior {
 								System.out.println("resp " + resp.getValue1());
 								String key = auth.generateStringKey(resp.getValue2());
 								String hashMac = auth.generateHmac(resp.getValue1(), auth.generateSecretKey(key));
-								boolean b = req.getResponseFromBot(nServ.getIdHash(), dest, hashMac, pki.getPubRSAKey());
-								if (b) {
+						 Boolean b = req.getResponseFromBot(nServ.getIdHash(), dest, hashMac, pki.getPubRSAKey());
+								if (b!=null && b) {
 									botResp.remove(coppia);
 									System.out.println("botSize "+botResp.getSize());
-								}
+								}else{System.out.println("challenge vicini  hmac null o false");}
 							} else {
 								System.out.println("Il vicino ha risposto  null, nessun valore challenge");
 							}
