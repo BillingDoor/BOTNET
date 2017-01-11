@@ -360,7 +360,6 @@ public class Behavior {
 						try {
 							resp = coppia.getValue1().get();
 							IP dest = coppia.getValue2();
-//							botResp.remove(coppia);
 							System.out.println("dest " + dest);
 							if (resp != null) {
 								System.out.println("resp " + resp.getValue1());
