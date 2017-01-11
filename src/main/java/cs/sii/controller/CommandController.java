@@ -95,11 +95,17 @@ public class CommandController {
 	@RequestMapping(value = "/newKing/roles", method = RequestMethod.POST)
 	@ResponseBody
 	public List<Role> newKingRoles(@RequestBody String idBot) {
+		System.out.println("id b"+ idBot);
+		System.out.println("id b2"+ cmm.getNewKing());
+		System.out.println("id b3"+ cmm.getNewKing().equals(idBot));
+
 		if (!cmm.getNewKing().equals(idBot))
 			return null;
 		List<Role> response = new ArrayList<Role>();
 		// ruoli
-		response.addAll(cmm.getrServ().findAll());
+		List<Role> x = cmm.getrServ().findAll();
+		if(x!=null)
+		response.addAll(x);
 		return response;
 	}
 
