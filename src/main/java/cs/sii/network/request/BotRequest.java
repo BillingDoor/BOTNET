@@ -477,7 +477,7 @@ public class BotRequest {
 	 * @return
 	 */
 	@Async
-	public Boolean getResponseFromBot(String idBot, IP dest, String hashMac, PublicKey pk) {
+	public boolean getResponseFromBot(String idBot, IP dest, String hashMac, PublicKey pk) {
 		Integer counter = 0;
 		Boolean response = false;
 		while (counter < REQNUMBER) {
