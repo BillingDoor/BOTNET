@@ -473,10 +473,11 @@ public class BotRequest {
 	 * @param dest
 	 * @param hashMac
 	 * @param pk
+	 * @return 
 	 * @return
 	 */
 	@Async
-	public void getResponseFromBot(String idBot, IP dest, String hashMac, PublicKey pk) {
+	public Boolean getResponseFromBot(String idBot, IP dest, String hashMac, PublicKey pk) {
 		Integer counter = 0;
 		Boolean response = false;
 		while (counter < REQNUMBER) {
@@ -488,6 +489,7 @@ public class BotRequest {
 				response = restTemplate.postForObject(HTTPS + dest + PORT + "/bot/myneighbours/hmac", objects,
 						boolean.class);
 				System.out.println("Risposta richiesta " + response);
+				return response;
 			} catch (Exception e) {
 				// e.printStackTrace();
 				System.out.println("response:   " + response);
@@ -500,6 +502,7 @@ public class BotRequest {
 				}
 			}
 		}
+		return response;
 	}
 
 	public String askMyIpToAmazon() {

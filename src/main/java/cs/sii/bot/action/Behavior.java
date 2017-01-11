@@ -293,6 +293,8 @@ public class Behavior {
 		System.out.println("idbot " + idBot);
 		Pairs<Long, Integer> challenge = new Pairs<Long, Integer>(keyNumber, iterationNumber);
 		Pairs<String, Pairs<Long, Integer>> map = new Pairs<String, Pairs<Long, Integer>>(idBot, challenge);
+		
+		System.out.println("map "+map.getValue1());
 		boolean x= auth.getNeighSeed().add(map);
 		System.out.println("add challenge bot neigh "+ x);
 		return challenge;
@@ -361,7 +363,9 @@ public class Behavior {
 							if (resp != null) {
 								String key = auth.generateStringKey(resp.getValue2());
 								String hashMac = auth.generateHmac(resp.getValue1(), auth.generateSecretKey(key));
-								req.getResponseFromBot(nServ.getIdHash(), dest, hashMac, pki.getPubRSAKey());
+								boolean b =req.getResponseFromBot(nServ.getIdHash(), dest, hashMac, pki.getPubRSAKey());
+								if(b)
+									botResp.remove(coppia);
 							} else {
 								System.out.println("Il vicino ha risposto  null, nessun valore challenge");
 							}

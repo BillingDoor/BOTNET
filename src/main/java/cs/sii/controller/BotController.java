@@ -94,9 +94,9 @@ public class BotController {
 		Boolean response = false;
 		response =bhv.checkHmacBot(objects);
 		if(response){
-			Pairs<IP,PublicKey> bot=new Pairs<IP, PublicKey>();
 			IP ipbot=new IP(req.getRemoteAddr());
 			PublicKey pubKey=pki.rebuildPuK(objects.get(2).toString());
+			Pairs<IP,PublicKey> bot=new Pairs<IP, PublicKey>(ipbot,pubKey);
 			nServ.getNeighbours().add(bot);
 		}
 		System.out.println("risposta"+response);
