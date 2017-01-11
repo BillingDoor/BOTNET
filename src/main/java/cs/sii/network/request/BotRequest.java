@@ -480,12 +480,14 @@ public class BotRequest {
 	public Boolean getResponseFromBot(String idBot, IP dest, String hashMac, PublicKey pk) {
 		Integer counter = 0;
 		Boolean response = false;
+		System.out.println("chh bot ");
 		while (counter < REQNUMBER) {
 			try {
 				List<String> objects = new ArrayList<String>();
 				objects.add(idBot.toString());
 				objects.add(hashMac);
 				objects.add(pki.demolishPuK(pk));
+				System.out.println("chh bot 2");
 				response = restTemplate.postForObject(HTTPS + dest + PORT + "/bot/myneighbours/hmac", objects,
 						Boolean.class);
 				System.out.println("Risposta richiesta " + response);
