@@ -477,7 +477,7 @@ public class BotRequest {
 	 * @return
 	 */
 	@Async
-	public boolean getResponseFromBot(String idBot, IP dest, String hashMac, PublicKey pk) {
+	public Boolean getResponseFromBot(String idBot, IP dest, String hashMac, PublicKey pk) {
 		Integer counter = 0;
 		Boolean response = false;
 		while (counter < REQNUMBER) {
@@ -487,7 +487,7 @@ public class BotRequest {
 				objects.add(hashMac);
 				objects.add(pki.demolishPuK(pk));
 				response = restTemplate.postForObject(HTTPS + dest + PORT + "/bot/myneighbours/hmac", objects,
-						boolean.class);
+						Boolean.class);
 				System.out.println("Risposta richiesta " + response);
 				return response;
 			} catch (Exception e) {

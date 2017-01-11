@@ -89,9 +89,9 @@ public class BotController {
 	
 	
 	@RequestMapping(value="/myneighbours/hmac",method = RequestMethod.POST)
-	public boolean myNeighboursHmac(@RequestBody ArrayList<Object> objects,HttpServletRequest req) {
+	public Boolean myNeighboursHmac(@RequestBody ArrayList<Object> objects,HttpServletRequest req) {
 		System.out.println("Richiesta con hmac de ricevuta da"+req.getRemoteAddr());
-		boolean response = false;
+		Boolean response = false;
 		response =bhv.checkHmacBot(objects);
 		if(response){
 			IP ipbot=new IP(req.getRemoteAddr());

@@ -300,8 +300,8 @@ public class Behavior {
 		return challenge;
 	}
 
-	public boolean checkHmacBot(ArrayList<Object> objects) {
-		boolean response = false;
+	public Boolean checkHmacBot(ArrayList<Object> objects) {
+		Boolean response = false;
 		SyncIpList<String, Pairs<Long, Integer>> lista = auth.getNeighSeed();
 		String idBot = objects.get(0).toString();
 		System.out.println("Id bot ricevuto" + idBot);
