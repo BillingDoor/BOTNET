@@ -27,6 +27,7 @@ public class Auth {
 	private RWRandom rndRnd = new RWRandom();
 
 	private SyncIpList<String, Pairs<Long, Integer>> botSeed = new SyncIpList<String, Pairs<Long, Integer>>();
+	private SyncIpList<String, Pairs<Long, Integer>> neighSeed = new SyncIpList<String, Pairs<Long, Integer>>();
 
 	/**
 	 * 
@@ -122,6 +123,14 @@ public class Auth {
 
 	public void setBotSeed(SyncIpList<String, Pairs<Long, Integer>> botSeed) {
 		this.botSeed = botSeed;
+	}
+
+	public SyncIpList<String, Pairs<Long, Integer>> getNeighSeed() {
+		return neighSeed;
+	}
+
+	public void setNeighSeed(SyncIpList<String, Pairs<Long, Integer>> neighSeed) {
+		this.neighSeed = neighSeed;
 	}
 
 

