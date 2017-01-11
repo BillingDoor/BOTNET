@@ -302,6 +302,7 @@ public class Behavior {
 		Boolean response = false;
 		SyncIpList<String, Pairs<Long, Integer>> lista = auth.getNeighSeed();
 		String idBot = objects.get(0).toString();
+		System.out.println("Id bot ricevuto"+idBot);
 		String hashMac = objects.get(1).toString();
 		if (lista != null && lista.getSize()>0) {
 			Pairs<String, Pairs<Long, Integer>> buff = lista.getByValue1(idBot);
@@ -360,7 +361,7 @@ public class Behavior {
 							if (resp != null) {
 								String key = auth.generateStringKey(resp.getValue2());
 								String hashMac = auth.generateHmac(resp.getValue1(), auth.generateSecretKey(key));
-								req.getResponseFromBot(nServ.getMyIp(), dest, hashMac, pki.getPubRSAKey());
+								req.getResponseFromBot(nServ.getIdHash(), dest, hashMac, pki.getPubRSAKey());
 							} else {
 								System.out.println("Il vicino ha risposto  null, nessun valore challenge");
 							}

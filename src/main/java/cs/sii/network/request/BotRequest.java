@@ -476,13 +476,13 @@ public class BotRequest {
 	 * @return
 	 */
 	@Async
-	public void getResponseFromBot(IP sorg, IP dest, String hashMac, PublicKey pk) {
+	public void getResponseFromBot(String idBot, IP dest, String hashMac, PublicKey pk) {
 		Integer counter = 0;
 		Boolean response = false;
 		while (counter < REQNUMBER) {
 			try {
 				List<String> objects = new ArrayList<String>();
-				objects.add(sorg.toString());
+				objects.add(idBot.toString());
 				objects.add(hashMac);
 				objects.add(pki.demolishPuK(pk));
 				response = restTemplate.postForObject(HTTPS + dest + PORT + "/bot/myneighbours/hmac", objects,
