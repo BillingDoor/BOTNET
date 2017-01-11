@@ -110,9 +110,12 @@ public class Auth {
 		System.out.println("string " + stringKey);
 		SecretKeySpec secretKey = generateSecretKey(stringKey);
 		System.out.println("sck  " + secretKey);
-		if (cry.generateHmac(keyNumber, secretKey).equals(hashMac)) {
+		String buff = cry.generateHmac(keyNumber, secretKey);
+		if (buff.equals(hashMac)) {
+			System.out.println("hmac uguale");
 			return true;
 		} else {
+			System.out.println("hmac non uguale "+ buff + " " + hashMac);
 			return false;
 		}
 	}
