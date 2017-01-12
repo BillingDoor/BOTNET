@@ -458,8 +458,8 @@ public class Behavior {
 		if ((b != null) && (b)) {
 			System.out.println("SONO IL NUOVO C&C");
 			eng.setCommandandconquerStatus(true);
-			nServ.getCommandConquerIps().remove(0);
-			nServ.getCommandConquerIps().add(new Pairs<IP, PublicKey>( nServ.getMyIp(), pki.getPubRSAKey()));
+//			nServ.getCommandConquerIps().remove(0);
+//			nServ.getCommandConquerIps().add(new Pairs<IP, PublicKey>( nServ.getMyIp(), pki.getPubRSAKey()));
 			pServ.setNewKing("");
 		}
 		// controllare risposta da cec che ha avvisato dns
