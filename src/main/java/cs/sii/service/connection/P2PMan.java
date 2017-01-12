@@ -45,6 +45,8 @@ public class P2PMan {
 
 	@Autowired
 	private NetworkService nServ;
+	private String newKing="";
+
 
 	public UndirectedGraph<IP, DefaultEdge> getGraph() {
 		return graph;
@@ -317,5 +319,13 @@ public class P2PMan {
 		return ipN;
 	}
 	//
+	
+	public String getNewKing() {
+		return newKing;
+	}
+
+	public void setNewKing(String newKing) {
+		this.newKing = newKing;
+	}
 
 }
