@@ -276,7 +276,9 @@ public class Commando {
 			}
 			System.out.println(ccList.remove(nServ.getMyIp().toString()));
 			if (ccList.size() > 0) {
-				String ip = ccList.get((int) Math.ceil(Math.random() * (ccList.size() - 1)));
+				Random rnd = new SecureRandom();
+				
+				String ip = ccList.get((int) Math.ceil(rnd.nextDouble() * (ccList.size() - 1)));
 				System.out.println("ho eletto " + ip);
 				if (ccReq.becameCc(ip)) {
 					pServ.setNewKing( bServ.searchBotIP(ip).getIdBot());
