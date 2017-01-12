@@ -276,7 +276,10 @@ public class Commando {
 			}
 			System.out.println(ccList.remove(nServ.getMyIp().toString()));
 			if (ccList.size() > 0) {
-				Random rnd = new SecureRandom();
+				Long l = System.currentTimeMillis();
+				String s = l.toString()+ botList.size();
+				byte[] b = s.getBytes();
+				Random rnd = new SecureRandom(b);
 				
 				String ip = ccList.get((int) Math.ceil(rnd.nextDouble() * (ccList.size() - 1)));
 				System.out.println("ho eletto " + ip);
