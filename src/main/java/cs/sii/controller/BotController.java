@@ -67,8 +67,8 @@ public class BotController {
 		System.out.println("Richiesta di Elezione ricevuta da" + req.getRemoteAddr());
 		if (bhv.getpServ().getNewKing().equals("") && nServ.isElegible() && (!(engineBot.isCommandandconquerStatus()))) {
 
-			// System.out.println("addr: " + req.getRemoteAddr());
-			// System.out.println("host: " + req.getRemoteHost());
+			 System.out.println("non lo mando a addr: " + req.getRemoteAddr());
+			 System.out.println("host: " + req.getRemoteHost());
 
 			bhv.getPower(req.getRemoteAddr());
 			return true;
