@@ -286,6 +286,7 @@ public class Behavior {
 	}
 
 	public Pairs<Long, Integer> authReqBot(String idBot) {
+		System.out.println(" inizio authreqbot");
 		Long keyNumber = new Long(auth.generateNumberText());
 		Integer iterationNumber = new Integer(auth.generateIterationNumber());
 		System.out.println("keyNumber " + keyNumber);
@@ -297,11 +298,15 @@ public class Behavior {
 		System.out.println("map " + map.getValue1());
 		boolean x = auth.getNeighSeed().add(map);
 		System.out.println("add challenge bot neigh " + x);
+		System.out.println(" fine authreqbot");
+
 		return challenge;
 	}
 
 	public Boolean checkHmacBot(ArrayList<Object> objects) {
 		Boolean response = false;
+		System.out.println(" inizio check");
+
 		SyncIpList<String, Pairs<Long, Integer>> lista = auth.getNeighSeed();
 		String idBot = objects.get(0).toString();
 		System.out.println("Id bot ricevuto" + idBot);
@@ -312,6 +317,9 @@ public class Behavior {
 				Pairs<Long, Integer> coppia = buff.getValue2();
 				Long keyNumber = coppia.getValue1();
 				Integer iterationNumber = coppia.getValue2();
+				System.out.println("keyNumber " + keyNumber);
+				System.out.println("IterationNumber " + iterationNumber);
+				System.out.println("idbot " + idBot);
 				if (coppia != null) {
 					if (lista.indexOfValue1(idBot) >= 0) {
 						if (auth.validateHmac(keyNumber, iterationNumber, hashMac)) {
@@ -324,6 +332,8 @@ public class Behavior {
 			} else
 				System.out.println("hmac bot nofound " + idBot);
 		}
+		System.out.println(" fine check");
+
 		System.out.println("");
 		return response;
 	}
@@ -364,7 +374,11 @@ public class Behavior {
 							if (resp != null) {
 								System.out.println("resp " + resp.getValue1());
 								String key = auth.generateStringKey(resp.getValue2());
+								System.out.println("key "+ key);
 								String hashMac = auth.generateHmac(resp.getValue1(), auth.generateSecretKey(key));
+								System.out.println("keyNumber " + resp.getValue1());
+								System.out.println("IterationNumber " + resp.getValue2());
+								System.out.println("hash " + hashMac);
 								Boolean b = false;
 								b = req.getResponseFromBot(nServ.getIdHash(), dest, hashMac, pki.getPubRSAKey());
 								if (b != null && b) {
