@@ -77,7 +77,7 @@ public class ScheduledTasksNet {
 //		}
 //	}
 	
-	@Scheduled(fixedRate = 5000)
+	@Scheduled(fixedRate = 500000)
 	public void pingVicinato() {
 
 		// TODO PIng
