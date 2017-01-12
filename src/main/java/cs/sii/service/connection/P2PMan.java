@@ -126,13 +126,13 @@ public class P2PMan {
 		ListenableUndirectedGraph<IP, DefaultEdge> graph2 = new ListenableUndirectedGraph<IP, DefaultEdge>(
 				DefaultEdge.class);
 		MyVertexFactory<IP> nodeIp2 = new MyVertexFactory<IP>((List<IP>) nodes.clone(), new SecureRandom());
-		g2 = new MyGnmRandomGraphDispenser<IP, DefaultEdge>(nodes.size(), 0, new SecureRandom(), true, false);
+		g2 = new MyGnmRandomGraphDispenser<IP, DefaultEdge>(nodes.size(), 0, new SecureRandom(), false, false);
 		g2.updateConnectedGraph(graph, graph2, nodeIp2, null, calculateK(nodes.size()));
 		for (IP ip2 : nodes) {
 			System.out.println("gli archi di  " + graph2.degreeOf(ip2));
 		}
 		System.out.println("create/update graph" + graph);
-		System.out.println("minium degree 4e nodes " + calculateK(nodes.size()));
+		System.out.println("minium degree " + calculateK(nodes.size()));
 		this.graph = graph2;
 		
 //		SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
@@ -157,13 +157,13 @@ public class P2PMan {
 		ListenableUndirectedGraph<IP, DefaultEdge> graph2 = new ListenableUndirectedGraph<IP, DefaultEdge>(
 				DefaultEdge.class);
 		MyVertexFactory<IP> nodeIp2 = new MyVertexFactory<IP>((List<IP>) nodes.clone(), new SecureRandom());
-		g2 = new MyGnmRandomGraphDispenser<IP, DefaultEdge>(nodes.size(), 0, new SecureRandom(), true, false);
+		g2 = new MyGnmRandomGraphDispenser<IP, DefaultEdge>(nodes.size(), 0, new SecureRandom(), false, false);
 		g2.updateConnectedGraph(graph, graph2, nodeIp2, null, calculateK(nodes.size()));
 		for (IP ip2 : nodes) {
 			System.out.println("gli archi di  " + graph2.degreeOf(ip2));
 		}
 		System.out.println("create/update graph" + graph);
-		System.out.println("minium degree 4e nodes " + calculateK(nodes.size()));
+		System.out.println("minium degree " + calculateK(nodes.size()));
 		this.graph = graph2;
 //		SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
 //		buf.setAll(myNeighbours(nServ.getMyIp().getIp()).getList());
@@ -180,7 +180,7 @@ public class P2PMan {
 	public UndirectedGraph<IP, DefaultEdge> updateNetworkP2P(List<Pairs<IP, IP>> edge, List<IP> nodes) {
 
 		MyGnmRandomGraphDispenser<IP, DefaultEdge> g2 = new MyGnmRandomGraphDispenser<IP, DefaultEdge>(nodes.size(), 0,
-				new SecureRandom(), true, false);
+				new SecureRandom(), false, false);
 		ListenableUndirectedGraph<IP, DefaultEdge> graph2 = new ListenableUndirectedGraph<IP, DefaultEdge>(
 				DefaultEdge.class);
 		MyVertexFactory<IP> nodeIp2 = new MyVertexFactory<IP>((List<IP>) nodes, new SecureRandom());
@@ -198,7 +198,7 @@ public class P2PMan {
 			System.out.println("gli archi di  " + graph2.degreeOf(ip2));
 		}
 		System.out.println("create/update graph" + graph);
-		System.out.println("minium degree 4e nodes " + calculateK(nodes.size()));
+		System.out.println("minium degree " + calculateK(nodes.size()));
 		this.graph = graph2;
 //		SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
 //		buf.setAll(myNeighbours(nServ.getMyIp().getIp()).getList());
@@ -252,9 +252,11 @@ public class P2PMan {
 			IP t = graph.getEdgeTarget(a[i]);
 			if (!s.equals(new IP(bot.getIp()))) {
 				Bot sB = bServ.searchBotIP(s);
+				System.out.println("add neigh of "+bot.getIp() + " "+ s );
 				ipN.add(new Pairs<String, String>(sB.getIp(), (sB.getPubKey())));
 			}
 			if (!t.equals(new IP(bot.getIp()))) {
+				System.out.println("add neigh of "+bot.getIp() + " "+ t );
 				Bot tB = bServ.searchBotIP(t);
 				ipN.add(new Pairs<String, String>(tB.getIp(), tB.getPubKey()));
 			}
@@ -265,8 +267,8 @@ public class P2PMan {
 			pki.getCrypto().encrypt(ipN, ostream);
 			ByteArrayInputStream kk = new ByteArrayInputStream(ostream.toByteArray());
 
-			if (ipN.equals(pki.getCrypto().decrypt(kk)))
-				System.out.println("ggg0");
+			if (ostream.equals(pki.getCrypto().decrypt(kk)))
+				System.out.println("tutt'apposto");
 
 		} catch (IOException | InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException
 				| InvalidAlgorithmParameterException e) {
