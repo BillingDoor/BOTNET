@@ -166,7 +166,6 @@ public class CommandController {
 			return false;
 		cmm.abdicate();
 		configEngine.setCommandandconquerStatus(false);
-		cmm.getpServ().setNewKing("");
 		return true;
 	}
 

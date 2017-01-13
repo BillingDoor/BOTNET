@@ -427,22 +427,26 @@ public class Behavior {
 		System.out.println("Importo Database dal C&C");
 		// richiesta ruoli
 		List<Role> roles = req.getRoles(ip, myId);
+		if(roles!=null){
 		Collections.sort(roles, (a, b) -> a.getId() < b.getId() ? -1 : a.getId() == b.getId() ? 0 : 1);
 		roles.forEach(role -> System.out.println("Ruolo: " + role));
 		rServ.saveAll(roles);
-
+		}
 		// richiesta bots
 		List<Bot> bots = req.getBots(ip, myId);
+		if(bots!=null){
 		Collections.sort(bots, (a, b) -> a.getId() < b.getId() ? -1 : a.getId() == b.getId() ? 0 : 1);
 		bots.forEach(bot -> System.out.println("Bot: " + bot));
 		bServ.saveAll(bots);
-
+		}
+		
 		// richiesta users
 		List<User> users = req.getUser(ip, myId);
+		if(users!=null){
 		Collections.sort(users, (a, b) -> a.getId() < b.getId() ? -1 : a.getId() == b.getId() ? 0 : 1);
 		users.forEach(user -> System.out.println("Utenti: " + user));
 		uServ.saveAll(users);
-
+		}
 		// prendo grafo
 		List<String> graph = req.getPeers(ip, myId);
 
@@ -472,7 +476,7 @@ public class Behavior {
 		if ((b != null) && (b)) {
 			System.out.println("SONO IL NUOVO C&C");
 			eng.setCommandandconquerStatus(true);
-//			nServ.getCommandConquerIps().remove(0);
+//			nServ.getCommandConquerIps().remove(0); non lo faccio più perché mi aggiorno con il flood del cec
 //			nServ.getCommandConquerIps().add(new Pairs<IP, PublicKey>( nServ.getMyIp(), pki.getPubRSAKey()));
 			pServ.setNewKing("");
 		}
