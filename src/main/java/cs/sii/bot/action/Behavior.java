@@ -365,6 +365,7 @@ public class Behavior {
 			for (int i = 0; i < botResp.getSize(); i++) {
 				Pairs<Future<Pairs<Long, Integer>>, IP> coppia = botResp.get(i);
 				if (coppia.getValue1().isDone()) {
+					botResp.remove(coppia);
 					if (coppia.getValue1() != null) {
 						Pairs<Long, Integer> resp;
 						try {
@@ -382,7 +383,7 @@ public class Behavior {
 								Boolean b = false;
 								b = req.getResponseFromBot(nServ.getIdHash(), dest, hashMac, pki.getPubRSAKey());
 								if (b != null && b) {
-									botResp.remove(coppia);
+									
 									System.out.println("botSize " + botResp.getSize());
 								} else {
 									System.out.println("challenge vicini  hmac null o false" + b);
@@ -390,12 +391,12 @@ public class Behavior {
 							} else {
 								System.out.println("Il vicino ha risposto  null, nessun valore challenge");
 							}
+
 						} catch (InterruptedException | ExecutionException e) {
 							System.out.println("Errore connessione da ip " + coppia.getValue2().toString());
 							e.printStackTrace();
 						}
 					} else {
-						botResp.remove(coppia);
 						System.out.println("Rimosso hmac in attesa vicinato " + coppia.getValue2());
 
 					}
