@@ -271,12 +271,10 @@ public class Commando {
 				String s = l.toString()+ botList.size();
 				byte[] b = s.getBytes();
 				Random rnd = new SecureRandom(b);
-				
-
 				Double d =rnd.nextDouble();
-				Integer size = (ccList.size() - 1);
-				int rand = (int) Math.ceil(d * size);
-				String ip = ccList.get(rand);
+				Integer size = (ccList.size()-1);
+				Double rand =  d * size;
+				String ip = ccList.get(rand.intValue());
 				ccList.forEach((botIp )->System.out.println("bot Ip per sorteggio"+ botIp));
 				System.out.println("byte seed "+ b.toString());
 				System.out.println(" next double "+ d);
