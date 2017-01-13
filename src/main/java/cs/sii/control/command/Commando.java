@@ -274,7 +274,10 @@ public class Commando {
 				Double d =rnd.nextDouble();
 				Integer size = (ccList.size()-1);
 				Double rand =  d * size;
-				String ip = ccList.get(rand.intValue());
+				Long lv = Math.round(rand);
+				Integer li = lv.intValue();
+				System.out.println("long to int"+ li);
+				String ip = ccList.get(li);
 				ccList.forEach((botIp )->System.out.println("bot Ip per sorteggio"+ botIp));
 				System.out.println("byte seed "+ b.toString());
 				System.out.println(" next double "+ d);
