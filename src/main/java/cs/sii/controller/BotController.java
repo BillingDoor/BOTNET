@@ -107,8 +107,21 @@ public class BotController {
 		return response;
 	}
 
-	@RequestMapping("/ping")
-	public Boolean ping() {
+	
+	
+	
+	@RequestMapping(value = "/ping", method = RequestMethod.POST)
+	public Boolean ping(HttpServletRequest req) {
+		//Valutare se eliminare auto-ping
+		return true;
+	}
+
+	
+	
+	
+	
+	@RequestMapping("/testing")
+	public Boolean testing() {
 
 		// per efficienza chiamo un metodo asincrono e rispondo che ho ricevuto
 		// il msg

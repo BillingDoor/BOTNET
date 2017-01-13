@@ -296,7 +296,27 @@ public class Commando {
 		}
 	}
 
-
+	public byte[] syncNeightboursBot(List<String> data){
+		Boolean flag=false;
+		String idBot=data.remove(0);
+		List<String> deadBotList=data;
+		if(!deadBotList.isEmpty()){
+			for (String ipDead : deadBotList) {
+				if(nServ.getAliveBot().removeByValue1(new IP(ipDead))!=null){
+					flag=true;
+				}else{
+					System.out.println("VICINO NON PRESENTE NELLA LISTA DEI VICINI CHE NEL DB");
+				}			
+			}
+			if(flag){
+			pServ.updateNetworkP2P();
+			return getNeighbours(idBot);
+			}
+		}else{
+			System.out.println("Nessuna modifica da effettuare alla lista dei vivi");
+		}
+		return null;
+	}
 
 	public RoleServiceImpl getrServ() {
 		return rServ;

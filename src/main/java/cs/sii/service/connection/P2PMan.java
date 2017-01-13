@@ -94,10 +94,16 @@ public class P2PMan {
 		// creo grafo partenza
 		graph = new ListenableUndirectedGraph<IP, DefaultEdge>(DefaultEdge.class);
 		List<Bot> bots = bServ.findAll();
-
+		
 		ArrayList<IP> nodes = new ArrayList<IP>();
 	
 		bots.forEach(bot -> nodes.add(new IP(bot.getIp())));
+		
+		//Inizializzo la lista dei nodi vivi
+		for (Bot bot: bots) {
+			nServ.getAliveBot().add(new Pairs<IP, String>(new IP(bot.getIp()), bot.getIdBot()));
+		}
+		
 		System.out.println("Nodes Size: "+nodes.size());
 		MyGnmRandomGraphDispenser<IP, DefaultEdge> g2 = new MyGnmRandomGraphDispenser<IP, DefaultEdge>(nodes.size(), 0,
 				new SecureRandom(), true, false);

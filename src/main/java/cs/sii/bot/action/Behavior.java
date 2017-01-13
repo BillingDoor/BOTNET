@@ -484,6 +484,71 @@ public class Behavior {
 		// controllare risposta da cec che ha avvisato dns
 	}
 
+	
+	
+	private void pingToNeighbours(){
+		System.out.println("PING a vicini e vedo se sono vivi");
+		SyncIpList<IP, PublicKey> listNegh = nServ.getNeighbours();
+		SyncIpList<Future<Boolean>, IP> botResp = new SyncIpList<Future<Boolean>, IP>();
+		List<IP> listDeadNegh=new ArrayList<IP>();
+		
+		for (int i = 0; i < listNegh.getSize(); i++) {
+			Pairs<IP, PublicKey> pairs = listNegh.get(i);
+			Future<Boolean> result = req.pingToBot(pairs.getValue1().toString());
+			Pairs<Future<Boolean>, IP> element = new Pairs<Future<Boolean>, IP>(result,	pairs.getValue1());
+			botResp.add(element);
+		}
+		
+		while (botResp.getSize() != 0) {
+			for (int i = 0; i < botResp.getSize(); i++) {
+				Pairs<Future<Boolean>, IP> coppia = botResp.get(i);
+				if (coppia.getValue1().isDone()) {					
+					botResp.remove(coppia);
+					if (coppia.getValue1() != null) {
+						Boolean response;
+						try {
+							response = coppia.getValue1().get();
+							IP dest = coppia.getValue2();
+							if (response) {
+								System.out.println("Il vicino "+dest+" è vivo");
+							} else {
+								listDeadNegh.add(coppia.getValue2());
+								System.out.println("Il vicino "+dest+" è morto");
+							}
+
+						} catch (InterruptedException | ExecutionException e) {
+							System.out.println("Errore connessione da ip " + coppia.getValue2().toString());
+							e.printStackTrace();
+						}
+					} else {
+						listDeadNegh.add(coppia.getValue2());
+					}
+				}
+			}
+		}
+		if(!listDeadNegh.isEmpty())
+		syncNeightoCec(listDeadNegh);
+		System.out.println("Fase di PING conclusa");
+	}
+	
+	private void syncNeightoCec(List<IP> listDeadNegh){
+		//invico a cec di mia nuova lista vicini ovvero di chi mi ha risposto		
+		List<Pairs<IP, PublicKey>> newNeighbours = new ArrayList<Pairs<IP, PublicKey>>();
+		List<Pairs<String, String>> response = null;
+		response=req.sendDeadNeighToCeC(nServ.getCommandConquerIps().get(0).getValue1().toString(), nServ.getIdHash(),listDeadNegh);	
+		newNeighbours = nServ.tramsuteNeigha(response);
+		if (newNeighbours != null) {
+			newNeighbours.forEach(ob -> System.out.println("Vicinato convertito " + ob.getValue1().toString()));
+		} else
+			System.out.println("Risposta vicini senza elementi");
+		
+		SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
+		buf.setAll(newNeighbours);
+		nServ.setNeighbours(buf);// TODO controllare se serve veramente
+		System.out.println("Avviso i mie vicini di conoscerli");
+		challengeToBot();
+	}
+	
 	public P2PMan getpServ() {
 		return pServ;
 	}
