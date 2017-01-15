@@ -19,6 +19,16 @@ public class Role implements Serializable{
 	@Column(name="Type", length=15, unique=true, nullable=false)
 	private String type = UserRoleType.USER.getUserProfileType();
 	
+		
+	public Role(){
+		
+	}
+	
+	public Role(String type) {
+		super();
+		this.type = type;
+	}
+
 	public Integer getId() {
 		return id;
 	}
@@ -34,7 +44,7 @@ public class Role implements Serializable{
 	public void setType(String type) {
 		this.type = type;
 	}
-
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
