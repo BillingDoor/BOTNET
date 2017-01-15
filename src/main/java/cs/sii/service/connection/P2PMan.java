@@ -256,7 +256,7 @@ public class P2PMan {
 			System.out.println(" Ip of bot who made request " + bot.getIp());
 			if (graph.containsVertex(new IP(bot.getIp()))) {
 				Set<DefaultEdge> neighbours = graph.edgesOf(new IP(bot.getIp()));
-				if (neighbours.size() < calculateK(bServ.findAll().size())) {
+				if (neighbours.size() < calculateK(nServ.getAliveBot().getSize())) {
 					updateNetworkP2P();
 				}
 			} else {

