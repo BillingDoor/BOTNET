@@ -72,17 +72,13 @@
 				Matching bots with users:
 			<table>
 			<tr><td>
-				<select size=5 class="minimal">
-					<option>abra</option>
-					<option>cadabra</option>
-				</select>
+			<form:select path="users" items="${users}" multiple="false" itemValue="id" itemLabel="type" class="minimal" />		
 				</td><td>
 					<i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i>
 				</td><td>
-				<select size=5 class="minimal">
-					<option>abra</option>
-					<option>cadabra</option>
-				</select>
+			
+						<form:select path="bots" items="${bots}" multiple="false" itemValue="id" itemLabel="type" class="minimal" />		
+			
 				</td></tr>
 			</table>
 			</div>

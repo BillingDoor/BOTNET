@@ -26,8 +26,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import cs.sii.config.onLoad.Config;
 import cs.sii.control.command.Commando;
+import cs.sii.model.bot.Bot;
 import cs.sii.model.role.Role;
 import cs.sii.model.user.User;
+import cs.sii.service.dao.BotServiceImpl;
 import cs.sii.service.dao.RoleServiceImpl;
 import cs.sii.service.dao.UserServiceImpl;
 
@@ -49,6 +51,9 @@ public class SiteController {
 
 	@Autowired
 	RoleServiceImpl rServ;
+	
+	@Autowired
+	BotServiceImpl bServ;
 
 	@Autowired
 	private Commando cmm;
@@ -60,15 +65,24 @@ public class SiteController {
 	 */
 	// @PreAuthorize("hasRole('ROLE_ANONYMOUS')")
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public String login(HttpServletResponse error) throws IOException {
-
+	public String login(HttpServletResponse error,HttpServletResponse httpServletResponse) throws IOException {
 		String result = "";
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (configEngine.isCommandandconquerStatus()) {
 			if (auth.getName().equals("anonymousUser")) {
 				result = "login";
 			} else {
-				return "redirect:/site/index";
+				Collection<? extends GrantedAuthority> x = (auth.getAuthorities());
+				for (GrantedAuthority gA : x) {
+				System.out.println("ga "+gA.toString()+"  "+gA.toString().contains("ROLE_ADMIN"));
+					if (gA.toString().contains("ROLE_ADMIN")) {
+						System.out.println("admin ");
+						result = "indexadmin";}
+					if (gA.toString().contains("ROLE_USER")) {
+						System.out.println("no admin");
+						result = "indexuser";
+					}
+				}			
 			}
 		}
 		return result;
@@ -93,7 +107,7 @@ public class SiteController {
 				if (gA.toString().contains("ROLE_ADMIN")) {
 					System.out.println("admin ");
 					result = "indexadmin";
-				} else {
+				} if (gA.toString().contains("ROLE_USER")) {
 					System.out.println("no admin");
 					result = "indexuser";
 				}
@@ -187,6 +201,18 @@ public class SiteController {
 		model.addAttribute("loggedinuser", getPrincipal());
 		return "registration";
 	}
+	
+	
+	/**
+	 * This method will provide the medium to add a new user.
+	 */
+	@RequestMapping(value = { "/addbot" }, method = RequestMethod.GET)
+	public String addBot(ModelMap model) {
+		
+		return "addbot";
+	}
+
+	
 
 	/**
 	 * This method will be called on form submission, handling POST request for
@@ -232,6 +258,19 @@ public class SiteController {
 	public List<Role> initializeProfiles() {
 		return rServ.findAll();
 	}
+	
+	@ModelAttribute("users")
+	public List<User> userForBot() {
+		return uServ.findAll();
+	}
+	
+	@ModelAttribute("bots")
+	public List<Bot> botForUser() {
+		//TODO ritornare solo i bot disponibili per essere assegnati
+		return bServ.findAll();
+	}
+	
+	
 
 	private String getPrincipal() {
 		String userName = null;
