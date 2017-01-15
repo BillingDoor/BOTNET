@@ -3,6 +3,7 @@ package cs.sii.service.dao;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +20,6 @@ public class UserServiceImpl {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	public UserRepository getUserRepository() {
-		return userRepository;
-	}
-
 	/**
 	 * @return
 	 */
@@ -30,9 +27,6 @@ public class UserServiceImpl {
 		return userRepository.findAll();
 	}
 
-	public void setUserRepository(UserRepository userRepository) {
-		this.userRepository = userRepository;
-	}
 
 	public void save(User user) {
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -49,6 +43,17 @@ public class UserServiceImpl {
 	public void deleteAll(){
 		userRepository.deleteAll();
 	}
+	
+	
+	public User findBySsoId(String ssoId){
+		return userRepository.findBySsoId(ssoId);
+	}
+	
+	public User findById(Integer id){
+		return userRepository.findById(id);
+	}
+	
+	
 //	public void saveAllObj(List<Object> users) {
 //		for (Object obj : users) {
 //			User user= (User) obj;

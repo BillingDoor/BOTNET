@@ -43,10 +43,10 @@ public class SiteController {
 	PersistentTokenBasedRememberMeServices persistentTokenBasedRememberMeServices;
 
 	@Autowired
-	UserServiceImpl userService;
+	UserServiceImpl uServ;
 
 	@Autowired
-	RoleServiceImpl roleService;
+	RoleServiceImpl rServ;
 
 	@Autowired
 	private Commando cmm;
@@ -77,18 +77,27 @@ public class SiteController {
 		// }
 	}
 
-	// @PreAuthorize("hasRole('ADMIN')")
+	
+	//@PreAuthorize("hasRole('ADMIN')")
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
-	public String index(HttpServletResponse error) throws IOException {
+	public String indexAdmin(HttpServletResponse error) throws IOException {
 		String result = "";
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (configEngine.isCommandandconquerStatus()) {
-			result = "index";
+			System.out.println("auth.getCredentials().toString())");
+			User u=uServ.findBySsoId(auth.getCredentials().toString());
+			if(u.getUserRoles().contains("ADMIN"))
+			result = "indexadmin";
+			else
+				result="indexuser";
 		} else {
 			error.sendError(HttpStatus.SC_NOT_FOUND);
 		}
 		return result;
 
 	}
+	
+	
 
 	// @PreAuthorize("hasAnyRole('ADMIN','USER')")
 	/**
@@ -190,7 +199,7 @@ public class SiteController {
 			return "registration";
 		}
 
-		if (userService.getUserRepository().findBySsoId(user.getSsoId()) != null) {
+		if (uServ.findBySsoId(user.getSsoId()) != null) {
 			System.out.println("2");
 			return "registration";
 		} else {
@@ -205,7 +214,7 @@ public class SiteController {
 			// }
 			System.out.println("3 " + user.toString());
 
-			userService.save(user);
+			uServ.save(user);
 
 			model.addAttribute("success",
 					"User " + user.getFirstName() + " " + user.getLastName() + " registered successfully");
@@ -220,7 +229,7 @@ public class SiteController {
 	 */
 	@ModelAttribute("roles")
 	public List<Role> initializeProfiles() {
-		return roleService.getRoleRepository().findAll();
+		return rServ.findAll();
 	}
 
 	private String getPrincipal() {

@@ -184,7 +184,7 @@ public class Commando {
 	@Async
 	public void floodingByUser(String cmd, String userSSoID) {
 
-		User user = uServ.getUserRepository().findBySsoId(userSSoID);
+		User user = uServ.findBySsoId(userSSoID);
 		if (user != null) {
 			flooding(cmd);
 		}
