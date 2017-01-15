@@ -47,6 +47,13 @@ public class BotServiceImpl {
 	public void deleteAll(){
 		bRep.deleteAll();
 	}
+	
+	
+	public void updateBot(Bot bot){
+		Bot old=bRep.findByIdBot(bot.getIdBot());
+		bRep.delete(old);
+		bRep.save(bot);
+	}
 
 //	public Boolean saveObj(List<Object> bots) {
 //		for (Object obj : bots) {

