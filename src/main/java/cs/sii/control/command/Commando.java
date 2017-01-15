@@ -84,14 +84,15 @@ public class Commando {
 
 		// non necessario
 		// nServ.updateDnsInformation();
+		Pairs<IP, String> botAlive = new Pairs<IP, String>(nServ.getMyIp(),nServ.getIdHash());
+		nServ.getAliveBot().add(botAlive);
 		pServ.initP2P();
 		System.out.println("peer to peer fatto");
 		Bot bot = new Bot(nServ.getIdHash(), nServ.getMyIp().toString(), nServ.getMac(), nServ.getOs(),
 				nServ.getVersionOS(), nServ.getArchOS(), nServ.getUsernameOS(), pki.getPubRSAKeyToString(),
 				(nServ.isElegible() + ""));
 		bServ.save(bot);
-		Pairs<IP, String> botAlive = new Pairs<IP, String>(new IP(bot.getIp()), bot.getIdBot());
-		nServ.getAliveBot().add(botAlive);
+		
 	}
 
 	/**

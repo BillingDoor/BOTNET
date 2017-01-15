@@ -45,8 +45,7 @@ public class P2PMan {
 
 	@Autowired
 	private NetworkService nServ;
-	private String newKing="";
-
+	private String newKing = "";
 
 	public UndirectedGraph<IP, DefaultEdge> getGraph() {
 		return graph;
@@ -60,11 +59,11 @@ public class P2PMan {
 		graph = createNetworkP2P();
 		System.out.println("Grafo completato " + graph);
 		System.out.println("Inizio calcolo vicini");
-		if(graph.degreeOf(nServ.getMyIp())>0){
-//			SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
+		if (graph.degreeOf(nServ.getMyIp()) > 0) {
+			// SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
 			nServ.setNeighbours(myNeighbours(nServ.getMyIp().getIp()));
 			for (int i = 0; i < nServ.getNeighbours().getSize(); i++) {
-				Pairs<IP, PublicKey> p = nServ.getNeighbours().get(i);			
+				Pairs<IP, PublicKey> p = nServ.getNeighbours().get(i);
 				System.out.println("Ip vicinato= " + p.getValue1());
 			}
 		}
@@ -78,10 +77,10 @@ public class P2PMan {
 		Integer k = (int) Math.ceil(Math.log10(nodes + 10));
 		if (nodes > 3) {
 			k++;
-		}else if(nodes==2){
-			k=1;
-		}else{
-			k=0;
+		} else if (nodes == 2) {
+			k = 1;
+		} else {
+			k = 0;
 		}
 		return k;
 	}
@@ -93,26 +92,27 @@ public class P2PMan {
 	public UndirectedGraph<IP, DefaultEdge> createNetworkP2P() {
 		// creo grafo partenza
 		graph = new ListenableUndirectedGraph<IP, DefaultEdge>(DefaultEdge.class);
-//		List<Bot> bots = bServ.findAll();
-		
+		// List<Bot> bots = bServ.findAll();
+
 		ArrayList<IP> nodes = new ArrayList<IP>();
-	
-//		bots.forEach(bot -> nodes.add(new IP(bot.getIp())));
-		
-		//Inizializzo la lista dei nodi vivi
-//		for (Bot bot: bots) {
-//			nServ.getAliveBot().add(new Pairs<IP, String>(new IP(bot.getIp()), bot.getIdBot()));
-//		}
-		
-		System.out.println("Nodes Size: "+nodes.size());
+
+		// bots.forEach(bot -> nodes.add(new IP(bot.getIp())));
+
+		// Inizializzo la lista dei nodi vivi
+		// for (Bot bot: bots) {
+		// nServ.getAliveBot().add(new Pairs<IP, String>(new IP(bot.getIp()),
+		// bot.getIdBot()));
+		// }
+
+		System.out.println("Nodes Size: " + nodes.size());
 		MyGnmRandomGraphDispenser<IP, DefaultEdge> g2 = new MyGnmRandomGraphDispenser<IP, DefaultEdge>(nodes.size(), 0,
 				new SecureRandom(), true, false);
 		MyVertexFactory<IP> nodeIp = new MyVertexFactory<IP>((List<IP>) nodes.clone(), new SecureRandom());
-		
+
 		g2.generateConnectedGraph(graph, nodeIp, null, calculateK(nodes.size()));
-//		for (IP ip2 : nodes) {
-//			System.out.println("gli archi di  " + graph.degreeOf(ip2));
-//		}
+		// for (IP ip2 : nodes) {
+		// System.out.println("gli archi di " + graph.degreeOf(ip2));
+		// }
 		System.out.println("create/update graph" + graph);
 		System.out.println("minium degree " + calculateK(nodes.size()));
 		return graph;
@@ -124,20 +124,21 @@ public class P2PMan {
 	@SuppressWarnings("unchecked")
 	public UndirectedGraph<IP, DefaultEdge> updateNetworkP2P() {
 
-//		List<Bot> bots = bServ.findAll();
-		
+		// List<Bot> bots = bServ.findAll();
+
 		SyncIpList<IP, String> bots = nServ.getAliveBot();
 		ArrayList<IP> nodes = new ArrayList<IP>();
 
 		for (int i = 0; i < bots.getSize(); i++) {
-			Pairs<IP, String> bot=bots.get(i);
-			nodes.add(bot.getValue1());
+			Pairs<IP, String> bot = bots.get(i);
+			if (nodes.indexOf(bot.getValue1()) < 0) {
+				nodes.add(bot.getValue1());
+				System.out.println("AGGIUNGO IP A VERTICI " + bot.getValue1());
+			}
+
 		}
-		
-//		bots.forEach(bot -> nodes.add(new IP(bot.getIp())));
-		
-		
-		
+
+		// bots.forEach(bot -> nodes.add(new IP(bot.getIp())));
 
 		MyGnmRandomGraphDispenser<IP, DefaultEdge> g2 = new MyGnmRandomGraphDispenser<IP, DefaultEdge>(nodes.size(), 0,
 				new SecureRandom(), true, false);
@@ -152,9 +153,9 @@ public class P2PMan {
 		System.out.println("create/update graph" + graph);
 		System.out.println("minium degree " + calculateK(nodes.size()));
 		this.graph = graph2;
-		
-//		SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
-//		buf.setAll(myNeighbours(nServ.getMyIp().getIp()).getList());
+
+		// SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
+		// buf.setAll(myNeighbours(nServ.getMyIp().getIp()).getList());
 		nServ.setNeighbours(myNeighbours(nServ.getMyIp().getIp()));
 		return graph;
 	}
@@ -169,11 +170,14 @@ public class P2PMan {
 		ArrayList<IP> nodes = new ArrayList<IP>();
 
 		for (int i = 0; i < bots.getSize(); i++) {
-			Pairs<IP, String> bot=bots.get(i);
-			nodes.add(bot.getValue1());
+			Pairs<IP, String> bot = bots.get(i);
+			if (nodes.indexOf(bot.getValue1()) < 0) {
+				nodes.add(bot.getValue1());
+				System.out.println("AGGIUNGO IP A VERTICI " + bot.getValue1());
+			}
 		}
 
-//		bots.forEach(bot -> nodes.add(new IP(bot.getIp())));
+		// bots.forEach(bot -> nodes.add(new IP(bot.getIp())));
 
 		MyGnmRandomGraphDispenser<IP, DefaultEdge> g2 = new MyGnmRandomGraphDispenser<IP, DefaultEdge>(nodes.size(), 0,
 				new SecureRandom(), true, false);
@@ -188,9 +192,9 @@ public class P2PMan {
 		System.out.println("create/update graph" + graph);
 		System.out.println("minium degree " + calculateK(nodes.size()));
 		this.graph = graph2;
-//		SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
-//		buf.setAll(myNeighbours(nServ.getMyIp().getIp()).getList());
-//		nServ.setNeighbours(buf);
+		// SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
+		// buf.setAll(myNeighbours(nServ.getMyIp().getIp()).getList());
+		// nServ.setNeighbours(buf);
 		nServ.setNeighbours(myNeighbours(nServ.getMyIp().getIp()));
 		return graph;
 	}
@@ -200,7 +204,17 @@ public class P2PMan {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public UndirectedGraph<IP, DefaultEdge> updateNetworkP2P(List<Pairs<IP, IP>> edge, List<IP> nodes) {
+	public UndirectedGraph<IP, DefaultEdge> updateNetworkP2P(List<Pairs<IP, IP>> edge, List<IP> bots) {
+
+		ArrayList<IP> nodes = new ArrayList<IP>();
+
+		for (int i = 0; i < bots.size(); i++) {
+			IP bot = bots.get(i);
+			if (nodes.indexOf(bot) < 0) {
+				nodes.add(bot);
+				System.out.println("AGGIUNGO IP A VERTICI " + bot);
+			}
+		}
 
 		MyGnmRandomGraphDispenser<IP, DefaultEdge> g2 = new MyGnmRandomGraphDispenser<IP, DefaultEdge>(nodes.size(), 0,
 				new SecureRandom(), false, false);
@@ -223,10 +237,10 @@ public class P2PMan {
 		System.out.println("create/update graph" + graph);
 		System.out.println("minium degree " + calculateK(nodes.size()));
 		this.graph = graph2;
-//		SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
-//		buf.setAll(myNeighbours(nServ.getMyIp().getIp()).getList());
+		// SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
+		// buf.setAll(myNeighbours(nServ.getMyIp().getIp()).getList());
 		nServ.setNeighbours(myNeighbours(nServ.getMyIp().getIp()));
-//		nServ.setNeighbours(buf);
+		// nServ.setNeighbours(buf);
 		return graph;
 	}
 
@@ -275,11 +289,11 @@ public class P2PMan {
 			IP t = graph.getEdgeTarget(a[i]);
 			if (!s.equals(new IP(bot.getIp()))) {
 				Bot sB = bServ.searchBotIP(s);
-				System.out.println("add neigh of "+bot.getIp() + " "+ s );
+				System.out.println("add neigh of " + bot.getIp() + " " + s);
 				ipN.add(new Pairs<String, String>(sB.getIp(), (sB.getPubKey())));
 			}
 			if (!t.equals(new IP(bot.getIp()))) {
-				System.out.println("add neigh of "+bot.getIp() + " "+ t );
+				System.out.println("add neigh of " + bot.getIp() + " " + t);
 				Bot tB = bServ.searchBotIP(t);
 				ipN.add(new Pairs<String, String>(tB.getIp(), tB.getPubKey()));
 			}
@@ -317,7 +331,7 @@ public class P2PMan {
 				Bot sB = bServ.searchBotIP(s);
 				Pairs<IP, PublicKey> ps = new Pairs<IP, PublicKey>();
 				ps.setValue1(new IP(sB.getIp()));
-				System.out.println("nuovi vicini "+sB.getIp());
+				System.out.println("nuovi vicini " + sB.getIp());
 				ps.setValue2(pki.rebuildPuK(sB.getPubKey()));
 				ipN.add(ps);
 				// ipN.getList().add(ps);
@@ -329,7 +343,7 @@ public class P2PMan {
 				Bot tB = bServ.searchBotIP(t);
 				Pairs<IP, PublicKey> pt = new Pairs<IP, PublicKey>();
 				pt.setValue1(new IP(tB.getIp()));
-				System.out.println("nuovi vicini "+tB.getIp());
+				System.out.println("nuovi vicini " + tB.getIp());
 				pt.setValue2(pki.rebuildPuK(tB.getPubKey()));
 				ipN.add(pt);
 				// ipN.getList().add(pt);
@@ -340,7 +354,7 @@ public class P2PMan {
 		return ipN;
 	}
 	//
-	
+
 	public String getNewKing() {
 		return newKing;
 	}
