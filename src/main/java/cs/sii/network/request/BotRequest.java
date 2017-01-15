@@ -269,7 +269,7 @@ public class BotRequest {
 
 		Pairs<Long, Integer> response = new Pairs<>();
 		Integer counter = 0;
-		while (true) {
+		while (counter < REQNUMBER) {
 			try {
 				String url = HTTPS + ipCeC + PORT + "/cec/welcome";
 				System.out.println("url challenge request " + url);
@@ -286,6 +286,7 @@ public class BotRequest {
 				}
 			}
 		}
+		return response;
 	}
 
 	// da valutare se devono essere asincroni
@@ -507,7 +508,7 @@ public class BotRequest {
 			String usrName, IP dest, String hashMac, PublicKey pk, boolean elegible) {
 		Integer counter = 0;
 		String response = "";
-		while (true) {// (counter <= REQNUMBER) {
+		while (counter <= REQNUMBER) {
 			// Type type=new TypeToken<Pairs<Long,Integer>>(){}.getType();
 			// String postRequest = "{\"hashMac\":\""+hashMac+"\"}";
 			try {
@@ -540,6 +541,7 @@ public class BotRequest {
 				}
 			}
 		}
+		return response;
 	}
 
 	/**
