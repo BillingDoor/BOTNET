@@ -499,7 +499,7 @@ public class Behavior {
 		// controllare risposta da cec che ha avvisato dns
 	}
 
-	private void pingToNeighbours() {
+	public void pingToNeighbours() {
 		System.out.println("PING a vicini e vedo se sono vivi");
 		SyncIpList<IP, PublicKey> listNegh = nServ.getNeighbours();
 		SyncIpList<Future<Boolean>, IP> botResp = new SyncIpList<Future<Boolean>, IP>();

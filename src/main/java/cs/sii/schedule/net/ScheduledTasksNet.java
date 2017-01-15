@@ -63,10 +63,8 @@ public class ScheduledTasksNet {
 //	}
 	
 	@Scheduled(fixedRate = 3600000)
-	public void pingCeC() {
-		if (configEngine.isCommandandconquerStatus()){
-			//pinga listacec se sono piu di uno per mantere minimo
-		}
+	public void pingNeighbours() {
+			botB.pingToNeighbours();
 	}
 	
 	//TODO riabilitare e toglire controller mock
