@@ -86,7 +86,7 @@ public class BotController {
 
 	@RequestMapping(value = "/myneighbours/welcome", method = RequestMethod.POST)
 	public Pairs<Long, Integer> myNeighbours(@RequestBody String idBot, HttpServletRequest req) {
-		System.out.println("Richiesta challenge dal mio vicino ricevuta da" + req.getRemoteAddr());
+		System.out.println("Richiesta challenge vicino ricevuta da" + req.getRemoteAddr());
 		Pairs<Long, Integer> response = new Pairs<>();
 		response = bhv.authReqBot(idBot);
 		return response;
@@ -94,7 +94,7 @@ public class BotController {
 
 	@RequestMapping(value = "/myneighbours/hmac", method = RequestMethod.POST)
 	public Boolean myNeighboursHmac(@RequestBody ArrayList<Object> objects, HttpServletRequest req) {
-		System.out.println("Richiesta con hmac de ricevuta da" + req.getRemoteAddr());
+		System.out.println("Richiesta hmac vicino ricevuta da" + req.getRemoteAddr());
 		Boolean response = false;
 		response = bhv.checkHmacBot(objects);
 		if (response) {
