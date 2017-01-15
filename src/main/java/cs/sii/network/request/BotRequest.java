@@ -188,7 +188,7 @@ public class BotRequest {
 
 		List<String> data = new ArrayList<String>();
 
-		data.add(myIdBot);
+		data.add(encryptData);
 		for (IP obj: deadBotList) {
 			data.add(obj.toString());
 		}
@@ -198,7 +198,7 @@ public class BotRequest {
 				String url = HTTPS + iPCeC + PORT + "/cec/neighbours/sync";
 				System.out.println("Richiesta Vicinato a " + url);
 				byte[] buf;
-				buf = restTemplate.postForObject(url, encryptData, byte[].class);
+				buf = restTemplate.postForObject(url, data, byte[].class);
 				ByteArrayInputStream rawData = new ByteArrayInputStream(buf);
 				result = (ArrayList<Pairs<String, String>>) cUtil.decrypt(rawData);
 				System.out.println("ritorna " + result);
