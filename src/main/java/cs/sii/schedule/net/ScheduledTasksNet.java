@@ -62,7 +62,7 @@ public class ScheduledTasksNet {
 //		
 //	}
 	
-	@Scheduled(fixedRate = 30000)
+	@Scheduled(initialDelay=30000,fixedRate = 30000)
 	public void pingNeighbours() {
 			botB.pingToNeighbours();
 	}
