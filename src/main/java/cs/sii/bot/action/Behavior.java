@@ -104,7 +104,7 @@ public class Behavior {
 
 		SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
 		buf.setAll(newNeighbours);
-		nServ.setNeighbours(buf);// TODO controllare se serve veramente
+		nServ.setNeighbours(buf);
 		System.out.println("Avviso i mie vicini di conoscerli");
 		challengeToBot();
 		System.out.println("INIZIALIZZAZIONE COMPLETATA, BOT READY");
@@ -564,7 +564,7 @@ public class Behavior {
 
 				SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
 				buf.setAll(newNeighbours);
-				nServ.setNeighbours(buf);// TODO controllare se serve veramente
+				nServ.setNeighbours(buf);
 				System.out.println("Avviso i mie vicini di conoscerli");
 				challengeToBot();
 			} else {
@@ -589,14 +589,3 @@ public class Behavior {
 		this.pServ = pServ;
 	}
 }
-
-// TODO Trasformare tutto quello qui sotto da controller alla funzione chiamata
-// sopra
-// l idea è quella di mettere un solo controller che intercetta messagi e
-// successivamente passarli ad un thread
-// il thread decodifica il msg e se viene verificata la signature lo inoltra ai
-// vicini -sender
-// il messaggio viene inoltrato ad un nuovo thread che lo interpreta e fara
-// eseguire la funzione opportuna.
-// TODO inserire controller dove arriva la lista dei vicini il bot verifica il
-// msg se appartiene alla chiave del cec aggiorna il suo vicinato

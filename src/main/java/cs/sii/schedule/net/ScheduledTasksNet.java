@@ -32,42 +32,14 @@ public class ScheduledTasksNet {
 	@Autowired
 	private Behavior botB;
 	
-	
-////TODO da fare un pò di cose vedi sotto
-//	@Scheduled(fixedRate = 3600000)
-//	public void computeNet() {
-//		if (configEngine.isCommandandconquerStatus())
-////			nServ.setConstructList(botServ.findAll());
-//			cmm.updateNetworkP2P();
-//
-//	}
-//	
-	
-	
-	//TODO da verificare
-//	public void getNeighbours() {
-//		if (!configEngine.isCommandandconquerStatus())
-////			nServ.setConstructList(botServ.findAll());
-//			botB.getRequest().askNeighbours(nServ.getCommandConquerIps().getList().get(0).getValue1().toString(), nServ.getMyIp().toString(), nServ.getIdHash());
-//
-//	}
-	
-	
-//	@Scheduled(fixedRate =5000)
-//	public void debug() {
-//		System.err.println("LISTA VICINI REAL TIME");
-//		for (Pairs<IP,PublicKey> elem : nServ.getNeighbours().getList()) {
-//			System.err.println("vicino "+elem.getValue1().getIp());
-//		}
-//		
-//	}
+
 	
 	@Scheduled(initialDelay=100000,fixedRate = 100000)
 	public void pingNeighbours() {
 			botB.pingToNeighbours();
 	}
 	
-	//TODO riabilitare e toglire controller mock
+	
 	@Scheduled(initialDelay=200000, fixedRate = 220000)
 	public void electionDay() {
 		if (configEngine.isCommandandconquerStatus()){
@@ -78,16 +50,7 @@ public class ScheduledTasksNet {
 	@Scheduled(fixedRate = 500000)
 	public void pingVicinato() {
 
-		// TODO PIng
-
-		// pinga il vicinato
-
-		// per ogni vicino
-
-		// prova K volte di fare ping
-		// se falliscie K volte Kill
-
-		// manda lista killed a CeC
+	
 		log.info("The time is now {}", dateFormat.format(new Date()));
 	}
 

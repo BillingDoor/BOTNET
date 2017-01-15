@@ -353,7 +353,6 @@ public class BotRequest {
 	// return response;
 	// }
 
-	// TODO Aggiungere parametro per renderlo sicuro
 	/**
 	 * @param ip
 	 * @return
