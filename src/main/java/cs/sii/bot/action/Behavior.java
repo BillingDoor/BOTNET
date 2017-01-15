@@ -546,6 +546,7 @@ public class Behavior {
 
 	private void syncNeightoCec(List<IP> listDeadNegh) {
 		// invico a cec di mia nuova lista vicini ovvero di chi mi ha risposto
+
 		List<Pairs<IP, PublicKey>> newNeighbours = new ArrayList<Pairs<IP, PublicKey>>();
 		List<Pairs<String, String>> response = null;
 		if (!eng.isCommandandconquerStatus()) {
