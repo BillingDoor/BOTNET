@@ -231,9 +231,8 @@ public class Commando {
 			newKingFlood(ip, pk);
 			nServ.getCommandConquerIps().remove(0);
 			nServ.getCommandConquerIps().add(new Pairs<IP, PublicKey>(ip, pki.rebuildPuK(pk)));
-
 			pServ.setNewKing("");
-
+			nServ.setAliveBot(new SyncIpList<IP,String>());
 			// TODO DropDATABASE
 			return true;
 		}
