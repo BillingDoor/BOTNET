@@ -84,10 +84,10 @@ public class SiteController {
 		String result = "";
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (configEngine.isCommandandconquerStatus()) {
-			System.out.println(auth.getCredentials().toString());
-			User u=uServ.findBySsoId(auth.getCredentials().toString());
-			if(u.getUserRoles().contains("ADMIN"))
-			result = "indexadmin";
+			System.out.println("Role= "+auth.getAuthorities());
+			//User u=uServ.findBySsoId(auth.getCredentials().toString());
+			if(auth.getAuthorities().equals("ROLE_ADMIN"))
+				result = "indexadmin";
 			else
 				result="indexuser";
 		} else {
