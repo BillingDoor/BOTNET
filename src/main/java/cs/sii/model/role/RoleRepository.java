@@ -13,6 +13,8 @@ public interface RoleRepository  extends CrudRepository<Role,Integer> {
 	Role findById(@Param("id")Integer id);
 	
 	List<Role> findAll();
+
+	Role findByType(@Param("type")String type);
 	
 	
 }

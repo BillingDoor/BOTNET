@@ -14,7 +14,7 @@ import cs.sii.model.role.RoleRepository;
 public class RoleServiceImpl {
 
 	@Autowired
-	private RoleRepository roleRepository;
+	private RoleRepository rRep;
 
 	public RoleServiceImpl() {
 	}
@@ -23,15 +23,20 @@ public class RoleServiceImpl {
 	 * @return
 	 */
 	public List<Role> findAll() {
-		return roleRepository.findAll();
+		return rRep.findAll();
 	}
 
-	public void save(Role role) {
-		roleRepository.save(role);
+	public Boolean save(Role role) {
+		
+		if (rRep.findByType(role.getType()) == null) {
+			rRep.save(role);
+			return true;
+		} else
+			return false;
 	}
 
 	public void saveAll(List<Role> roles) {
-		roleRepository.save(roles);
+		rRep.save(roles);
 	}
 //	public void saveAllObj(List<Object> roles) {
 //		for (Object obj : roles) {
@@ -44,11 +49,11 @@ public class RoleServiceImpl {
 //	}
 
 	public void setRoleRepository(RoleRepository roleRepository) {
-		this.roleRepository = roleRepository;
+		this.rRep = roleRepository;
 	}
 
 	public void deleteAll(){
-		roleRepository.deleteAll();
+		rRep.deleteAll();
 	}
 	
 }
