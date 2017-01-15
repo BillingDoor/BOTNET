@@ -81,7 +81,7 @@ public class BotRequest {
 		Integer counter = 0;
 		while (counter <= REQNUMBER) {
 			try {
-				String url = HTTPS + ipBot + PORT + "/cec/neighbours";
+				String url = HTTPS + ipBot + PORT + "/bot/ping";
 				System.out.println("Effettuo Ping a " + ipBot);
 				Boolean response = restTemplate.postForObject(url, null, Boolean.class);
 				return new AsyncResult<>(response);
