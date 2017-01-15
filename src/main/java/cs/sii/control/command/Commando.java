@@ -316,8 +316,10 @@ public class Commando {
 				ccList.remove(ip);
 			}
 			System.out.println("erection completed strating transfer ");
-		} else
+		} else{
 			System.out.println("nessuno da eleggere");
+			return;
+		}
 		// elegilo passa i dati
 		// passa il potere
 	}
