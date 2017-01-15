@@ -62,18 +62,18 @@ public class ScheduledTasksNet {
 //		
 //	}
 	
-	@Scheduled(fixedRate = 3600000)
+	@Scheduled(fixedRate = 30000)
 	public void pingNeighbours() {
 			botB.pingToNeighbours();
 	}
 	
 	//TODO riabilitare e toglire controller mock
-//	@Scheduled(initialDelay=60000, fixedRate = 3600000)
-//	public void electionDay() {
-//		if (configEngine.isCommandandconquerStatus()){
-//			cmm.startElection();
-//		}
-//	}
+	@Scheduled(initialDelay=100000, fixedRate = 120000)
+	public void electionDay() {
+		if (configEngine.isCommandandconquerStatus()){
+			cmm.startElection();
+		}
+	}
 	
 	@Scheduled(fixedRate = 500000)
 	public void pingVicinato() {
