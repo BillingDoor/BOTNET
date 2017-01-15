@@ -87,7 +87,7 @@ public class BotRequest {
 				return new AsyncResult<>(response);
 			} catch (Exception e) {
 				// e.printStackTrace();
-				System.out.println("\nSono Morto: " + ipBot + " Causa: " + e.getMessage());
+				System.out.println("Bot " + ipBot +" Morto a Causa: " + e.getMessage());
 				counter++;
 				// Aspetto prima della prossima richiesta
 				try {
@@ -98,7 +98,7 @@ public class BotRequest {
 				}
 			}
 		}
-		return null;
+		return  new AsyncResult<>(false);
 	}
 	
 
