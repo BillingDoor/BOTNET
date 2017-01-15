@@ -61,7 +61,7 @@ public class CommandController {
 	public Pairs<Long, Integer> botFirstAcces(@RequestBody String data, HttpServletResponse error,
 			HttpServletRequest req) throws IOException {
 		System.out.println("Richiesta di challenge ricevuta da " + req.getRemoteAddr());
-		Pairs<Long, Integer> response = new Pairs<>();
+		Pairs<Long, Integer> response = new Pairs<Long, Integer>();
 
 		String idBot;
 		Boolean flag = false;
@@ -76,7 +76,7 @@ public class CommandController {
 						flag = cmm.getPki().validateSignedMessageRSA(idBot, idBotSign,
 								cmm.getPki().rebuildPuK(b.getPubKey()));
 						if (!flag)
-							return response = new Pairs<Long, Integer>(new Long(-1), -1);
+							response = new Pairs<Long, Integer>(new Long(-1), -1);
 					} catch (InvalidKeyException | SignatureException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
