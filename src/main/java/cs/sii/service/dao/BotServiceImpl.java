@@ -18,12 +18,12 @@ public class BotServiceImpl {
 	private BotRepository bRep;
 
 	public BotServiceImpl() {
-	
+
 	}
 
 	public Boolean save(Bot bot) {
-		System.out.println(" bot " + bot.getIdBot() + " " + bot.getIp() + " " + bot.getElegible() + " "
-				+bot.getPubKey());
+		System.out.println(
+				" bot " + bot.getIdBot() + " " + bot.getIp() + " " + bot.getElegible() + " " + bot.getPubKey());
 		if (bRep.findByIdBot(bot.getIdBot()) == null) {
 			bRep.save(bot);
 			return true;
@@ -33,8 +33,8 @@ public class BotServiceImpl {
 
 	public Boolean saveAll(List<Bot> bots) {
 		for (Bot bot : bots) {
-			System.out.println(" bot " + bot.getIdBot() + " " + bot.getIp() + " " + bot.getElegible() + " "
-					+ bot.getPubKey());
+			System.out.println(
+					" bot " + bot.getIdBot() + " " + bot.getIp() + " " + bot.getElegible() + " " + bot.getPubKey());
 			if (bRep.findByIdBot(bot.getIdBot()) == null) {
 				bRep.save(bot);
 			} else
@@ -43,31 +43,47 @@ public class BotServiceImpl {
 		}
 		return true;
 	}
-	
-	public void deleteAll(){
+
+	public Boolean updateAll(List<Bot> bots) {
+		for (Bot bot : bots) {
+			System.out.println(
+					" bot " + bot.getIdBot() + " " + bot.getIp() + " " + bot.getElegible() + " " + bot.getPubKey());
+			Bot b = bRep.findByIdBot(bot.getIdBot());
+			if (b == null) {
+				bRep.save(bot);
+			} else {
+				bRep.delete(b);
+				bRep.save(bot);
+			}
+		}
+		return true;
+	}
+
+	public void deleteAll() {
 		bRep.deleteAll();
 	}
-	
-	
-	public void updateBot(Bot bot){
-		Bot old=bRep.findByIdBot(bot.getIdBot());
+
+	public void updateBot(Bot bot) {
+		Bot old = bRep.findByIdBot(bot.getIdBot());
 		bRep.delete(old);
 		bRep.save(bot);
 	}
 
-//	public Boolean saveObj(List<Object> bots) {
-//		for (Object obj : bots) {
-//			Bot bot = (Bot) obj;
-//			System.out.println(" pk " + Base64.encodeBase64String(bot.getPubKey().getEncoded()).length());
-//			System.out.println(" bot " + bot.getIdBot() + " " + bot.getIp() + " " + bot.isElegible() + " "
-//					+ Base64.encodeBase64String(bot.getPubKey().getEncoded()));
-//			if (bRep.findByIdBot(bot.getIdBot()) == null) {
-//				bRep.save(bot);
-//			} else
-//				System.out.println("bot gia presente" + bot.getIp());
-//		}
-//		return true;
-//	}
+	// public Boolean saveObj(List<Object> bots) {
+	// for (Object obj : bots) {
+	// Bot bot = (Bot) obj;
+	// System.out.println(" pk " +
+	// Base64.encodeBase64String(bot.getPubKey().getEncoded()).length());
+	// System.out.println(" bot " + bot.getIdBot() + " " + bot.getIp() + " " +
+	// bot.isElegible() + " "
+	// + Base64.encodeBase64String(bot.getPubKey().getEncoded()));
+	// if (bRep.findByIdBot(bot.getIdBot()) == null) {
+	// bRep.save(bot);
+	// } else
+	// System.out.println("bot gia presente" + bot.getIp());
+	// }
+	// return true;
+	// }
 
 	/**
 	 * @return
@@ -100,8 +116,6 @@ public class BotServiceImpl {
 		return bRep.findByip(ip);
 	}
 
-	
-
 	/**
 	 * @param id
 	 * @return
@@ -109,6 +123,7 @@ public class BotServiceImpl {
 	public Bot searchBotID(Integer id) {
 		return bRep.findById(id);
 	}
+
 	/**
 	 * @param mac
 	 * @return

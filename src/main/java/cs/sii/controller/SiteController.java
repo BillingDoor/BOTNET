@@ -1,6 +1,7 @@
 package cs.sii.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -226,34 +227,40 @@ public class SiteController {
 		bServ.updateBot(bot);
 		return new ModelAndView("redirect:/site/addbot");
 	}
-	
-	
+
 	/**
 	 * This method will provide the medium to add a new user.
 	 */
-	@RequestMapping(value = { "/removebot" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "/removeAllbot" }, method = RequestMethod.GET)
 	public String removeBot(ModelMap model) {
 		System.out.println("linkstart");
-		model.addAttribute("linkBot", new LinkBot());
-		
+		model.addAttribute("usr", new User());
 		model.addAttribute("users", uServ.findAll());
 		System.out.println("linkFinisgh");
 
 		return "addbot";
 	}
 
-	@RequestMapping(value = { "/removebot" }, method = RequestMethod.POST)
-	public ModelAndView removeBot(@ModelAttribute("linkBot") LinkBot lb) {
+	@RequestMapping(value = { "/removeAllbot" }, method = RequestMethod.POST)
+	public ModelAndView removeBot(@ModelAttribute("usr") User usr) {
 		System.out.println("linkstart2");
 
-		System.out.println(" m utente " + lb.getIdUsrL());
-		System.out.println(" m bot " + lb.getIdBotL());
+		System.out.println(" m utente " + usr.getEmail());
+
+		List<Bot> botList = bServ.findAll();
+		List<Bot> botList2 = new ArrayList<Bot>();
+		for (Bot bot : botList) {
+			if (bot.getBotUser() != usr) {
+				botList.remove(bot);
+			} else {
+				bot.setBotUser(null);
+				botList2.add(bot);
+			}
+			bServ.updateAll(botList2);
+		}
+
 		System.out.println("linkFinisgh3");
-		Bot bot = bServ.searchBotID(lb.getIdBotL());
-		User usr = uServ.findById(lb.getIdUsrL());
-		bot.setBotUser(usr);
-		bServ.updateBot(bot);
-		return new ModelAndView("redirect:/site/addbot");
+		return new ModelAndView("redirect:/site/removeAllbot");
 	}
 
 	/**
