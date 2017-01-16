@@ -195,6 +195,29 @@ public class SiteController {
 		return result;
 	}
 
+	
+	
+	/**
+	 * This method will provide the medium to add a new user.
+	 */
+	@RequestMapping(value = { "/showbot" }, method = RequestMethod.GET)
+	public ModelAndView showBot() {
+		System.out.println("linkstart");
+		ModelAndView mav = new ModelAndView("userbotlist");
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String idUser = auth.getName(); // get logged in username
+		List<Bot> botList = bServ.findAll();
+		User usr = uServ.findBySsoId(idUser);
+		for (Bot bot : botList) {
+			if (!bot.getBotUser().equals(usr)) {
+				botList.remove(bot);
+			}
+		}
+		mav.addObject("bots", botList);
+		return mav;
+	}
+	
+	
 	/**
 	 * This method will provide the medium to add a new user.
 	 */
@@ -231,7 +254,7 @@ public class SiteController {
 	/**
 	 * This method will provide the medium to add a new user.
 	 */
-	@RequestMapping(value = { "/removeAllbot" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "/removeallbot" }, method = RequestMethod.GET)
 	public String removeBot(ModelMap model) {
 		System.out.println("linkstart");
 		model.addAttribute("usr", new User());
@@ -241,7 +264,7 @@ public class SiteController {
 		return "addbot";
 	}
 
-	@RequestMapping(value = { "/removeAllbot" }, method = RequestMethod.POST)
+	@RequestMapping(value = { "/removeallbot" }, method = RequestMethod.POST)
 	public ModelAndView removeBot(@ModelAttribute("usr") User usr) {
 		System.out.println("linkstart2");
 
@@ -262,6 +285,8 @@ public class SiteController {
 		System.out.println("linkFinisgh3");
 		return new ModelAndView("redirect:/site/removeAllbot");
 	}
+
+
 
 	/**
 	 * This method will provide the medium to add a new user.
