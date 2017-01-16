@@ -195,8 +195,6 @@ public class SiteController {
 		return result;
 	}
 
-	
-	
 	/**
 	 * This method will provide the medium to add a new user.
 	 */
@@ -216,8 +214,7 @@ public class SiteController {
 		mav.addObject("bots", botList);
 		return mav;
 	}
-	
-	
+
 	/**
 	 * This method will provide the medium to add a new user.
 	 */
@@ -226,14 +223,16 @@ public class SiteController {
 		System.out.println("linkstart");
 		model.addAttribute("linkBot", new LinkBot());
 		List<Bot> botList = bServ.findAll();
-		for (Bot bot : botList) {
-			if (bot.getBotUser() != null)
-				botList.remove(bot);
-		}
+		if (botList != null)
+			for (Integer i = 0; i < botList.size(); i++) {
+				Bot bot = botList.get(i);
+				System.out.println("bot sadd"+bot.getIp()+ " user ?null "+ bot.getBotUser()==null);
+				if (bot.getBotUser() != null)
+					botList.remove(bot);
+			}
 		model.addAttribute("bots", botList);
 		model.addAttribute("users", uServ.findAll());
 		System.out.println("linkFinisgh");
-
 		return "addbot";
 	}
 
@@ -261,7 +260,7 @@ public class SiteController {
 		model.addAttribute("users", uServ.findAll());
 		System.out.println("linkFinisgh");
 
-		return "addbot";
+		return "deletebot";
 	}
 
 	@RequestMapping(value = { "/removeallbot" }, method = RequestMethod.POST)
@@ -269,7 +268,7 @@ public class SiteController {
 		System.out.println("linkstart2");
 
 		System.out.println(" m utente " + usr.getEmail());
-
+		usr = uServ.findById(usr.getId());
 		List<Bot> botList = bServ.findAll();
 		List<Bot> botList2 = new ArrayList<Bot>();
 		for (Bot bot : botList) {
@@ -286,14 +285,13 @@ public class SiteController {
 		return new ModelAndView("redirect:/site/removeAllbot");
 	}
 
-
-
 	/**
 	 * This method will provide the medium to add a new user.
 	 */
 	@RequestMapping(value = { "/newuser" }, method = RequestMethod.GET)
 	public String newUser(ModelMap model) {
 		User user = new User();
+		model.addAttribute("roles", rServ.findAll());
 		model.addAttribute("user", user);
 		model.addAttribute("edit", false);
 		model.addAttribute("loggedinuser", getPrincipal());

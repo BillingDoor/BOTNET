@@ -40,7 +40,7 @@
 				<img width="20%" src="/images/bitskull.jpg">
 			</header>
 			<nav class="mdl-navigation">
-				<a class="mdl-navigation__link" href="indexadmin"> <i
+					<a class="mdl-navigation__link" href="indexadmin"> <i
 					class="material-icons" role="presentation">dashboard</i> Dashboard
 				</a>
 				 <a class="mdl-navigation__link" href="newuser"> <i
@@ -51,7 +51,7 @@
 					<i class="material-icons" role="presentation"><i
 						class="fa fa-plus-square-o" aria-hidden="true"></i></i> <i>Add Bot</i>
 				</a>
-				<a class="mdl-navigation__link mdl -navigation__link--current" href="deletebot">
+				<a class="mdl-navigation__link mdl -navigation__link--current" href="removeallbot">
 					<i class="material-icons" role="presentation"><i
 						class="fa fa-trash-o" aria-hidden="true"></i></i> <i>Delete Bot</i>
 				</a>

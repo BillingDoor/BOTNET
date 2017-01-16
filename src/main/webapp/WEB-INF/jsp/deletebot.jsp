@@ -92,14 +92,14 @@
 								<%-- 	<%@include file="authheader.jsp" %> --%>
 
 								<div class="well lead">Delete Bot Form</div>
-								<form:form method="POST" modelAttribute="linkBot"
+								<form:form method="POST" modelAttribute="usr"
 									class="form-horizontal">
 
 									<div class="row">
 										<div class="form-group col-md-12">
-											<label class="col-md-3 control-lable" for="idUsrL">user</label>
+											<label class="col-md-3 control-lable" for="id">user</label>
 											<div class="col-md-7">
-												<form:select path="idUsrL" items="${users}" multiple="true"
+												<form:select path="id" items="${users}" multiple="true"
 													itemValue="id" itemLabel="ssoId"
 													class="form-control input-sm" />
 

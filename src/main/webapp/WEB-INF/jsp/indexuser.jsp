@@ -63,9 +63,9 @@
                 <i class="material-icons" role="presentation">dashboard</i>
                 Dashboard
             </a>
-            <a class="mdl-navigation__link" href="forms">
+            <a class="mdl-navigation__link" href="showbot">
                 <i class="material-icons" role="presentation">person</i>
-                Account
+                Bot List
             </a>
             
                       
