@@ -53,6 +53,7 @@ public class BotServiceImpl {
 				bRep.save(bot);
 			} else {
 				bRep.delete(b);
+				bot.setId(b.getId());
 				bRep.save(bot);
 			}
 		}
@@ -66,6 +67,7 @@ public class BotServiceImpl {
 	public void updateBot(Bot bot) {
 		Bot old = bRep.findByIdBot(bot.getIdBot());
 		bRep.delete(old);
+		bot.setId(old.getId());
 		bRep.save(bot);
 	}
 

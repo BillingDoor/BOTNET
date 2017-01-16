@@ -54,7 +54,7 @@
 				<img width="20%" src="/images/bitskull.jpg">
 			</header>
 			<nav class="mdl-navigation">
-				<a class="mdl-navigation__link" href="indexadmin"> <i
+				<a class="mdl-navigation__link" href="index"> <i
 					class="material-icons" role="presentation">dashboard</i> Dashboard
 				</a>
 				 <a class="mdl-navigation__link" href="newuser"> <i

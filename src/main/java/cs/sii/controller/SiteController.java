@@ -204,14 +204,21 @@ public class SiteController {
 		ModelAndView mav = new ModelAndView("userbotlist");
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String idUser = auth.getName(); // get logged in username
-		List<Bot> botList = bServ.findAll();
 		User usr = uServ.findBySsoId(idUser);
-		for (Bot bot : botList) {
-			if (!bot.getBotUser().equals(usr)) {
-				botList.remove(bot);
+		List<Bot> botList = bServ.findAll();
+		if (usr != null)
+			if (botList != null) {
+				for (Integer i = 0; i < botList.size(); i++) {
+					Bot bot = botList.get(i);
+					if (bot.getBotUser() != null) {
+						if (!usr.equals(bot.getBotUser())) {
+							botList.remove(bot);
+						}
+					} else
+						botList.remove(bot);
+				}
+				mav.addObject("bots", botList);
 			}
-		}
-		mav.addObject("bots", botList);
 		return mav;
 	}
 
@@ -226,7 +233,7 @@ public class SiteController {
 		if (botList != null)
 			for (Integer i = 0; i < botList.size(); i++) {
 				Bot bot = botList.get(i);
-				System.out.println("bot sadd"+bot.getIp()+ " user ?null "+ bot.getBotUser()==null);
+				System.out.println("bot sadd" + bot.getIp() + " user ?null " + bot.getBotUser() == null);
 				if (bot.getBotUser() != null)
 					botList.remove(bot);
 			}
@@ -245,7 +252,9 @@ public class SiteController {
 		System.out.println("linkFinisgh3");
 		Bot bot = bServ.searchBotID(lb.getIdBotL());
 		User usr = uServ.findById(lb.getIdUsrL());
+		System.out.println("bot " + bot.getIp() + " " + bot.getIdBot() + " " + bot.getBotUser() == null);
 		bot.setBotUser(usr);
+		System.out.println("bot " + bot.getIp() + " " + bot.getIdBot() + " " + bot.getBotUser() == null);
 		bServ.updateBot(bot);
 		return new ModelAndView("redirect:/site/addbot");
 	}
@@ -271,15 +280,17 @@ public class SiteController {
 		usr = uServ.findById(usr.getId());
 		List<Bot> botList = bServ.findAll();
 		List<Bot> botList2 = new ArrayList<Bot>();
-		for (Bot bot : botList) {
-			if (bot.getBotUser() != usr) {
-				botList.remove(bot);
-			} else {
-				bot.setBotUser(null);
-				botList2.add(bot);
+		if (botList != null)
+			for (Integer i = 0; i < botList.size(); i++) {
+				Bot bot = botList.get(i);
+				if (bot.getBotUser() != usr) {
+					botList.remove(bot);
+				} else {
+					bot.setBotUser(null);
+					botList2.add(bot);
+				}
+				bServ.updateAll(botList2);
 			}
-			bServ.updateAll(botList2);
-		}
 
 		System.out.println("linkFinisgh3");
 		return new ModelAndView("redirect:/site/removeAllbot");
@@ -331,7 +342,7 @@ public class SiteController {
 					"User " + user.getFirstName() + " " + user.getLastName() + " registered successfully");
 			model.addAttribute("loggedinuser", getPrincipal());
 			// return "success";
-			return "registrationsuccess";
+			return "registration";
 		}
 	}
 

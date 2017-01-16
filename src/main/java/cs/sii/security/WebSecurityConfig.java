@@ -46,8 +46,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 //		http.addFilter(XUserAgent());
 	    // Enable csrf for login form
-//	    http.csrf().requireCsrfProtectionMatcher(kk );
-		 http.csrf().disable();
+	    http.csrf().requireCsrfProtectionMatcher(kk );
+//		 http.csrf().disable();
 		// Configure login page
 	    http.formLogin().loginPage("/site/login").usernameParameter("ssoId").passwordParameter("password").failureUrl("/login?error").defaultSuccessUrl("/site/index").loginProcessingUrl("/site/login");
 	    //Configure remember me
