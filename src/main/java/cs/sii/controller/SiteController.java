@@ -23,9 +23,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import cs.sii.config.onLoad.Config;
 import cs.sii.control.command.Commando;
+import cs.sii.domain.LinkBot;
 import cs.sii.model.bot.Bot;
 import cs.sii.model.role.Role;
 import cs.sii.model.user.User;
@@ -51,7 +53,7 @@ public class SiteController {
 
 	@Autowired
 	RoleServiceImpl rServ;
-	
+
 	@Autowired
 	BotServiceImpl bServ;
 
@@ -65,7 +67,7 @@ public class SiteController {
 	 */
 	// @PreAuthorize("hasRole('ROLE_ANONYMOUS')")
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public String login(HttpServletResponse error,HttpServletResponse httpServletResponse) throws IOException {
+	public String login(HttpServletResponse error, HttpServletResponse httpServletResponse) throws IOException {
 		String result = "";
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (configEngine.isCommandandconquerStatus()) {
@@ -74,15 +76,16 @@ public class SiteController {
 			} else {
 				Collection<? extends GrantedAuthority> x = (auth.getAuthorities());
 				for (GrantedAuthority gA : x) {
-				System.out.println("ga "+gA.toString()+"  "+gA.toString().contains("ROLE_ADMIN"));
+					System.out.println("ga " + gA.toString() + "  " + gA.toString().contains("ROLE_ADMIN"));
 					if (gA.toString().contains("ROLE_ADMIN")) {
 						System.out.println("admin ");
-						result = "indexadmin";}
+						result = "indexadmin";
+					}
 					if (gA.toString().contains("ROLE_USER")) {
 						System.out.println("no admin");
 						result = "indexuser";
 					}
-				}			
+				}
 			}
 		}
 		return result;
@@ -103,11 +106,12 @@ public class SiteController {
 			// User u=uServ.findBySsoId(auth.getCredentials().toString());
 			Collection<? extends GrantedAuthority> x = (auth.getAuthorities());
 			for (GrantedAuthority gA : x) {
-			System.out.println("ga "+gA.toString()+"  "+gA.toString().contains("ROLE_ADMIN"));
+				System.out.println("ga " + gA.toString() + "  " + gA.toString().contains("ROLE_ADMIN"));
 				if (gA.toString().contains("ROLE_ADMIN")) {
 					System.out.println("admin ");
 					result = "indexadmin";
-				} if (gA.toString().contains("ROLE_USER")) {
+				}
+				if (gA.toString().contains("ROLE_USER")) {
 					System.out.println("no admin");
 					result = "indexuser";
 				}
@@ -201,25 +205,54 @@ public class SiteController {
 		model.addAttribute("loggedinuser", getPrincipal());
 		return "registration";
 	}
-	
-	
+
 	/**
 	 * This method will provide the medium to add a new user.
 	 */
 	@RequestMapping(value = { "/addbot" }, method = RequestMethod.GET)
 	public String addingBot(ModelMap model) {
-		
+		model.addAttribute("roles", rServ.findAll());
+		model.addAttribute("users", uServ.findAll());
 		return "addbot";
 	}
-	
-	@RequestMapping(value = { "/addbot" }, method = RequestMethod.POST)
-	public String addBot(@Valid Bot bot, BindingResult result,ModelMap model) {
+	@RequestMapping(value = { "/assignBot" }, method = RequestMethod.POST)
+	public String addBot(@Valid Bot bot, BindingResult result, ModelMap model) {
 		
 		return "addbot";
 	}
 
 	
+	
+	
+	
+	/**
+	 * This method will provide the medium to add a new user.
+	 */
+	@RequestMapping(value = { "/addbot2" }, method = RequestMethod.GET)
+	public ModelAndView addingBot2(ModelMap model) {
+		ModelAndView mav = new ModelAndView("addbot");
+		mav.addObject("roles", rServ.findAll());
+		mav.addObject("users", uServ.findAll());
+		return mav;
+	}
+	
+	@RequestMapping(value = { "/assignBot2" }, method = RequestMethod.POST)
+	public String addBot2(LinkBot lb, BindingResult result) {
+		System.out.println(" m utente "+ lb.getSsoId());
+		System.out.println(" m bot "+ lb.getIdBot());		
+		return "addbot";
+	}
 
+	@RequestMapping(value = { "/assignBot2" }, method = RequestMethod.POST)
+	public String addBot2(LinkBot lb, BindingResult result, ModelMap model) {
+		System.out.println("utente "+ lb.getSsoId());
+		System.out.println("bot "+ lb.getIdBot());		
+		return "addbot";
+	}
+
+	
+	
+	
 	/**
 	 * This method will be called on form submission, handling POST request for
 	 * saving user in database. It also validates the user input
@@ -264,19 +297,17 @@ public class SiteController {
 	public List<Role> initializeProfiles() {
 		return rServ.findAll();
 	}
-	
+
 	@ModelAttribute("users")
 	public List<User> userForBot() {
 		return uServ.findAll();
 	}
-	
+
 	@ModelAttribute("bots")
 	public List<Bot> botForUser() {
-		//TODO ritornare solo i bot disponibili per essere assegnati
+		// TODO ritornare solo i bot disponibili per essere assegnati
 		return bServ.findAll();
 	}
-	
-	
 
 	private String getPrincipal() {
 		String userName = null;

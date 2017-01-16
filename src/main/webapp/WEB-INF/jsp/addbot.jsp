@@ -70,9 +70,28 @@
 			
 			<div>
 				Matching bots with users:
-			<table>
+				
+				
+				
+				
+					<form:form action="/assignBot" modelAttribure="mylinkBot">
+					
+						<form:select path="usr" items="${users}" multiple="false" itemValue="ssoId" itemLabel="user Id" class="minimal" />		
+						<form:select path="bot" items="${bots}" multiple="false" itemValue="idBot" itemLabel="bot Id" class="minimal" />		
+					
+					</form:form>
+				
+		<%-- 	<table>
 			<tr><td>
-			<form:select path="user" items="${users}" multiple="false" itemValue="id" itemLabel="type" class="minimal" />		
+			
+		
+				
+			
+			
+			
+			
+			
+		
 				</td><td>
 					<i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i>
 				</td><td>
@@ -80,7 +99,12 @@
 						<form:select path="bot" items="${bots}" multiple="false" itemValue="id" itemLabel="type" class="minimal" />		
 			
 				</td></tr>
-			</table>
+			</table>--%>
+			
+			
+			
+			
+			
 			</div>
 	
 			<p></p>
@@ -88,7 +112,7 @@
 	
 			<div class="form-actions">
 				<button type="submit" value="Update">apply</button>
-			</div>
+			</div> 
 	</div>
 	</div>
 	</div>
