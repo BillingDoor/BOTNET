@@ -51,6 +51,12 @@ public interface BotRepository extends CrudRepository<Bot, Integer> {
 	 */
 	Bot findByip(@Param("Ip") String ip);
 
+	/**
+	 * @param id
+	 * @return
+	 */
+	Bot findById(@Param("id")Integer id);
+
 	//
 	// List<Bot> findBychainLevelGreaterThan(@Param("cLevel") Integer cLevel);
 	//

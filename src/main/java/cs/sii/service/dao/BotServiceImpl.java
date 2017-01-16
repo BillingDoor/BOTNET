@@ -100,6 +100,15 @@ public class BotServiceImpl {
 		return bRep.findByip(ip);
 	}
 
+	
+
+	/**
+	 * @param id
+	 * @return
+	 */
+	public Bot searchBotID(Integer id) {
+		return bRep.findById(id);
+	}
 	/**
 	 * @param mac
 	 * @return

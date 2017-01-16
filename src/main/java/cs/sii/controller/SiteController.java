@@ -197,6 +197,68 @@ public class SiteController {
 	/**
 	 * This method will provide the medium to add a new user.
 	 */
+	@RequestMapping(value = { "/addbot" }, method = RequestMethod.GET)
+	public String addBot(ModelMap model) {
+		System.out.println("linkstart");
+		model.addAttribute("linkBot", new LinkBot());
+		List<Bot> botList = bServ.findAll();
+		for (Bot bot : botList) {
+			if (bot.getBotUser() != null)
+				botList.remove(bot);
+		}
+		model.addAttribute("bots", botList);
+		model.addAttribute("users", uServ.findAll());
+		System.out.println("linkFinisgh");
+
+		return "addbot";
+	}
+
+	@RequestMapping(value = { "/addbot" }, method = RequestMethod.POST)
+	public ModelAndView addBot(@ModelAttribute("linkBot") LinkBot lb) {
+		System.out.println("linkstart2");
+
+		System.out.println(" m utente " + lb.getIdUsrL());
+		System.out.println(" m bot " + lb.getIdBotL());
+		System.out.println("linkFinisgh3");
+		Bot bot = bServ.searchBotID(lb.getIdBotL());
+		User usr = uServ.findById(lb.getIdUsrL());
+		bot.setBotUser(usr);
+		bServ.updateBot(bot);
+		return new ModelAndView("redirect:/site/addbot");
+	}
+	
+	
+	/**
+	 * This method will provide the medium to add a new user.
+	 */
+	@RequestMapping(value = { "/removebot" }, method = RequestMethod.GET)
+	public String removeBot(ModelMap model) {
+		System.out.println("linkstart");
+		model.addAttribute("linkBot", new LinkBot());
+		
+		model.addAttribute("users", uServ.findAll());
+		System.out.println("linkFinisgh");
+
+		return "addbot";
+	}
+
+	@RequestMapping(value = { "/removebot" }, method = RequestMethod.POST)
+	public ModelAndView removeBot(@ModelAttribute("linkBot") LinkBot lb) {
+		System.out.println("linkstart2");
+
+		System.out.println(" m utente " + lb.getIdUsrL());
+		System.out.println(" m bot " + lb.getIdBotL());
+		System.out.println("linkFinisgh3");
+		Bot bot = bServ.searchBotID(lb.getIdBotL());
+		User usr = uServ.findById(lb.getIdUsrL());
+		bot.setBotUser(usr);
+		bServ.updateBot(bot);
+		return new ModelAndView("redirect:/site/addbot");
+	}
+
+	/**
+	 * This method will provide the medium to add a new user.
+	 */
 	@RequestMapping(value = { "/newuser" }, method = RequestMethod.GET)
 	public String newUser(ModelMap model) {
 		User user = new User();
@@ -206,53 +268,6 @@ public class SiteController {
 		return "registration";
 	}
 
-	/**
-	 * This method will provide the medium to add a new user.
-	 */
-	@RequestMapping(value = { "/addbot" }, method = RequestMethod.GET)
-	public String addingBot(ModelMap model) {
-		model.addAttribute("roles", rServ.findAll());
-		model.addAttribute("users", uServ.findAll());
-		return "addbot";
-	}
-	@RequestMapping(value = { "/assignBot" }, method = RequestMethod.POST)
-	public String addBot(@Valid Bot bot, BindingResult result, ModelMap model) {
-		
-		return "addbot";
-	}
-
-	
-	
-	
-	
-	/**
-	 * This method will provide the medium to add a new user.
-	 */
-	@RequestMapping(value = { "/addbot2" }, method = RequestMethod.GET)
-	public ModelAndView addingBot2(ModelMap model) {
-		ModelAndView mav = new ModelAndView("addbot");
-		mav.addObject("roles", rServ.findAll());
-		mav.addObject("users", uServ.findAll());
-		return mav;
-	}
-	
-	@RequestMapping(value = { "/assignBot2" }, method = RequestMethod.POST)
-	public String addBot2(LinkBot lb, BindingResult result) {
-		System.out.println(" m utente "+ lb.getSsoId());
-		System.out.println(" m bot "+ lb.getIdBot());		
-		return "addbot";
-	}
-
-	@RequestMapping(value = { "/assignBot2" }, method = RequestMethod.POST)
-	public String addBot2(LinkBot lb, BindingResult result, ModelMap model) {
-		System.out.println("utente "+ lb.getSsoId());
-		System.out.println("bot "+ lb.getIdBot());		
-		return "addbot";
-	}
-
-	
-	
-	
 	/**
 	 * This method will be called on form submission, handling POST request for
 	 * saving user in database. It also validates the user input
@@ -290,24 +305,24 @@ public class SiteController {
 		}
 	}
 
-	/**
-	 * This method will provide UserProfile list to views
-	 */
-	@ModelAttribute("roles")
-	public List<Role> initializeProfiles() {
-		return rServ.findAll();
-	}
-
-	@ModelAttribute("users")
-	public List<User> userForBot() {
-		return uServ.findAll();
-	}
-
-	@ModelAttribute("bots")
-	public List<Bot> botForUser() {
-		// TODO ritornare solo i bot disponibili per essere assegnati
-		return bServ.findAll();
-	}
+	// /**
+	// * This method will provide UserProfile list to views
+	// */
+	// @ModelAttribute("roles")
+	// public List<Role> initializeProfiles() {
+	// return rServ.findAll();
+	// }
+	//
+	// @ModelAttribute("users")
+	// public List<User> userForBot() {
+	// return uServ.findAll();
+	// }
+	//
+	// @ModelAttribute("bots")
+	// public List<Bot> botForUser() {
+	// // TODO ritornare solo i bot disponibili per essere assegnati
+	// return bServ.findAll();
+	// }
 
 	private String getPrincipal() {
 		String userName = null;
@@ -345,4 +360,52 @@ public class SiteController {
 		return "TESTING";
 	}
 
+	//
+	// @RequestMapping(value = { "/assignBot" }, method = RequestMethod.POST)
+	// public String addBot(@Valid Bot bot, BindingResult result, ModelMap
+	// model) {
+	//
+	// return "addbot";
+	// }
+
+	// /**
+	// * This method will provide the medium to add a new user.
+	// */
+	// @RequestMapping(value = { "/addbot2" }, method = RequestMethod.GET)
+	// public ModelAndView addingBot2() {
+	// ModelAndView mav = new ModelAndView("addbot");
+	// mav.addObject("bots", bServ.findAll());
+	// mav.addObject("users", uServ.findAll());
+	// return mav;
+	// }
+	// @RequestMapping(value = { "/addbot" }, method = RequestMethod.POST)
+	// public String addBot23(@ModelAttribute("mylinkBot") LinkBot lb) {
+	// System.out.println("utente "+ lb.getSsoId());
+	// System.out.println("bot "+ lb.getIdBot());
+	// return "addbot";
+	// }
+	//
+	//
+	//
+	// @RequestMapping(value = { "/addbot2" }, method = RequestMethod.GET)
+	// public ModelAndView addingBot2(ModelMap model) {
+	// ModelAndView mav = new ModelAndView("addbot");
+	// mav.addObject("roles", rServ.findAll());
+	// mav.addObject("users", uServ.findAll());
+	// return mav;
+	// }
+	//
+	// @RequestMapping(value = { "/assignBot3" }, method = RequestMethod.POST)
+	// public String addBot2(LinkBot lb, BindingResult result) {
+	// System.out.println(" m utente "+ lb.getSsoId());
+	// System.out.println(" m bot "+ lb.getIdBot());
+	// return "addbot";
+	// }
+	//
+	// @RequestMapping(value = { "/assignBot2" }, method = RequestMethod.POST)
+	// public String addBot2(LinkBot lb, BindingResult result, ModelMap model) {
+	// System.out.println("utente "+ lb.getSsoId());
+	// System.out.println("bot "+ lb.getIdBot());
+	// return "addbot";
+	// }
 }

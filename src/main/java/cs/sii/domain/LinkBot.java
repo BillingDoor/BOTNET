@@ -2,34 +2,33 @@ package cs.sii.domain;
 
 public class LinkBot {
 
-    Long id;
+	private Integer idBotL;
 	
-	private String botL;
-	
-	private String usrL;
+	private Integer idUsrL;
 
-	public Long getId() {
-		return id;
+	public LinkBot() {
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public LinkBot(Integer botL, Integer usrL) {
+		super();
+		this.idBotL = botL;
+		this.idUsrL = usrL;
 	}
 
-	public String getIdBot() {
-		return botL;
+	public Integer getIdBotL() {
+		return idBotL;
 	}
 
-	public void setIdBot(String idBot) {
-		botL = idBot;
+	public void setIdBotL(Integer idBotL) {
+		this.idBotL = idBotL;
 	}
 
-	public String getSsoId() {
-		return usrL;
+	public Integer getIdUsrL() {
+		return idUsrL;
 	}
 
-	public void setSsoId(String ssoId) {
-		this.usrL = ssoId;
+	public void setIdUsrL(Integer idUsrL) {
+		this.idUsrL = idUsrL;
 	}
 
 }
