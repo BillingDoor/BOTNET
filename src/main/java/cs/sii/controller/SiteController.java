@@ -207,7 +207,13 @@ public class SiteController {
 	 * This method will provide the medium to add a new user.
 	 */
 	@RequestMapping(value = { "/addbot" }, method = RequestMethod.GET)
-	public String addBot(ModelMap model) {
+	public String addingBot(ModelMap model) {
+		
+		return "addbot";
+	}
+	
+	@RequestMapping(value = { "/addbot" }, method = RequestMethod.POST)
+	public String addBot(@Valid Bot bot, BindingResult result,ModelMap model) {
 		
 		return "addbot";
 	}

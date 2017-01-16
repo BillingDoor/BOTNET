@@ -72,12 +72,12 @@
 				Matching bots with users:
 			<table>
 			<tr><td>
-			<form:select path="users" items="${users}" multiple="false" itemValue="id" itemLabel="type" class="minimal" />		
+			<form:select path="user" items="${users}" multiple="false" itemValue="id" itemLabel="type" class="minimal" />		
 				</td><td>
 					<i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i>
 				</td><td>
 			
-						<form:select path="bots" items="${bots}" multiple="false" itemValue="id" itemLabel="type" class="minimal" />		
+						<form:select path="bot" items="${bots}" multiple="false" itemValue="id" itemLabel="type" class="minimal" />		
 			
 				</td></tr>
 			</table>
