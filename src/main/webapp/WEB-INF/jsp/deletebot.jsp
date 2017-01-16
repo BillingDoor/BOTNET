@@ -46,7 +46,7 @@
 			</div>
 		</header>
 
-				<div class="mdl-layout__drawer">
+		<div class="mdl-layout__drawer">
 			<header>
 				<img width="20%" src="/images/bitskull.jpg">
 			</header>
@@ -85,27 +85,16 @@
 
 
 						<div>
-							Matching bots with users:
+							Delete All Bot from selected users:
 
 
 							<div class="generic-container">
 								<%-- 	<%@include file="authheader.jsp" %> --%>
 
-								<div class="well lead">User Registration Form</div>
+								<div class="well lead">Delete Bot Form</div>
 								<form:form method="POST" modelAttribute="linkBot"
 									class="form-horizontal">
 
-									<div class="row">
-										<div class="form-group col-md-12">
-											<label class="col-md-3 control-lable" for="idBotL">bots</label>
-											<div class="col-md-7">
-												<form:select path="idBotL" items="${bots}" multiple="true"
-													itemValue="id" itemLabel="idBot"
-													class="form-control input-sm" />
-
-											</div>
-										</div>
-									</div>
 									<div class="row">
 										<div class="form-group col-md-12">
 											<label class="col-md-3 control-lable" for="idUsrL">user</label>
