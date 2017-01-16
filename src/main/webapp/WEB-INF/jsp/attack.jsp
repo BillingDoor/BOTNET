@@ -7,16 +7,13 @@
    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
    <title>&#9618;&#9618;&#9618;&#9618;&#9618;&#9618;&#9618;&#9618;&#9618;&#9618;</title>
    <script src="https://storage.googleapis.com/code.getmdl.io/1.0.4/material.min.js"></script>
-   <link href="<c:url value='/css/login.css' />" rel="stylesheet"></link>
+   <link href="<c:url value='/css/app.css' />" rel="stylesheet"></link>
    <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.4/material.red-purple.min.css" /> 
    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.css" />
-	<link href='https://fonts.googleapis.com/css?family=Roboto:400,500,300,100,700,900' rel='stylesheet'
-          type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Roboto:400,500,300,100,700,900' rel='stylesheet' type='text/css'>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/lib/getmdl-select.min.css">
-    <link rel="stylesheet" href="/css/lib/nv.d3.css">
     <link rel="stylesheet" href="/css/application.css">
 </head>
 <body>
@@ -66,9 +63,9 @@
 
 
 	<div id="mainWrapper" align="center">
-	<div class="login-container">
-	<div class="login-card-2">
-	<div class="login-form">
+	<div class="general-container">
+	<div class="general-card">
+	<div class="general-form">
 		
 	<div><p>Choose an attack:</p></div>
 	<form class="lefto">

@@ -9,7 +9,6 @@ body{
 	overflow-y: hidden;
 }
 
-
 #mainWrapper {
 	background: url("../images/Dark_background_1920x1080.png") center top no-repeat;
   	background-size: cover;
@@ -56,7 +55,7 @@ body, #mainWrapper, .form-control{
 	padding-bottom:10px;
 }
 
-.login-container {
+.general-container {
     margin-top: 13%;
     background-color: transparent;
     width: 25%;
@@ -65,12 +64,12 @@ body, #mainWrapper, .form-control{
     border: 1px;
 }
 
-.login-card {
+.general-card {
     width: 80%;
     margin: auto;
 }
 
-.login-form {
+.general-form {
     padding: 10%;
     
 }
@@ -84,7 +83,7 @@ body, #mainWrapper, .form-control{
 
 
 
-
+/* stile dell'input ed effetti */
 
 input.hiddbox {
 	font-family: FontAwesome, Verdana;
@@ -116,6 +115,9 @@ input.hiddbox:focus ~ label, input.hiddbox.used ~ label {
 
 input.hiddbox:focus ~ .bar:before, input.hiddbox:focus ~ .bar:after { width: 50%; }
 
+
+/* barra celeste sotto le textbox */
+
 .bar {
 	position: relative;
 	display: block;
@@ -135,6 +137,9 @@ input.hiddbox:focus ~ .bar:before, input.hiddbox:focus ~ .bar:after { width: 50%
 .bar:before { left: 50%; }
 
 .bar:after { right: 50%; }
+
+
+/* stile del bottone */
 
 button {
   position: relative;
@@ -165,8 +170,6 @@ button:hover {
 }
 
 
-
-/* Base for label styling */
 [type="checkbox"]:not(:checked),
 [type="checkbox"]:checked {
   position: absolute;
@@ -179,7 +182,6 @@ button:hover {
   cursor: pointer;
 }
 
-/* checkbox aspect */
 [type="checkbox"]:not(:checked) + label:before,
 [type="checkbox"]:checked + label:before {
   content: '';
@@ -191,7 +193,7 @@ button:hover {
   border-radius: 3px;
   box-shadow: inset 0 1px 3px rgba(0,0,0,.3)
 }
-/* checked mark aspect */
+
 [type="checkbox"]:not(:checked) + label:after,
 [type="checkbox"]:checked + label:after {
   content: '';
@@ -204,39 +206,64 @@ button:hover {
   box-shadow: inset 0 1px 3px rgba(0,0,0,.3)
   
 }
-/* checked mark aspect changes */
+
 [type="checkbox"]:not(:checked) + label:after {
   opacity: 0;
   transform: scale(0);
 }
+
 [type="checkbox"]:checked + label:after {
   opacity: 1;
   transform: scale(1);
 }
-/* disabled checkbox */
+
 [type="checkbox"]:disabled:not(:checked) + label:before,
 [type="checkbox"]:disabled:checked + label:before {
   box-shadow: none;
   border-color: #999;
   background-color: #999;
 }
+
 [type="checkbox"]:disabled:checked + label:after {
   color: gray;
 }
+
 [type="checkbox"]:disabled + label {
   color: gray;
 }
-/* accessibility */
+
 [type="checkbox"]:checked:focus + label:before,
 [type="checkbox"]:not(:checked):focus + label:before {
   border: 1px dotted blue;
 }
 
-/* hover style just for information */
 label:hover:before {
   border: 1px solid rgb(4,167,187)!important;
 }
 
 label:hover {
 	color: rgb(4,167,187);
+}
+
+
+
+
+
+
+
+
+select.minimal {
+width:80px;
+height: 35px;
+padding:7px;
+margin-top:3px;
+line-height:15px;
+border-radius:8px;
+background-color: black;
+color:grey;
+font-style: Verdana;
+font-size: 15px;
+}
+select:hover {
+color:rgb(4,167,187);
 }

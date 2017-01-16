@@ -13,9 +13,9 @@
 
 	<body>
 		<div id="mainWrapper" align="center">
-			<div class="login-container">
-				<div class="login-card">
-					<div class="login-form">
+			<div class="general-container">
+				<div class="general-card">
+					<div class="general-form">
 						<c:url var="loginUrl" value="" />
 						<form action="${loginUrl}" method="post" class="form-horizontal">
 							<c:if test="${param.error != null}">
