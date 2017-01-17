@@ -26,7 +26,7 @@
        			
        			<li class="mdl-list__item mdl-list__item--two-line">
        				<span class="mdl-list__item-primary-content" >
-                        <a href="logout">
+                        <a href="../logout">
                         <i class="material-icons mdl-list__item-icon text-color--secondary" >exit_to_app</i>
                        </a>
                       </span>
@@ -39,21 +39,27 @@
     <div class="mdl-layout__drawer">
         <header> <img width="20%" src="/images/bitskull.jpg"></header>
         <nav class="mdl-navigation">
-  	<a class="mdl-navigation__link" href="indexadmin"> <i
+				
+						<a class="mdl-navigation__link" href="../admin/index"> <i
 					class="material-icons" role="presentation">dashboard</i> Dashboard
 				</a>
-				 <a class="mdl-navigation__link" href="newuser"> <i
+				<a class="mdl-navigation__link" href="../admin/newuser"> <i
 					class="material-icons" role="presentation"><i
 						class="fa fa-address-book-o" aria-hidden="true"></i></i> Registration
 				</a> 
-				<a class="mdl-navigation__link mdl -navigation__link--current" href="addbot">
+				<a class="mdl-navigation__link mdl -navigation__link--current" href="../admin/addbot">
 					<i class="material-icons" role="presentation"><i
 						class="fa fa-plus-square-o" aria-hidden="true"></i></i> <i>Add Bot</i>
 				</a>
-				<a class="mdl-navigation__link mdl -navigation__link--current" href="removeallbot">
+				<a class="mdl-navigation__link mdl -navigation__link--current" href="../admin/removeallbot">
 					<i class="material-icons" role="presentation"><i
 						class="fa fa-trash-o" aria-hidden="true"></i></i> <i>Delete Bot</i>
 				</a>
+                <div class="mdl-layout-spacer"></div>
+            <a class="mdl-navigation__link" href="https://github.com/xXCiccioXx/BOTNET">
+                <i class="material-icons" role="presentation">link</i>
+                GitHub
+            </a>
         </nav>
         
     </div>

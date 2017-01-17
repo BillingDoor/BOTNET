@@ -25,7 +25,7 @@
        			
        			<li class="mdl-list__item mdl-list__item--two-line">
        				<span class="mdl-list__item-primary-content" >
-                        <a href="logout">
+                       <a href="../logout">
                         <i class="material-icons mdl-list__item-icon text-color--secondary" >exit_to_app</i>
                        </a>
                       </span>
