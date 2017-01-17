@@ -13,7 +13,6 @@
     <!-- Add to homescreen for Chrome on Android -->
     <meta name="mobile-web-app-capable" content="yes">
 
-
     <!-- Add to homescreen for Safari on iOS -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -83,7 +82,7 @@
     </div>
 
 <main class="mdl-layout__content"></main>
-	<font color="white"><p align="right"><font size="15"><i class="fa fa-hand-spock-o" aria-hidden="true"></i></font> <br>Control panel: <br><i>check your own business!</i></p></font>
+	<font color="white"><p align="right"><font size="15"><i class="fa fa-hand-spock-o" aria-hidden="true"></i></font> <br>Administrator Control Panel: <br><i>check your own business!</i></p></font>
 </div>
 
 <!-- inject:js -->

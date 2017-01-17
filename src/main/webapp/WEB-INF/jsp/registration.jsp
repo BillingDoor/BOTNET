@@ -9,6 +9,19 @@
 	<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>&#9618;&#9618;&#9618;&#9618;&#9618;&#9618;&#9618;&#9618;&#9618;&#9618;</title>
+	
+	<!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Material Design Lite">
+
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="/images/touch/ms-touch-icon-144x144-precomposed.png">
+    <meta name="msapplication-TileColor" content="#3372DF">
+    
 	<link href="<c:url value='/css/app.css' />" rel="stylesheet"></link>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.4/material.red-purple.min.css" /> 
@@ -70,7 +83,7 @@
 	<div id="mainWrapper" align="center">
  	<div class="general-container">
  	<div class="general-form">
-
+ 	<div class="generic-container">
 		<div class="well lead">Registration Form:</div><br>
 	 	<form:form method="POST" modelAttribute="user">
 			<form:input type="hidden" path="id" id="id"/>
@@ -127,6 +140,7 @@
 			</div>
 		</form:form>
 	
+	</div>
 	</div>
 	</div>
 	</div>

