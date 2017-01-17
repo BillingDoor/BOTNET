@@ -49,14 +49,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	    http.csrf().requireCsrfProtectionMatcher(kk );
 //		 http.csrf().disable();
 		// Configure login page
-	    http.formLogin().loginPage("/site/login").usernameParameter("ssoId").passwordParameter("password").failureUrl("/login?error").defaultSuccessUrl("/site/index").loginProcessingUrl("/site/login");
+	    http.formLogin().loginPage("/site/login").usernameParameter("ssoId").passwordParameter("password").failureUrl("/login?error").defaultSuccessUrl("/site/login").loginProcessingUrl("/site/login");
 	    //Configure remember me
 	    http.rememberMe().rememberMeParameter("remember-me").tokenRepository(tokenRepository).tokenValiditySeconds(86400);
 	    
 	    // Configure logout redirect
 	    http.logout().logoutSuccessUrl("/").invalidateHttpSession(true).deleteCookies("remember-me");
 	    // Ensure admin pages have correct role
-	    http.authorizeRequests().antMatchers("/site/user/**").access("hasRole('ADMIN') and hasRole('USER')");
+	    http.authorizeRequests().antMatchers("/site/user/**").hasAnyRole("ADMIN,USER");
 	    http.authorizeRequests().antMatchers("/site/admin/**").hasRole("ADMIN");
 	    http.authorizeRequests().antMatchers("/", "/bot**", "/cec**"/* ,"/resources/**" */).permitAll();
 	    
