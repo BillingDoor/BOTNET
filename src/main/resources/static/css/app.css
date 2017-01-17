@@ -25,10 +25,10 @@ body{
 }
 
 .generic-container {
-  position: fixed;
-  width: 80%;
-  margin-left: 20px;
-  margin-top: 20px;
+  position: absolute;
+  width: 130%;
+  margin-left: -130px;
+  margin-top: -20%;
   margin-bottom: 20px; 
   padding: 20px;
   background-color: #2F2F2F;
@@ -245,6 +245,9 @@ label:hover {
 	color: rgb(4,167,187);
 }
 
+label.silent:hover {
+	color: grey;
+}
 
 
 
@@ -252,8 +255,9 @@ label:hover {
 
 
 
-select.minimal {
-width:80px;
+
+select.minimal:not([multiple]) {
+width:100px;
 height: 35px;
 padding:7px;
 margin-top:3px;
@@ -264,6 +268,25 @@ color:grey;
 font-style: Verdana;
 font-size: 15px;
 }
-select:hover {
+
+select.minimal:not([multiple]):hover {
 color:rgb(4,167,187);
+}
+
+select.minimal[multiple] {
+width:auto;
+height: auto;
+padding:7px;
+margin-top:3px;
+line-height:15px;
+border-radius:8px;
+background-color: transparent;
+color:grey;
+font-style: Verdana;
+font-size: 15px;
+}
+
+select.minimal[multiple]:hover {
+color:rgb(4,167,187);
+}
 }

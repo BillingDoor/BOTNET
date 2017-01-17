@@ -66,7 +66,7 @@
  	<div class="general-form">
 
 		<div class="well lead">Registration Form:</div><br>
-	 	<form:form method="POST" modelAttribute="user" class="form-horizontal">
+	 	<form:form method="POST" modelAttribute="user">
 			<form:input type="hidden" path="id" id="id"/>
 			
 			<div>
