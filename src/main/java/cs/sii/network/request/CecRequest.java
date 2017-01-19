@@ -143,6 +143,7 @@ public class CecRequest {
 	
 	public String resolveDns(String dnsUrl) {
 		String url = "http://" + dnsUrl;
+		System.out.println("Risolvo dns: "+url);
 		String rediret = null;
 
 		HttpURLConnection connection = null;
