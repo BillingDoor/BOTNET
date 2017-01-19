@@ -29,6 +29,7 @@ import org.springframework.web.servlet.ModelAndView;
 import cs.sii.config.onLoad.Config;
 import cs.sii.control.command.Commando;
 import cs.sii.domain.LinkBot;
+import cs.sii.domain.Target;
 import cs.sii.model.bot.Bot;
 import cs.sii.model.role.Role;
 import cs.sii.model.user.User;
@@ -399,6 +400,24 @@ public class SiteController {
 	public String attack() {	
 		return "attack";
 	}
+	
+	
+	
+	@RequestMapping(value = { "/user/attack" }, method = RequestMethod.GET)
+	public String choseAttack(@ModelAttribute("tgt")Target target) {	
+		
+		
+		
+		
+		return "redirect: /site/user/attack";
+	}
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

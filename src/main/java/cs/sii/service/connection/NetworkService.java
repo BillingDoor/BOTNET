@@ -273,7 +273,7 @@ public class NetworkService {
 	 */
 	public boolean firstConnectToMockServerDns() {
 		if(engineBot.isCommandandconquerStatus()){
-			String url = engineBot.getDnsip() + ":" + engineBot.getDnsport();
+			String url = engineBot.getDnsurl();
 			Boolean result = false;
 			result = cecReq.sendInfoToDnsServer(url, this.ip, pki.getPubRSAKey());
 			Pairs<IP, PublicKey> cec = new Pairs<>(getMyIp(),pki.getPubRSAKey());
@@ -281,7 +281,7 @@ public class NetworkService {
 			System.out.println("Ip tornato " + result);
 			return Boolean.TRUE;
 		}else{
-			String url = engineBot.getDnsip() + ":" + engineBot.getDnsport() + engineBot.getUrirequest();
+			String url = engineBot.getDnsurl() + engineBot.getUrirequest();
 			Pairs<String, String> result = new Pairs<>();
 			Pairs<IP, PublicKey> cec = new Pairs<>();
 			try {
@@ -371,7 +371,7 @@ public class NetworkService {
 	 */
 	public Boolean updateDnsInformation() {
 
-		String url = engineBot.getDnsip() + ":" + engineBot.getDnsport();
+		String url = engineBot.getDnsurl();
 		Boolean result = false;
 		result = cecReq.sendInfoToDnsServer(url, this.ip, pki.getPubRSAKey());
 		System.out.println("Ip tornato " + result);
@@ -386,7 +386,7 @@ public class NetworkService {
 	 */
 	public Boolean updateDnsInformation(IP ip, PublicKey pk) {
 
-		String url = engineBot.getDnsip() + ":" + engineBot.getDnsport();
+		String url = engineBot.getDnsurl();
 		Boolean result = false;
 		result = cecReq.sendInfoToDnsServer(url,ip, pk);
 		System.out.println("Ip tornato " + result);
@@ -399,7 +399,7 @@ public class NetworkService {
 	 */
 	public Boolean updateDnsInformation(IP ip, String pk) {
 
-		String url = engineBot.getDnsip() + ":" + engineBot.getDnsport();
+		String url = engineBot.getDnsurl();
 		Boolean result = false;
 		result = cecReq.sendInfoToDnsServer(url,ip, pk);
 		System.out.println("Ip tornato " + result);

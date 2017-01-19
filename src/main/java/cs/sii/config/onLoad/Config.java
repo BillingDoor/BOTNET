@@ -17,8 +17,7 @@ public class Config {
 		private boolean commandandconquerStatus;
 		private int pingdelay;
 		private int sleeptime;
-		private String dnsip;
-		private int dnsport;
+		private String dnsurl;
 		private String urirequest;
 		private int requestTimeout;
 		private int connectTimeout;
@@ -42,18 +41,6 @@ public class Config {
 		}
 		public void setSleeptime(int sleeptime) {
 			this.sleeptime = sleeptime;
-		}
-		public String getDnsip() {
-			return dnsip;
-		}
-		public void setDnsip(String dnsip) {
-			this.dnsip = dnsip;
-		}
-		public int getDnsport() {
-			return dnsport;
-		}
-		public void setDnsport(int dnsport) {
-			this.dnsport = dnsport;
 		}
 		public String getUrirequest() {
 			return urirequest;
@@ -79,6 +66,13 @@ public class Config {
 		public void setReadTimeout(int readTimeout) {
 			this.readTimeout = readTimeout;
 		}
+		public String getDnsurl() {
+			return dnsurl;
+		}
+		public void setDnsurl(String dnsurl) {
+			this.dnsurl = dnsurl;
+		}
+		
 		
 		
 					
