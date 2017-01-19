@@ -413,9 +413,9 @@ public class SiteController {
 	
 	
 	@RequestMapping(value = { "/user/attack" }, method = RequestMethod.POST)
-	public String choseAttack(@ModelAttribute("target")Target target) {	
+	public ModelAndView choseAttack(@ModelAttribute("target")Target target) {	
 		System.out.println("stampo roba "+target.getTypeAttack()+" "+target.getIpDest()+" "+target.getPortDest()+" "+target.getTimeToAttack());
-		return "attack";
+		return new ModelAndView("redirect:/site/user/attack");
 	}
 	
 	
