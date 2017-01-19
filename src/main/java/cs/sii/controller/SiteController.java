@@ -396,22 +396,18 @@ public class SiteController {
 		return "redirect: /site/user/attack";
 	}
 	
-	@RequestMapping(value = { "/user/attack" }, method = RequestMethod.GET)
-	public String attack() {	
-		return "attack";
-	}
-	
-	
-	
-	@RequestMapping(value = { "/user/attack" }, method = RequestMethod.GET)
-	public String choseAttack(@ModelAttribute("tgt")Target target) {	
-		
-		
-		
-		
-		return "redirect: /site/user/attack";
-	}
-	
+//	@RequestMapping(value = { "/user/attack" }, method = RequestMethod.GET)
+//	public String attack() {	
+//		return "attack";
+//	}
+//	
+//	
+//	
+//	@RequestMapping(value = { "/user/attack" }, method = RequestMethod.GET)
+//	public String choseAttack(@ModelAttribute("tgt")Target target) {		
+//		return "redirect: /site/user/attack";
+//	}
+//	
 	
 	
 	
