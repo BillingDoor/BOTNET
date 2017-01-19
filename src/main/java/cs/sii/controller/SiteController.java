@@ -396,18 +396,28 @@ public class SiteController {
 		return "redirect: /site/user/attack";
 	}
 	
-//	@RequestMapping(value = { "/user/attack" }, method = RequestMethod.GET)
-//	public String attack() {	
-//		return "attack";
-//	}
-//	
-//	
-//	
-//	@RequestMapping(value = { "/user/attack" }, method = RequestMethod.POST)
-//	public String choseAttack(@ModelAttribute("tgt")Target target) {		
-//		return "redirect: /site/user/attack";
-//	}
-//	
+	
+	@RequestMapping(value = { "/user/attack" }, method = RequestMethod.GET)
+	public String attack(ModelMap model) {
+		
+		Target target=new Target();
+		List<Target> attack=new ArrayList<Target>();
+		attack.add(new Target("synflood"));
+		
+		model.addAttribute("listAttack", attack);
+		model.addAttribute("target", target);
+		
+		return "attack";
+	}
+	
+	
+	
+	@RequestMapping(value = { "/user/attack" }, method = RequestMethod.POST)
+	public String choseAttack(@ModelAttribute("target")Target target) {	
+		System.out.println("stampo roba "+target.getTypeAttack()+" "+target.getIpDest()+" "+target.getPortDest()+" "+target.getTimeToAttack());
+		return "attack";
+	}
+	
 	
 	
 	

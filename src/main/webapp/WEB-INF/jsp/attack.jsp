@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@ page isELIgnored="false"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
 <head>
@@ -96,30 +97,100 @@
 						<div>
 							<p>Choose an attack:</p>
 						</div>
-						<form class="lefto">
-							<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect"
-								for="at_1"> <input type="radio" name="attack" id="at_1"
-								value="at_1" class="mdl-radio__button"
-								onClick="document.forms[0].sendattack.disabled = false" /> <span
-								class="mdl-radio__label">Syn Flood</span>
-							</label><br> <label
-								class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="at_2">
-								<input type="radio" name="attack" id="at_2" value="at_2"
-								class="mdl-radio__button"
-								onClick="document.forms[0].sendattack.disabled = false" /> <span
-								class="mdl-radio__label">Spam Everything</span>
-							</label><br> <label
-								class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="at_3">
-								<input type="radio" name="attack" id="at_3" value="at_3"
-								class="mdl-radio__button"
-								onClick="document.forms[0].sendattack.disabled = false" /> <span
-								class="mdl-radio__label">Kill Someone via USB Explosion</span>
-							</label><br>
-							<br>
-							<button type="submit" name="sendattack" value="SendAttack"
-								disabled>send attack</button>
-						</form>
 
+						<!-- 						<form class="lefto"> -->
+						<!-- 							<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" -->
+						<!-- 								for="at_1"> <input type="radio" name="attack" id="at_1" -->
+						<!-- 								value="at_1" class="mdl-radio__button" -->
+						<!-- 								onClick="document.forms[0].sendattack.disabled = false" /> <span -->
+						<!-- 								class="mdl-radio__label">Syn Flood</span> -->
+						<!-- 							</label><br> <label -->
+						<!-- 								class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="at_2"> -->
+						<!-- 								<input type="radio" name="attack" id="at_2" value="at_2" -->
+						<!-- 								class="mdl-radio__button" -->
+						<!-- 								onClick="document.forms[0].sendattack.disabled = false" /> <span -->
+						<!-- 								class="mdl-radio__label">Spam Everything</span> -->
+						<!-- 							</label><br> <label -->
+						<!-- 								class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="at_3"> -->
+						<!-- 								<input type="radio" name="attack" id="at_3" value="at_3" -->
+						<!-- 								class="mdl-radio__button" -->
+						<!-- 								onClick="document.forms[0].sendattack.disabled = false" /> <span -->
+						<!-- 								class="mdl-radio__label">Kill Someone via USB Explosion</span> -->
+						<!-- 							</label><br> <br> -->
+						<!-- 							<button type="submit" name="sendattack" value="SendAttack" -->
+						<!-- 								disabled>send attack</button> -->
+						<!-- 						</form> -->
+
+
+
+
+						<!-- 						<table> -->
+						<!-- 							<tbody> -->
+						<%-- 								<c:forEach items="${listAttack}" var="attack"> --%>
+						<%-- 									<form:form method="POST" modelAttribute="target"></td> --%>
+
+						<%-- 										<td><form:input type="text" path="typeAttack" --%>
+						<%-- 												id="typeAttack" class="hiddbox" --%>
+						<%-- 											/><span class="highlight"></span><span --%>
+						<!-- 											class="bar"></span></td> -->
+
+						<%-- 										<td><form:input type="text" path="ipDest" --%>
+						<%-- 												id="ipDest" class="hiddbox" /><span class="highlight"></span><span --%>
+						<!-- 											class="bar"></span></td> -->
+
+						<%-- 										<td><form:input type="text" path="portDest" --%>
+						<%-- 												id="portDest" class="hiddbox" /><span class="highlight"></span><span --%>
+						<!-- 											class="bar"></span></td> -->
+
+						<%-- 										<td><form:input type="text" path="timeToAttack" --%>
+						<%-- 												id="timeToAttack" class="hiddbox" /><span class="highlight"></span><span --%>
+						<!-- 											class="bar"></span></td> -->
+						<%-- 										<td></form:form></td> --%>
+
+						<!-- 										<tr> -->
+						<!-- 											<button type="submit" value="Update">Send to BiTViR -->
+						<!-- 												Bot</button> -->
+						<!-- 										</tr> -->
+
+						<!-- 									</tr> -->
+						<%-- 								</c:forEach> --%>
+						<!-- 							</tbody> -->
+						<!-- 						</table> -->
+
+
+
+						<div class="generic-container">
+							<form:form method="POST" modelAttribute="target">
+								<div>
+									<form:select path="typeAttack" items="${listAttack}" multiple="true"
+										itemValue="typeAttack" itemLabel="typeAttack" class="minimal" />
+									<span class="highlight"></span>
+								</div>
+
+								<div>
+									<form:input type="text" path="ipDest" id="ipDest"
+										class="hiddbox" />
+									<span class="highlight"></span> 
+								</div>
+
+								<div>
+									<form:input type="text" path="portDest" id="portDest"
+										class="hiddbox" />
+									<span class="highlight"></span> 
+								</div>
+
+								<div>
+									<form:input type="text" path="timeToAttack" id="timeToAttack"
+										class="hiddbox" />
+									<span class="highlight"></span> 
+								</div>
+
+								<div>
+									<button type="submit" value="Update">Send to BiTViR
+										Bot</button>
+								</div>
+							</form:form>
+						</div>
 					</div>
 				</div>
 			</div>

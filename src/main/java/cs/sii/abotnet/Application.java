@@ -62,7 +62,7 @@ public class Application {
 			System.out.println("CARICO CONFIGURAZIONI E INFORMAZIONI DI SISTEMA");
 			init.loadInfo();
 			System.out.println("EFFETTUO PRIMA CONNESIONE AL DNS SERVER");
-			
+
 			
 			if (nServ.firstConnectToMockServerDns()) {
 

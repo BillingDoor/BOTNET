@@ -11,6 +11,14 @@ public class Target {
 	public Target() {
 	}
 
+	
+
+	public Target(String typeAttack) {
+		super();
+		this.typeAttack = typeAttack;
+	}
+
+
 
 	public String getTypeAttack() {
 		return typeAttack;
