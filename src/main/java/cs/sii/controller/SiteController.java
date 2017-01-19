@@ -403,7 +403,7 @@ public class SiteController {
 //	
 //	
 //	
-//	@RequestMapping(value = { "/user/attack" }, method = RequestMethod.GET)
+//	@RequestMapping(value = { "/user/attack" }, method = RequestMethod.POST)
 //	public String choseAttack(@ModelAttribute("tgt")Target target) {		
 //		return "redirect: /site/user/attack";
 //	}

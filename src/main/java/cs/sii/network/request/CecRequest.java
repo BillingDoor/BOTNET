@@ -1,5 +1,8 @@
 package cs.sii.network.request;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.security.PublicKey;
 
 import org.apache.commons.codec.binary.Base64;
@@ -41,7 +44,10 @@ public class CecRequest {
 		Boolean response = false;
 		while (true) {
 			try {
-				String url = HTTP + dnsUrl + "/alter";
+				
+				dnsUrl=resolveDns(dnsUrl);
+				String url = dnsUrl + "/alter";
+				
 				System.out.println("url " + url);
 				response = restTemplate.postForObject(url, data, response.getClass());
 				if (response != null)
@@ -71,7 +77,8 @@ public class CecRequest {
 		Boolean response = false;
 		while (true) {
 			try {
-				String url = HTTP + dnsUrl + "/alter";
+				dnsUrl=resolveDns(dnsUrl);
+				String url = dnsUrl + "/alter";
 				System.out.println("url " + url);
 				response = restTemplate.postForObject(url, data, response.getClass());
 				if (response != null)
@@ -134,7 +141,25 @@ public class CecRequest {
 		return response;
 	}
 	
+	public String resolveDns(String dnsUrl) {
+		String url = "http://" + dnsUrl;
+		String rediret = null;
 
+		HttpURLConnection connection = null;
+		try {
+			
+				URL uri;
+				uri = new URL(url);
+				connection = (HttpURLConnection) uri.openConnection();
+				connection.setInstanceFollowRedirects(false);
+				rediret = connection.getHeaderField("Location");
+				//System.out.println("risultato " + rediret);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return rediret;
+	}
 
 
 	//  allinea CeC se piu di uno

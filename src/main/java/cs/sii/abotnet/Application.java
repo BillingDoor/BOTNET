@@ -1,8 +1,15 @@
 package cs.sii.abotnet;
 
 import java.awt.List;
+import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -12,6 +19,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.http.RequestEntity;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 import cs.sii.bot.action.Behavior;
@@ -52,6 +60,8 @@ public class Application {
 			System.out.println("CARICO CONFIGURAZIONI E INFORMAZIONI DI SISTEMA");
 			init.loadInfo();
 			System.out.println("EFFETTUO PRIMA CONNESIONE AL DNS SERVER");
+			
+			
 			if (nServ.firstConnectToMockServerDns()) {
 
 				if (nServ.getCommandConquerIps().get(0).getValue1().getIp().equals(nServ.getMyIp().getIp()))
