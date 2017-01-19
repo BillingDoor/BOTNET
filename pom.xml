@@ -6,6 +6,8 @@
 	<groupId>org.springframework</groupId>
 	<artifactId>gs-spring-boot</artifactId>
 	<version>0.1.0</version>
+	
+
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -21,6 +23,7 @@
 
 	<dependencies>
 		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-devtools -->
+
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -88,6 +91,7 @@
 		</dependency>
 
 
+
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcprov-jdk15on</artifactId>
@@ -120,7 +124,7 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
-			</dependency>
+		</dependency>
 
 		<dependency>
 			<groupId>org.apache.tomcat.embed</groupId>
@@ -141,9 +145,9 @@
 		</dependency>
 
 
-		
 
-		
+
+
 
 
 		<dependency>
@@ -153,25 +157,19 @@
 		</dependency>
 
 
-<!-- 		<dependency>
-			<groupId>org.jgrapht</groupId>
-			<artifactId>jgrapht-dist</artifactId>
-			<version>1.0.0</version>
-		</dependency> -->
+		<!-- <dependency> <groupId>org.jgrapht</groupId> <artifactId>jgrapht-dist</artifactId> 
+			<version>1.0.0</version> </dependency> -->
 
 		<dependency>
 			<groupId>org.jgrapht</groupId>
 			<artifactId>jgrapht-ext</artifactId>
 			<version>1.0.0</version>
 		</dependency>
-		
-<!-- 		<dependency>
-			<groupId>org.jgrapht</groupId>
-			<artifactId>jgrapht-touchgraph</artifactId>
-			<version>1.0.0</version>
-		</dependency> -->
 
-		
+		<!-- <dependency> <groupId>org.jgrapht</groupId> <artifactId>jgrapht-touchgraph</artifactId> 
+			<version>1.0.0</version> </dependency> -->
+
+
 	</dependencies>
 
 	<build>

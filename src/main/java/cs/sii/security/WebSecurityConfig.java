@@ -101,10 +101,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		return tokenBasedservice;
 	}
 
-	@Bean
-	public AuthenticationTrustResolver getAuthenticationTrustResolver() {
-		return new AuthenticationTrustResolverImpl();
-	}
+
 	
 
 	@Autowired

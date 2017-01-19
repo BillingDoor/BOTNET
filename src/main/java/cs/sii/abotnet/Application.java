@@ -21,6 +21,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.RequestEntity;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 
 import cs.sii.bot.action.Behavior;
 import cs.sii.config.onLoad.Config;
@@ -32,6 +33,7 @@ import cs.sii.service.connection.NetworkService;
 @ComponentScan("cs.sii")
 @EnableJpaRepositories("cs.sii")
 @EnableAsync
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class Application {
 
 	@Autowired
