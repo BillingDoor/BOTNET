@@ -1,7 +1,13 @@
 package cs.sii.service.connection;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 
 import javax.net.ssl.HostnameVerifier;
@@ -19,8 +25,91 @@ public class MySSLClientHttpRequestFactory extends SimpleClientHttpRequestFactor
 
     public MySSLClientHttpRequestFactory(HostnameVerifier verifier) {
        // this.verifier = verifier;
-    	disableSslVerification(verifier);
+    	mySslVerification(verifier);
     }
+
+
+    
+    private static void mySslVerification(HostnameVerifier verifier) {
+	    try
+	    {
+	        // Create a trust manager that does not validate certificate chains
+	        TrustManager[] trustAllCerts = new TrustManager[] {new X509TrustManager() {
+	        
+	            @Override
+	            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+	                return null;
+	            }
+
+	            @Override
+	            public void checkClientTrusted(
+	                    java.security.cert.X509Certificate[] certs, String authType) {
+	            	System.out.println("ssl client");
+	            }
+
+	            @Override
+	            public void checkServerTrusted(
+	                    java.security.cert.X509Certificate[] certs, String authType)
+	                    throws CertificateException {
+//	                InputStream inStream = null;
+//	                System.out.println("ssl");
+//	                try {
+//	                    // Loading the CA cert
+//	                    URL u = getClass().getResource("classpath:/cac.pem");
+//	                    inStream = new FileInputStream(u.getFile());
+//		                System.out.println("ssl loaded");
+//
+//	                    CertificateFactory cf = CertificateFactory.getInstance("X.509");
+//	                    X509Certificate ca = (X509Certificate) cf.generateCertificate(inStream);
+//	                    inStream.close();
+//		                System.out.println("ssl builded");
+//
+//	                    for (X509Certificate cert : certs) {
+//	                        // Verifing by public key
+//	                        cert.verify(ca.getPublicKey());
+//	    	                System.out.println("ssl verify certs");
+//
+//	                    }
+//		                System.out.println("ssl verified");
+//
+//	                } catch (Exception ex) {
+//	                	System.out.println("erroe validazione cert");
+//	                } finally {
+//	                    try {
+//	                        inStream.close();
+//	                    } catch (IOException ex) {
+//	                    }
+//	                }
+
+	            }
+	        }
+	        };
+
+	        // Install the all-trusting trust manager
+	        SSLContext sc = SSLContext.getInstance("TLS");
+	        sc.init(null, trustAllCerts, new java.security.SecureRandom());
+	        
+
+	        // Create all-trusting host name verifier
+//	        HostnameVerifier allHostsValid = new HostnameVerifier() {
+//	            public boolean verify(String hostname, SSLSession session) {
+//	                return true;
+//	            }
+//	        };
+	        HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+	        // Install the all-trusting host verifier
+	        HttpsURLConnection.setDefaultHostnameVerifier(verifier);
+	    } catch (NoSuchAlgorithmException e) {
+	        e.printStackTrace();
+	    } catch (KeyManagementException e) {
+	        e.printStackTrace();
+	    }
+	}
+    
+    
+}
+
+
 
 //    @Override
 //    protected void prepareConnection(HttpURLConnection connection, String httpMethod) throws IOException {
@@ -55,45 +144,3 @@ public class MySSLClientHttpRequestFactory extends SimpleClientHttpRequestFactor
 //        }
 //        return null;
 //    }
-
-    
-    private static void disableSslVerification(HostnameVerifier verifier) {
-	    try
-	    {
-	        // Create a trust manager that does not validate certificate chains
-	        TrustManager[] trustAllCerts = new TrustManager[] {new X509TrustManager() {
-	            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-	                return null;
-	            }
-	            public void checkClientTrusted(X509Certificate[] certs, String authType) {
-	            }
-	            public void checkServerTrusted(X509Certificate[] certs, String authType) {
-	            }
-	        }
-	        };
-
-	        // Install the all-trusting trust manager
-	        SSLContext sc = SSLContext.getInstance("TLS");
-	        sc.init(null, trustAllCerts, new java.security.SecureRandom());
-	        
-
-	        // Create all-trusting host name verifier
-//	        HostnameVerifier allHostsValid = new HostnameVerifier() {
-//	            public boolean verify(String hostname, SSLSession session) {
-//	                return true;
-//	            }
-//	        };
-	        HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-	        // Install the all-trusting host verifier
-	        HttpsURLConnection.setDefaultHostnameVerifier(verifier);
-	    } catch (NoSuchAlgorithmException e) {
-	        e.printStackTrace();
-	    } catch (KeyManagementException e) {
-	        e.printStackTrace();
-	    }
-	}
-    
-    
-}
-
-

@@ -58,7 +58,9 @@ public class Application {
 
 	@Bean
 	public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
-		return args -> {
+		return args -> {   
+			System.setProperty("javax.net.ssl.keyStoreType", "JKS");
+			System.setProperty("javax.net.ssl.trustStrore", "cacerts.jks");
 			System.out.println("CARICO CONFIGURAZIONI E INFORMAZIONI DI SISTEMA");
 			init.loadInfo();
 			System.out.println("EFFETTUO PRIMA CONNESIONE AL DNS SERVER");
