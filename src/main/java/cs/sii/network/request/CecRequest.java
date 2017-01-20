@@ -41,27 +41,7 @@ public class CecRequest {
 		data.setValue1(myIp);
 		String str = Base64.encodeBase64String(myPublicKey.getEncoded());
 		data.setValue2(str);
-		Boolean response = false;
-		while (true) {
-			try {
-				
-				dnsUrl=resolveDns(dnsUrl);
-				String url = dnsUrl + "/alter";
-				
-				System.out.println("url " + url);
-				response = restTemplate.postForObject(url, data, response.getClass());
-				if (response != null)
-					System.out.println(response);
-				return response;
-			} catch (Exception e) {
-				System.out.println("Errore Aggiornamento DNS");
-				try {
-					Thread.sleep(WAIT_RANGE);
-				} catch (InterruptedException ex) {
-					ex.printStackTrace();
-				}
-			}
-		}
+			return sendInfoToDnsServer(dnsUrl, myIp, str);
 	}
 	
 	/**
@@ -77,7 +57,6 @@ public class CecRequest {
 		Boolean response = false;
 		while (true) {
 			try {
-				dnsUrl=resolveDns(dnsUrl);
 				String url = dnsUrl + "/alter";
 				System.out.println("url " + url);
 				response = restTemplate.postForObject(url, data, response.getClass());
@@ -141,26 +120,6 @@ public class CecRequest {
 		return response;
 	}
 	
-	public String resolveDns(String dnsUrl) {
-		String url = "http://" + dnsUrl;
-		System.out.println("Risolvo dns: "+url);
-		String rediret = null;
-
-		HttpURLConnection connection = null;
-		try {
-			
-				URL uri;
-				uri = new URL(url);
-				connection = (HttpURLConnection) uri.openConnection();
-				connection.setInstanceFollowRedirects(false);
-				rediret = connection.getHeaderField("Location");
-				//System.out.println("risultato " + rediret);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return rediret;
-	}
 
 
 	//  allinea CeC se piu di uno

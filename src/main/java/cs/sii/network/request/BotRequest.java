@@ -236,11 +236,12 @@ public class BotRequest {
 		Pairs<String, String> cec = new Pairs<String, String>();
 		while (true) {
 			try {
+			
+				
 				System.out.println("url request " + dnsUrl);
-				String url = resolveDns(dnsUrl);
 				// Type type=new TypeToken<Pairs<IP,String>>(){}.getType();
 				// cec = restTemplate.getForObject(url,Pairs.class);
-				cec = restTemplate.postForObject(url, null, cec.getClass());
+				cec = restTemplate.postForObject(dnsUrl, null, cec.getClass());
 				return cec;
 			} catch (Exception e) {
 				System.err.println("Errore ricezione Ip da Mock Dns Server" + e);
