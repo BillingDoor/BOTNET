@@ -210,7 +210,7 @@ public class SiteController {
 		System.out.println("bot " + bot.getIp() + " " + bot.getIdBot() + " " + bot.getBotUser() == null);
 		bServ.updateBot(bot);
 		String cmd="setbot<BU>"+usr.getSsoId()+"<BU>"+bot.getIdBot();
-		cmm.floodingByCecSetUserToBot(cmd, usr.getSsoId());
+		cmm.floodingByCecToBot(cmd, usr.getSsoId());
 		return new ModelAndView("redirect:/site/admin/addbot");
 	}
 
@@ -247,7 +247,7 @@ public class SiteController {
 				bServ.updateAll(botList2);
 			}
 		String cmd="delbot<BU>"+usr.getSsoId();
-		cmm.floodingByCecDelUserToBot(cmd, usr.getSsoId());
+		cmm.floodingByCecToBot(cmd, usr.getSsoId());
 		return new ModelAndView("redirect:/site/admin/removeAllbot");
 	}
 
