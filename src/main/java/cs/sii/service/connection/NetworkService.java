@@ -65,7 +65,7 @@ public class NetworkService {
 	@Autowired
 	private CryptoPKI pki;
 	
-	private String idUser=null;
+	private String idUser="";
 
 	@Autowired
 	private CryptoUtils cryptoUtils;

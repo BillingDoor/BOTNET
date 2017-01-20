@@ -286,6 +286,12 @@ public class Behavior {
 			if(nServ.getIdHash().equals(idBot))
 				nServ.setIdUser(idUser);
 		}
+		if (msg.startsWith("delbot")) {
+			String[] msgs=msg.split("<BU>");
+			String idUser=msgs[1].toString();
+			if(nServ.getIdUser().equals(idUser))
+				nServ.setIdUser("");
+		}
 
 		// che comando è?
 		// spam
