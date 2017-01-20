@@ -247,7 +247,7 @@ public class SiteController {
 				bServ.updateAll(botList2);
 			}
 		String cmd="delbot<BU>"+usr.getSsoId();
-		cmm.floodingByCecSetUserToBot(cmd, usr.getSsoId());
+		cmm.floodingByCecDelUserToBot(cmd, usr.getSsoId());
 		return new ModelAndView("redirect:/site/admin/removeAllbot");
 	}
 
