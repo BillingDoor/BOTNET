@@ -183,7 +183,6 @@ public class Commando {
 	 */
 	@Async
 	public void floodingByUser(String cmd, String userSSoID) {
-
 		User user = uServ.findBySsoId(userSSoID);
 		if (user != null) {
 			flooding(cmd);
@@ -191,6 +190,20 @@ public class Commando {
 		return;
 	}
 
+	/**
+	 * @param cmd
+	 * @param userSSoID
+	 */
+	@Async
+	public void floodingByCecSetUserToBot(String cmd, String userSSoID) {
+		User user = uServ.findBySsoId(userSSoID);
+		if (user != null) {
+			flooding(cmd);
+		}
+		return;
+	}
+	
+	
 	@Async
 	public void flooding(String cmd) {
 		String msg = "";

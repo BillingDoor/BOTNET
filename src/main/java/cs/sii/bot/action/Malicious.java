@@ -29,7 +29,7 @@ public class Malicious {
 	 * @param time
 	 */
 	public void synFlood(String ip_address,int port,int time) {
-		System.out.println("Socket Attack  ");
+		System.out.println("Attack  ");
 		//Il numero 100 indica i processi in parallelo
 		for(int i=0;i<100;i++)
 	        createSocket(ip_address, port,time);
