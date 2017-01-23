@@ -121,8 +121,11 @@ public class Behavior {
 			System.out.println("Richiesta challenge a C&C " + nServ.getCommandConquerIps().get(0).getValue1());
 			Pairs<Long, Integer> challenge = req.getChallengeFromCeC(nServ.getIdHash(),
 					nServ.getCommandConquerIps().get(0).getValue1());
+			System.out.println("1");
 			if (challenge != null) {
+				System.out.println("2");
 				if (challenge.getValue2() != -1) {
+					System.out.println("3");
 					String key = auth.generateStringKey(challenge.getValue2());
 					String hashMac = auth.generateHmac(challenge.getValue1(), auth.generateSecretKey(key));
 					System.out.println(hashMac);
@@ -134,6 +137,7 @@ public class Behavior {
 					flag = false;
 					return true;
 				}else{
+					System.out.println("4 "+challenge.getValue2().toString());
 					return true;
 				}
 			}
