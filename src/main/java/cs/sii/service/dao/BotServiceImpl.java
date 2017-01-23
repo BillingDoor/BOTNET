@@ -25,7 +25,7 @@ public class BotServiceImpl {
 		System.out.println(
 				" bot " + bot.getIdBot() + " " + bot.getIp() + " " + bot.getElegible() + " " + bot.getPubKey());
 		if (bRep.findByIdBot(bot.getIdBot()) == null) {
-			bRep.save(bot);
+			updateBot(bot);
 			return true;
 		} else
 			return false;
@@ -36,7 +36,7 @@ public class BotServiceImpl {
 			System.out.println(
 					" bot " + bot.getIdBot() + " " + bot.getIp() + " " + bot.getElegible() + " " + bot.getPubKey());
 			if (bRep.findByIdBot(bot.getIdBot()) == null) {
-				bRep.save(bot);
+				updateBot(bot);
 			} else
 				System.out.println("bot gia presente" + bot.getIp());
 			;
