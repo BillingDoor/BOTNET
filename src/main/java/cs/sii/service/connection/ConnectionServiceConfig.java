@@ -35,6 +35,7 @@ public class ConnectionServiceConfig {
 			throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
 		NullHostnameVerifier verifier=new NullHostnameVerifier();
 		MySSLClientHttpRequestFactory crf = new MySSLClientHttpRequestFactory(verifier);
+		
 		crf.setConnectTimeout(configEngine.getConnectTimeout());
 //		crf.setConnectionRequestTimeout(configEngine.getRequestTimeout());
 		crf.setReadTimeout(configEngine.getReadTimeout());
