@@ -66,8 +66,12 @@ public class BotServiceImpl {
 
 	public void updateBot(Bot bot) {
 		Bot old = bRep.findByIdBot(bot.getIdBot());
-		bRep.delete(old);
-		bot.setId(old.getId());
+		if (old == null)
+			old = bRep.findByip(bot.getIp());
+		if (old != null) {
+			bRep.delete(old);
+			bot.setId(old.getId());
+		}
 		bRep.save(bot);
 	}
 
