@@ -33,21 +33,21 @@ public class ConnectionServiceConfig {
 	@Bean
 	public MySSLClientHttpRequestFactory HttpRequestFactory()
 			throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
-		NullHostnameVerifier verifier=new NullHostnameVerifier();
+		NullHostnameVerifier verifier = new NullHostnameVerifier();
 		MySSLClientHttpRequestFactory crf = new MySSLClientHttpRequestFactory(verifier);
-		
+
 		crf.setConnectTimeout(configEngine.getConnectTimeout());
-//		crf.setConnectionRequestTimeout(configEngine.getRequestTimeout());
 		crf.setReadTimeout(configEngine.getReadTimeout());
 
 		return crf;
-	    
-	
+
 	}
+
 	@Bean
 	public AuthenticationTrustResolver getAuthenticationTrustResolver() {
 		return new AuthenticationTrustResolverImpl();
 	}
+
 	@Bean
 	public RestTemplate RestTemplate() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
 
@@ -62,20 +62,19 @@ public class ConnectionServiceConfig {
 		return restTemplate;
 	}
 
-	
 	public class XUserAgentInterceptor implements ClientHttpRequestInterceptor {
 
-	    @Override
-	    public ClientHttpResponse intercept(
-	            HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
-	            throws IOException {
+		@Override
+		public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
+				throws IOException {
 
-	        HttpHeaders headers = request.getHeaders();
-	    	if (!configEngine.isCommandandconquerStatus()) {
-	        headers.add("X-User-Agent", "Bot");}
-	    	else  headers.add("X-User-Agent", "CeC");
-	        
-	        return execution.execute(request, body);
-	    }
+			HttpHeaders headers = request.getHeaders();
+			if (!configEngine.isCommandandconquerStatus()) {
+				headers.add("X-User-Agent", "Bot");
+			} else
+				headers.add("X-User-Agent", "CeC");
+
+			return execution.execute(request, body);
+		}
 	}
 }

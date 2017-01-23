@@ -8,11 +8,6 @@ import org.springframework.data.repository.query.Param;
 //@RepositoryRestResource(collectionResourceRel = "botter", path = "botter")
 public interface BotRepository extends CrudRepository<Bot, Integer> {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.springframework.data.repository.CrudRepository#findAll()
-	 */
 	List<Bot> findAll();
 
 	/**
@@ -55,20 +50,6 @@ public interface BotRepository extends CrudRepository<Bot, Integer> {
 	 * @param id
 	 * @return
 	 */
-	Bot findById(@Param("id")Integer id);
-
-	//
-	// List<Bot> findBychainLevelGreaterThan(@Param("cLevel") Integer cLevel);
-	//
-	// List<Bot>
-	// findByChainLevelGreaterThanOrderByChainLevelDesc(@Param("cLevel") Integer
-	// cLevel);
-	//
-	// List<Bot>
-	// findTop10ByChainLevelGreaterThanOrderByChainLevelDesc(@Param("cLevel")
-	// Integer cLevel);
-	//
-	// List<Bot> findByChainLevelBetweenOrderByChainLevelAsc(@Param("inf")
-	// Integer inf,@Param("sup") Integer sup);
+	Bot findById(@Param("id") Integer id);
 
 }

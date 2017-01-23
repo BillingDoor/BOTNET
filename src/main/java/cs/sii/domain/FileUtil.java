@@ -48,7 +48,7 @@ public class FileUtil {
 		br = new BufferedReader(new FileReader(filename));
 		String rd = br.readLine();
 		br.close();
- 		return rd;
+		return rd;
 
 	}
 
@@ -79,13 +79,4 @@ public class FileUtil {
 		br.close();
 		return data;
 	}
-
-	// public void encodeObjToFile(String data) throws FileNotFoundException,
-	// UnsupportedEncodingException{
-	// PrintWriter writer = new PrintWriter(filename, codec);
-	// writer.println(cryptoUtils.encryptAES(data));
-	// writer.close();
-	//
-	// }
-
 }

@@ -10,20 +10,20 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="Role")
-public class Role implements Serializable{
+@Table(name = "Role")
+public class Role implements Serializable {
 
-	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Integer id;	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-	@Column(name="Type", length=15, unique=true, nullable=false)
-	private String type ;
-	
-		
-	public Role(){
-		
+	@Column(name = "Type", length = 15, unique = true, nullable = false)
+	private String type;
+
+	public Role() {
+
 	}
-	
+
 	public Role(String type) {
 		super();
 		this.type = type;
@@ -44,7 +44,7 @@ public class Role implements Serializable{
 	public void setType(String type) {
 		this.type = type;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -80,8 +80,5 @@ public class Role implements Serializable{
 	public String toString() {
 		return "UserProfile [id=" + id + ", type=" + type + "]";
 	}
-
-
-
 
 }

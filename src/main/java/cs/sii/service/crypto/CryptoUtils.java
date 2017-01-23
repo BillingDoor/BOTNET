@@ -84,7 +84,7 @@ public class CryptoUtils {
 	 * @throws BadPaddingException
 	 * @throws IllegalBlockSizeException
 	 */
-	public String encryptAES(String value){
+	public String encryptAES(String value) {
 
 		IvParameterSpec iv;
 		try {
@@ -95,14 +95,13 @@ public class CryptoUtils {
 			cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
 
 			byte[] encrypted = cipher.doFinal(value.getBytes());
-		
+
 			return Base64.encodeBase64String(encrypted);
-		} catch (UnsupportedEncodingException | NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
+		} catch (UnsupportedEncodingException | NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException
+				| InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
 			e.printStackTrace();
 		}
-		
-		// System.out.println("encrypted string: " +
-		// Base64.encodeBase64String(encrypted));
+
 		return null;
 
 	}
@@ -122,7 +121,7 @@ public class CryptoUtils {
 		IvParameterSpec iv;
 		try {
 			iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
-			
+
 			SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
 
 			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
@@ -131,8 +130,9 @@ public class CryptoUtils {
 			byte[] original = cipher.doFinal(Base64.decodeBase64(encrypted));
 
 			return new String(original);
-			
-		} catch (UnsupportedEncodingException | NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
+
+		} catch (UnsupportedEncodingException | NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException
+				| InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -150,7 +150,6 @@ public class CryptoUtils {
 	public void encrypt(Serializable object, OutputStream ostream) throws IOException, NoSuchAlgorithmException,
 			NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException {
 		try {
-			// Length is 16 byte
 
 			// Create cipher
 			IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
@@ -179,7 +178,7 @@ public class CryptoUtils {
 	 * @throws NoSuchPaddingException
 	 * @throws InvalidKeyException
 	 */
-	public  Object decrypt(InputStream istream)
+	public Object decrypt(InputStream istream)
 			throws IOException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException {
 		IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
 		SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
@@ -329,10 +328,8 @@ public class CryptoUtils {
 		return key;
 	}
 
-
 	public String getInitVector() {
 		return initVector;
 	}
-
 
 }

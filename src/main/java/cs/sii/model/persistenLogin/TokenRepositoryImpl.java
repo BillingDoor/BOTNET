@@ -10,7 +10,6 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-
 @Repository("tokenRepositoryDao")
 @Transactional
 public class TokenRepositoryImpl implements PersistentTokenRepository {
@@ -19,7 +18,7 @@ public class TokenRepositoryImpl implements PersistentTokenRepository {
 
 	@Autowired
 	private PersistentLoginRepository persistentRepository;
-		
+
 	@Override
 	public void createNewToken(PersistentRememberMeToken token) {
 		logger.info("Creating Token for user : {}", token.getUsername());
@@ -29,15 +28,12 @@ public class TokenRepositoryImpl implements PersistentTokenRepository {
 		persistentLogin.setToken(token.getTokenValue());
 		persistentLogin.setLast_used(token.getDate());
 		persistentRepository.save(persistentLogin);
-		//persist(persistentLogin);
 	}
 
 	@Override
 	public PersistentRememberMeToken getTokenForSeries(String seriesId) {
 		logger.info("Fetch Token if any for seriesId : {}", seriesId);
 		try {
-			//Criteria crit = createEntityCriteria();
-			//crit.add(Restrictions.eq("series", seriesId));
 			PersistentLogin persistentLogin = persistentRepository.findOne(seriesId);
 
 			return new PersistentRememberMeToken(persistentLogin.getUsername(), persistentLogin.getSeries(),
@@ -51,11 +47,8 @@ public class TokenRepositoryImpl implements PersistentTokenRepository {
 	@Override
 	public void removeUserTokens(String username) {
 		logger.info("Removing Token if any for user : {}", username);
-		//Criteria crit = createEntityCriteria();
-		//crit.add(Restrictions.eq("username", username));
-		//PersistentLogin persistentLogin = (PersistentLogin) crit.uniqueResult();
-		PersistentLogin persistentLogin=persistentRepository.findFirstByUsername(username);
-		
+		PersistentLogin persistentLogin = persistentRepository.findFirstByUsername(username);
+
 		if (persistentLogin != null) {
 			logger.info("rememberMe was selected");
 			persistentRepository.delete(persistentLogin);
@@ -70,7 +63,6 @@ public class TokenRepositoryImpl implements PersistentTokenRepository {
 		persistentLogin.setToken(tokenValue);
 		persistentLogin.setLast_used(lastUsed);
 		persistentRepository.save(persistentLogin);
-		//update(persistentLogin);
 	}
 
 }

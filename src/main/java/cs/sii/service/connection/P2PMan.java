@@ -60,7 +60,6 @@ public class P2PMan {
 		System.out.println("Grafo completato " + graph);
 		System.out.println("Inizio calcolo vicini");
 		if (graph.degreeOf(nServ.getMyIp()) > 0) {
-			// SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
 			nServ.setNeighbours(myNeighbours(nServ.getMyIp().getIp()));
 			for (int i = 0; i < nServ.getNeighbours().getSize(); i++) {
 				Pairs<IP, PublicKey> p = nServ.getNeighbours().get(i);
@@ -92,17 +91,8 @@ public class P2PMan {
 	public UndirectedGraph<IP, DefaultEdge> createNetworkP2P() {
 		// creo grafo partenza
 		graph = new ListenableUndirectedGraph<IP, DefaultEdge>(DefaultEdge.class);
-		// List<Bot> bots = bServ.findAll();
 
 		ArrayList<IP> nodes = new ArrayList<IP>();
-
-		// bots.forEach(bot -> nodes.add(new IP(bot.getIp())));
-
-		// Inizializzo la lista dei nodi vivi
-		// for (Bot bot: bots) {
-		// nServ.getAliveBot().add(new Pairs<IP, String>(new IP(bot.getIp()),
-		// bot.getIdBot()));
-		// }
 
 		System.out.println("Nodes Size: " + nodes.size());
 		MyGnmRandomGraphDispenser<IP, DefaultEdge> g2 = new MyGnmRandomGraphDispenser<IP, DefaultEdge>(nodes.size(), 0,
@@ -110,9 +100,6 @@ public class P2PMan {
 		MyVertexFactory<IP> nodeIp = new MyVertexFactory<IP>((List<IP>) nodes.clone(), new SecureRandom());
 
 		g2.generateConnectedGraph(graph, nodeIp, null, calculateK(nodes.size()));
-		// for (IP ip2 : nodes) {
-		// System.out.println("gli archi di " + graph.degreeOf(ip2));
-		// }
 		System.out.println("create/update graph" + graph);
 		System.out.println("minium degree " + calculateK(nodes.size()));
 		return graph;
@@ -123,8 +110,6 @@ public class P2PMan {
 	 */
 	@SuppressWarnings("unchecked")
 	public UndirectedGraph<IP, DefaultEdge> updateNetworkP2P() {
-
-		// List<Bot> bots = bServ.findAll();
 
 		SyncIpList<IP, String> bots = nServ.getAliveBot();
 		ArrayList<IP> nodes = new ArrayList<IP>();
@@ -137,8 +122,6 @@ public class P2PMan {
 			}
 
 		}
-
-		// bots.forEach(bot -> nodes.add(new IP(bot.getIp())));
 
 		MyGnmRandomGraphDispenser<IP, DefaultEdge> g2 = new MyGnmRandomGraphDispenser<IP, DefaultEdge>(nodes.size(), 0,
 				new SecureRandom(), true, false);
@@ -154,8 +137,6 @@ public class P2PMan {
 		System.out.println("minium degree " + calculateK(nodes.size()));
 		this.graph = graph2;
 
-		// SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
-		// buf.setAll(myNeighbours(nServ.getMyIp().getIp()).getList());
 		nServ.setNeighbours(myNeighbours(nServ.getMyIp().getIp()));
 		return graph;
 	}
@@ -177,8 +158,6 @@ public class P2PMan {
 			}
 		}
 
-		// bots.forEach(bot -> nodes.add(new IP(bot.getIp())));
-
 		MyGnmRandomGraphDispenser<IP, DefaultEdge> g2 = new MyGnmRandomGraphDispenser<IP, DefaultEdge>(nodes.size(), 0,
 				new SecureRandom(), true, false);
 		ListenableUndirectedGraph<IP, DefaultEdge> graph2 = new ListenableUndirectedGraph<IP, DefaultEdge>(
@@ -192,9 +171,6 @@ public class P2PMan {
 		System.out.println("create/update graph" + graph);
 		System.out.println("minium degree " + calculateK(nodes.size()));
 		this.graph = graph2;
-		// SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
-		// buf.setAll(myNeighbours(nServ.getMyIp().getIp()).getList());
-		// nServ.setNeighbours(buf);
 		nServ.setNeighbours(myNeighbours(nServ.getMyIp().getIp()));
 		return graph;
 	}
@@ -221,12 +197,9 @@ public class P2PMan {
 		ListenableUndirectedGraph<IP, DefaultEdge> graph2 = new ListenableUndirectedGraph<IP, DefaultEdge>(
 				DefaultEdge.class);
 		MyVertexFactory<IP> nodeIp2 = new MyVertexFactory<IP>((List<IP>) nodes, new SecureRandom());
-		// g2 = new MyGnmRandomGraphDispenser<IP, DefaultEdge>(nodes.size(), 0,
-		// new SecureRandom(), true, false);
 		for (IP ip : nodes) {
 			graph.addVertex(ip);
 		}
-		// controllare se inserire anche arco inverso
 		for (Pairs<IP, IP> pair : edge) {
 			graph.addEdge(pair.getValue1(), pair.getValue2());
 		}
@@ -237,10 +210,7 @@ public class P2PMan {
 		System.out.println("create/update graph" + graph);
 		System.out.println("minium degree " + calculateK(nodes.size()));
 		this.graph = graph2;
-		// SyncIpList<IP, PublicKey> buf = nServ.getNeighbours();
-		// buf.setAll(myNeighbours(nServ.getMyIp().getIp()).getList());
 		nServ.setNeighbours(myNeighbours(nServ.getMyIp().getIp()));
-		// nServ.setNeighbours(buf);
 		return graph;
 	}
 
@@ -334,9 +304,6 @@ public class P2PMan {
 				System.out.println("nuovi vicini " + sB.getIp());
 				ps.setValue2(pki.rebuildPuK(sB.getPubKey()));
 				ipN.add(ps);
-				// ipN.getList().add(ps);
-				// ipN.add(new Pairs<IP, PublicKey>(new
-				// IP(sB.getIp()),(pki.rebuildPuK(sB.getPubKey()))));
 
 			}
 			if (!t.equals(new IP(data))) {
@@ -346,7 +313,6 @@ public class P2PMan {
 				System.out.println("nuovi vicini " + tB.getIp());
 				pt.setValue2(pki.rebuildPuK(tB.getPubKey()));
 				ipN.add(pt);
-				// ipN.getList().add(pt);
 			}
 
 		}

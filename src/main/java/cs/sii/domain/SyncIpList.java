@@ -22,11 +22,8 @@ public class SyncIpList<V, T> {
 	 * 
 	 */
 	public SyncIpList() {
-			list = new ArrayList<Pairs<V, T>>();
+		list = new ArrayList<Pairs<V, T>>();
 
-		// for (Pairs<V, T> pairs : list) {
-		// System.out.println("construct sync ip "+pairs.getValue1() );
-		// }
 	}
 
 	public Integer getSize() {
@@ -34,62 +31,34 @@ public class SyncIpList<V, T> {
 		synchronized (list) {
 			x = list.size();
 		}
-
-		// for (Pairs<V, T> pairs : list) {
-		// System.out.println("size sync ip "+pairs.getValue1() );
-		// }
 		return x;
 	}
 
-	// /**
-	// * @return
-	// */
-	// public List<Pairs<V, T>> getList() {
-	// synchronized (list) {
-	// return list;
-	// }
-	// }
-
-	
-	
-	
 	/**
 	 * @param ips
 	 */
 	public boolean setAll(List<Pairs<V, T>> ipList) {
 		synchronized (list) {
-			 for (Pairs<V, T> pairs : list) {
-			 System.out.println("setAllOLD sync ip "+pairs.getValue1() );
-			 }
+			for (Pairs<V, T> pairs : list) {
+			}
 			list.clear();
-			 for (Pairs<V, T> pairs : ipList) {
-			 System.out.println("setAllNEW sync ip "+pairs.getValue1() );
-			 return list.addAll(ipList);
-			 }
-			 return false;
+			for (Pairs<V, T> pairs : ipList) {
+				return list.addAll(ipList);
+			}
+			return false;
 		}
 	}
-	
-	// /**
-	// * @param list
-	// * the ipList to set
-	// */
-	// public void setList(List<Pairs<V, T>> list) {
-	// this.list = list;
-	// }
 
 	/**
 	 * @param ips
 	 */
 	public boolean addAll(List<Pairs<V, T>> ipList) {
 		synchronized (list) {
-			 for (Pairs<V, T> pairs : list) {
-			 System.out.println("addALLOLD sync ip "+pairs.getValue1() );
-			 }
-			 for (Pairs<V, T> pairs : ipList) {
-			 System.out.println("AddAllNew sync ip "+pairs.getValue1() );
-			 }
-			
+			for (Pairs<V, T> pairs : list) {
+			}
+			for (Pairs<V, T> pairs : ipList) {
+			}
+
 			return list.addAll(ipList);
 
 		}
@@ -136,13 +105,12 @@ public class SyncIpList<V, T> {
 
 	/**
 	 * @param ipList
-	 * @return 
+	 * @return
 	 */
 	public boolean add(Pairs<V, T> ip) {
 		synchronized (list) {
 			if (list.indexOf(ip) < 0) {
 				list.add(ip);
-				 System.out.println("sync ip Add "+ip.getValue1());
 				return true;
 			}
 		}
@@ -156,7 +124,6 @@ public class SyncIpList<V, T> {
 	public Pairs<V, T> remove(Pairs<V, T> obj) {
 		synchronized (list) {
 			int index = indexOf(obj);
-			System.out.println("sync ip remove obj "+ obj.toString());
 			if (index >= 0)
 				return list.remove(index);
 		}
@@ -169,7 +136,6 @@ public class SyncIpList<V, T> {
 	 */
 	public Pairs<V, T> remove(int i) {
 		synchronized (list) {
-			System.out.println("sync ip remove index "+i );
 
 			return list.remove(i);
 		}
@@ -182,7 +148,6 @@ public class SyncIpList<V, T> {
 	public Pairs<V, T> removeByValue1(V obj) {
 		synchronized (list) {
 			int index = indexOfValue1(obj);
-			System.out.println("sync ip remove va1 obj "+ obj.toString());
 			if (index >= 0)
 				return list.remove(index);
 		}
@@ -191,12 +156,11 @@ public class SyncIpList<V, T> {
 
 	/**
 	 * @param obj
-	 * @return 
+	 * @return
 	 */
 	public Pairs<V, T> removeByValue2(T obj) {
 		synchronized (list) {
 			int index = indexOfValue2(obj);
-			System.out.println("sync ip remove va2 obj "+ obj.toString());
 			if (index >= 0)
 				return list.remove(index);
 		}
@@ -229,7 +193,5 @@ public class SyncIpList<V, T> {
 			return list.get(i);
 		}
 	}
-	
-
 
 }

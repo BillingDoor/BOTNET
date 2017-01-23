@@ -3,7 +3,7 @@ package cs.sii.domain;
 public class LinkBot {
 
 	private Integer idBotL;
-	
+
 	private Integer idUsrL;
 
 	public LinkBot() {

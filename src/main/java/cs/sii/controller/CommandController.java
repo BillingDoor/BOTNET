@@ -230,50 +230,5 @@ public class CommandController {
 		}
 		return response;
 	}	
-	
-	
-	// Deprecated
-	// @RequestMapping(value = "/newKing", method = RequestMethod.POST)
-	// @ResponseBody
-	//
-	// public List<Object> newKing(@RequestBody String j) {
-	// List<Object> response = new ArrayList<Object>();
-	//
-	// Integer i = Integer.parseInt(j);
-	//
-	// System.out.println("processamento della i: "+(i+10));
-	//
-	// if(i==1){
-	// //ruoli
-	// response.addAll(cmm.getrServ().findAll());
-	// } else if(i==2) {
-	// //bot
-	// response.addAll(cmm.getbServ().findAll());
-	// } else if(i==3) {
-	// //user
-	// response.addAll(cmm.getuServ().findAll());
-	// } else if(i==4) {
-	//// response.addAll(cmm.getGraph().edgeSet());
-	// List<Object> aux = new ArrayList<Object>();
-	// cmm.getGraph().edgeSet().forEach(e->{
-	// String txt = e.toString();
-	// txt=txt.replace("(", "");
-	// txt=txt.replace(")", "");
-	// txt=txt.replace(" ", "");
-	// txt=txt.replace(":", "|");
-	// System.out.println("adderò: "+txt);
-	// aux.add(txt);
-	// });
-	// response.addAll(aux);
-	//// response.forEach(resp->System.out.println("cose nel grafo: "+resp));
-	// System.out.println("response grafo: "+response);
-	// } else {
-	// return null;
-	// }
-	//
-	//
-	//
-	// return response;
-	// }
 
 }

@@ -20,51 +20,44 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import cs.sii.model.role.Role;
 
-
 @Entity
-@Table(name="User")
-public class User implements Serializable{
+@Table(name = "User")
+public class User implements Serializable {
 
-	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
 	@NotEmpty
-	@Column(name="Sso_Id", unique=true, nullable=false)
+	@Column(name = "Sso_Id", unique = true, nullable = false)
 	private String ssoId;
-	
+
 	@NotEmpty
-	@Column(name="Password", nullable=false)
+	@Column(name = "Password", nullable = false)
 	private String password;
-		
+
 	@NotEmpty
-	@Column(name="First_Name", nullable=false)
+	@Column(name = "First_Name", nullable = false)
 	private String firstName;
 
 	@NotEmpty
-	@Column(name="Last_Name", nullable=false)
+	@Column(name = "Last_Name", nullable = false)
 	private String lastName;
 
 	@NotEmpty
-	@Column(name="Email", nullable=false)
+	@Column(name = "Email", nullable = false)
 	private String email;
 
-	//@ManyToOne
-	//@JoinColumn(name="Role_id")
-	//private Role userRole;
-	
 	@NotEmpty
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "App_User_Role", 
-             joinColumns = { @JoinColumn(name = "User_id") }, 
-             inverseJoinColumns = { @JoinColumn(name = "Role_id") })
+	@JoinTable(name = "App_User_Role", joinColumns = { @JoinColumn(name = "User_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "Role_id") })
 	private Set<Role> userRoles = new HashSet<Role>();
-	
-	
-	public User(){
-		
+
+	public User() {
+
 	}
 
-	
 	/**
 	 * @param ssoId
 	 * @param password
@@ -82,9 +75,6 @@ public class User implements Serializable{
 		this.email = email;
 		this.userRoles = userRoles;
 	}
-
-
-
 
 	@Override
 	public int hashCode() {
@@ -117,17 +107,11 @@ public class User implements Serializable{
 		return true;
 	}
 
-	/*
-	 * DO-NOT-INCLUDE passwords in toString function.
-	 * It is done here just for convenience purpose.
-	 */
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", ssoId=" + ssoId + ", password=" + password
-				+ ", firstName=" + firstName + ", lastName=" + lastName
-				+ ", email=" + email + "]";
+		return "User [id=" + id + ", ssoId=" + ssoId + ", password=" + password + ", firstName=" + firstName
+				+ ", lastName=" + lastName + ", email=" + email + "]";
 	}
-
 
 	public Integer getId() {
 		return id;
@@ -177,9 +161,6 @@ public class User implements Serializable{
 		this.email = email;
 	}
 
-	
-	
-	
 	public Set<Role> getUserRoles() {
 		return userRoles;
 	}
@@ -187,5 +168,5 @@ public class User implements Serializable{
 	public void setUserRoles(Set<Role> userRoles) {
 		this.userRoles = userRoles;
 	}
-	
+
 }

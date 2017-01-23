@@ -6,7 +6,7 @@ package cs.sii.domain;
 
 import java.io.Serializable;
 
-public class Pairs<K, V> implements Serializable{
+public class Pairs<K, V> implements Serializable {
 
 	/**
 	 * 
@@ -23,7 +23,6 @@ public class Pairs<K, V> implements Serializable{
 	public Pairs() {
 
 	}
-
 
 	/**
 	 * @return the value1

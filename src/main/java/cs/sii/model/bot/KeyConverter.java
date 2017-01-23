@@ -15,14 +15,13 @@ import org.apache.commons.codec.binary.Base64;
 @Converter
 public class KeyConverter implements AttributeConverter<PublicKey, String> {
 
-
 	/**
 	 * Convert PublicKey Object to String
 	 */
 	@Override
 	public String convertToDatabaseColumn(PublicKey key) {
-		if(key!=null){
-			String s=Base64.encodeBase64String(key.getEncoded());
+		if (key != null) {
+			String s = Base64.encodeBase64String(key.getEncoded());
 			return s;
 		}
 		System.out.println("conversione fallita");
@@ -34,9 +33,10 @@ public class KeyConverter implements AttributeConverter<PublicKey, String> {
 	 */
 	@Override
 	public PublicKey convertToEntityAttribute(String keyEncoding) {
-		try {KeyFactory  fact = KeyFactory.getInstance("RSA", "BC");
-			if ((keyEncoding != null)){
-				 PublicKey puK = fact.generatePublic(new X509EncodedKeySpec(Base64.decodeBase64(keyEncoding)));		
+		try {
+			KeyFactory fact = KeyFactory.getInstance("RSA", "BC");
+			if ((keyEncoding != null)) {
+				PublicKey puK = fact.generatePublic(new X509EncodedKeySpec(Base64.decodeBase64(keyEncoding)));
 				return puK;
 			}
 		} catch (InvalidKeySpecException | NoSuchAlgorithmException | NoSuchProviderException e) {

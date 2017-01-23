@@ -33,9 +33,6 @@ public class Initialize {
 	 * Load info from machine and from files
 	 */
 	public void loadInfo() {
-
-		// System.out.println(folder.canExecute());
-		// System.out.println(folder.getCanonicalPath());
 		try {
 
 			pki.loadKeyFromFile();

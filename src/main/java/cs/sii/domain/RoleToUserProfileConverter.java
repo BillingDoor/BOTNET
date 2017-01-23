@@ -15,19 +15,19 @@ import cs.sii.model.user.UserRepository;
  * A converter class used in views to map id's to actual userProfile objects.
  */
 @Component
-public class RoleToUserProfileConverter implements Converter<Object, Role>{
+public class RoleToUserProfileConverter implements Converter<Object, Role> {
 
 	static final Logger logger = LoggerFactory.getLogger(RoleToUserProfileConverter.class);
-	
+
 	@Autowired
 	RoleRepository userRepository;
 
 	public Role convert(Object element) {
-		Integer id = Integer.parseInt((String)element);
-		Role profile= userRepository.findById(id);
-		logger.info("Profile : {}",profile);
-		System.out.println("convert "+profile.toString());
+		Integer id = Integer.parseInt((String) element);
+		Role profile = userRepository.findById(id);
+		logger.info("Profile : {}", profile);
+		System.out.println("convert " + profile.toString());
 		return profile;
 	}
-	
+
 }

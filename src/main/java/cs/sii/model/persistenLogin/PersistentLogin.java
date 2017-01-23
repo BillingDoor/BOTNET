@@ -11,18 +11,18 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-@Table(name="Persistent_Logins")
-public class PersistentLogin implements Serializable{
+@Table(name = "Persistent_Logins")
+public class PersistentLogin implements Serializable {
 
 	@Id
 	private String series;
 
-	@Column(name="Username", unique=true, nullable=false)
+	@Column(name = "Username", unique = true, nullable = false)
 	private String username;
-	
-	@Column(name="Token", unique=true, nullable=false)
+
+	@Column(name = "Token", unique = true, nullable = false)
 	private String token;
-	
+
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date last_used;
 
@@ -57,6 +57,5 @@ public class PersistentLogin implements Serializable{
 	public void setLast_used(Date last_used) {
 		this.last_used = last_used;
 	}
-	
-	
+
 }

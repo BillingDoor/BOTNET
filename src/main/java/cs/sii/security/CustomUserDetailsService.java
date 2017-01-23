@@ -18,41 +18,36 @@ import cs.sii.model.role.Role;
 import cs.sii.model.user.User;
 import cs.sii.model.user.UserRepository;
 
-
-
 @Service("customUserDetailsService")
-public class CustomUserDetailsService implements UserDetailsService{
+public class CustomUserDetailsService implements UserDetailsService {
 
 	static final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
-	
+
 	@Autowired
 	private UserRepository userRepository;
-	
-	@Transactional(readOnly=true)
+
+	@Transactional(readOnly = true)
 	public UserDetails loadUserByUsername(String ssoId) throws UsernameNotFoundException {
 		User user = userRepository.findBySsoId(ssoId);
 		logger.info("User : {}", user);
-		if(user==null){
+		if (user == null) {
 			logger.info("User not found");
 			throw new UsernameNotFoundException("Username not found");
 		}
-			return new org.springframework.security.core.userdetails.User(user.getSsoId(), user.getPassword(), 
-				 true, true, true, true, getGrantedAuthorities(user));
+		return new org.springframework.security.core.userdetails.User(user.getSsoId(), user.getPassword(), true, true,
+				true, true, getGrantedAuthorities(user));
 	}
 
-	
-	private List<GrantedAuthority> getGrantedAuthorities(User user){
+	private List<GrantedAuthority> getGrantedAuthorities(User user) {
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-		
-		for(Role role : user.getUserRoles()){
+
+		for (Role role : user.getUserRoles()) {
 			logger.info("UserProfile : {}", role);
-			authorities.add(new SimpleGrantedAuthority("ROLE_"+role.getType()));
+			authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getType()));
 		}
-		
-//		authorities.add(new SimpleGrantedAuthority("ROLE_"+user.getUserRole().getType()));
-		
+
 		logger.info("authorities : {}", authorities);
 		return authorities;
 	}
-	
+
 }

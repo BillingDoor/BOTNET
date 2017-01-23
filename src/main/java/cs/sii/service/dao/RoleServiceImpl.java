@@ -38,15 +38,7 @@ public class RoleServiceImpl {
 	public void saveAll(List<Role> roles) {
 		rRep.save(roles);
 	}
-//	public void saveAllObj(List<Object> roles) {
-//		for (Object obj : roles) {
-//			System.out.println("class "+ obj.getClass() +obj.toString());
-//			System.out.println(((LinkedHashMap<String, String>) obj).size());
-//			((LinkedHashMap<String, String>) obj).get("type")
-//			System.out.println("gg");
-//			//roleRepository.save();
-//		}
-//	}
+
 
 	public void setRoleRepository(RoleRepository roleRepository) {
 		this.rRep = roleRepository;

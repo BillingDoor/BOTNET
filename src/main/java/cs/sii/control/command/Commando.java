@@ -281,9 +281,6 @@ public class Commando {
 			ccReq.sendFloodToBot(pairs.getValue1().toString(), msg);
 		}
 		System.out.println("fine flood");
-		// nServ.getNeighbours().getList().forEach((pairs) -> {
-		// ccReq.sendFloodToBot(pairs.getValue1().toString(), msg);
-		// });
 	}
 
 	/**
@@ -430,23 +427,3 @@ public class Commando {
 	
 
 }
-
-// for (int i = 1; i < 20; i++) {
-// nodes.add(new IP("192.168.0." + i));
-// }
-//
-// // for(IP ip : nodes)
-// for (IP ip2 : nodes) {
-// System.out.println("gli archi di " + graph.degreeOf(ip2));
-// }
-//
-// System.out.println("graph" + graph);
-//
-// System.out.println("gdegree " + calculateK(nodes.size()));
-
-// System.out.println(" ||||||||||||||||||||||||||||||| ");
-//
-// nodes.clear();
-// for (int i = 13; i < 10025; i++) {
-// nodes.add(new IP("192.168.0." + i));
-// }

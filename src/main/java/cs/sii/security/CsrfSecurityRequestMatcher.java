@@ -10,23 +10,22 @@ import java.util.regex.Pattern;
 /**
  */
 public class CsrfSecurityRequestMatcher implements RequestMatcher {
-    private Pattern allowedMethods = Pattern.compile("^(GET)$");//(GET|HEAD|TRACE|OPTIONS)
+	private Pattern allowedMethods = Pattern.compile("^(GET)$");// (GET|HEAD|TRACE|OPTIONS)
 
-    private static final String HTTP_REGEX =  ".*(/cec/|/bot/).*";
-    
+	private static final String HTTP_REGEX = ".*(/cec/|/bot/).*";
 
-    @Override
-    public boolean matches(HttpServletRequest request) {
-      // Skip allowed methods
-      if (allowedMethods.matcher(request.getMethod()).matches()) {
-        return false;
-      }   
+	@Override
+	public boolean matches(HttpServletRequest request) {
+		// Skip allowed methods
+		if (allowedMethods.matcher(request.getMethod()).matches()) {
+			return false;
+		}
 
-      // If the request match one url the CSFR protection will be disabled
-      if (request.getRequestURI().matches(HTTP_REGEX)) {
-		return false;
-	}	
+		// If the request match one url the CSFR protection will be disabled
+		if (request.getRequestURI().matches(HTTP_REGEX)) {
+			return false;
+		}
 
-      return true;
-    } // method matches
+		return true;
+	} // method matches
 }
