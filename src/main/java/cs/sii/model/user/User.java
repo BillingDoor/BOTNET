@@ -49,7 +49,7 @@ public class User implements Serializable {
 	@Column(name = "Email", nullable = false)
 	private String email;
 
-	@ManyToMany(cascade=CascadeType.ALL)
+	@ManyToMany(fetch=FetchType.LAZY)
 	@JoinTable(name = "App_User_Role", joinColumns = { @JoinColumn(name = "User_id", nullable = false) }, inverseJoinColumns = { @JoinColumn(name = "Role_id", nullable = false) })
 	private Set<Role> userRoles = new HashSet<Role>(1);
 
