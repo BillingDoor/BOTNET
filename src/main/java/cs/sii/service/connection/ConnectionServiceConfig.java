@@ -8,7 +8,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.catalina.connector.Connector;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
+import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
+import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -30,24 +35,43 @@ public class ConnectionServiceConfig {
 	@Autowired
 	Config configEngine;
 
+	   @Value("${http.port}")
+	    private int httpPort;
+
+	    @Bean
+	    public EmbeddedServletContainerCustomizer containerCustomizer() {
+	        return new EmbeddedServletContainerCustomizer() {
+	            @Override
+	            public void customize(ConfigurableEmbeddedServletContainer container) {
+	                if (container instanceof TomcatEmbeddedServletContainerFactory) {
+	                    TomcatEmbeddedServletContainerFactory containerFactory =
+	                            (TomcatEmbeddedServletContainerFactory) container;
+
+	                    Connector connector = new Connector(TomcatEmbeddedServletContainerFactory.DEFAULT_PROTOCOL);
+	                    connector.setPort(httpPort);
+	                    containerFactory.addAdditionalTomcatConnectors(connector);
+	                }
+	            }
+	        };
+	    }
 	@Bean
 	public MySSLClientHttpRequestFactory HttpRequestFactory()
 			throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
-		NullHostnameVerifier verifier = new NullHostnameVerifier();
+		NullHostnameVerifier verifier=new NullHostnameVerifier();
 		MySSLClientHttpRequestFactory crf = new MySSLClientHttpRequestFactory(verifier);
-
+		
 		crf.setConnectTimeout(configEngine.getConnectTimeout());
+//		crf.setConnectionRequestTimeout(configEngine.getRequestTimeout());
 		crf.setReadTimeout(configEngine.getReadTimeout());
 
 		return crf;
-
+	    
+	
 	}
-
 	@Bean
 	public AuthenticationTrustResolver getAuthenticationTrustResolver() {
 		return new AuthenticationTrustResolverImpl();
 	}
-
 	@Bean
 	public RestTemplate RestTemplate() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
 
@@ -62,19 +86,20 @@ public class ConnectionServiceConfig {
 		return restTemplate;
 	}
 
+	
 	public class XUserAgentInterceptor implements ClientHttpRequestInterceptor {
 
-		@Override
-		public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
-				throws IOException {
+	    @Override
+	    public ClientHttpResponse intercept(
+	            HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
+	            throws IOException {
 
-			HttpHeaders headers = request.getHeaders();
-			if (!configEngine.isCommandandconquerStatus()) {
-				headers.add("X-User-Agent", "Bot");
-			} else
-				headers.add("X-User-Agent", "CeC");
-
-			return execution.execute(request, body);
-		}
+	        HttpHeaders headers = request.getHeaders();
+	    	if (!configEngine.isCommandandconquerStatus()) {
+	        headers.add("X-User-Agent", "Bot");}
+	    	else  headers.add("X-User-Agent", "CeC");
+	        
+	        return execution.execute(request, body);
+	    }
 	}
 }

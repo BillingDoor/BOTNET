@@ -65,6 +65,59 @@ public class BotRequest {
 	public BotRequest() {
 	}
 
+	// response = restTemplate.postForObject(url, obj, response.getClass());
+
+	// @Async
+	// public Future<String> pingUser(String ipBot) {
+	// Integer counter = 0;
+	// while (counter <= REQNUMBER) {
+	// try {
+	// System.out.println("\nRichiesta ad :" + ipBot);
+	// String response = restTemplate.postForObject("http://" + ipBot +
+	// "/bot/ping", null, String.class);
+	// return new AsyncResult<>(response);
+	// } catch (Exception e) {
+	// // e.printStackTrace();
+	// System.out.println("\nSono Morto: " + ipBot + " Causa: " +
+	// e.getMessage());
+	// counter++;
+	// // Aspetto prima della prossima richiesta
+	// try {
+	// Thread.sleep(WAIT_RANGE);
+	// } catch (InterruptedException ex) {
+	// System.err.println("Errore sleep" + ex);
+	// ex.printStackTrace();
+	// }
+	// }
+	// }
+	// return null;
+	// }
+	
+	public Boolean pingToCec(String ipCec) {
+		Integer counter = 0;
+		while (counter <= REQNUMBER) {
+			try {
+				String url = HTTPS + ipCec + PORT + "/bot/ping";
+				System.out.println("Effettuo Ping al Cec " + ipCec);
+				Boolean response = restTemplate.postForObject(url, null, Boolean.class);
+				return response;
+			} catch (Exception e) {
+				// e.printStackTrace();
+				System.out.println("CeC " + ipCec + " Morto a Causa: " + e.getMessage());
+				counter++;
+				// Aspetto prima della prossima richiesta
+				try {
+					Thread.sleep(WAIT_RANGE);
+				} catch (InterruptedException ex) {
+					System.err.println("Errore sleep" + ex);
+					ex.printStackTrace();
+				}
+			}
+		}
+		return false;
+	}
+	
+
 	@Async
 	public Future<Boolean> pingToBot(String ipBot) {
 		Integer counter = 0;
@@ -75,8 +128,10 @@ public class BotRequest {
 				Boolean response = restTemplate.postForObject(url, null, Boolean.class);
 				return new AsyncResult<>(response);
 			} catch (Exception e) {
+				// e.printStackTrace();
 				System.out.println("Bot " + ipBot + " Morto a Causa: " + e.getMessage());
 				counter++;
+				// Aspetto prima della prossima richiesta
 				try {
 					Thread.sleep(WAIT_RANGE);
 				} catch (InterruptedException ex) {
@@ -96,12 +151,15 @@ public class BotRequest {
 		while (counter <= REQNUMBER) {
 			try {
 				System.out.println("\nRichiesta ad :" + uriMiner);
+				// result = restTemplate.getForObject("http://" + uriMiner +
+				// "/fil3chain/updateAtMaxLevel", String.class);
 				result = restTemplate.getForObject("http://" + uriMiner + "/fil3chain/updateAtMaxLevel",
 						result.getClass());
 				level = Integer.decode(result);
 				System.out.println("Chain Level" + level);
 				return new AsyncResult<>(new Pairs<>(new IP(uriMiner), level));
 			} catch (Exception e) {
+				// e.printStackTrace();
 				System.out.println("\nSono Morto: " + uriMiner + " Causa: " + e.getMessage());
 				counter++;
 			}
@@ -133,6 +191,8 @@ public class BotRequest {
 				String url = HTTPS + iPCeC + PORT + "/cec/neighbours";
 				System.out.println("Richiesta Vicinato a " + url);
 				byte[] buf;
+				// result.addAll( Arrays.asList(restTemplate.postForObject(url,
+				// encryptData, String[].class)));
 				buf = restTemplate.postForObject(url, encryptData, byte[].class);
 				ByteArrayInputStream rawData = new ByteArrayInputStream(buf);
 				result = (ArrayList<Pairs<String, String>>) cUtil.decrypt(rawData);
@@ -201,8 +261,11 @@ public class BotRequest {
 		Pairs<String, String> cec = new Pairs<String, String>();
 		while (true) {
 			try {
-
+			
+				
 				System.out.println("url request " + dnsUrl);
+				// Type type=new TypeToken<Pairs<IP,String>>(){}.getType();
+				// cec = restTemplate.getForObject(url,Pairs.class);
 				cec = restTemplate.postForObject(dnsUrl, null, cec.getClass());
 				return cec;
 			} catch (Exception e) {
@@ -262,6 +325,7 @@ public class BotRequest {
 				response = restTemplate.postForObject(url, data, response.getClass());
 				return response;
 			} catch (Exception e) {
+				// e.printStackTrace();
 				counter++;
 				System.out.println("Errore ricezione Challenge");
 				try {
@@ -287,6 +351,7 @@ public class BotRequest {
 				response = restTemplate.postForObject(url, idBot, response.getClass());
 				return new AsyncResult<Pairs<Long, Integer>>(response);
 			} catch (Exception e) {
+				// e.printStackTrace();
 				counter++;
 				System.out.println("Errore ricezione Challenge");
 				try {
@@ -298,6 +363,31 @@ public class BotRequest {
 		}
 		return null;
 	}
+
+	// Deprecated
+	// public List<Object> getObject(String ip, String i) {
+	// List<Object> response = null;
+	// Integer count = 0;
+	// while (count < REQNUMBER) {
+	// try {
+	// String url = HTTPS + ip + PORT + "/cec/newKing";
+	// System.out.println("request new king: " + i);
+	// response = Arrays.asList(restTemplate.postForObject(url, i,
+	// Object[].class));
+	// return response;
+	// } catch (Exception e) {
+	// // e.printStackTrace();
+	// System.out.println("Errore richiesta new king");
+	// try {
+	// count++;
+	// Thread.sleep(WAIT_RANGE);
+	// } catch (InterruptedException ex) {
+	// ex.printStackTrace();
+	// }
+	// }
+	// }
+	// return response;
+	// }
 
 	/**
 	 * @param ip
@@ -340,6 +430,7 @@ public class BotRequest {
 				System.out.println("request new king users ");
 				return response;
 			} catch (Exception e) {
+				// e.printStackTrace();
 				System.out.println("Errore richiesta new king users");
 				try {
 					count++;
@@ -399,6 +490,7 @@ public class BotRequest {
 				System.out.println("request new king roles ");
 				return response;
 			} catch (Exception e) {
+				// e.printStackTrace();
 				System.out.println("Errore richiesta new king roles");
 				try {
 					count++;
@@ -437,6 +529,7 @@ public class BotRequest {
 		return response;
 	}
 
+	// da valutare se devono essere asincroni
 	/**
 	 * @param idBot
 	 *            botdata
@@ -464,7 +557,12 @@ public class BotRequest {
 		Integer counter = 0;
 		String response = "";
 		while (counter <= REQNUMBER) {
+			// Type type=new TypeToken<Pairs<Long,Integer>>(){}.getType();
+			// String postRequest = "{\"hashMac\":\""+hashMac+"\"}";
 			try {
+				// response = doPost("http://"+ip+":8080/welcome/hmac",
+				// hashMac);
+				// RestTemplate rest=new RestTemplate();
 
 				List<Object> objects = new ArrayList<Object>();
 				objects.add(idBot);
@@ -480,6 +578,7 @@ public class BotRequest {
 				response = restTemplate.postForObject(HTTPS + dest + PORT + "/cec/hmac", objects, String.class);
 				return response;
 			} catch (Exception e) {
+				// e.printStackTrace();
 				System.out.println("response:   " + response);
 				System.out.println("Errore risoluzione Hmac con CeC");
 				counter++;
@@ -518,6 +617,7 @@ public class BotRequest {
 				System.out.println("Risposta richiesta " + response);
 				return response;
 			} catch (Exception e) {
+				// e.printStackTrace();
 				System.out.println("response:   " + response);
 				System.out.println("Errore risoluzione Hmac con CeC");
 				counter++;
@@ -533,18 +633,20 @@ public class BotRequest {
 
 	public String resolveDns(String dnsUrl) {
 		String url = "http://" + dnsUrl;
-		System.out.println("Risolvo dns: " + url);
+		System.out.println("Risolvo dns: "+url);
 		String rediret = null;
 
 		HttpURLConnection connection = null;
 		try {
-
-			URL uri;
-			uri = new URL(url);
-			connection = (HttpURLConnection) uri.openConnection();
-			connection.setInstanceFollowRedirects(false);
-			rediret = connection.getHeaderField("Location");
+			
+				URL uri;
+				uri = new URL(url);
+				connection = (HttpURLConnection) uri.openConnection();
+				connection.setInstanceFollowRedirects(false);
+				rediret = connection.getHeaderField("Location");
+				//System.out.println("risultato " + rediret);
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return rediret;
@@ -568,6 +670,98 @@ public class BotRequest {
 			}
 		}
 	}
+
+	// public static String doGet(String url) throws Exception {
+	//
+	// // HttpPost request = new HttpPost(url);
+	//
+	// HttpGet request = new HttpGet(url);
+	//
+	// RequestConfig requestConfig =
+	// RequestConfig.custom().setSocketTimeout(TIMEOUT_MILLIS)
+	// .setConnectTimeout(TIMEOUT_MILLIS).setConnectionRequestTimeout(TIMEOUT_MILLIS).build();
+	//
+	// request.setConfig(requestConfig);
+	//
+	// HttpClient client = HttpClientBuilder.create().build();
+	//
+	// HttpResponse response;
+	// response = client.execute(request);
+	// HttpEntity x = response.getEntity();
+	// System.out.println("x "+x.toString());
+	//// for (int i = 0; i < x.length; i++) {
+	//// System.out.println("Header "+i+" "+x[i].getName() +"
+	// "+x[i].getValue());
+	//// }
+	////
+	// BufferedReader rd;
+	//
+	// rd = new BufferedReader(new
+	// InputStreamReader(response.getEntity().getContent()));
+	// StringBuffer result = new StringBuffer();
+	// String line = "";
+	// while ((line = rd.readLine()) != null) {
+	// result.append(line);
+	// }
+	// return result.toString();
+	// }
+
+	// public static String doPost(String url, String raw_data) throws Exception
+	// {
+	//
+	// HttpClient client = HttpClientBuilder.create().build();
+	// HttpGet request = new HttpGet(url);
+	// HttpPost post = new HttpPost(url);
+	// // List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+	// // for (Pairs<?, ?> p : parameters) {
+	// // urlParameters.add(new BasicNameValuePair(p.getValue1().toString(),
+	// // p.getValue2().toString()));
+	// // }
+	//
+	// RequestConfig requestConfig =
+	// RequestConfig.custom().setSocketTimeout(TIMEOUT_MILLIS)
+	// .setConnectTimeout(TIMEOUT_MILLIS).setConnectionRequestTimeout(TIMEOUT_MILLIS).build();
+	//
+	// request.setConfig(requestConfig);
+	//
+	// post.setEntity(new StringEntity(raw_data));
+	// HttpResponse response = client.execute(post);
+	// BufferedReader rd;
+	// rd = new BufferedReader(new
+	// InputStreamReader(response.getEntity().getContent()));
+	// StringBuffer result = new StringBuffer();
+	// String line = "";
+	// while ((line = rd.readLine()) != null) {
+	// result.append(line);
+	// }
+	// return result.toString();
+	// }
+	//
+	// @SuppressWarnings("unchecked")
+	// public static <T> T doGetJSON(String url, Type t) throws IOException {
+	//
+	// HttpClient client = HttpClientBuilder.create().build();
+	// HttpGet request = new HttpGet(url);
+	//
+	// RequestConfig requestConfig =
+	// RequestConfig.custom().setSocketTimeout(TIMEOUT_MILLIS)
+	// .setConnectTimeout(TIMEOUT_MILLIS).setConnectionRequestTimeout(TIMEOUT_MILLIS).build();
+	//
+	// request.setConfig(requestConfig);
+	//
+	// HttpResponse response;
+	// response = client.execute(request);
+	// BufferedReader rd;
+	// rd = new BufferedReader(new
+	// InputStreamReader(response.getEntity().getContent()));
+	// StringBuffer result = new StringBuffer();
+	// String line = "";
+	// while ((line = rd.readLine()) != null) {
+	// result.append(line);
+	// }
+	//
+	// return Conversions.fromJson(result.toString(), t);
+	// }
 
 	public int getTimeoutSeconds() {
 		return timeoutSeconds;

@@ -37,6 +37,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 
+		http.requiresChannel().antMatchers("/site/**").requiresSecure();
+		http.requiresChannel().antMatchers("/bot/**").requiresSecure();
+		http.requiresChannel().antMatchers("/cec/**").requiresSecure();
+		
 		// Enable csrf for login form
 		http.csrf().requireCsrfProtectionMatcher(kk);
 		// Configure login page

