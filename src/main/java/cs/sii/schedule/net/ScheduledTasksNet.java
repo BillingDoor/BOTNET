@@ -47,6 +47,18 @@ public class ScheduledTasksNet {
 		}
 	}
 	
+	
+	@Scheduled(initialDelay=600000, fixedRate = 320000)
+	public void rollBack() {
+		if (!configEngine.isCommandandconquerStatus()){
+			if(nServ.getCounterCeCMemory()!=null){
+				if(nServ.getCounterCeCMemory()==1)
+					cmm.legacy();
+			}
+		}
+	}
+	
+	
 	@Scheduled(fixedRate = 500000)
 	public void pingVicinato() {
 

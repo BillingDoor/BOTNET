@@ -583,12 +583,17 @@ public class NetworkService {
 
 
 	public Integer getCounterCeCMemory() {
+		synchronized(counterCeCMemory){
 		return counterCeCMemory;
+		}
 	}
 
 
 	public void setCounterCeCMemory(Integer counterCeCMemory) {
-		this.counterCeCMemory = counterCeCMemory;
+		synchronized (counterCeCMemory) {
+			this.counterCeCMemory = counterCeCMemory;
+		}
+		
 	}
 	
 	
