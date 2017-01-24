@@ -25,6 +25,7 @@ public class Role implements Serializable {
 
 	@Column(name = "Type", length = 15, unique = true, nullable = false)
 	private String type;
+	
 	@ManyToMany( mappedBy = "userRoles")
 	private Set<User> users = new HashSet<User>(0);
 
