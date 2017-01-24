@@ -40,7 +40,7 @@ public class ScheduledTasksNet {
 	}
 	
 	
-	@Scheduled(initialDelay=50000, fixedRate = 220000)
+	@Scheduled(initialDelay=800000, fixedRate = 220000)
 	public void electionDay() {
 		if (configEngine.isCommandandconquerStatus()){
 			cmm.startElection();

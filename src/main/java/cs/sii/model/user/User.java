@@ -54,7 +54,7 @@ public class User implements Serializable {
 //			inverseJoinColumns = { @JoinColumn(name = "Role_id",
 //					nullable = false) })
 	@ManyToMany
-	private Set<Role> userRoles = new HashSet<Role>(0);
+	private Set<Role> userroles = new HashSet<Role>(1);
 
 	
 	
@@ -80,7 +80,7 @@ public class User implements Serializable {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
-		this.userRoles = userRoles;
+		this.userroles = userRoles;
 	}
 
 	@Override
@@ -169,11 +169,11 @@ public class User implements Serializable {
 	}
 
 	public Set<Role> getUserRoles() {
-		return userRoles;
+		return userroles;
 	}
 
 	public void setUserRoles(Set<Role> userRoles) {
-		this.userRoles = userRoles;
+		this.userroles = userRoles;
 	}
 
 }
