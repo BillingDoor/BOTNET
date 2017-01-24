@@ -45,7 +45,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 
 //		http.addFilter(XUserAgent());
-	    // Enable csrf for login form
+		http.requiresChannel().antMatchers("/site/**").requiresSecure();
+		http.requiresChannel().antMatchers("/bot/**").requiresSecure();
+		http.requiresChannel().antMatchers("/cec/**").requiresSecure();
+		
+		// Enable csrf for login form
 	    http.csrf().requireCsrfProtectionMatcher(kk );
 //		 http.csrf().disable();
 		// Configure login page
