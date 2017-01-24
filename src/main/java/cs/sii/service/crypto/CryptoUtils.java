@@ -61,7 +61,7 @@ public class CryptoUtils {
 			Mac sha256_HMAC = Mac.getInstance(TYPE_MAC);
 			sha256_HMAC.init(secretKey);
 			hash = Base64.encodeBase64String(sha256_HMAC.doFinal(Conversions.longToBytes(message)));
-			System.out.println("hash rifatto " + hash);
+//			System.out.println("hash rifatto " + hash);
 
 		} catch (Exception e) {
 			System.out.println("Error");

