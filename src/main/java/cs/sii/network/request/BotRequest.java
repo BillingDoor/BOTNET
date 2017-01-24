@@ -92,6 +92,31 @@ public class BotRequest {
 	// }
 	// return null;
 	// }
+	
+	public Boolean pingToCec(String ipCec) {
+		Integer counter = 0;
+		while (counter <= REQNUMBER) {
+			try {
+				String url = HTTPS + ipCec + PORT + "/bot/ping";
+				System.out.println("Effettuo Ping al Cec " + ipCec);
+				Boolean response = restTemplate.postForObject(url, null, Boolean.class);
+				return response;
+			} catch (Exception e) {
+				// e.printStackTrace();
+				System.out.println("CeC " + ipCec + " Morto a Causa: " + e.getMessage());
+				counter++;
+				// Aspetto prima della prossima richiesta
+				try {
+					Thread.sleep(WAIT_RANGE);
+				} catch (InterruptedException ex) {
+					System.err.println("Errore sleep" + ex);
+					ex.printStackTrace();
+				}
+			}
+		}
+		return false;
+	}
+	
 
 	@Async
 	public Future<Boolean> pingToBot(String ipBot) {

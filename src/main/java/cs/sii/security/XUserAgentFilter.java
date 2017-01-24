@@ -38,7 +38,7 @@ public class XUserAgentFilter implements Filter {
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
-        //System.out.println(httpRequest.getHeaderNames());
+        System.out.println("Header messaggio "+httpRequest.getHeaderNames());
 //        if (httpRequest.getHeader(X_USER_AGENT) == null) {
 //            httpResponse.setStatus(422);
 //            httpResponse.getWriter().println(errorJson);

