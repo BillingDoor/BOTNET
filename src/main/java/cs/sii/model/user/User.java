@@ -49,18 +49,10 @@ public class User implements Serializable {
 	@Column(name = "Email", nullable = false)
 	private String email;
 
-//	@JoinTable(name = "App_User_Role", joinColumns = {
-//			@JoinColumn(name = "User_id", nullable = false) },
-//			inverseJoinColumns = { @JoinColumn(name = "Role_id",
-//					nullable = false) })
-	@ManyToMany
-	private Set<Role> userroles = new HashSet<Role>(1);
+	@ManyToMany(cascade=CascadeType.ALL)
+	@JoinTable(name = "App_User_Role", joinColumns = { @JoinColumn(name = "User_id", nullable = false) }, inverseJoinColumns = { @JoinColumn(name = "Role_id", nullable = false) })
+	private Set<Role> userRoles = new HashSet<Role>(1);
 
-	
-	
-	
-	
-	
 	public User() {
 
 	}
@@ -80,7 +72,7 @@ public class User implements Serializable {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
-		this.userroles = userRoles;
+		this.userRoles = userRoles;
 	}
 
 	@Override
@@ -116,8 +108,7 @@ public class User implements Serializable {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", ssoId=" + ssoId + ", password=" + password + ", firstName=" + firstName
-				+ ", lastName=" + lastName + ", email=" + email + "]";
+		return "User [id=" + id + ", ssoId=" + ssoId + ", password=" + password + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + "]";
 	}
 
 	public Integer getId() {
@@ -169,11 +160,11 @@ public class User implements Serializable {
 	}
 
 	public Set<Role> getUserRoles() {
-		return userroles;
+		return userRoles;
 	}
 
 	public void setUserRoles(Set<Role> userRoles) {
-		this.userroles = userRoles;
+		this.userRoles = userRoles;
 	}
 
 }

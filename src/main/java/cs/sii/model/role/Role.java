@@ -26,8 +26,8 @@ public class Role implements Serializable {
 	@Column(name = "Type", length = 15, unique = true, nullable = false)
 	private String type;
 	
-	@ManyToMany( mappedBy = "userroles")
-	private Set<User> users = new HashSet<User>(1);
+//	@ManyToMany( mappedBy = "userroles")
+//	private Set<User> users = new HashSet<User>(1);
 
 	
 	
@@ -92,12 +92,5 @@ public class Role implements Serializable {
 		return "UserProfile [id=" + id + ", type=" + type + "]";
 	}
 
-	public Set<User> getUsers() {
-		return users;
-	}
-
-	public void setUsers(Set<User> users) {
-		this.users = users;
-	}
 
 }
