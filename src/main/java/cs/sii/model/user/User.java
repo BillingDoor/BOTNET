@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -48,12 +49,18 @@ public class User implements Serializable {
 	@Column(name = "Email", nullable = false)
 	private String email;
 
-	@NotEmpty
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "App_User_Role", joinColumns = { @JoinColumn(name = "User_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "Role_id") })
-	private Set<Role> userRoles = new HashSet<Role>();
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinTable(name = "App_User_Role", joinColumns = {
+			@JoinColumn(name = "User_id", nullable = false) },
+			inverseJoinColumns = { @JoinColumn(name = "Role_id",
+					nullable = false) })
+	private Set<Role> userRoles = new HashSet<Role>(0);
 
+	
+	
+	
+	
+	
 	public User() {
 
 	}

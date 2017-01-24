@@ -1,13 +1,19 @@
 package cs.sii.model.role;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import cs.sii.model.user.User;
 
 @Entity
 @Table(name = "Role")
@@ -19,7 +25,11 @@ public class Role implements Serializable {
 
 	@Column(name = "Type", length = 15, unique = true, nullable = false)
 	private String type;
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "userRoles")
+	private Set<User> users = new HashSet<User>(0);
 
+	
+	
 	public Role() {
 
 	}
@@ -79,6 +89,14 @@ public class Role implements Serializable {
 	@Override
 	public String toString() {
 		return "UserProfile [id=" + id + ", type=" + type + "]";
+	}
+
+	public Set<User> getUsers() {
+		return users;
+	}
+
+	public void setUsers(Set<User> users) {
+		this.users = users;
 	}
 
 }
