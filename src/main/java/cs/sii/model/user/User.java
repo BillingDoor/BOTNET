@@ -50,8 +50,8 @@ public class User implements Serializable {
 	private String email;
 
 	@ManyToMany(fetch=FetchType.LAZY)
-	@JoinTable(name = "App_User_Role", joinColumns = { @JoinColumn(name = "User_id", nullable = false) }, inverseJoinColumns = { @JoinColumn(name = "Role_id", nullable = false) })
-	private Set<Role> userRoles = new HashSet<Role>(1);
+	@JoinTable(name = "App_User_Role", joinColumns = { @JoinColumn(name = "User_id") }, inverseJoinColumns = { @JoinColumn(name = "Role_id") })
+	private Set<Role> userRoles = new HashSet<Role>(0);
 
 	public User() {
 
