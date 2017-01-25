@@ -6,12 +6,14 @@ import java.net.URL;
 import java.security.PublicKey;
 
 import org.apache.commons.codec.binary.Base64;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import cs.sii.domain.IP;
 import cs.sii.domain.Pairs;
+import cs.sii.schedule.net.ScheduledTasksNet;
 
 @Service("CeCRequest")
 public class CecRequest {
@@ -23,6 +25,9 @@ public class CecRequest {
 	private static final int TIMEOUT_MILLIS = 600000;
 	private RestTemplate restTemplate = new RestTemplate();
 
+	@Autowired
+	private ScheduledTasksNet sTN;
+	
 	/**
 	 * @param dnsUrl
 	 * @param myIp
@@ -91,6 +96,9 @@ public class CecRequest {
 				}
 			}
 		}
+			if(sTN.getLegacy()){
+				sTN.setLegacy(false);
+			}
 		return response;
 	}
 

