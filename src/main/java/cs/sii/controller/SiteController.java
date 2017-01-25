@@ -94,6 +94,7 @@ public class SiteController {
 		System.out.println("ciccio stampa false "+configEngine.isCommandandconquerStatus());
 		System.out.println(" "+ auth.getName());
 		System.out.println(" "+ auth.getPrincipal().toString());
+		if(auth.getCredentials().toString()!=null)
 		System.out.println(" "+ auth.getCredentials().toString());
 
 		User usr =uServ.findBySsoId(auth.getName());
