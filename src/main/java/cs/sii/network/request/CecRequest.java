@@ -25,8 +25,7 @@ public class CecRequest {
 	private static final int TIMEOUT_MILLIS = 600000;
 	private RestTemplate restTemplate = new RestTemplate();
 
-	@Autowired
-	private ScheduledTasksNet sTN;
+
 	
 	/**
 	 * @param dnsUrl
@@ -96,9 +95,7 @@ public class CecRequest {
 				}
 			}
 		}
-			if(sTN.getLegacy()){
-				sTN.setLegacy(false);
-			}
+			
 		return response;
 	}
 

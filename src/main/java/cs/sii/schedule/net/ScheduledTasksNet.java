@@ -86,6 +86,9 @@ public class ScheduledTasksNet {
 									flagLegacy = true;
 								}
 								cmm.legacy();
+								if(getLegacy()){
+									setLegacy(false);
+								}
 							}
 						}
 					}
