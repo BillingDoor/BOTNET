@@ -55,7 +55,7 @@ public class ScheduledTasksNet {
 		}
 	}
 
-	@Scheduled(initialDelay = 140000, fixedRate = 120000)
+	@Scheduled(initialDelay = 240000, fixedRate = 120000)
 	public void electionDay() {
 		synchronized (flagLegacy) {
 			if (flagLegacy == false)
