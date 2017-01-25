@@ -34,13 +34,13 @@ public class ScheduledTasksNet {
 	
 
 	
-	@Scheduled(initialDelay=100000,fixedRate = 100000)
+	@Scheduled(initialDelay=100000,fixedRate = 60000)
 	public void pingNeighbours() {
 			botB.pingToNeighbours();
 	}
 	
 	
-	@Scheduled(initialDelay=800000, fixedRate = 220000)
+	@Scheduled(initialDelay=140000, fixedRate = 120000)
 	public void electionDay() {
 		if (configEngine.isCommandandconquerStatus()){
 			cmm.startElection();
@@ -48,7 +48,7 @@ public class ScheduledTasksNet {
 	}
 	
 	
-	@Scheduled(initialDelay=600000, fixedRate = 320000)
+	@Scheduled(initialDelay=180000, fixedRate = 60000)
 	public void rollBack() {
 		if (!configEngine.isCommandandconquerStatus()){
 				if(nServ.getCounterCeCMemory()==1)
