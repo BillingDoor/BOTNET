@@ -89,7 +89,7 @@ public class SiteController {
 
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String index(HttpServletResponse error, HttpServletResponse httpServletResponse) throws IOException {
-		String result = "login";
+		String result = "redirect:/site/login";
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		System.out.println("ciccio stampa false "+configEngine.isCommandandconquerStatus());
 		System.out.println(" "+ auth.getName());
