@@ -102,7 +102,6 @@ public class SiteController {
 			System.out.println(usr.getFirstName());
 		else System.out.println("user not found");
 
-		usr.getUserRoles().forEach(r->System.out.println("r "+ r));
 		if (configEngine.isCommandandconquerStatus()) {
 			
 				System.out.println("sei qualcuno");
