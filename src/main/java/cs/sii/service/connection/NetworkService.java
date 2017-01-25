@@ -286,7 +286,11 @@ public class NetworkService {
 				if (!buff.equals("")) {
 					cec.setValue1(new IP(buff));
 					cec.setValue2(pki.rebuildPuK(result.getValue2()));
+					
+					while(commandConquerIps.getSize()>0)
+						commandConquerIps.remove(0);
 					commandConquerIps.add(cec);
+					
 					for (int i = 0; i < commandConquerIps.getSize(); i++) {
 						Pairs<IP, PublicKey> command = commandConquerIps.get(i);
 						System.out.println("Cec: " + command.getValue1());
