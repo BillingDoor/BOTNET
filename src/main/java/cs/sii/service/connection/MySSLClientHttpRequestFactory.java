@@ -21,6 +21,11 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import org.hibernate.jpa.boot.internal.FileInputStreamAccess;
+import org.hibernate.validator.internal.util.privilegedactions.GetResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 
 public class MySSLClientHttpRequestFactory extends SimpleClientHttpRequestFactory {
@@ -53,14 +58,21 @@ public class MySSLClientHttpRequestFactory extends SimpleClientHttpRequestFactor
 				KeyStore ks;
 				char[] storepass = "sicurezza2016".toCharArray();
 				char[] keypass = "sicurezza2016".toCharArray();
-				String storename = "src/main/resources/SIIKeyStore.jks";
-
+			
+				
+				String storename = "/SIIKeyStore.jks";
+			
 				kmf = KeyManagerFactory.getInstance("SunX509");
-				FileInputStream fin = new FileInputStream(storename);
+//				FileInputStream fin = new FileInputStream(storename);
 
+				ResourcePatternResolver patternResolver=new PathMatchingResourcePatternResolver();
+				Resource resource=patternResolver.getResource(storename);
+				
+				
+				
 				ks = KeyStore.getInstance("JKS");
 
-				ks.load(fin, storepass);
+				ks.load(resource.getInputStream(), storepass);
 
 				kmf.init(ks, keypass);
 

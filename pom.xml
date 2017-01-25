@@ -4,9 +4,8 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.springframework</groupId>
-	<artifactId>gs-spring-boot</artifactId>
 	<version>0.1.0</version>
-	
+
 
 
 	<parent>
@@ -148,8 +147,6 @@
 
 
 
-
-
 		<dependency>
 			<groupId>org.jgrapht</groupId>
 			<artifactId>jgrapht-core</artifactId>
@@ -176,20 +173,25 @@
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
+				<artifactId>spring-boot-maven-plugin</artifactId>	
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>cs.sii.abotnet.Application</mainClass>
+						</manifest>
+						<manifestEntries>
+							<Class-Path>.</Class-Path> <!-- HERE IS THE IMPORTANT BIT -->
+						</manifestEntries>
+					</archive>
+				</configuration>
 			</plugin>
-			<plugin>
-				<artifactId>maven-failsafe-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>integration-test</goal>
-							<goal>verify</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+
+
 		</plugins>
 	</build>
 
+
+
+
+	<artifactId>bitvir</artifactId>
 </project>
