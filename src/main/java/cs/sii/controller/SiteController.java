@@ -72,6 +72,7 @@ public class SiteController {
 		String result = "";
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		System.out.println("ciccio stampa false "+configEngine.isCommandandconquerStatus());
+		System.out.println(" "+ auth.getName());
 		if (configEngine.isCommandandconquerStatus()) {
 			if (auth.getName().equals("anonymousUser")) {
 				System.out.println("anonymouse");
