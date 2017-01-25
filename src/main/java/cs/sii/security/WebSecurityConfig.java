@@ -45,7 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().requireCsrfProtectionMatcher(kk);
 		// Configure login page
 		http.formLogin().loginPage("/site/login").usernameParameter("ssoId").passwordParameter("password")
-				.failureUrl("/login?error").defaultSuccessUrl("/site/index").loginProcessingUrl("/site/login");
+				.failureUrl("/site/login").defaultSuccessUrl("/site/index").loginProcessingUrl("/site/login");
 		// Configure remember me
 		http.rememberMe().rememberMeParameter("remember-me").tokenRepository(tokenRepository)
 				.tokenValiditySeconds(86400);
@@ -68,10 +68,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		return new CsrfSecurityRequestMatcher();
 	}
 
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+//	@Bean
+//	public PasswordEncoder passwordEncoder() {
+//		return new BCryptPasswordEncoder();
+//	}
 
 	@Bean
 	public DaoAuthenticationProvider authenticationProvider() {
