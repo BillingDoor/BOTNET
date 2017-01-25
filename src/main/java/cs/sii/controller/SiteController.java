@@ -71,20 +71,25 @@ public class SiteController {
 	public String login(HttpServletResponse error, HttpServletResponse httpServletResponse) throws IOException {
 		String result = "";
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		System.out.println("ciccio stampa false "+configEngine.isCommandandconquerStatus());
 		if (configEngine.isCommandandconquerStatus()) {
 			if (auth.getName().equals("anonymousUser")) {
+				System.out.println("anonymouse");
 				result = "login";
 			} else {
+				System.out.println("sei qualcuno");
 				Collection<? extends GrantedAuthority> x = (auth.getAuthorities());
 				for (GrantedAuthority gA : x) {
 					System.out.println("ga " + gA.toString() + "  " + gA.toString().contains("ROLE_ADMIN"));
 					if (gA.toString().contains("ROLE_ADMIN")) {
-
+						System.out.println("ADMIN ACCEPTED");
 						result = "redirect:/site/admin/index";
 					}
 					if (gA.toString().contains("ROLE_USER")) {
+						System.out.println("USER ACCEPTED");
 						result = "redirect:/site/user/index";
 					}
+					
 				}
 			}
 		}
