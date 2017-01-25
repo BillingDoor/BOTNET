@@ -11,6 +11,7 @@ import javax.validation.Valid;
 
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -74,10 +75,35 @@ public class SiteController {
 		System.out.println("ciccio stampa false "+configEngine.isCommandandconquerStatus());
 		System.out.println(" "+ auth.getName());
 		if (configEngine.isCommandandconquerStatus()) {
-			if (auth.getName().equals("anonymousUser")) {
-				System.out.println("anonymouse");
-				result = "login";
-			} else {
+			
+					result = "login";
+				
+			}
+		
+		return result;
+
+	}
+
+	
+	
+
+	@RequestMapping(value = "/index", method = RequestMethod.GET)
+	public String index(HttpServletResponse error, HttpServletResponse httpServletResponse) throws IOException {
+		String result = "login";
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		System.out.println("ciccio stampa false "+configEngine.isCommandandconquerStatus());
+		System.out.println(" "+ auth.getName());
+		System.out.println(" "+ auth.getPrincipal().toString());
+		System.out.println(" "+ auth.getCredentials().toString());
+
+		User usr =uServ.findBySsoId(auth.getName());
+		if(usr!=null)
+			System.out.println(usr.getFirstName());
+		else System.out.println("user not found");
+
+		usr.getUserRoles().forEach(r->System.out.println("r "+ r));
+		if (configEngine.isCommandandconquerStatus()) {
+			
 				System.out.println("sei qualcuno");
 				Collection<? extends GrantedAuthority> x = (auth.getAuthorities());
 				for (GrantedAuthority gA : x) {
@@ -90,14 +116,14 @@ public class SiteController {
 						System.out.println("USER ACCEPTED");
 						result = "redirect:/site/user/index";
 					}
-					
 				}
 			}
-		}
+		
 		return result;
 
 	}
-
+	
+	@PreAuthorize("hasRole('ROLE_USER')")
 	@RequestMapping(value = "/user/index", method = RequestMethod.GET)
 	public String indexUser(HttpServletResponse error) throws IOException {
 		String result = "";
@@ -108,6 +134,7 @@ public class SiteController {
 		}
 		return result;
 	}
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 
 	@RequestMapping(value = "/admin/index", method = RequestMethod.GET)
 	public String indexAdmin(HttpServletResponse error) throws IOException {
