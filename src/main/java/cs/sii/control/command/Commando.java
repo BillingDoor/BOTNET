@@ -101,7 +101,7 @@ public class Commando {
 		
 		 Set<Role> roleSet=new HashSet<Role>();
 		 roleSet.add(admin);
-		 uServ.save(new User("admin","admin", "a", "b", "ad", roleSet));
+		 uServ.saveCrypto(new User("admin","admin", "a", "b", "ad", roleSet));
 		////////
 
 		Bot bot = new Bot(nServ.getIdHash(), nServ.getMyIp().toString(), nServ.getMac(), nServ.getOs(), nServ.getVersionOS(), nServ.getArchOS(), nServ.getUsernameOS(), pki.getPubRSAKeyToString(), (nServ.isElegible() + ""));

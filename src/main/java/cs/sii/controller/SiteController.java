@@ -289,7 +289,7 @@ public class SiteController {
 
 			System.out.println("3 " + user.toString());
 
-			uServ.save(user);
+			uServ.saveCrypto(user);
 
 			model.addAttribute("success", "User " + user.getFirstName() + " " + user.getLastName() + " registered successfully");
 			model.addAttribute("loggedinuser", getPrincipal());

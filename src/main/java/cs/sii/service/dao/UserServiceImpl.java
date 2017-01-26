@@ -28,7 +28,14 @@ public class UserServiceImpl {
 
 	}
 
-	public void save(User user) {
+	public void saveClean(User user) {
+		User usr = uRep.findBySsoId(user.getSsoId());
+		if (usr == null) {
+			uRep.save(user);
+		}
+	}
+
+	public void saveCrypto(User user) {
 		User usr = uRep.findBySsoId(user.getSsoId());
 		if (usr == null) {
 			user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -36,7 +43,7 @@ public class UserServiceImpl {
 		}
 	}
 
-	public void update(User user) {
+	public void updateCrypto(User user) {
 		User usr = uRep.findBySsoId(user.getSsoId());
 		uRep.delete(usr);
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -44,7 +51,20 @@ public class UserServiceImpl {
 
 	}
 
-	public void saveAll(List<User> users) {
+	public void updateClean(User user) {
+		User usr = uRep.findBySsoId(user.getSsoId());
+		uRep.delete(usr);
+		uRep.save(user);
+
+	}
+
+	public void saveAllClean(List<User> users) {
+		for (User user : users) {
+			uRep.save(user);
+		}
+	}
+
+	public void saveAllCrypto(List<User> users) {
 		for (User user : users) {
 			user.setPassword(passwordEncoder.encode(user.getPassword()));
 			uRep.save(user);

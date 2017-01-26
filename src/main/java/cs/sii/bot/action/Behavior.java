@@ -431,7 +431,7 @@ public class Behavior {
 		if (users != null) {
 			Collections.sort(users, (a, b) -> a.getId() < b.getId() ? -1 : a.getId() == b.getId() ? 0 : 1);
 			users.forEach(user -> System.out.println("Utenti: " + user));
-			uServ.saveAll(users);
+			uServ.saveAllClean(users);
 		}
 		// prendo grafo
 		List<String> graph = req.getPeers(ip, myId);
