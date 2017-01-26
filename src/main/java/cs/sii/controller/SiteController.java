@@ -206,7 +206,7 @@ public class SiteController {
 			for (Integer i = 0; i < botList.size(); i++) {
 				Bot bot = botList.get(i);
 				System.out.println("bot sadd" + bot.getIp() + " user ?null " + bot.getBotUser() == null);
-				if (bot.getBotUser() != null)
+				if (bot.getBotUser() != null||bot.getIp().equals(cmm.getnServ().getCommandConquerIps().get(0).getValue1().getIp()))
 					botList.remove(bot);
 			}
 		model.addAttribute("bots", botList);

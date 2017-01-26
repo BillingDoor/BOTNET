@@ -267,6 +267,7 @@ background-color: black;
 color:grey;
 font-style: Verdana;
 font-size: 15px;
+overflow:hidden
 }
 
 select.minimal:not([multiple]):hover {
@@ -284,6 +285,7 @@ background-color: transparent;
 color:grey;
 font-style: Verdana;
 font-size: 15px;
+overflow:hidden
 }
 
 select.minimal[multiple]:hover {

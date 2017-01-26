@@ -35,7 +35,7 @@ public class ScheduledTasksNet {
 	private Boolean flagELection = false;
 	private Boolean flagNeighbours = false;
 	private Boolean flagLegacy = false;
-//
+
 //	@Scheduled(initialDelay = 100000, fixedRate = 60000)
 //	public void pingNeighbours() {
 //		synchronized (flagLegacy) {

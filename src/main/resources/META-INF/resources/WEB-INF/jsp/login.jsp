@@ -42,10 +42,10 @@
 								</div>
 							</c:if>
 							<div>
-								<input type="text" class="hiddbox" id="username" name="ssoId" onfocus="if(this.placeholder == '&#xf007';  Username') { this.placeholder = ''; }" onblur="if(this.placeholder == '') { this.placeholder = '&#xf007';  Username'; } " placeholder="&#xf007;  Username"><span class="highlight"></span><span class="bar"></span>
+								<input type="text" class="hiddbox" id="username" name="ssoId" onfocus="if(this.placeholder == '&#xf007;  Username') { this.placeholder = ''; }" onblur="if(this.placeholder == '') { this.placeholder = '&#xf007;  Username'; } " placeholder="&#xf007;  Username"><span class="highlight"></span><span class="bar"></span>
 							</div>
 							<div>
-								<input type="password" class="hiddbox" id="password" name="password" onfocus="if(this.placeholder == '&#xf023';  Password') { this.placeholder = ''; }" onblur="if(this.placeholder == '') { this.placeholder = '&#xf023';  Password'; }" placeholder="&#xf023;  Password"><span class="highlight"></span><span class="bar"></span>
+								<input type="password" class="hiddbox" id="password" name="password" onfocus="if(this.placeholder == '&#xf023;  Password') { this.placeholder = ''; }" onblur="if(this.placeholder == '') { this.placeholder = '&#xf023;  Password'; }" placeholder="&#xf023;  Password"><span class="highlight"></span><span class="bar"></span>
                           	</div>
 							<p>
    							<input type="checkbox" id="rememberme" name="remember-me"/>  							

@@ -162,27 +162,33 @@
 						<div class="generic-container">
 							<form:form method="POST" modelAttribute="target">
 								<div>
-									<form:select path="typeAttack" items="${listAttack}" multiple="true"
-										itemValue="typeAttack" itemLabel="typeAttack" class="minimal" />
-									<span class="highlight"></span>
-								</div>
-
-								<div>
 									<form:input type="text" path="ipDest" id="ipDest"
-										class="hiddbox" />
+										class="hiddbox" onfocus="if(this.placeholder == 'IP') { this.placeholder = ''; }" 
+										onblur="if(this.placeholder == '') { this.placeholder = 'IP'; } " 
+										placeholder="IP"/>
 									<span class="highlight"></span> 
 								</div>
 
 								<div>
 									<form:input type="text" path="portDest" id="portDest"
-										class="hiddbox" />
+										class="hiddbox" onfocus="if(this.placeholder == 'Port') { this.placeholder = ''; }" 
+										onblur="if(this.placeholder == '') { this.placeholder = 'Port'; } " 
+										placeholder="Port"/>
 									<span class="highlight"></span> 
 								</div>
 
 								<div>
 									<form:input type="text" path="timeToAttack" id="timeToAttack"
-										class="hiddbox" />
+										class="hiddbox" onfocus="if(this.placeholder == 'Time to attack') { this.placeholder = ''; }" 
+										onblur="if(this.placeholder == '') { this.placeholder = 'Time to attack'; } " 
+										placeholder="Time to attack"/>
 									<span class="highlight"></span> 
+								</div>
+								
+								<div>
+									<form:select path="typeAttack" items="${listAttack}" multiple="true"
+										itemValue="typeAttack" itemLabel="typeAttack" class="minimal" />
+									<span class="highlight"></span>
 								</div>
 
 								<div>
