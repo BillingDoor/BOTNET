@@ -186,7 +186,7 @@ public class Behavior {
 
 					} else {
 						System.out.println("Signature Comando FALLITA1");
-						nServ.firstConnectToMockServerDns();
+						nServ.getDnsCeC();
 						if (pki.validateSignedMessageRSA(msgs[0], msgs[2],	nServ.getCommandConquerIps().get(0).getValue2())) {
 							Pairs<Integer, String> data = new Pairs<>();
 							data.setValue1(msgHashList.getSize() + 1);
@@ -201,7 +201,6 @@ public class Behavior {
 
 						} else {
 							System.out.println("Signature Comando FALLITA2");
-							nServ.firstConnectToMockServerDns();
 							
 						}
 						
