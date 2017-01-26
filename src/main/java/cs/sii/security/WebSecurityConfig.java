@@ -1,5 +1,8 @@
 package cs.sii.security;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -8,7 +11,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -74,8 +76,58 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		
-		return (PasswordEncoder) new ShaPasswordEncoder(512);
-	}
+		return new PasswordEncoder() {
+			
+			@Override
+			public boolean matches(CharSequence rawPassword, String encodedPassword) {
+		        try {
+		            MessageDigest md = MessageDigest.getInstance("SHA-512");
+		            md.update(rawPassword.toString().getBytes());
+		            byte[] bytes = md.digest(rawPassword.toString().getBytes());
+		            StringBuilder sb = new StringBuilder();
+		            for(int i=0; i< bytes.length ;i++)
+		            {
+		                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+		            }
+		            String generatedPassword = sb.toString();
+		            System.out.println("encoded "+encodedPassword);
+		            System.out.println("raw "+ rawPassword);
+		            System.out.println("gene "+generatedPassword);
+		            if (encodedPassword.equals(generatedPassword)) {
+						System.out.println("tutto apposto fraaaaa");
+						return true;
+					}
+		        } 
+		        catch (NoSuchAlgorithmException e) 
+		        {
+		            e.printStackTrace();
+		        }
+		        return false;
+			}
+			
+			@Override
+			public String encode(CharSequence rawPassword) {
+				 String generatedPassword = null;
+			        try {
+			            MessageDigest md = MessageDigest.getInstance("SHA-512");
+			            md.update(rawPassword.toString().getBytes());
+			            byte[] bytes = md.digest(rawPassword.toString().getBytes());
+			            StringBuilder sb = new StringBuilder();
+			            for(int i=0; i< bytes.length ;i++)
+			            {
+			                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+			            }
+			            generatedPassword = sb.toString();
+			        } 
+			        catch (NoSuchAlgorithmException e) 
+			        {
+			            e.printStackTrace();
+			        }
+			        return generatedPassword;
+	
+			    }
+			};
+		}
 
 	@Bean
 	public DaoAuthenticationProvider authenticationProvider() {
