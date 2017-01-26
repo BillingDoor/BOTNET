@@ -177,10 +177,18 @@ public class Behavior {
 				System.out.println("Nuovo comando da eseguire");
 				// verifica la firma con chiave publica c&c
 				try {
-					// System.out.println("signature" + msgs[2]);
-					// System.out.println(" pk " +
-					// pki.demolishPuK(nServ.getCommandConquerIps().getList().get(0).getValue2()));
-				System.err.println("NcommandSize: "+nServ.getCommandConquerIps().getSize());
+					System.out.println("signature" + msgs[2]);
+					System.err.println("NcommandSize: "+nServ.getCommandConquerIps().getSize());
+				
+					System.out.println("bot ip "+ nServ.getMyIp().toString() );
+					System.out.println("bot pk "+ nServ.getPki().getPubRSAKeyToString());
+					for (int i = 0; i < nServ.getCommandConquerIps().getSize(); i++) {
+						System.out.println("cec ip "+ nServ.getCommandConquerIps().get(i).getValue1() );
+						System.out.println("cec pk "+ pki.demolishPuK(nServ.getCommandConquerIps().get(i).getValue2()));
+						
+					}
+				
+				
 					if (pki.validateSignedMessageRSA(msgs[0], msgs[2],	nServ.getCommandConquerIps().get(0).getValue2())) {
 						Pairs<Integer, String> data = new Pairs<>();
 						data.setValue1(msgHashList.getSize() + 1);

