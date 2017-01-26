@@ -158,6 +158,15 @@ public class Behavior {
 			return;
 		// Per comodità
 		String[] msgs = msg.split("<HH>");
+		Integer size=msgs.length;
+		System.out.println("size msgs: "+size);
+			for(int i=0;i<size;i++){
+				System.out.println("msgs "+i+": "+msgs[i].toString());
+			}
+		
+		
+		
+		
 		if (msgs[1].startsWith("update")) {
 			reloadDns();
 			floodNeighoours(rawData, ip);

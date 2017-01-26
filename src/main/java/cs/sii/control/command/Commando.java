@@ -217,6 +217,7 @@ public class Commando {
 		try {
 			signature = pki.signMessageRSA(hashIdMsg);
 			msg = hashIdMsg + "<HH>" + cmd + "<HH>" + signature;
+			System.out.println("Messaggio creato per il flood: "+msg);
 			request = pki.getCrypto().encryptAES(msg);
 		} catch (InvalidKeyException | SignatureException e) {
 			e.printStackTrace();
