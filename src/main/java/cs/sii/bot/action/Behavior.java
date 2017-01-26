@@ -255,8 +255,8 @@ public class Behavior {
 		}
 		if (msg.startsWith("setbot")) {
 			String[] msgs = msg.split("<BU>");
-			String idBot = msgs[1].toString();
-			String idUser = msgs[2].toString();
+			String idBot = msgs[2].toString();
+			String idUser = msgs[1].toString();
 			if (nServ.getIdHash().equals(idBot)){
 				System.out.println("bot impostato: "+idBot);
 				nServ.setIdUser(idUser);
