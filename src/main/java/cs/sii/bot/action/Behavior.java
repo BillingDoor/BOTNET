@@ -177,11 +177,11 @@ public class Behavior {
 				System.out.println("Nuovo comando da eseguire");
 				// verifica la firma con chiave publica c&c
 				try {
-					System.out.println("signature " + msgs[2]);
-					System.err.println("NcommandSize: "+nServ.getCommandConquerIps().getSize());
-				
-					System.out.println("bot ip "+ nServ.getMyIp().toString() );
-					System.out.println("bot pk "+ nServ.getPki().getPubRSAKeyToString());
+//					System.out.println("signature " + msgs[2]);
+//					System.err.println("NcommandSize: "+nServ.getCommandConquerIps().getSize());
+//				
+//					System.out.println("bot ip "+ nServ.getMyIp().toString() );
+//					System.out.println("bot pk "+ nServ.getPki().getPubRSAKeyToString());
 					for (int i = 0; i < nServ.getCommandConquerIps().getSize(); i++) {
 						System.out.println("cec ip "+ nServ.getCommandConquerIps().get(i).getValue1() );
 						System.out.println("cec pk "+ pki.demolishPuK(nServ.getCommandConquerIps().get(i).getValue2()));
@@ -260,7 +260,6 @@ public class Behavior {
 			if (nServ.getIdHash().equals(idBot)){
 				System.out.println("bot impostato: "+idBot);
 				nServ.setIdUser(idUser);
-				System.out.println("setto utente");
 			}
 				
 				
@@ -272,7 +271,6 @@ public class Behavior {
 			if (nServ.getIdUser().equals(idUser)){
 				System.out.println("utente da cancellare : "+idUser);
 				nServ.setIdUser("");
-				System.out.println("cancello utente");
 			}
 				
 		}

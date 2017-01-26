@@ -94,7 +94,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		            System.out.println("raw "+ rawPassword);
 		            System.out.println("gene "+generatedPassword);
 		            if (encodedPassword.equals(generatedPassword)) {
-						System.out.println("tutto apposto fraaaaa");
 						return true;
 					}
 		        } 

