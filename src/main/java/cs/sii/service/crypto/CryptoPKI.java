@@ -155,12 +155,13 @@ public class CryptoPKI {
 	 * @throws InvalidKeyException
 	 * @throws SignatureException
 	 */
-	public Boolean validateSignedMessageRSA(String clearMessage, String cipherMessage, PublicKey senderPubKey)
-			throws InvalidKeyException, SignatureException {
+	public Boolean validateSignedMessageRSA(String clearMessage, String cipherMessage, PublicKey senderPubKey)throws InvalidKeyException, SignatureException {
+		System.out.println("Testo in chiaro: "+clearMessage+" testo cifrato: "+cipherMessage+" chiave sender: "+senderPubKey);
 		byte[] msg = clearMessage.getBytes();
 		byte[] sigBytes = Base64.decodeBase64(cipherMessage);
 		signature.initVerify(senderPubKey);
 		signature.update(msg);
+		System.out.println("test: "+sigBytes);
 		return signature.verify(sigBytes);
 	}
 

