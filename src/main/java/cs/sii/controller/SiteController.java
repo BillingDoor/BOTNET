@@ -254,7 +254,7 @@ public class SiteController {
 			}
 		String cmd = "delbot<BU>" + usr.getSsoId();
 		cmm.floodingByCecToBot(cmd, usr.getSsoId());
-		return new ModelAndView("redirect:/site/admin/removeAllbot");
+		return new ModelAndView("redirect:/site/admin/removeallbot");
 	}
 
 	/**

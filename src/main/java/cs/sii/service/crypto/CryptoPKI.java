@@ -156,7 +156,7 @@ public class CryptoPKI {
 	 * @throws SignatureException
 	 */
 	public Boolean validateSignedMessageRSA(String clearMessage, String cipherMessage, PublicKey senderPubKey)throws InvalidKeyException, SignatureException {
-		System.out.println("Testo in chiaro: "+clearMessage+" testo cifrato: "+cipherMessage+" chiave sender: "+senderPubKey);
+		System.out.println("Testo in chiaro: "+clearMessage+" testo cifrato: "+cipherMessage);
 		byte[] msg = clearMessage.getBytes();
 		byte[] sigBytes = Base64.decodeBase64(cipherMessage);
 		signature.initVerify(senderPubKey);
