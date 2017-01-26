@@ -8,6 +8,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -72,20 +73,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
-		return new PasswordEncoder() {
-			
-			@Override
-			public boolean matches(CharSequence rawPassword, String encodedPassword) {
-				if(encodedPassword.equals(rawPassword.toString()))
-				return true;
-				return false;
-			}
-			
-			@Override
-			public String encode(CharSequence rawPassword) {
-								return rawPassword.toString();
-			}
-		};
+		
+		return (PasswordEncoder) new ShaPasswordEncoder(512);
 	}
 
 	@Bean
