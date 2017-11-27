@@ -14,3 +14,6 @@ Per quanto riguarda il C&C:
 - lato back-end, sfrutta le stesse tecnologie del BOT ed in più: ha un database MySQL per la gestione delle utenze e sfrutta Hibernate per l'interazione con esso.
 - lato front-end, sviluppato tramite framework Spring Security che fornisce un sistema di autenticazione che ne gestisce i privilegi di accesso al sito.
 In aggiunta, è stata realizzata l'applicazione DNSBOT che permette ai BOT di entrare a far parte della rete P2P costruita.
+
+## Documentazione
+https://github.com/xXCiccioXx/BOTNET/blob/final/Relazione.pdf
